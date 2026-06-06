@@ -1,0 +1,90 @@
+---
+import Layout from "../../../../components/Layout.astro";
+import TabNav from "../../../../components/TabNav.astro";
+import { getCollection, getEntry } from "astro:content";
+import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+
+export async function getStaticPaths() {
+  const recipes = await getCollection("recipes", (r) => r.data.in_scope);
+  return recipes.map((r) => {
+    const slug = r.id.split("/").pop()!;
+    return { params: { subject: r.data.subject, recipe: slug } };
+  });
+}
+
+const subjectSlug = Astro.params.subject!;
+const recipeSlug  = Astro.params.recipe!;
+const entry = await getEntry("recipes", `${subjectSlug}/${recipeSlug}`);
+if (!entry) throw new Error(`recipe ${subjectSlug}/${recipeSlug} not found`);
+
+const allTerms = await getCollection("terms", (t) => t.data.subject === subjectSlug);
+const knownSlugs = new Set(allTerms.map((t) => t.id.split("/").pop()!));
+
+const html = await renderMarkdownString(entry.body ?? "", subjectSlug, knownSlugs);
+
+const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+---
+<Layout title={`${entry.data.title} · ${subject.data.title}`}>
+  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
+  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
+  <TabNav subject={subjectSlug} active="recipes" />
+
+  <article class="reading">
+    <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Recipe</p>
+    <h2 class="mt-2 font-display text-2xl" style="font-variation-settings: 'opsz' 48, 'wght' 500;">
+      {entry.data.title}
+    </h2>
+    <div class="recipe-body mt-6 text-base text-ink" set:html={html} />
+  </article>
+</Layout>
+
+<style is:global>
+  /* Marginalia numerals on recipe step lists */
+  .recipe-body ol {
+    list-style: none;
+    counter-reset: step;
+    padding-left: 0;
+  }
+  .recipe-body ol > li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 3.5rem;
+    margin-top: 1.25rem;
+  }
+  .recipe-body ol > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -0.1em;
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 72, "wght" 400;
+    font-size: 1.875rem;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+  /* "Common pitfalls" and similar h2s inside the recipe body become marginalia rules */
+  .recipe-body h2 {
+    margin-top: 2.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-rule-strong);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  .recipe-body h2 + ul,
+  .recipe-body h2 + p {
+    margin-left: 1rem;
+    border-left: 2px solid var(--color-rule);
+    padding-left: 1rem;
+    color: var(--color-ink-soft);
+  }
+  .recipe-body a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+</style>
