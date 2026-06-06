@@ -6,7 +6,12 @@ export interface SubjectConfig {
 }
 
 export const subjects: Record<string, SubjectConfig> = {
-  // Filled in Task 11 once paths are verified.
+  micro: {
+    slug: "micro",
+    title: "Micro-Economics",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Micro-Economics",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Micro-Economics",
+  },
 };
 
 export function getSubjectConfig(slug: string): SubjectConfig {
