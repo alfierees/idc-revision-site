@@ -24,7 +24,8 @@ export interface PendingProblemSet {
   title: string;
   sourceDocPath: string; // absolute, .pdf or .docx
   sourceDocFilename: string; // e.g. "EX-1 - Micro 3.docx"
-  solutionDocPath: string | null; // absolute, .pdf or .docx, if present
+  vaultSolutionPath: string | null; // absolute .md path under <vaultPath>/Assignments, preferred over solutionDocPath
+  solutionDocPath: string | null; // absolute, .pdf or .docx fallback from sibling "Assignment solutions" folder
 }
 
 export type PendingItem = PendingTerm | PendingRecipe | PendingProblemSet;
