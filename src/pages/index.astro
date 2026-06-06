@@ -1,17 +1,27 @@
 ---
-import "../styles/globals.css";
+import Layout from "../components/Layout.astro";
+import SubjectCard from "../components/SubjectCard.astro";
+import { getCollection } from "astro:content";
+
+const subjects = await getCollection("subjects");
+subjects.sort((a, b) => {
+  if (a.data.placeholder !== b.data.placeholder) return a.data.placeholder ? 1 : -1;
+  return a.data.title.localeCompare(b.data.title);
+});
 ---
-<html lang="en">
-  <head><meta charset="utf-8" /><title>IDC Revision</title></head>
-  <body>
-    <main class="mx-auto max-w-5xl px-6 py-12">
-      <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">IDC · Year 2 · Semester 2</p>
-      <h1 class="mt-2 font-display text-4xl">Revision</h1>
-      <p class="mt-6 reading text-base text-ink-soft">
-        Typography sanity check. Body text in Source Serif 4. Display in Fraunces.
-        Inline math like $\hat&#123;\beta&#125; = (X^\top X)^&#123;-1&#125; X^\top y$ should sit on the line.
-      </p>
-      <code class="mt-4 inline-block font-mono text-sm text-ink-soft">Q1b</code>
-    </main>
-  </body>
-</html>
+<Layout title="IDC Revision">
+  <section class="reading">
+    <p class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">For the exams</p>
+    <h1 class="mt-3 font-display text-4xl" style="font-variation-settings: 'opsz' 96, 'wght' 500;">
+      Revise.
+    </h1>
+    <p class="mt-4 text-base text-ink-soft">
+      Five subjects. Pick one to open its dictionary, recipes, problem sets and past papers.
+    </p>
+  </section>
+  <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {subjects.map((s, i) => (
+      <SubjectCard title={s.data.title} slug={s.data.slug} placeholder={s.data.placeholder} index={i} />
+    ))}
+  </div>
+</Layout>

@@ -1,0 +1,36 @@
+---
+interface Props {
+  title: string;
+  slug: string;
+  placeholder: boolean;
+  index: number;
+}
+const { title, slug, placeholder, index } = Astro.props;
+const delay = `${index * 60}ms`;
+---
+{placeholder ? (
+  <div
+    class="block rounded bg-paper-deep p-6"
+    style={`animation: rise-in 280ms ease-out both; animation-delay: ${delay};`}
+  >
+    <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Year 2 · Sem 2</p>
+    <h2 class="mt-3 font-display text-2xl text-ink-soft" style="font-variation-settings: 'opsz' 48, 'wght' 400;">
+      {title}
+    </h2>
+    <p class="mt-2 italic text-sm text-ink-muted">Awaiting ingestion.</p>
+  </div>
+) : (
+  <a
+    href={`/subjects/${slug}/dictionary`}
+    class="group block rounded border border-rule bg-card p-6 transition-shadow duration-150 ease-out hover:shadow-sm"
+    style={`animation: rise-in 280ms ease-out both; animation-delay: ${delay};`}
+  >
+    <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Year 2 · Sem 2</p>
+    <h2 class="mt-3 font-display text-2xl text-ink" style="font-variation-settings: 'opsz' 48, 'wght' 500;">
+      {title}
+    </h2>
+    <p class="mt-2 font-ui text-sm text-ink-soft group-hover:text-accent transition-colors">
+      Open →
+    </p>
+  </a>
+)}
