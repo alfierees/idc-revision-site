@@ -42,6 +42,7 @@ const question = z.object({
   text: z.string(),
   solution: z.string(),
   related_terms: z.array(z.string()).default([]),
+  source_doc_page: z.number().optional(),
 });
 
 const problemSets = defineCollection({
@@ -49,7 +50,7 @@ const problemSets = defineCollection({
   schema: z.object({
     title: z.string(),
     subject: z.string(),
-    source_pdf: z.string().optional(),
+    source_doc: z.string().optional(),
     questions: z.array(question),
     ai_drafted: z.boolean().default(false),
   }),
@@ -61,7 +62,7 @@ const pastPapers = defineCollection({
     title: z.string(),
     subject: z.string(),
     year: z.number().optional(),
-    source_pdf: z.string().optional(),
+    source_doc: z.string().optional(),
     questions: z.array(question),
     ai_drafted: z.boolean().default(false),
   }),

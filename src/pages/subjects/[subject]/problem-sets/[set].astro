@@ -37,8 +37,8 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
 
   <div class="mb-6 flex items-baseline justify-between">
     <h2 class="font-display text-2xl" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{set.data.title}</h2>
-    {set.data.source_pdf && (
-      <a href={set.data.source_pdf} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent underline underline-offset-4">
+    {set.data.source_doc && (
+      <a href={set.data.source_doc} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent underline underline-offset-4">
         Original PDF ↗
       </a>
     )}
