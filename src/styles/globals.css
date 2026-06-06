@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "./fonts.css";
-/* TODO Task 3: uncomment once katex is installed */
-/* @import "katex/dist/katex.min.css"; */
+@import "katex/dist/katex.min.css";
 
 @theme {
   /* Typography */

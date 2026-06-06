@@ -12,12 +12,17 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^6.0.2",
     "@fontsource-variable/fraunces": "^5.2.9",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/manrope": "^5.2.8",
     "@fontsource-variable/source-serif-4": "^5.2.9",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.4",
+    "katex": "^0.17.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "remark-wiki-link": "^2.0.1",
     "tailwindcss": "^4.3.0"
   }
 }
