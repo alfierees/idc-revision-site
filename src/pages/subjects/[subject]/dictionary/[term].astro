@@ -1,0 +1,75 @@
+---
+import Layout from "../../../../components/Layout.astro";
+import TabNav from "../../../../components/TabNav.astro";
+import BacklinkList from "../../../../components/BacklinkList.astro";
+import { getCollection, getEntry } from "astro:content";
+import { computeBacklinks } from "../../../../lib/backlinks";
+import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+
+export async function getStaticPaths() {
+  const terms = await getCollection("terms", (t) => t.data.in_scope);
+  return terms.map((t) => {
+    const slug = t.id.split("/").pop()!;
+    return { params: { subject: t.data.subject, term: slug } };
+  });
+}
+
+const subjectSlug = Astro.params.subject!;
+const termSlug = Astro.params.term!;
+
+const termEntry = await getEntry("terms", `${subjectSlug}/${termSlug}`);
+if (!termEntry) throw new Error(`term ${subjectSlug}/${termSlug} not found`);
+
+const allTerms = await getCollection("terms", (t) => t.data.subject === subjectSlug);
+const slugOf = (id: string) => id.split("/").pop()!;
+const knownSlugs = new Set(allTerms.map((t) => slugOf(t.id)));
+const aliases = new Map<string, string>();
+for (const t of allTerms) {
+  const s = slugOf(t.id);
+  for (const a of t.data.aliases) aliases.set(a.toLowerCase(), s);
+}
+
+const html = await renderMarkdownString(termEntry.body ?? "", subjectSlug, knownSlugs);
+
+const recipes = (await getCollection("recipes", (r) => r.data.subject === subjectSlug))
+  .map((r) => ({ slug: slugOf(r.id), title: r.data.title, body: r.body ?? "" }));
+const problemSets = (await getCollection("problem-sets", (p) => p.data.subject === subjectSlug))
+  .map((p) => ({ slug: slugOf(p.id), title: p.data.title, questions: p.data.questions }));
+const pastPapers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug))
+  .map((p) => ({ slug: slugOf(p.id), title: p.data.title, questions: p.data.questions }));
+
+const backlinks = computeBacklinks({
+  subject: subjectSlug, knownTermSlugs: knownSlugs, aliases,
+  recipes, problemSets, pastPapers,
+});
+const entries = backlinks.get(termSlug) ?? [];
+
+const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+---
+<Layout title={`${termEntry.data.title} · ${subject.data.title}`}>
+  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
+  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
+  <TabNav subject={subjectSlug} active="dictionary" />
+  <article class="reading">
+    <h2 class="font-display text-2xl text-ink" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{termEntry.data.title}</h2>
+    {termEntry.data.aliases.length > 0 && (
+      <p class="mt-1 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Also known as · {termEntry.data.aliases.join(" · ")}</p>
+    )}
+    <div class="term-body mt-6 text-base text-ink" set:html={html} />
+  </article>
+  <section class="mt-12 border-t border-rule pt-6 reading">
+    <h3 class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">Appears in</h3>
+    <div class="mt-3"><BacklinkList subject={subjectSlug} entries={entries} /></div>
+  </section>
+</Layout>
+
+<style is:global>
+  .term-body a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .term-body p { margin-top: 1rem; }
+  .term-body strong { color: var(--color-ink); }
+</style>

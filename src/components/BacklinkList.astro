@@ -1,0 +1,25 @@
+---
+import type { BacklinkEntry } from "../lib/backlinks";
+interface Props { subject: string; entries: BacklinkEntry[]; }
+const { subject, entries } = Astro.props;
+
+function urlOf(e: BacklinkEntry, subject: string) {
+  if (e.type === "recipe")      return `/subjects/${subject}/recipes/${e.ref}`;
+  if (e.type === "problem-set") return `/subjects/${subject}/problem-sets/${e.ref}#${e.question}`;
+  return `/subjects/${subject}/past-papers/${e.ref}#${e.question}`;
+}
+function labelOf(e: BacklinkEntry) {
+  if (e.type === "recipe")      return `Recipe · ${e.title}`;
+  if (e.type === "problem-set") return `${e.title} · ${e.question}`;
+  return `${e.title} · ${e.question}`;
+}
+---
+{entries.length === 0 ? (
+  <p class="font-ui text-sm text-ink-muted italic">No references yet.</p>
+) : (
+  <ul class="space-y-1">
+    {entries.map((e) => (
+      <li><a href={urlOf(e, subject)} class="font-ui text-sm text-ink-soft hover:text-accent transition-colors">{labelOf(e)}</a></li>
+    ))}
+  </ul>
+)}
