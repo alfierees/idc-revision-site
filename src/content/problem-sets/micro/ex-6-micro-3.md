@@ -1,6 +1,17 @@
 ---
-title: "EX-6 - Micro 3"
+title: "EX-6"
 subject: micro
+tags:
+  - microeconomics
+  - assignment-solution
+  - game-theory
+  - nash-equilibrium
+  - simultaneous-games
+  - normal-form-game
+  - best-response
+  - travellers-dilemma
+  - coordination-game
+  - iterated-dominance
 ai_drafted: true
 questions:
   - id: "1a"

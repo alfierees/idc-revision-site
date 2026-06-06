@@ -1,6 +1,16 @@
 ---
-title: "Exercise 4 — Micro 3"
+title: "EX-4"
 subject: micro
+tags:
+  - microeconomics
+  - assignment-solution
+  - monopoly
+  - elasticity
+  - lerner-index
+  - revenue-maximisation
+  - lump-sum-tax
+  - per-unit-tax
+  - tax-incidence
 source_doc: /papers/micro/ex-4-micro-3.docx
 ai_drafted: true
 questions:

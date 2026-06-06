@@ -1,6 +1,18 @@
 ---
-title: "EX-7 - Micro 3"
+title: "EX-7"
 subject: micro
+tags:
+  - microeconomics
+  - assignment-solution
+  - bertrand-competition
+  - price-competition
+  - nash-equilibrium
+  - limit-pricing
+  - monopolistic-competition
+  - differentiated-products
+  - double-marginalization
+  - complementary-goods
+  - sequential-pricing
 ai_drafted: true
 questions:
   - id: "1a"

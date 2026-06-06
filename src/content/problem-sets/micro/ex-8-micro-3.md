@@ -1,6 +1,17 @@
 ---
-title: "EX-8 - Micro 3"
+title: "EX-8"
 subject: micro
+tags:
+  - microeconomics
+  - assignment-solution
+  - cournot-competition
+  - stackelberg-model
+  - quantity-competition
+  - nash-equilibrium
+  - cartel
+  - collusion
+  - merger
+  - common-resource
 ai_drafted: true
 questions:
   - id: "1a"

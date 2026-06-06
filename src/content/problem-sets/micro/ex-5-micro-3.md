@@ -1,6 +1,17 @@
 ---
-title: "Exercise 5 — Micro 3"
+title: "EX-5"
 subject: micro
+tags:
+  - microeconomics
+  - assignment-solution
+  - price-discrimination
+  - third-degree-price-discrimination
+  - two-part-tariff
+  - monopoly
+  - consumer-surplus
+  - screening
+  - information-rent
+  - constant-elasticity
 source_doc: /papers/micro/ex-5-micro-3.docx
 ai_drafted: true
 questions:

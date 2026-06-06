@@ -5,7 +5,7 @@ import CollapsibleSolution from "../../../../components/CollapsibleSolution.astr
 import StatusPill from "../../../../components/StatusPill";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
-import { buildLinkMap } from "../../../../lib/known-links";
+import { buildLinkMap, linkHref } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const sets = await getCollection("problem-sets");
@@ -35,7 +35,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
   <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
   <TabNav subject={subjectSlug} active="problem-sets" />
 
-  <div class="mb-6 flex items-baseline justify-between">
+  <div class="mb-3 flex items-baseline justify-between">
     <h2 class="font-display text-2xl" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{set.data.title}</h2>
     {set.data.source_doc && (
       <a href={set.data.source_doc} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent underline underline-offset-4">
@@ -43,6 +43,23 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       </a>
     )}
   </div>
+
+  {set.data.tags.length > 0 && (
+    <ul class="mb-6 flex flex-wrap gap-2 list-none p-0">
+      {set.data.tags.map((tag) => {
+        const kind = links.get(tag);
+        return kind ? (
+          <li>
+            <a href={linkHref(subjectSlug, tag, kind)} class="tag tag-link">#{tag}</a>
+          </li>
+        ) : (
+          <li>
+            <span class="tag tag-muted">#{tag}</span>
+          </li>
+        );
+      })}
+    </ul>
+  )}
 
   <ol class="space-y-6 reading list-none p-0">
     {rendered.map((q) => (
@@ -64,5 +81,28 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
+  }
+  .tag {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-card);
+    transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
+  }
+  .tag-link {
+    color: var(--color-accent);
+    cursor: pointer;
+  }
+  .tag-link:hover {
+    border-color: var(--color-accent);
+    background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-card));
+  }
+  .tag-muted {
+    color: var(--color-ink-muted);
+    font-style: italic;
   }
 </style>

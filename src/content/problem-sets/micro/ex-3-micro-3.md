@@ -1,6 +1,14 @@
 ---
-title: "EX-3 - Micro 3"
+title: "EX-3"
 subject: micro
+tags:
+  - microeconomics
+  - assignment-solution
+  - opportunity-cost
+  - sunk-cost
+  - cost-functions
+  - bundling
+  - price-discrimination
 source_doc: /papers/micro/ex-3-micro-3.docx
 ai_drafted: true
 questions:

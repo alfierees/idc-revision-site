@@ -3,6 +3,16 @@ import { getCollection } from "astro:content";
 export type LinkKind = "term" | "recipe" | "problem-set";
 export type LinkMap = Map<string, LinkKind>;
 
+export const KIND_TO_PATH: Record<LinkKind, string> = {
+  term: "dictionary",
+  recipe: "recipes",
+  "problem-set": "problem-sets",
+};
+
+export function linkHref(subject: string, slug: string, kind: LinkKind): string {
+  return `/subjects/${subject}/${KIND_TO_PATH[kind]}/${slug}`;
+}
+
 function slugOf(id: string): string {
   return id.split("/").pop()!;
 }

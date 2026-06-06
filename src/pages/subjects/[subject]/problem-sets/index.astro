@@ -10,7 +10,7 @@ export async function getStaticPaths() {
 
 const subjectSlug = Astro.params.subject!;
 const sets = (await getCollection("problem-sets", (p) => p.data.subject === subjectSlug))
-  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+  .sort((a, b) => a.data.title.localeCompare(b.data.title, undefined, { numeric: true }));
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---

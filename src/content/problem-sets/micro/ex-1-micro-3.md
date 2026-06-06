@@ -1,6 +1,14 @@
 ---
-title: "EX-1 - Micro 3"
+title: "EX-1"
 subject: micro
+tags:
+  - microeconomics
+  - assignment-solution
+  - adverse-selection
+  - insurance
+  - lemons-market
+  - rational-expectations-equilibrium
+  - screening
 source_doc: /papers/micro/ex-1-micro-3.docx
 ai_drafted: true
 questions:

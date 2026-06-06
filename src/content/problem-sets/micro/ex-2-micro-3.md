@@ -1,6 +1,11 @@
 ---
-title: "EX-2 - Micro 3"
+title: "EX-2"
 subject: micro
+tags:
+  - microeconomics
+  - assignment-solution
+  - insurance
+  - adverse-selection
 source_doc: /papers/micro/ex-2-micro-3.docx
 ai_drafted: true
 questions:
