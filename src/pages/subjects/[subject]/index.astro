@@ -1,0 +1,10 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const subjects = await getCollection("subjects");
+  return subjects.map((s) => ({ params: { subject: s.data.slug } }));
+}
+
+return Astro.redirect(`/subjects/${Astro.params.subject}/dictionary`);
+---

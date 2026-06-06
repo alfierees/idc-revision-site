@@ -1,0 +1,35 @@
+---
+interface Props {
+  subject: string;
+  active: "dictionary" | "recipes" | "problem-sets" | "past-papers";
+}
+const { subject, active } = Astro.props;
+
+const tabs = [
+  { id: "dictionary",   label: "Dictionary" },
+  { id: "recipes",      label: "Recipes" },
+  { id: "problem-sets", label: "Problem Sets" },
+  { id: "past-papers",  label: "Past Papers" },
+] as const;
+---
+<nav class="border-b border-rule mb-10">
+  <ul class="flex gap-8">
+    {tabs.map((t) => {
+      const isActive = active === t.id;
+      return (
+        <li>
+          <a
+            href={`/subjects/${subject}/${t.id}`}
+            aria-current={isActive ? "page" : undefined}
+            class={`relative inline-block py-3 font-ui text-sm tracking-wide transition-colors duration-150 ${isActive ? "text-ink" : "text-ink-muted hover:text-ink"}`}
+          >
+            {t.label}
+            {isActive && (
+              <span class="absolute left-0 right-0 -bottom-px h-[2px] bg-accent" aria-hidden="true"></span>
+            )}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>
