@@ -8,13 +8,15 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import wikiLinkPlugin from 'remark-wiki-link';
 
+import preact from '@astrojs/preact';
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
 
-  integrations: [mdx()],
+  integrations: [mdx(), preact()],
 
   markdown: {
     remarkPlugins: [
