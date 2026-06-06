@@ -1,0 +1,68 @@
+---
+import Layout from "../../../../components/Layout.astro";
+import TabNav from "../../../../components/TabNav.astro";
+import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
+import StatusPill from "../../../../components/StatusPill";
+import { getCollection, getEntry } from "astro:content";
+import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+
+export async function getStaticPaths() {
+  const sets = await getCollection("problem-sets");
+  return sets.map((p) => {
+    const slug = p.id.split("/").pop()!;
+    return { params: { subject: p.data.subject, set: slug } };
+  });
+}
+
+const subjectSlug = Astro.params.subject!;
+const setSlug = Astro.params.set!;
+const set = await getEntry("problem-sets", `${subjectSlug}/${setSlug}`);
+if (!set) throw new Error(`problem set ${subjectSlug}/${setSlug} not found`);
+
+const allTerms = await getCollection("terms", (t) => t.data.subject === subjectSlug);
+const knownSlugs = new Set(allTerms.map((t) => t.id.split("/").pop()!));
+
+const rendered = await Promise.all(set.data.questions.map(async (q) => ({
+  id: q.id,
+  questionHtml: await renderMarkdownString(q.text, subjectSlug, knownSlugs),
+  solutionHtml: await renderMarkdownString(q.solution, subjectSlug, knownSlugs),
+})));
+
+const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+---
+<Layout title={`${set.data.title} · ${subject.data.title}`}>
+  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
+  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
+  <TabNav subject={subjectSlug} active="problem-sets" />
+
+  <div class="mb-6 flex items-baseline justify-between">
+    <h2 class="font-display text-2xl" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{set.data.title}</h2>
+    {set.data.source_pdf && (
+      <a href={set.data.source_pdf} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent underline underline-offset-4">
+        Original PDF ↗
+      </a>
+    )}
+  </div>
+
+  <ol class="space-y-6 reading list-none p-0">
+    {rendered.map((q) => (
+      <li id={q.id} class="scroll-mt-24 rounded border border-rule bg-card p-6">
+        <div class="flex items-start justify-between gap-4">
+          <span class="font-mono text-sm text-ink-soft tracking-wide">{q.id}</span>
+          <StatusPill client:load subject={subjectSlug} kind="problem-set" refSlug={setSlug} question={q.id} />
+        </div>
+        <div class="mt-3 text-base text-ink question-body" set:html={q.questionHtml} />
+        <CollapsibleSolution html={q.solutionHtml} />
+      </li>
+    ))}
+  </ol>
+</Layout>
+
+<style is:global>
+  .question-body a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+</style>
