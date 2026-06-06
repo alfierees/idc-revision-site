@@ -5,6 +5,7 @@ import CollapsibleSolution from "../../../../components/CollapsibleSolution.astr
 import StatusPill from "../../../../components/StatusPill";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+import { buildLinkMap } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const sets = await getCollection("problem-sets");
@@ -19,13 +20,12 @@ const setSlug = Astro.params.set!;
 const set = await getEntry("problem-sets", `${subjectSlug}/${setSlug}`);
 if (!set) throw new Error(`problem set ${subjectSlug}/${setSlug} not found`);
 
-const allTerms = await getCollection("terms", (t) => t.data.subject === subjectSlug);
-const knownSlugs = new Set(allTerms.map((t) => t.id.split("/").pop()!));
+const links = await buildLinkMap(subjectSlug);
 
 const rendered = await Promise.all(set.data.questions.map(async (q) => ({
   id: q.id,
-  questionHtml: await renderMarkdownString(q.text, subjectSlug, knownSlugs),
-  solutionHtml: await renderMarkdownString(q.solution, subjectSlug, knownSlugs),
+  questionHtml: await renderMarkdownString(q.text, subjectSlug, links),
+  solutionHtml: await renderMarkdownString(q.solution, subjectSlug, links),
 })));
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
@@ -51,7 +51,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
           <span class="font-mono text-sm text-ink-soft tracking-wide">{q.id}</span>
           <StatusPill client:load subject={subjectSlug} kind="problem-set" refSlug={setSlug} question={q.id} />
         </div>
-        <div class="mt-3 text-base text-ink question-body" set:html={q.questionHtml} />
+        <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
         <CollapsibleSolution html={q.solutionHtml} />
       </li>
     ))}

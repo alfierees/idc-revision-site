@@ -5,6 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 import mdx from '@astrojs/mdx';
 import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm';
+import remarkCallouts from 'remark-callouts';
 import rehypeKatex from 'rehype-katex';
 import wikiLinkPlugin from 'remark-wiki-link';
 
@@ -20,7 +22,9 @@ export default defineConfig({
 
   markdown: {
     remarkPlugins: [
+      remarkGfm,
       remarkMath,
+      remarkCallouts,
       [
         wikiLinkPlugin,
         {

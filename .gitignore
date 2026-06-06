@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # ingest pipeline ephemeral output
 scripts/ingest/.queue/
+
+# ad-hoc backups from interactive ingest re-runs
+scripts/ingest/.backup-pre-vault-solutions/
