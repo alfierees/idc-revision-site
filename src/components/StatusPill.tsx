@@ -4,7 +4,7 @@ import { readStatus, cycleStatus, statusKey, type StatusValue } from "../lib/sta
 interface Props {
   subject: string;
   kind: "problem-set" | "past-paper";
-  ref: string;
+  refSlug: string;
   question: string;
 }
 
@@ -22,8 +22,8 @@ const LABEL: Record<StatusValue, string> = {
   skipped: "Skipped",
 };
 
-export default function StatusPill({ subject, kind, ref, question }: Props) {
-  const key = statusKey(subject, kind, ref, question);
+export default function StatusPill({ subject, kind, refSlug, question }: Props) {
+  const key = statusKey(subject, kind, refSlug, question);
   const [value, setValue] = useState<StatusValue>("untried");
   const [pulse, setPulse] = useState(false);
 
