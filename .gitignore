@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# ingest pipeline ephemeral output
+scripts/ingest/.queue/
