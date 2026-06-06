@@ -17,9 +17,9 @@ export function detectRecipes(markdown: string): RecipeCandidate[] {
     const title = h[2];
     const isVerbLed = VERB_LED.test(title);
 
-    // Find the first ordered-list item within the next 4 non-blank lines.
+    // Find the first ordered-list item within the next 3 non-blank lines.
     let j = i + 1, seenLines = 0, listStart = -1;
-    while (j < lines.length && seenLines < 4) {
+    while (j < lines.length && seenLines < 3) {
       if (lines[j].trim().length === 0) { j++; continue; }
       if (ORDERED_ITEM.test(lines[j].trim())) { listStart = j; break; }
       seenLines++;
