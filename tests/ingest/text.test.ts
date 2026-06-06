@@ -11,6 +11,16 @@ describe("slugify", () => {
   it("collapses repeated dashes and trims edges", () => {
     expect(slugify("  ---hello---world---  ")).toBe("hello-world");
   });
+
+  it("preserves accented characters via Unicode normalisation", () => {
+    expect(slugify("Léontief Préférence")).toBe("leontief-preference");
+    expect(slugify("São Paulo Model")).toBe("sao-paulo-model");
+  });
+
+  it("returns empty string for inputs with no alphanumerics", () => {
+    expect(slugify("")).toBe("");
+    expect(slugify("---")).toBe("");
+  });
 });
 
 describe("extractImageRefs", () => {
@@ -26,5 +36,11 @@ describe("extractImageRefs", () => {
 
   it("returns empty array when no images", () => {
     expect(extractImageRefs("just text")).toEqual([]);
+  });
+
+  it("handles Obsidian sized embeds and additional image extensions", () => {
+    expect(extractImageRefs("![[diagram.png|400]]")).toEqual(["diagram.png"]);
+    expect(extractImageRefs("![[photo.heic]]")).toEqual(["photo.heic"]);
+    expect(extractImageRefs("![](modern.avif)")).toEqual(["modern.avif"]);
   });
 });
