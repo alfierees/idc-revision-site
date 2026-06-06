@@ -1,0 +1,82 @@
+@import "tailwindcss";
+@import "./fonts.css";
+/* TODO Task 3: uncomment once katex is installed */
+/* @import "katex/dist/katex.min.css"; */
+
+@theme {
+  /* Typography */
+  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-body:    "Source Serif 4 Variable", ui-serif, Georgia, serif;
+  --font-ui:      "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono Variable", ui-monospace, monospace;
+
+  /* Colours — editorial / academic palette */
+  --color-paper:        #faf7f2;
+  --color-paper-deep:   #f4efe6;
+  --color-card:         #ffffff;
+  --color-rule:         #e6dfd2;
+  --color-rule-strong:  #cfc6b3;
+  --color-ink:          #1c1814;
+  --color-ink-soft:     #4a423a;
+  --color-ink-muted:    #8a8275;
+
+  --color-accent:       #b8451f;
+  --color-accent-soft:  #f2dccf;
+
+  --color-status-done:        #5a6b3a;
+  --color-status-wrong:       #9a3a32;
+  --color-status-skipped:     #9c7a1f;
+  --color-status-done-bg:     #e9ecd9;
+  --color-status-wrong-bg:    #f1d9d6;
+  --color-status-skipped-bg:  #f1e6c8;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    color-scheme: light;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-feature-settings: "kern", "liga", "calt";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-feature-settings: "ss01", "kern", "liga";
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--color-ink);
+  }
+  h1 { font-variation-settings: "opsz" 96, "wght" 500; }
+  h2 { font-variation-settings: "opsz" 72, "wght" 500; }
+  h3 { font-variation-settings: "opsz" 48, "wght" 500; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .katex { font-size: 1.05em; }
+  .katex-display { margin: 1.25rem 0; }
+
+  .reading { max-width: 68ch; }
+
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
