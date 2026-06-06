@@ -63,6 +63,24 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
     }
   }
 
+  // Also scan vault Assignments/*.md for image refs — solution notes often
+  // embed diagrams (e.g. game trees, indifference curves) that need to land
+  // in public/images/<subject>/ so the drafted problem-set can reference them.
+  const assignmentsDir = join(cfg.vaultPath, "Assignments");
+  if (existsSync(assignmentsDir)) {
+    const files = (await readdir(assignmentsDir)).filter(f => f.endsWith(".md"));
+    for (const f of files) {
+      const md = await readFile(join(assignmentsDir, f), "utf8");
+      for (const img of extractImageRefs(md)) {
+        const fromAbs = img.startsWith("/") ? img : join(cfg.vaultPath, "Attachments", basename(img));
+        if (!existsSync(fromAbs)) continue;
+        const safe = slugify(basename(img).replace(/\.[^.]+$/, "")) + extname(img);
+        const toAbs = join(destContentRoot, "..", "..", "public", "images", cfg.slug, safe);
+        imageOps.push({ from: fromAbs, to: toAbs });
+      }
+    }
+  }
+
   if (existsSync(cfg.sourceDocPath)) {
     const docFiles = await collectDocs(cfg.sourceDocPath);
     const vaultSolutions = await listVaultSolutions(cfg.vaultPath);
