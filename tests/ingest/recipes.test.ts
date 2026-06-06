@@ -31,4 +31,11 @@ describe("detectRecipes", () => {
     const recipes = detectRecipes(md);
     expect(recipes.find(r => r.title === "A heading with only two list items")).toBeUndefined();
   });
+
+  it("detects procedural keywords anywhere in the heading (not just at the start)", async () => {
+    const md = await readFile(fixturePath, "utf8");
+    const recipes = detectRecipes(md);
+    const titles = recipes.map(r => r.title);
+    expect(titles).toContain("2.4 The Method for Bayesian inference");
+  });
 });

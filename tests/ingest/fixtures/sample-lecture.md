@@ -25,3 +25,10 @@ Some prose.
 
 1. First.
 2. Second.
+
+## 2.4 The Method for Bayesian inference
+
+1. State your prior.
+2. Observe data.
+3. Compute the posterior via Bayes' rule.
+4. Update.

@@ -3,7 +3,7 @@ export interface RecipeCandidate {
   stepCount: number;
 }
 
-const VERB_LED = /^(to\s+|how\s+to|steps?\s+|procedure|method)/i;
+const VERB_LED = /^(?:to\s+|how\s+to)|\b(?:steps?|procedure|method|mechanism|algorithm|derivation)\b/i;
 const HEADING = /^(#{2,3})\s+(.+?)\s*$/;
 const ORDERED_ITEM = /^\d+\.\s+/;
 
@@ -32,7 +32,7 @@ export function detectRecipes(markdown: string): RecipeCandidate[] {
       stepCount++; k++;
     }
 
-    if (isVerbLed || stepCount >= 3) {
+    if (isVerbLed && stepCount >= 3) {
       out.push({ title, stepCount });
     }
   }
