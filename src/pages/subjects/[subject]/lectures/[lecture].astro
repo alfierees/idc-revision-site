@@ -5,6 +5,7 @@ import LectureSidebar from "../../../../components/LectureSidebar.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
+import { decodeHtmlEntities } from "../../../../lib/html-entities";
 
 export async function getStaticPaths() {
   const lectures = await getCollection("lectures", (l) => l.data.in_scope);
@@ -36,7 +37,7 @@ let m: RegExpExecArray | null;
 while ((m = sectionRe.exec(html)) !== null) {
   sections.push({
     id: m[2],
-    text: m[3].replace(/<[^>]+>/g, "").trim(),
+    text: decodeHtmlEntities(m[3].replace(/<[^>]+>/g, "")).trim(),
     level: m[1] === "h2" ? 2 : 3,
   });
 }
