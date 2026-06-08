@@ -28,6 +28,10 @@ const rendered = await Promise.all(set.data.questions.map(async (q) => ({
   solutionHtml: await renderMarkdownString(q.solution, subjectSlug, links),
 })));
 
+const bodyHtml = set.body?.trim()
+  ? await renderMarkdownString(set.body, subjectSlug, links)
+  : null;
+
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
 <Layout title={`${set.data.title} · ${subject.data.title}`}>
@@ -73,6 +77,10 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       </li>
     ))}
   </ol>
+
+  {bodyHtml && (
+    <section class="mt-8 rounded border border-rule bg-card p-6 question-body prose-card" set:html={bodyHtml} />
+  )}
 </Layout>
 
 <style is:global>
