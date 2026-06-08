@@ -82,27 +82,4 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
   }
-  .tag {
-    display: inline-block;
-    font-family: var(--font-ui);
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    padding: 0.18rem 0.55rem;
-    border-radius: 999px;
-    border: 1px solid var(--color-rule);
-    background-color: var(--color-card);
-    transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
-  }
-  .tag-link {
-    color: var(--color-accent);
-    cursor: pointer;
-  }
-  .tag-link:hover {
-    border-color: var(--color-accent);
-    background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-card));
-  }
-  .tag-muted {
-    color: var(--color-ink-muted);
-    font-style: italic;
-  }
 </style>
