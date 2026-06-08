@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { rewriteWikiHrefs } from "../src/lib/wikilink-rewrite";
-import type { LinkMap } from "../src/lib/known-links";
+import { resolveLink, type LinkMap } from "../src/lib/known-links";
 import { renderMarkdownString } from "../src/lib/render-markdown-string";
 
 describe("rewriteWikiHrefs", () => {
@@ -66,6 +66,46 @@ describe("renderMarkdownString — heading ids", () => {
       "micro", links,
     );
     expect(html).toContain('href="/subjects/micro/lectures/topic-2-x#cournot-1838"');
+  });
+});
+
+describe("resolveLink — prefix fallback", () => {
+  it("auto-resolves a single-word tag to the longer canonical term", () => {
+    const map: LinkMap = new Map([
+      ["cournot-competition", { kind: "term", slug: "cournot-competition" }],
+    ]);
+    expect(resolveLink(map, "cournot")?.slug).toBe("cournot-competition");
+  });
+
+  it("returns undefined when multiple canonicals share the prefix (ambiguous)", () => {
+    const map: LinkMap = new Map([
+      ["fixed-effects", { kind: "term", slug: "fixed-effects" }],
+      ["time-fixed-effects", { kind: "term", slug: "time-fixed-effects" }],
+    ]);
+    // "fixed" prefix-matches "fixed-effects" only (not "time-fixed-effects"
+    // which doesn't START with "fixed-"). So this should resolve to fixed-effects.
+    expect(resolveLink(map, "fixed")?.slug).toBe("fixed-effects");
+  });
+
+  it("prefers exact match over prefix fallback", () => {
+    const map: LinkMap = new Map([
+      ["panel-data", { kind: "term", slug: "panel-data" }],
+      ["panel-data-extras", { kind: "term", slug: "panel-data-extras" }],
+    ]);
+    expect(resolveLink(map, "panel-data")?.slug).toBe("panel-data");
+  });
+
+  it("does not match against alias entries (only canonical)", () => {
+    // Setup: alias "ols" -> canonical "ols-estimator"; another canonical "ols-extras".
+    // Tag "ols" should hit the alias direct (highest precedence), not get confused
+    // by prefix-fallback (which would otherwise see two candidates: "ols-estimator"
+    // and "ols-extras") and return undefined.
+    const map: LinkMap = new Map([
+      ["ols-estimator", { kind: "term", slug: "ols-estimator" }],
+      ["ols-extras", { kind: "term", slug: "ols-extras" }],
+      ["ols", { kind: "term", slug: "ols-estimator" }],   // alias
+    ]);
+    expect(resolveLink(map, "ols")?.slug).toBe("ols-estimator");
   });
 });
 

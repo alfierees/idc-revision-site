@@ -22,7 +22,22 @@ export function linkHref(subject: string, target: LinkTarget): string {
  * were registered in lowercase form.
  */
 export function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
-  return links.get(slugifyAlias(raw));
+  const slug = slugifyAlias(raw);
+  const direct = links.get(slug);
+  if (direct) return direct;
+  // Prefix-fallback: if exactly one CANONICAL entry starts with `<slug>-`, use it.
+  // This lets short tags like "cournot" auto-resolve to "cournot-competition"
+  // without needing an explicit alias. Returns undefined on ambiguity (e.g.
+  // "fixed" with both "fixed-effects" and "time-fixed-effects" present).
+  const prefix = slug + "-";
+  let candidate: LinkTarget | undefined;
+  for (const [key, target] of links) {
+    if (key.startsWith(prefix) && target.slug === key) {
+      if (candidate) return undefined; // ambiguous, mute
+      candidate = target;
+    }
+  }
+  return candidate;
 }
 
 function slugOf(id: string): string {
