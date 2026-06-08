@@ -27,9 +27,18 @@ const { questions } = Astro.props;
 
 <style>
   .question-sidebar {
-    position: sticky;
-    top: 5rem;
-    max-height: calc(100vh - 6rem);
-    overflow-y: auto;
+    /* Inline on small screens — the sticky-sidebar pattern relies on the
+       grid putting the sidebar in its own column, which only happens at
+       lg+ (see [set].astro's pset-grid). On smaller viewports stickiness
+       just makes the sidebar bleed over the cards as you scroll. */
+    background: var(--color-paper, transparent);
+  }
+  @media (min-width: 1024px) {
+    .question-sidebar {
+      position: sticky;
+      top: 5rem;
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
+    }
   }
 </style>
