@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 
-export type LinkKind = "term" | "recipe" | "problem-set";
+export type LinkKind = "term" | "recipe" | "problem-set" | "lecture";
 export type LinkTarget = { kind: LinkKind; slug: string };
 export type LinkMap = Map<string, LinkTarget>;
 
@@ -8,6 +8,7 @@ export const KIND_TO_PATH: Record<LinkKind, string> = {
   term: "dictionary",
   recipe: "recipes",
   "problem-set": "problem-sets",
+  lecture: "lectures",
 };
 
 export function linkHref(subject: string, target: LinkTarget): string {
@@ -48,7 +49,8 @@ function slugifyAlias(s: string): string {
  * slug but never override an existing entry.
  */
 export async function buildLinkMap(subject: string): Promise<LinkMap> {
-  const [terms, recipes, sets] = await Promise.all([
+  const [lectures, terms, recipes, sets] = await Promise.all([
+    getCollection("lectures", (l) => l.data.subject === subject),
     getCollection("terms", (t) => t.data.subject === subject),
     getCollection("recipes", (r) => r.data.subject === subject),
     getCollection("problem-sets", (p) => p.data.subject === subject),
@@ -57,6 +59,17 @@ export async function buildLinkMap(subject: string): Promise<LinkMap> {
   for (const s of sets) {
     const slug = slugOf(s.id);
     map.set(slug, { kind: "problem-set", slug });
+  }
+  for (const l of lectures) {
+    const slug = slugOf(l.id);
+    map.set(slug, { kind: "lecture", slug });
+    const aliases = (l.data as { aliases?: string[] }).aliases ?? [];
+    for (const a of aliases) {
+      const aslug = slugifyAlias(a);
+      if (aslug && !map.has(aslug)) {
+        map.set(aslug, { kind: "lecture", slug });
+      }
+    }
   }
   for (const r of recipes) {
     const slug = slugOf(r.id);
