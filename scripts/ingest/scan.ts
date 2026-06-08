@@ -18,6 +18,9 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
   const requireSolutionKeyword = cfg.requireSolutionKeyword ?? true;
   const assignmentsDirName = cfg.assignmentsDir ?? "Assignments";
 
+  const existingTermSlugs = await loadExistingTermSlugs(destContentRoot, cfg.slug);
+  const existingRecipeSlugs = await loadExistingRecipeSlugs(destContentRoot, cfg.slug);
+
   const registryPath = join(cfg.vaultPath, "_Wiki-Link Registry.md");
   if (existsSync(registryPath)) {
     const reg = parseRegistry(await readFile(registryPath, "utf8"));
@@ -26,6 +29,7 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
       const slug = slugify(entry.title);
       const destFile = join(destContentRoot, "terms", cfg.slug, `${slug}.md`);
       if (existsSync(destFile)) continue;
+      if (existingTermSlugs.has(slug)) continue;
       pending.push({
         kind: "term",
         slug,
@@ -61,6 +65,7 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
         const slug = slugify(r.title);
         const destFile = join(destContentRoot, "recipes", cfg.slug, `${slug}.md`);
         if (existsSync(destFile)) continue;
+        if (recipeSlugSubsumed(slug, existingRecipeSlugs)) continue;
         pending.push({
           kind: "recipe",
           slug,
@@ -194,6 +199,78 @@ function extractFrontmatterTitle(md: string): string | null {
   if (!m) return null;
   const titleMatch = m[1].match(/^title:\s*['"]?(.+?)['"]?\s*$/m);
   return titleMatch ? titleMatch[1] : null;
+}
+
+function extractFrontmatterAliases(md: string): string[] {
+  const m = md.match(/^---\s*\n([\s\S]*?)\n---/);
+  if (!m) return [];
+  const aliasMatch = m[1].match(/^aliases:\s*\[(.*)\]\s*$/m);
+  if (!aliasMatch) return [];
+  return [...aliasMatch[1].matchAll(/["']([^"']+)["']/g)].map(g => g[1]);
+}
+
+// Build the set of slugs an existing term file would resolve to: its filename
+// slug, its frontmatter title slug, and each of its frontmatter aliases. Mirrors
+// the alias-aware resolution buildLinkMap() does at render time, so the registry
+// pass doesn't re-queue terms that are already canonical under a different name.
+async function loadExistingTermSlugs(destContentRoot: string, subjectSlug: string): Promise<Set<string>> {
+  const dir = join(destContentRoot, "terms", subjectSlug);
+  const out = new Set<string>();
+  if (!existsSync(dir)) return out;
+  const files = (await readdir(dir)).filter(f => f.endsWith(".md"));
+  for (const f of files) {
+    out.add(slugify(f.replace(/\.md$/, "")));
+    const md = await readFile(join(dir, f), "utf8");
+    const title = extractFrontmatterTitle(md);
+    if (title) out.add(slugify(title));
+    for (const a of extractFrontmatterAliases(md)) out.add(slugify(a));
+  }
+  return out;
+}
+
+async function loadExistingRecipeSlugs(destContentRoot: string, subjectSlug: string): Promise<string[]> {
+  const dir = join(destContentRoot, "recipes", subjectSlug);
+  if (!existsSync(dir)) return [];
+  return (await readdir(dir))
+    .filter(f => f.endsWith(".md"))
+    .map(f => slugify(f.replace(/\.md$/, "")));
+}
+
+// Recipes have no aliases in the schema, so canonicalisation is heuristic: if
+// the existing recipe's content-tokens appear as a contiguous run inside the
+// candidate's content-tokens (or vice-versa), treat them as the same recipe.
+// Stop-words are stripped so lecture variants like "to find a nash equilibrium"
+// and "step-by-step recipe for computing marginal effects" reduce to the same
+// core tokens as their canonical recipe slugs.
+const RECIPE_STOP_WORDS = new Set([
+  "a", "an", "the", "of", "for", "to", "in", "on", "by", "with", "and",
+  "how", "step", "steps", "recipe", "method", "procedure",
+]);
+
+function recipeSlugSubsumed(candidate: string, existing: string[]): boolean {
+  const candTokens = contentTokens(candidate);
+  if (candTokens.length === 0) return false;
+  for (const e of existing) {
+    const eTokens = contentTokens(e);
+    if (eTokens.length === 0) continue;
+    if (containsContiguous(candTokens, eTokens) || containsContiguous(eTokens, candTokens)) return true;
+  }
+  return false;
+}
+
+function contentTokens(slug: string): string[] {
+  return slug.split("-").filter(t => t && !RECIPE_STOP_WORDS.has(t));
+}
+
+function containsContiguous(haystack: string[], needle: string[]): boolean {
+  if (needle.length === 0 || needle.length > haystack.length) return false;
+  outer: for (let i = 0; i <= haystack.length - needle.length; i++) {
+    for (let j = 0; j < needle.length; j++) {
+      if (haystack[i + j] !== needle[j]) continue outer;
+    }
+    return true;
+  }
+  return false;
 }
 
 // Recursively find .pdf and .docx files but only inside the configured assignments folder

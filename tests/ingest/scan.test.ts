@@ -68,4 +68,32 @@ describe("scan", () => {
       await rm(existing);
     }
   });
+
+  it("skips pending terms already covered by an existing term's aliases", async () => {
+    const existing = join(dest, "terms/pilot/strategic-game.md");
+    await writeFile(
+      existing,
+      `---\ntitle: Strategic Game\naliases: ["Game Theory", "strategic interaction"]\n---\n`
+    );
+    try {
+      const result = await scan(cfg, dest);
+      const titles = result.pending.filter(p => p.kind === "term").map(p => p.title);
+      expect(titles).not.toContain("Game Theory");
+      expect(titles).toContain("Nash Equilibrium");
+    } finally {
+      await rm(existing);
+    }
+  });
+
+  it("skips pending recipes whose slug is subsumed by an existing recipe's tokens", async () => {
+    const existing = join(dest, "recipes/pilot/find-nash-equilibrium.md");
+    await writeFile(existing, "---\ntitle: Finding a Nash equilibrium\nsubject: pilot\n---\n");
+    try {
+      const result = await scan(cfg, dest);
+      const recipes = result.pending.filter(p => p.kind === "recipe").map(p => p.title);
+      expect(recipes).not.toContain("To find a Nash equilibrium");
+    } finally {
+      await rm(existing);
+    }
+  });
 });
