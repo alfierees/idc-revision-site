@@ -44,9 +44,7 @@ describe("renderMarkdownString — heading ids", () => {
       "micro",
       new Map(),
     );
-    // rehype-slug (github-slugger) maps em-dash "—" to "--"; two consecutive
-    // non-word chars are NOT collapsed to a single dash (unlike our slugify).
-    expect(html).toMatch(/<h2[^>]*id="cournot-1838--quantity-competition"/);
+    expect(html).toMatch(/<h2[^>]*id="cournot-1838-quantity-competition"/);
   });
 
   it("adds an id to ### headings", async () => {
