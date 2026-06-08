@@ -79,6 +79,15 @@ function parseFrontmatter(content: string): { body: string; fm: Record<string, u
           fm[key] = items;
           continue;
         }
+      } else if (val.startsWith("[") && val.endsWith("]")) {
+        // Inline JSON-style array: aliases: ["LPM", "binary-outcome"]
+        const inner = val.slice(1, -1);
+        const items: string[] = [];
+        for (const m of inner.matchAll(/"([^"]*)"|'([^']*)'|([^,\s]+)/g)) {
+          const item = (m[1] ?? m[2] ?? m[3] ?? "").trim();
+          if (item) items.push(item);
+        }
+        fm[key] = items;
       } else {
         fm[key] = val.replace(/^["']|["']$/g, "");
       }
@@ -242,7 +251,11 @@ async function findBrokenWikiLinks(subject: string, links: LinkMap): Promise<Bro
         // Strip fragment: [[Page#Section]] → "Page"
         const pagePart = withoutAlias.split("#")[0].trim();
         if (!pagePart) continue; // same-page anchor [[#Foo]] — skip
-        if (!resolveLink(links, pagePart)) {
+        // Match the renderer: the wiki-link plugin's pageResolver runs the
+        // canonical slugify (underscores collapse to hyphens) before lookup.
+        // Audit must do the same or it false-positives on `[[Lec_04-Foo]]`.
+        const pageSlug = slugify(pagePart);
+        if (!resolveLink(links, pageSlug)) {
           results.push({ file: `src/content/${kind}/${subject}/${basename(f)}`, rawLink: inner });
         }
       }
