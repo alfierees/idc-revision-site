@@ -13,6 +13,10 @@ The actuarially fair premium is the *insurer's* expected payout — which is not
 3. The insurer's payout in state $s$ is $p_s \cdot q^{\text{ins}}_s$ at the original market price. Actuarially fair premium $= \sum_s \pi_s p_s q^{\text{ins}}_s$.
 4. The moral-hazard markup is the fair premium *minus* the natural expected loss. A risk-averse individual buys only if their risk premium (the certainty equivalent gap) exceeds this markup.
 
+![](/images/micro/t1-risk-aversion.png)
+
+A concave utility ($U(M) = \sqrt{M}$) sits *above* the expected-utility chord through any two income states. The gap between $\sqrt{\bar M}$ and $E[\sqrt M]$ is the risk premium — what a risk-averse agent will pay above the actuarially fair premium to lock in the certain income.
+
 ## Common pitfalls
 
 - Computing the fair premium from the *uninsured* consumption pattern. The whole point of fair insurance is that the *insurer* breaks even given insured behaviour — including any moral-hazard-induced overconsumption.

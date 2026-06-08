@@ -1,7 +1,7 @@
 ---
 title: Game Theory
 subject: micro
-aliases: []
+aliases: ["simultaneous games"]
 related: ["nash-equilibrium", "normal-form-game", "best-response", "dominated-strategy"]
 source_folder: micro
 ai_drafted: true

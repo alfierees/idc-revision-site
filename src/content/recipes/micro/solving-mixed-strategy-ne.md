@@ -14,6 +14,10 @@ Mixed-strategy Nash Equilibrium is found by the **opponent indifference principl
 4. Report the mixed NE as the pair of probability vectors.
 5. (Optional) Compute each player's expected payoff at the NE; both should equal whichever pure-strategy expected payoff you used in the indifference condition.
 
+![](/images/micro/t3-bos-mixed-br.png)
+
+All three equilibria of Battle of the Sexes in one picture. The blue and red step-functions are each player's best response to the other's probability of choosing Football. They intersect at three points: the two pure NE at the corners $(F,F)$ and $(B,B)$, and the mixed NE at the interior crossing $(p = 2/3,\ q = 1/3)$ — where each player makes the *other* exactly indifferent.
+
 ## Common pitfalls
 
 - Trying to maximise your own expected payoff over your own mixing probability. At a mixed NE you are indifferent — every mixing probability gives the same expected payoff, so calculus over $p$ is meaningless.

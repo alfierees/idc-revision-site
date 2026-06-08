@@ -1,7 +1,7 @@
 ---
 title: Vertical Integration
 subject: micro
-aliases: ["vertical merger"]
+aliases: ["vertical merger", "merger"]
 related: ["double-marginalization", "pricing-externality", "perfect-complements", "two-part-tariff"]
 source_folder: micro
 ai_drafted: true

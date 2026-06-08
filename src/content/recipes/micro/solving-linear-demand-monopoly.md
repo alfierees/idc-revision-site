@@ -14,6 +14,10 @@ The fastest path to a monopoly's profit-maximising $(P^*, Q^*)$ when demand is l
 4. Read $P^*$ off the demand curve: $P^* = A - b Q^*$.
 5. Compute profit $\pi^* = (P^* - AC)\,Q^*$ — and if there's a fixed cost, subtract it.
 
+![](/images/micro/t2-monopoly-mrmc.png)
+
+The monopolist sets $MR = MC$ (purple meets green), then reads the *price* off the demand curve above that quantity — never off the MR curve. The red triangle is the deadweight loss: trades worth more to buyers than they cost to produce, but which don't happen.
+
 ## Common pitfalls
 
 - Reading $P^*$ off the MR curve instead of the demand curve. $MR$ is the marginal-revenue *gradient* of demand; the price the consumer pays sits on the demand curve, not on MR.

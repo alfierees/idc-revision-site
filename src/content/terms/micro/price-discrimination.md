@@ -7,7 +7,9 @@ source_folder: micro
 ai_drafted: true
 ---
 
-**Price discrimination** is the practice of charging different prices for similar goods that do not reflect differences in marginal cost — the goal is to capture more [[Consumer Surplus]]. It comes in three textbook degrees: **1st** ([[First-Degree Price Discrimination|perfect PD]] — charge each consumer their exact reservation price), **2nd** ([[Second-Degree Price Discrimination|self-selecting menu]] when types are unobservable), and **3rd** ([[Third-Degree Price Discrimination|segment-based pricing]] when types are observable).
+**Price discrimination** is the practice of charging different prices for similar goods that do not reflect differences in marginal cost — the goal is to capture more [[Consumer Surplus]]. It comes in three textbook degrees: **1st** ([[First-Degree Price Discrimination|perfect PD]] — charge each consumer their exact reservation price), **2nd** ([[Second-Degree Price Discrimination|self-selecting menu]] when types are unobservable), and **3rd** ([[Third-Degree Price Discrimination|segment-based pricing]] when types are observable). A related strategy is **bundling** — selling two goods together at a single price — which extracts surplus when consumers' reservation values for the goods are negatively correlated.
+
+![](/images/micro/t2-bundling.png)
 
 ## When to use
 

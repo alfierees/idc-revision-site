@@ -1,7 +1,7 @@
 ---
 title: Constant Elasticity Demand
 subject: micro
-aliases: ["iso-elastic demand"]
+aliases: ["iso-elastic demand", "constant elasticity"]
 related: ["lerner-index", "price-discrimination"]
 source_folder: micro
 ai_drafted: true

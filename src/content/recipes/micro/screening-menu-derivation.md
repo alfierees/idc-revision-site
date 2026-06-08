@@ -15,6 +15,10 @@ When consumer types are unobservable, the optimal menu of [[Two-Part Tariff|two-
 5. Take FOCs. The high-type's optimum gives $p_1^* = MC$ (no distortion at the top). The low-type's optimum gives $p_2^* > MC$ (downward distortion).
 6. Compute the final fees, quantities, profit. Verify IC for *both* directions and IR for both types.
 
+![](/images/micro/t2-second-degree.png)
+
+The geometric a-vs-b trade-off: shrinking the poor type's bundle by $\Delta q$ loses revenue $b$ (red, under the low-type demand) but gains $a$ (green, between the two demands) by relaxing the high-type IC. The monopolist keeps cutting while $a > b$ and stops at $a = b$ — the low-type quantity is distorted downward, the high-type quantity is not ("no distortion at the top").
+
 ## Common pitfalls
 
 - Treating both contracts as independent and setting both $p_i = MC$. This violates IC: the high type would prefer the cheap low-type contract and pocket the surplus difference.
