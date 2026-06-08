@@ -26,6 +26,24 @@ function rehypeSlugLocal() {
   };
 }
 
+/**
+ * Pre-pass: convert Obsidian image embeds `![[basename.ext|alias]]` into standard
+ * markdown image syntax pointing at /images/<subject>/<slug>.<ext>. The site's
+ * ingest scan has already copied each vault image to that path using the same
+ * slug algorithm. Alias is treated as alt text when non-numeric, dropped when
+ * numeric (Obsidian's width hint).
+ */
+function rewriteObsidianEmbeds(md: string, subject: string): string {
+  return md.replace(/!\[\[([^\]|]+?)(?:\|([^\]]+))?\]\]/g, (_match, fname: string, alias: string | undefined) => {
+    const extMatch = fname.match(/\.[^.]+$/);
+    const ext = extMatch ? extMatch[0] : "";
+    const stem = ext ? fname.slice(0, -ext.length) : fname;
+    const slug = slugify(stem) + ext;
+    const alt = alias && !/^\d+$/.test(alias.trim()) ? alias.trim() : stem;
+    return `![${alt}](/images/${subject}/${slug})`;
+  });
+}
+
 const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
@@ -50,6 +68,7 @@ export async function renderMarkdownString(
   subject: string,
   links: LinkMap | Set<string>,
 ): Promise<string> {
-  const file = await processor.process(md);
+  const pre = rewriteObsidianEmbeds(md, subject);
+  const file = await processor.process(pre);
   return rewriteWikiHrefs(String(file), subject, links);
 }

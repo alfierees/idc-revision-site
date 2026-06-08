@@ -68,3 +68,22 @@ describe("renderMarkdownString — heading ids", () => {
     expect(html).toContain('href="/subjects/micro/lectures/topic-2-x#cournot-1838"');
   });
 });
+
+describe("renderMarkdownString — Obsidian image embeds", () => {
+  it("converts ![[Foo.png]] into an img with stem as alt", async () => {
+    const html = await renderMarkdownString("![[Lec04_iv_dag.png]]", "econometrics", new Map());
+    expect(html).toContain('<img src="/images/econometrics/lec04-iv-dag.png" alt="Lec04_iv_dag"');
+  });
+
+  it("drops a numeric width alias and uses stem as alt", async () => {
+    const html = await renderMarkdownString("![[Lec01_bimodal_giving.png|560]]", "econometrics", new Map());
+    expect(html).toContain('src="/images/econometrics/lec01-bimodal-giving.png"');
+    expect(html).toContain('alt="Lec01_bimodal_giving"');
+    expect(html).not.toMatch(/width="?560"?/);
+  });
+
+  it("uses a non-numeric alias as alt text", async () => {
+    const html = await renderMarkdownString("![[Foo.png|A causal DAG]]", "econometrics", new Map());
+    expect(html).toContain('alt="A causal DAG"');
+  });
+});
