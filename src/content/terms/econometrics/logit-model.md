@@ -1,7 +1,7 @@
 ---
 title: Logit Model
 subject: econometrics
-aliases: ["logit", "logistic regression"]
+aliases: ["logit", "logistic regression", "discrete-choice"]
 related: ["probit-model", "linear-probability-model", "maximum-likelihood-estimation", "marginal-effects"]
 source_folder: econometrics
 ai_drafted: true

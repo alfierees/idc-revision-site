@@ -1,7 +1,7 @@
 ---
 title: Mincer Wage Equation
 subject: econometrics
-aliases: ["Mincer equation", "returns to education equation"]
+aliases: ["Mincer equation", "returns to education equation", "returns-to-education"]
 related: ["heckman-selection-model", "sample-selection-bias"]
 source_folder: econometrics
 ai_drafted: true

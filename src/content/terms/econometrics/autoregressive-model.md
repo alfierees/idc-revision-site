@@ -1,7 +1,7 @@
 ---
 title: Autoregressive Model
 subject: econometrics
-aliases: ["AR model", "AR(p)"]
+aliases: ["AR model", "AR(p)", "autoregression"]
 related: ["time-series", "distributed-lag-model", "strict-exogeneity"]
 source_folder: econometrics
 ai_drafted: true

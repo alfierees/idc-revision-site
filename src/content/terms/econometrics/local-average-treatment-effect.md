@@ -1,7 +1,7 @@
 ---
 title: Local Average Treatment Effect
 subject: econometrics
-aliases: ["LATE", "LOCAL effect"]
+aliases: ["LATE", "LOCAL effect", "treatment-effects"]
 related: ["instrumental-variables", "regression-discontinuity", "two-stage-least-squares"]
 source_folder: econometrics
 ai_drafted: true

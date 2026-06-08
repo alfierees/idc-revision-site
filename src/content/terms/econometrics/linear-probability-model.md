@@ -1,7 +1,7 @@
 ---
 title: Linear Probability Model
 subject: econometrics
-aliases: ["LPM"]
+aliases: ["LPM", "binary-outcome", "binary-outcomes"]
 related: ["logit-model", "probit-model", "heteroskedasticity", "marginal-effects"]
 source_folder: econometrics
 ai_drafted: true

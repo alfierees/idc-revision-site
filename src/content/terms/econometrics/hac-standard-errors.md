@@ -1,7 +1,7 @@
 ---
 title: HAC Standard Errors
 subject: econometrics
-aliases: ["Newey-West standard errors", "HAC", "heteroskedasticity and autocorrelation consistent", "Newey-West", "newey-west"]
+aliases: ["Newey-West standard errors", "HAC", "heteroskedasticity and autocorrelation consistent", "Newey-West", "newey-west", "robust-standard-errors"]
 related: ["serial-correlation", "time-series", "heteroskedasticity"]
 source_folder: econometrics
 ai_drafted: true
