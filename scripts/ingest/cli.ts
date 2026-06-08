@@ -26,7 +26,7 @@ export async function runCli(input: RunCliInput): Promise<RunCliSummary> {
   await copyAssets({ imageOps: result.imageOps, docOps: result.docOps });
   const queuePath = await writeQueue(result, ingestRoot);
 
-  const counts: Record<string, number> = { term: 0, recipe: 0, "problem-set": 0 };
+  const counts: Record<string, number> = { term: 0, recipe: 0, "problem-set": 0, lecture: 0 };
   for (const p of result.pending) counts[p.kind]++;
   return { subject: input.subject.slug, counts, queuePath };
 }
@@ -42,7 +42,7 @@ async function main() {
   const siteRoot = join(here, "..", "..");
   const subject = getSubjectConfig(slug);
   const s = await runCli({ subject, siteRoot });
-  const order = ["term", "recipe", "problem-set"] as const;
+  const order = ["term", "recipe", "problem-set", "lecture"] as const;
   const pretty = order.map(k => `${s.counts[k] ?? 0} ${k}${(s.counts[k] ?? 0) === 1 ? "" : "s"}`).join(", ");
   console.log(`${s.subject}: ${pretty} pending`);
   console.log(`queue: ${s.queuePath}`);
