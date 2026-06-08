@@ -11,6 +11,12 @@ const KIND_TO_PATH: Record<string, string> = {
 export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap | Set<string>): string {
   return html.replace(/href="__WIKI__([^"]+)"/g, (_m, raw: string) => {
     const [slugPart, fragmentPart] = raw.split("#", 2);
+
+    // Same-page [[#Section]] links: no page slug, just an anchor on this page.
+    if (slugPart === "" && fragmentPart) {
+      return `href="#${slugify(fragmentPart)}"`;
+    }
+
     const slug = slugPart.toLowerCase();
 
     // Backwards-compat: still accept a plain Set of term slugs.

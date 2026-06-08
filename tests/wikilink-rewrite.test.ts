@@ -28,6 +28,11 @@ describe("rewriteWikiHrefs", () => {
     );
   });
 
+  it("resolves a same-page [[#Section]] link to a #fragment href", () => {
+    const html = rewriteWikiHrefs('<a href="__WIKI__#costs-of-production">x</a>', "micro", new Map());
+    expect(html).toContain('href="#costs-of-production"');
+  });
+
   it("marks an unresolved wiki-link as missing", () => {
     const html = rewriteWikiHrefs(
       '<a href="__WIKI__never-heard-of-it">x</a>',
