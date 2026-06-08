@@ -89,6 +89,10 @@ const lectureBySlug = new Map(
   allLectureEntries.map((l) => [l.id.split("/").pop()!, l.data.title])
 );
 
+// All sibling problem sets for the subject — feeds the sidebar's cross-PS nav.
+const siblingProblemSets = (await getCollection("problem-sets", (p) => p.data.subject === subjectSlug))
+  .map((p) => ({ slug: p.id.split("/").pop()!, title: p.data.title }));
+
 const toolkitLectures = [...lectureSlugSet]
   .filter((slug) => lectureBySlug.has(slug))
   .map((slug) => ({
@@ -134,7 +138,12 @@ const hasToolkit =
   )}
 
   <div class="pset-grid">
-    <QuestionSidebar questions={rendered} />
+    <QuestionSidebar
+      subject={subjectSlug}
+      problemSets={siblingProblemSets}
+      currentSlug={setSlug}
+      currentQuestions={rendered}
+    />
 
     <div>
       {hasToolkit && (
