@@ -3,6 +3,19 @@ export interface SubjectConfig {
   title: string;         // e.g. "Micro-Economics"
   vaultPath: string;     // absolute
   sourceDocPath: string; // absolute
+
+  // Optional vault folder names — default to micro's conventions when omitted.
+  lecturesDir?: string;          // default "Lectures"
+  vaultSolutionsDir?: string;    // default "Assignments" (the vault folder that holds worked-up solution notes)
+  requireSolutionKeyword?: boolean; // default true — when false, every .md in vaultSolutionsDir is a candidate, not just files matching /solution|answer/i
+
+  // Optional source-doc folder name — default "Assignments". Sibling solutions folder lives at "<sourceDocPath>/Assignment solutions".
+  assignmentsDir?: string;       // default "Assignments"
+
+  // Optional problem-set slug prefix. When set, the slug becomes "<prefix>-<exerciseNum>"
+  // (e.g. "ps-1") instead of the raw slugified filename. Falls back to the raw slug when
+  // no exercise number can be extracted.
+  problemSetSlugPrefix?: string;
 }
 
 export const subjects: Record<string, SubjectConfig> = {
@@ -11,6 +24,16 @@ export const subjects: Record<string, SubjectConfig> = {
     title: "Micro-Economics",
     vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Micro-Economics",
     sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Micro-Economics",
+  },
+  econometrics: {
+    slug: "econometrics",
+    title: "Econometrics",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Econometrics",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Econometrics ",
+    lecturesDir: "Lecture notes",
+    vaultSolutionsDir: "Problem Sets",
+    requireSolutionKeyword: false,
+    problemSetSlugPrefix: "ps",
   },
 };
 

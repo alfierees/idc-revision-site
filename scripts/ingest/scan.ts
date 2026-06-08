@@ -13,6 +13,11 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
   const imageOps: ImageOp[] = [];
   const docOps: DocOp[] = [];
 
+  const lecturesDirName = cfg.lecturesDir ?? "Lectures";
+  const vaultSolutionsDirName = cfg.vaultSolutionsDir ?? "Assignments";
+  const requireSolutionKeyword = cfg.requireSolutionKeyword ?? true;
+  const assignmentsDirName = cfg.assignmentsDir ?? "Assignments";
+
   const registryPath = join(cfg.vaultPath, "_Wiki-Link Registry.md");
   if (existsSync(registryPath)) {
     const reg = parseRegistry(await readFile(registryPath, "utf8"));
@@ -32,7 +37,7 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
     }
   }
 
-  const lecturesDir = join(cfg.vaultPath, "Lectures");
+  const lecturesDir = join(cfg.vaultPath, lecturesDirName);
   if (existsSync(lecturesDir)) {
     const lectureFiles = (await readdir(lecturesDir)).filter(f => f.endsWith(".md"));
     for (const lf of lectureFiles) {
@@ -63,14 +68,14 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
     }
   }
 
-  // Also scan vault Assignments/*.md for image refs — solution notes often
-  // embed diagrams (e.g. game trees, indifference curves) that need to land
-  // in public/images/<subject>/ so the drafted problem-set can reference them.
-  const assignmentsDir = join(cfg.vaultPath, "Assignments");
-  if (existsSync(assignmentsDir)) {
-    const files = (await readdir(assignmentsDir)).filter(f => f.endsWith(".md"));
+  // Also scan vault solution-notes folder for image refs — solution notes often
+  // embed diagrams (e.g. game trees, indifference curves, causal DAGs) that need
+  // to land in public/images/<subject>/ so the drafted problem-set can reference them.
+  const vaultSolutionsDir = join(cfg.vaultPath, vaultSolutionsDirName);
+  if (existsSync(vaultSolutionsDir)) {
+    const files = (await readdir(vaultSolutionsDir)).filter(f => f.endsWith(".md"));
     for (const f of files) {
-      const md = await readFile(join(assignmentsDir, f), "utf8");
+      const md = await readFile(join(vaultSolutionsDir, f), "utf8");
       for (const img of extractImageRefs(md)) {
         const fromAbs = img.startsWith("/") ? img : join(cfg.vaultPath, "Attachments", basename(img));
         if (!existsSync(fromAbs)) continue;
@@ -82,20 +87,23 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
   }
 
   if (existsSync(cfg.sourceDocPath)) {
-    const docFiles = await collectDocs(cfg.sourceDocPath);
-    const vaultSolutions = await listVaultSolutions(cfg.vaultPath);
+    const docFiles = await collectDocs(cfg.sourceDocPath, assignmentsDirName);
+    const vaultSolutions = await listVaultSolutions(cfg.vaultPath, vaultSolutionsDirName, requireSolutionKeyword);
     const docxSolutions = await listDocxSolutions(cfg.sourceDocPath);
     for (const docPath of docFiles) {
       const filename = basename(docPath);
       const ext = extname(filename).toLowerCase();
       if (ext !== ".pdf" && ext !== ".docx") continue;
-      const slug = slugify(filename.replace(/\.[^.]+$/, ""));
+      const rawSlug = slugify(filename.replace(/\.[^.]+$/, ""));
+      const exerciseNum = extractExerciseNumberFromSlug(rawSlug);
+      const slug = cfg.problemSetSlugPrefix && exerciseNum !== null
+        ? `${cfg.problemSetSlugPrefix}-${exerciseNum}`
+        : rawSlug;
       const destFile = join(destContentRoot, "problem-sets", cfg.slug, `${slug}.md`);
       const docDest = join(destContentRoot, "..", "..", "public", "papers", cfg.slug, `${slug}${ext}`);
       docOps.push({ from: docPath, to: docDest });
       if (existsSync(destFile)) continue;
-      const exerciseNum = extractExerciseNumberFromSlug(slug);
-      const vaultSolutionPath = pickBestMatch(vaultSolutions, exerciseNum, true);
+      const vaultSolutionPath = pickBestMatch(vaultSolutions, exerciseNum, requireSolutionKeyword);
       const solutionDocPath = vaultSolutionPath ? null : pickBestMatch(docxSolutions, exerciseNum, false);
       pending.push({
         kind: "problem-set",
@@ -112,24 +120,32 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
   return { subject: cfg.slug, pending, imageOps, docOps };
 }
 
-// Extracts the leading exercise number from a slug like "ex-1-micro-3" → 1, "ex-12-foo" → 12.
+// Extracts the assignment number from a slug. Handles "ex-1-micro-3" → 1, "appliedmetrics2026-hw1" → 1, "ps-2-something" → 2.
+// Matches the first occurrence of ex/hw/ps/assignment followed by digits, anywhere in the slug.
 function extractExerciseNumberFromSlug(slug: string): number | null {
-  const m = slug.match(/^ex-?(\d+)/i);
+  const m = slug.match(/(?:^|[^a-z])(?:ex|hw|ps|assignment)[-_ ]?(\d+)/i);
   return m ? parseInt(m[1], 10) : null;
 }
 
-// Returns the exercise numbers explicitly tied to "exercise" / "ex" tokens in a filename.
+// Returns the assignment numbers explicitly tied to ex/hw/ps/assignment tokens in a filename.
 // e.g. "EX1_Micro3_Answers.docx" → [1] (the "3" in "Micro3" is ignored).
+// "AppliedMetrics2026-HW1.pdf" → [1]. "PS_02-Fertility & Education.md" → [2].
 function exerciseNumbersInFilename(filename: string): number[] {
-  return [...filename.matchAll(/(?:exercise|ex)[-_ ]?(\d+)/gi)].map(m => parseInt(m[1], 10));
+  return [...filename.matchAll(/(?:exercise|ex|hw|ps|assignment)[-_ ]?(\d+)/gi)].map(m => parseInt(m[1], 10));
 }
 
-async function listVaultSolutions(vaultPath: string): Promise<string[]> {
-  const dir = join(vaultPath, "Assignments");
+async function listVaultSolutions(vaultPath: string, dirName: string, requireKeyword: boolean): Promise<string[]> {
+  const dir = join(vaultPath, dirName);
   if (!existsSync(dir)) return [];
   const files = await readdir(dir);
   return files
-    .filter(f => f.toLowerCase().endsWith(".md") && /solutions?|answers?/i.test(f))
+    .filter(f => {
+      if (!f.toLowerCase().endsWith(".md")) return false;
+      // Skip Obsidian Excalidraw metadata files — the rendered .png is what we embed.
+      if (f.endsWith(".excalidraw.md")) return false;
+      if (requireKeyword && !/solutions?|answers?/i.test(f)) return false;
+      return true;
+    })
     .map(f => join(dir, f));
 }
 
@@ -160,20 +176,29 @@ function pickBestMatch(candidates: string[], exerciseNum: number | null, require
   return matching[0];
 }
 
-// Recursively find .pdf and .docx files but only inside an "Assignments" folder
-// (Plan 2 pilot scope — past papers folder etc. are not auto-scanned).
-async function collectDocs(root: string): Promise<string[]> {
+// Recursively find .pdf and .docx files but only inside the configured assignments folder
+// (Plan 2 pilot scope — past papers folder etc. are not auto-scanned). Recurses into
+// nested subdirectories of the assignments folder so subjects like econometrics whose
+// assignments live in per-HW subfolders are still picked up.
+async function collectDocs(root: string, assignmentsDirName: string): Promise<string[]> {
   const out: string[] = [];
+  async function walkAssignments(dir: string) {
+    const entries = await readdir(dir, { withFileTypes: true });
+    for (const e of entries) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) {
+        await walkAssignments(full);
+      } else if (e.isFile()) {
+        out.push(full);
+      }
+    }
+  }
   async function walk(dir: string) {
     const entries = await readdir(dir, { withFileTypes: true });
     for (const e of entries) {
       const full = join(dir, e.name);
-      if (e.isDirectory() && e.name === "Assignments") {
-        const inner = await readdir(full);
-        for (const f of inner) {
-          const st = await stat(join(full, f));
-          if (st.isFile()) out.push(join(full, f));
-        }
+      if (e.isDirectory() && e.name === assignmentsDirName) {
+        await walkAssignments(full);
       } else if (e.isDirectory()) {
         await walk(full);
       }

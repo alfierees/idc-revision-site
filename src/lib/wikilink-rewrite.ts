@@ -1,4 +1,4 @@
-import type { LinkMap } from "./known-links";
+import { resolveLink, type LinkMap } from "./known-links";
 
 const KIND_TO_PATH: Record<string, string> = {
   term: "dictionary",
@@ -14,9 +14,9 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
       if (links.has(slug)) return `href="/subjects/${subject}/dictionary/${slug}"`;
       return `href="#" data-missing="true" title="Missing concept"`;
     }
-    const kind = links.get(slug);
-    if (kind) {
-      return `href="/subjects/${subject}/${KIND_TO_PATH[kind]}/${slug}"`;
+    const target = resolveLink(links, raw);
+    if (target) {
+      return `href="/subjects/${subject}/${KIND_TO_PATH[target.kind]}/${target.slug}"`;
     }
     return `href="#" data-missing="true" title="Missing concept"`;
   });

@@ -5,7 +5,7 @@ import CollapsibleSolution from "../../../../components/CollapsibleSolution.astr
 import StatusPill from "../../../../components/StatusPill";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
-import { buildLinkMap, linkHref } from "../../../../lib/known-links";
+import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const sets = await getCollection("problem-sets");
@@ -47,10 +47,10 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
   {set.data.tags.length > 0 && (
     <ul class="mb-6 flex flex-wrap gap-2 list-none p-0">
       {set.data.tags.map((tag) => {
-        const kind = links.get(tag);
-        return kind ? (
+        const target = resolveLink(links, tag);
+        return target ? (
           <li>
-            <a href={linkHref(subjectSlug, tag, kind)} class="tag tag-link">#{tag}</a>
+            <a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a>
           </li>
         ) : (
           <li>
@@ -61,7 +61,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     </ul>
   )}
 
-  <ol class="space-y-6 reading list-none p-0">
+  <ol class="space-y-6 list-none p-0">
     {rendered.map((q) => (
       <li id={q.id} class="scroll-mt-24 rounded border border-rule bg-card p-6">
         <div class="flex items-start justify-between gap-4">
