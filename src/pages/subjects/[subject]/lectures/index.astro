@@ -29,8 +29,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
 <Layout title={`Lectures · ${subject.data.title}`}>
   <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
   <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  {/* Task 12 will widen TabNav's active prop type and remove this `as any` */}
-  <TabNav subject={subjectSlug} active={"lectures" as any} />
+  <TabNav subject={subjectSlug} active="lectures" />
 
   {lectures.length === 0 ? (
     <p class="mt-6 font-ui text-ink-muted">No lectures ingested for this subject yet.</p>
