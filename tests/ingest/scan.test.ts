@@ -45,6 +45,17 @@ describe("scan", () => {
     expect(result.docOps[0].to).toMatch(/public\/papers\/pilot\/ex-1-pilot\.docx$/);
   });
 
+  it("queues lectures from the lectures directory", async () => {
+    const result = await scan(cfg, dest);
+    const lectures = result.pending.filter((p) => p.kind === "lecture");
+    expect(lectures).toHaveLength(1);
+    expect(lectures[0]).toMatchObject({
+      kind: "lecture",
+      slug: "topic-1",
+      sourceFolder: "pilot",
+    });
+  });
+
   it("skips pending items whose destination file already exists", async () => {
     const existing = join(dest, "terms/pilot/nash-equilibrium.md");
     await writeFile(existing, "---\ntitle: Nash Equilibrium\n---\n");

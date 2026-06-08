@@ -44,6 +44,19 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
       const lecturePath = join(lecturesDir, lf);
       const md = await readFile(lecturePath, "utf8");
 
+      const lectureSlug = slugify(lf.replace(/\.md$/, ""));
+      const destLecture = join(destContentRoot, "lectures", cfg.slug, `${lectureSlug}.md`);
+      if (!existsSync(destLecture)) {
+        const fmTitle = extractFrontmatterTitle(md) ?? lf.replace(/\.md$/, "");
+        pending.push({
+          kind: "lecture",
+          slug: lectureSlug,
+          title: fmTitle,
+          sourceVaultPath: lecturePath,
+          sourceFolder: cfg.slug,
+        });
+      }
+
       for (const r of detectRecipes(md)) {
         const slug = slugify(r.title);
         const destFile = join(destContentRoot, "recipes", cfg.slug, `${slug}.md`);
@@ -174,6 +187,13 @@ function pickBestMatch(candidates: string[], exerciseNum: number | null, require
   if (matching.length === 0) return null;
   matching.sort((a, b) => basename(a).length - basename(b).length);
   return matching[0];
+}
+
+function extractFrontmatterTitle(md: string): string | null {
+  const m = md.match(/^---\s*\n([\s\S]*?)\n---/);
+  if (!m) return null;
+  const titleMatch = m[1].match(/^title:\s*['"]?(.+?)['"]?\s*$/m);
+  return titleMatch ? titleMatch[1] : null;
 }
 
 // Recursively find .pdf and .docx files but only inside the configured assignments folder
