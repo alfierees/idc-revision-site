@@ -1,0 +1,35 @@
+---
+interface QuestionEntry {
+  id: string;
+}
+interface Props {
+  questions: QuestionEntry[];
+}
+const { questions } = Astro.props;
+---
+<aside class="question-sidebar font-ui text-sm">
+  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mb-4">Questions</p>
+  <nav>
+    <ol class="space-y-1 list-none p-0">
+      {questions.map((q) => (
+        <li>
+          <a
+            href={`#${q.id}`}
+            class="block py-1 text-ink-soft hover:text-accent font-mono text-sm tracking-wide"
+          >
+            {q.id}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</aside>
+
+<style>
+  .question-sidebar {
+    position: sticky;
+    top: 5rem;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+  }
+</style>
