@@ -61,13 +61,15 @@ const prefix = `/subjects/${subject}/dictionary/`;
       } catch { return null; }
     };
 
+    const esc = (s: string) =>
+      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const show = (a: HTMLAnchorElement) => {
       const slug = slugFromHref(a.getAttribute("href") || "");
       if (!slug || !data[slug]) return;
       const d = data[slug];
       card.innerHTML =
-        `<span class="cp-title">${d.title}</span>${d.def}` +
-        (d.lecture ? `<span class="cp-lecture">→ ${d.lecture}</span>` : "");
+        `<span class="cp-title">${esc(d.title)}</span>${esc(d.def)}` +
+        (d.lecture ? `<span class="cp-lecture">→ ${esc(d.lecture)}</span>` : "");
       const r = a.getBoundingClientRect();
       card.style.top = `${window.scrollY + r.bottom + 6}px`;
       card.style.left = `${window.scrollX + Math.min(r.left, window.innerWidth - 360)}px`;

@@ -76,6 +76,7 @@ const pastPapers = defineCollection({
   schema: z.object({
     title: z.string(),
     subject: z.string(),
+    type: z.string().optional(),
     exam: z.string().optional(),
     dataset: z.string().optional(),
     instructor: z.string().optional(),
