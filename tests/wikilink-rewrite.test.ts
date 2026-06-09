@@ -109,6 +109,41 @@ describe("resolveLink — prefix fallback", () => {
   });
 });
 
+describe("rewriteWikiHrefs — past papers & glossary anchors", () => {
+  const links: LinkMap = new Map([
+    ["pp-01-emotions-risky-choice-practice-exam",
+      { kind: "past-paper", slug: "pp-01-emotions-risky-choice-practice-exam" }],
+    ["f-test", { kind: "term", slug: "f-test" }],
+  ]);
+
+  it("resolves a [[PP_..]] link to the past-papers URL", () => {
+    const html = rewriteWikiHrefs(
+      '<a href="__WIKI__pp-01-emotions-risky-choice-practice-exam">x</a>',
+      "econometrics", links,
+    );
+    expect(html).toContain(
+      'href="/subjects/econometrics/past-papers/pp-01-emotions-risky-choice-practice-exam"',
+    );
+  });
+
+  it("routes a glossary-anchor link to the dictionary page via its fragment", () => {
+    const html = rewriteWikiHrefs(
+      '<a href="__WIKI__econometrics-concepts#f-test">F-test</a>',
+      "econometrics", links,
+    );
+    expect(html).toContain('href="/subjects/econometrics/dictionary/f-test"');
+    expect(html).not.toContain("#f-test\"");
+  });
+
+  it("marks an unknown glossary fragment as missing", () => {
+    const html = rewriteWikiHrefs(
+      '<a href="__WIKI__econometrics-concepts#never-heard">x</a>',
+      "econometrics", links,
+    );
+    expect(html).toContain('data-missing="true"');
+  });
+});
+
 describe("renderMarkdownString — Obsidian image embeds", () => {
   it("converts ![[Foo.png]] into an img with stem as alt", async () => {
     const html = await renderMarkdownString("![[Lec04_iv_dag.png]]", "econometrics", new Map());
