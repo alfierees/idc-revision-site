@@ -2,7 +2,10 @@
 import Layout from "../../../../components/Layout.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import DictionarySearch from "../../../../components/DictionarySearch";
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
+import { parseGlossary } from "../../../../lib/glossary";
+import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+import { buildLinkMap } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const subjects = await getCollection("subjects");
@@ -10,34 +13,107 @@ export async function getStaticPaths() {
 }
 
 const subjectSlug = Astro.params.subject!;
+const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+
+// Prefer the glossary topic-grouped overview; fall back to the flat list when no
+// glossary exists for this subject (keeps other subjects working).
+const glossaryEntry = await getEntry("glossary", subjectSlug);
+let topics: { title: string; slug: string; rows: { term: string; href: string; defHtml: string }[] }[] = [];
+if (glossaryEntry) {
+  const links = await buildLinkMap(subjectSlug);
+  const g = parseGlossary(glossaryEntry.body ?? "");
+  topics = await Promise.all(
+    g.topics.map(async (t) => ({
+      title: t.title,
+      slug: t.slug,
+      rows: await Promise.all(
+        t.entries.map(async (e) => ({
+          term: e.term,
+          href: `/subjects/${subjectSlug}/dictionary/${e.slug}`,
+          defHtml: await renderMarkdownString(
+            e.definition + (e.lectureRef ? ` ${e.lectureRef}` : ""),
+            subjectSlug, links,
+          ),
+        })),
+      ),
+    })),
+  );
+}
+
+// Fallback flat list
 const allTerms = await getCollection("terms", (t) => t.data.subject === subjectSlug && t.data.in_scope);
 allTerms.sort((a, b) => a.data.title.localeCompare(b.data.title));
-
-const entries = allTerms.map((t) => {
-  const slug = t.id.split("/").pop()!;        // glob loader id is e.g. "econometrics/heteroskedasticity"
-  return {
-    slug,
-    title: t.data.title,
-    aliases: t.data.aliases,
-    href: `/subjects/${subjectSlug}/dictionary/${slug}`,
-  };
+const flatEntries = allTerms.map((t) => {
+  const slug = t.id.split("/").pop()!;
+  return { slug, title: t.data.title, aliases: t.data.aliases, href: `/subjects/${subjectSlug}/dictionary/${slug}` };
 });
-
-const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
 <Layout title={`${subject.data.title} · Dictionary`}>
   <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
   <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
   <TabNav subject={subjectSlug} active="dictionary" />
-  {entries.length === 0 ? (
+
+  {topics.length > 0 ? (
+    <div class="mt-6">
+      <input
+        id="concept-filter"
+        type="search"
+        placeholder="Filter concepts…"
+        class="w-full max-w-md rounded border border-rule bg-card px-3 py-2 font-ui text-sm text-ink focus:border-accent focus:outline-none"
+        autocomplete="off"
+      />
+      <div class="mt-8 space-y-10">
+        {topics.map((t) => (
+          <section class="concept-topic" data-topic id={t.slug}>
+            <h2 class="font-display text-xl text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 500;">{t.title}</h2>
+            <ul class="mt-3 space-y-2 list-none p-0">
+              {t.rows.map((r) => (
+                <li class="concept-row" data-term={r.term.toLowerCase()}>
+                  <a href={r.href} class="font-ui text-sm font-medium text-accent hover:underline">{r.term}</a>
+                  <span class="concept-def text-sm text-ink-soft" set:html={r.defHtml} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
+  ) : flatEntries.length === 0 ? (
     <p class="font-ui text-sm text-ink-muted italic">Content not yet ingested.</p>
   ) : (
     <div class="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10">
-      <aside><DictionarySearch client:load terms={entries} /></aside>
+      <aside><DictionarySearch client:load terms={flatEntries} /></aside>
       <section class="reading text-ink-soft">
         <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Select a term</p>
-        <p class="mt-3">Pick a term from the list to see its definition and where it appears across your problem sets and past papers.</p>
+        <p class="mt-3">Pick a term from the list to see its definition and where it appears.</p>
       </section>
     </div>
   )}
 </Layout>
+
+<style is:global>
+  .concept-def { display: inline; }
+  .concept-def p { display: inline; margin: 0; }
+  .concept-row { line-height: 1.5; }
+  .concept-row a { margin-right: 0.4rem; }
+  .concept-def a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 2px; }
+</style>
+
+<script>
+  const input = document.getElementById("concept-filter") as HTMLInputElement | null;
+  if (input) {
+    input.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      document.querySelectorAll<HTMLElement>("[data-topic]").forEach((topic) => {
+        let any = false;
+        topic.querySelectorAll<HTMLElement>(".concept-row").forEach((row) => {
+          const hay = (row.dataset.term ?? "") + " " + (row.textContent ?? "").toLowerCase();
+          const show = q === "" || hay.includes(q);
+          row.style.display = show ? "" : "none";
+          if (show) any = true;
+        });
+        topic.style.display = any ? "" : "none";
+      });
+    });
+  }
+</script>
