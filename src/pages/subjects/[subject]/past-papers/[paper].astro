@@ -23,7 +23,7 @@ if (!paper) throw new Error(`past paper ${subjectSlug}/${paperSlug} not found`);
 const links = await buildLinkMap(subjectSlug);
 const html = await renderMarkdownString(paper.body ?? "", subjectSlug, links);
 
-const allPapers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug))
+const allPapers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug && p.data.in_scope))
   .map((p) => ({ slug: p.id.split("/").pop()!, title: p.data.title, year: p.data.year }));
 
 const sectionRe = /<(h2|h3)[^>]*id="([^"]+)"[^>]*>(.*?)<\/\1>/g;
@@ -71,12 +71,10 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
 <style>
   .paper-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
   @media (min-width: 1024px) { .paper-grid { grid-template-columns: 260px 1fr; } }
-</style>
-<style is:global>
-  .paper-prose h2 { margin-top: 2.5rem; margin-bottom: 1rem; font-family: var(--font-display); font-size: 1.5rem; font-variation-settings: "opsz" 48, "wght" 500; color: var(--color-ink); scroll-margin-top: 5rem; }
-  .paper-prose h3 { margin-top: 1.75rem; margin-bottom: 0.5rem; font-family: var(--font-display); font-size: 1.2rem; font-variation-settings: "opsz" 36, "wght" 500; color: var(--color-ink); scroll-margin-top: 5rem; }
-  .paper-prose p { margin-top: 1rem; }
-  .paper-prose a { color: var(--color-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  .paper-prose table { display: block; overflow-x: auto; max-width: 100%; }
-  .paper-prose pre { overflow-x: auto; max-width: 100%; }
+  .paper-prose :global(h2) { margin-top: 2.5rem; margin-bottom: 1rem; font-family: var(--font-display); font-size: 1.5rem; font-variation-settings: "opsz" 48, "wght" 500; color: var(--color-ink); scroll-margin-top: 5rem; }
+  .paper-prose :global(h3) { margin-top: 1.75rem; margin-bottom: 0.5rem; font-family: var(--font-display); font-size: 1.2rem; font-variation-settings: "opsz" 36, "wght" 500; color: var(--color-ink); scroll-margin-top: 5rem; }
+  .paper-prose :global(p) { margin-top: 1rem; }
+  .paper-prose :global(a) { color: var(--color-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .paper-prose :global(table) { display: block; overflow-x: auto; max-width: 100%; }
+  .paper-prose :global(pre) { overflow-x: auto; max-width: 100%; }
 </style>
