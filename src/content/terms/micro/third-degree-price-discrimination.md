@@ -11,6 +11,8 @@ ai_drafted: true
 $$P_i^* = \frac{MC}{1 - 1/|E_i|}$$
 applies segment by segment. The segment with **less elastic** demand pays the **higher** price.
 
+![](/images/micro/t2-price-discrim-3rd.png)
+
 ## When to use
 
 Third-degree PD is the workhorse exam example for *observable* type segmentation. Standard setup: $MC$, two linear demand curves $P_1 = a_1 - b_1 Q_1$ and $P_2 = a_2 - b_2 Q_2$ → solve each $MR_i = MC$ separately. The arbitrage-prevention requirement matters: the cheap segment must not be able to resell to the expensive segment, otherwise the price differential collapses.

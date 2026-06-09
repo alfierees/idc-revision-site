@@ -1,12 +1,4 @@
-export function slugify(input: string): string {
-  return input
-    .normalize("NFKD")
-    .replace(/\p{Diacritic}/gu, "")
-    .toLowerCase()
-    .replace(/['’]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
+export { slugify } from "../../src/lib/slugify";
 
 const IMG_EXT = "png|jpe?g|gif|svg|webp|heic|heif|avif|bmp";
 const OBSIDIAN_IMG = new RegExp(`!\\[\\[([^\\]|]+\\.(?:${IMG_EXT}))(?:\\|[^\\]]*)?\\]\\]`, "gi");

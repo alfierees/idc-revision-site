@@ -1,7 +1,7 @@
 ---
 title: OLS Estimator
 subject: econometrics
-aliases: ["ordinary least squares", "least squares estimator"]
+aliases: ["ordinary least squares", "least squares estimator", "OLS", "OLS estimation"]
 related: ["heteroskedasticity"]
 in_scope: true
 ai_drafted: false

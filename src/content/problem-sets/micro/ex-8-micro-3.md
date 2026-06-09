@@ -49,6 +49,11 @@ questions:
       $$Q = 37.5, \quad P = 120 - 37.5 = 82.5$$
       $$\pi_1 = (82.5 - 70) \cdot 25 = 312.5, \qquad \pi_2 = 12.5 \cdot 12.5 = 156.25$$
 
+      ![](/images/micro/ex8-q1-cournot-stackelberg.png)
+
+      > [!tip] Reading the picture
+      > Both reaction lines slope **down** — outputs are strategic substitutes. Their crossing is the Cournot point $(16.7, 16.7)$. The leader, knowing Firm 2 will sit on its reaction line, picks the point on that line best for itself — pushing out to $q_1 = 25$ and forcing the follower down to $12.5$.
+
       > [!success] Stackelberg
       > $q_1 = 25$, $q_2 = 12.5$, $P = 82.5$. Leader earns **312.5**, follower **156.25**.
 
@@ -124,6 +129,8 @@ questions:
       $$Q = 250, \quad P = 300$$
       $$\pi_1 = 300 \cdot 150 - 0.5 \cdot 150^2 = 45{,}000 - 11{,}250 = 33{,}750$$
       $$\pi_2 = 300 \cdot 100 - 100^2 = 30{,}000 - 10{,}000 = 20{,}000$$
+
+      ![](/images/micro/ex8-q3-reaction-functions.png)
 
       > [!success] Cournot–Nash
       > $q_1 = 150$, $q_2 = 100$, $P = 300$, $\pi_1 = 33{,}750$, $\pi_2 = 20{,}000$.
@@ -220,6 +227,8 @@ questions:
 
       Ranking: **cheating (2,025) > cartel (1,800) > Cournot (1,600)**.
 
+      ![](/images/micro/ex8-q4-cartel-deviation.png)
+
       > [!warning] Why cartels collapse
       > The cartel is jointly optimal (industry profit 3,600 > 3,200), but it is **not a Nash Equilibrium**: holding the partner at $q = 30$, Firm 1 earns *more* by secretly expanding to 45. Both firms feel this pull, both over-produce, and the agreement unravels back toward Cournot. This is exactly the [[Prisoner's Dilemma]] structure. Real cartels need credible punishment under repeated interaction to survive.
     related_terms: ["cartel", "prisoners-dilemma", "cournot-competition"]
@@ -273,6 +282,8 @@ questions:
       > [!example] Numerical check at $B = 1/2$
       > **Cournot:** $q_1 = q_2 = 1/3$, $U_1 = U_2 = 1/12 \approx 0.083$.
       > **Stackelberg:** $q_1 = 5/9 \approx 0.556$, $q_2 = 2/9 \approx 0.222$, $U_1 = 1/9 \approx 0.111$, $U_2 \approx -0.028$. The follower's utility is **negative** — externality damage exceeds catch value.
+
+      ![](/images/micro/ex8-q5-commons-utility.png)
     related_terms: ["stackelberg-model", "cournot-competition"]
     source_doc_page: 5
   - id: "5c"

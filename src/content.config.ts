@@ -37,6 +37,20 @@ const recipes = defineCollection({
   }),
 });
 
+const lectures = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/lectures" }),
+  schema: z.object({
+    title: z.string(),
+    subject: z.string(),
+    tags: z.array(z.string()).default([]),
+    aliases: z.array(z.string()).default([]),
+    week: z.number().optional(),
+    lecture: z.string().optional(),
+    instructor: z.string().optional(),
+    in_scope: z.boolean().default(true),
+  }),
+});
+
 const question = z.object({
   id: z.string(),
   text: z.string(),
@@ -74,6 +88,7 @@ export const collections = {
   subjects,
   terms,
   recipes,
+  lectures,
   "problem-sets": problemSets,
   "past-papers": pastPapers,
 };

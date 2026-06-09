@@ -1,11 +1,12 @@
 ---
 interface Props {
   subject: string;
-  active: "dictionary" | "recipes" | "problem-sets" | "past-papers";
+  active: "lectures" | "dictionary" | "recipes" | "problem-sets" | "past-papers";
 }
 const { subject, active } = Astro.props;
 
 const tabs = [
+  { id: "lectures",     label: "Lectures" },
   { id: "dictionary",   label: "Dictionary" },
   { id: "recipes",      label: "Recipes" },
   { id: "problem-sets", label: "Problem Sets" },

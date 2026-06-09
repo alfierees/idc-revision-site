@@ -14,6 +14,10 @@ Use this recipe to describe *why* a market with hidden quality can unravel from 
 4. Price falls further in response — triggering more exits.
 5. This continues until only the lowest quality remains (market collapse / lemons market).
 
+![](/images/micro/t1-lemons-threshold.png)
+
+The blue line is the buyer's expected value as the share of good cars $p$ rises; the red dashes are the good-car seller's reservation price. Below the threshold (red zone) only lemons trade; above it the good equilibrium *can* exist, but the lemons equilibrium still co-exists — beliefs are self-fulfilling.
+
 ## Common pitfalls
 
 - Pitfalls not covered in source — review and add.

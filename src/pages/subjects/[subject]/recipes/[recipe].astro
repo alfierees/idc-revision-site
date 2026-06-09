@@ -29,7 +29,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
   <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
   <TabNav subject={subjectSlug} active="recipes" />
 
-  <article class="reading">
+  <article>
     <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Recipe</p>
     <h2 class="mt-2 font-display text-2xl" style="font-variation-settings: 'opsz' 48, 'wght' 500;">
       {entry.data.title}

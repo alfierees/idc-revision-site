@@ -151,6 +151,67 @@
   .prose-card strong { color: var(--color-ink); }
   .prose-card hr { border: none; border-top: 1px solid var(--color-rule); margin: 1.5rem 0; }
 
+  /* Code blocks inside rendered solution markdown (R, etc.) — keep inside cards */
+  .prose-card pre, .question-body pre {
+    overflow-x: auto;
+    max-width: 100%;
+    background: color-mix(in srgb, var(--color-ink) 4%, var(--color-card));
+    border: 1px solid var(--color-rule);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin: 0.75rem 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+  .prose-card code, .question-body code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+  .prose-card :not(pre) > code, .question-body :not(pre) > code {
+    background: color-mix(in srgb, var(--color-ink) 5%, transparent);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+  /* Wide tables scroll inside their card instead of overflowing it */
+  .prose-card table, .question-body table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .prose-card img, .question-body img { max-width: 100%; height: auto; }
+  /* Math display blocks shouldn't bust out of cards either */
+  .prose-card .katex-display, .question-body .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    padding-bottom: 0.25rem;
+  }
+
+  /* Tag pills (used on lecture + problem-set pages) */
+  .tag {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-card);
+    transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
+  }
+  .tag-link {
+    color: var(--color-accent);
+    cursor: pointer;
+  }
+  .tag-link:hover {
+    border-color: var(--color-accent);
+    background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-card));
+  }
+  .tag-muted {
+    color: var(--color-ink-muted);
+    font-style: italic;
+  }
+
   @keyframes rise-in {
     from { opacity: 0; transform: translateY(4px); }
     to   { opacity: 1; transform: translateY(0); }

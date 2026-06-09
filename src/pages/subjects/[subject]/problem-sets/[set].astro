@@ -5,7 +5,7 @@ import CollapsibleSolution from "../../../../components/CollapsibleSolution.astr
 import StatusPill from "../../../../components/StatusPill";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
-import { buildLinkMap, linkHref } from "../../../../lib/known-links";
+import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const sets = await getCollection("problem-sets");
@@ -28,6 +28,10 @@ const rendered = await Promise.all(set.data.questions.map(async (q) => ({
   solutionHtml: await renderMarkdownString(q.solution, subjectSlug, links),
 })));
 
+const bodyHtml = set.body?.trim()
+  ? await renderMarkdownString(set.body, subjectSlug, links)
+  : null;
+
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
 <Layout title={`${set.data.title} · ${subject.data.title}`}>
@@ -47,10 +51,10 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
   {set.data.tags.length > 0 && (
     <ul class="mb-6 flex flex-wrap gap-2 list-none p-0">
       {set.data.tags.map((tag) => {
-        const kind = links.get(tag);
-        return kind ? (
+        const target = resolveLink(links, tag);
+        return target ? (
           <li>
-            <a href={linkHref(subjectSlug, tag, kind)} class="tag tag-link">#{tag}</a>
+            <a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a>
           </li>
         ) : (
           <li>
@@ -61,7 +65,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     </ul>
   )}
 
-  <ol class="space-y-6 reading list-none p-0">
+  <ol class="space-y-6 list-none p-0">
     {rendered.map((q) => (
       <li id={q.id} class="scroll-mt-24 rounded border border-rule bg-card p-6">
         <div class="flex items-start justify-between gap-4">
@@ -73,6 +77,10 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       </li>
     ))}
   </ol>
+
+  {bodyHtml && (
+    <section class="mt-8 rounded border border-rule bg-card p-6 question-body prose-card" set:html={bodyHtml} />
+  )}
 </Layout>
 
 <style is:global>
@@ -81,28 +89,5 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
-  }
-  .tag {
-    display: inline-block;
-    font-family: var(--font-ui);
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    padding: 0.18rem 0.55rem;
-    border-radius: 999px;
-    border: 1px solid var(--color-rule);
-    background-color: var(--color-card);
-    transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
-  }
-  .tag-link {
-    color: var(--color-accent);
-    cursor: pointer;
-  }
-  .tag-link:hover {
-    border-color: var(--color-accent);
-    background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-card));
-  }
-  .tag-muted {
-    color: var(--color-ink-muted);
-    font-style: italic;
   }
 </style>

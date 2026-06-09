@@ -9,6 +9,10 @@ ai_drafted: true
 
 **Bertrand competition** is the simultaneous price-setting model of oligopoly: firms sell a homogeneous product, consumers buy from the cheapest seller, and capacities are unconstrained. With two symmetric firms ($MC_1 = MC_2 = c$) the unique [[Nash Equilibrium]] is $P_1^* = P_2^* = c$ with zero profits — the **Bertrand paradox**: just two firms suffice for the perfect-competition outcome. With asymmetric costs $c_1 < c_2$, the efficient firm [[Limit Pricing|limit-prices]] at $\min(c_2, P_1^M)$ — just undercutting the rival's marginal cost.
 
+![](/images/micro/t2-structure-comparison.png)
+
+The three structures side by side ($A=10$, $c=2$): quantity climbs, price falls, industry profit collapses as you move from monopoly → Cournot → Bertrand. With just two firms Bertrand already reaches the competitive outcome.
+
 ## When to use
 
 Cite Bertrand whenever firms compete on price for a homogeneous good. The knife-edge predictions break when any assumption is relaxed: differentiated products ([[Monopolistic Competition]]), capacity constraints (Bertrand-Edgeworth), non-constant MC, multiple periods (collusion possible), or asymmetric information. The collapse to $P = MC$ is the *reductio* that motivates everything more realistic.

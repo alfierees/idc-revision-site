@@ -1,7 +1,7 @@
 ---
 title: Perfect Complements
 subject: micro
-aliases: []
+aliases: ["complementary goods"]
 related: ["double-marginalization", "complementary-monopolist", "vertical-integration"]
 source_folder: micro
 ai_drafted: true

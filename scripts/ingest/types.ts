@@ -28,7 +28,15 @@ export interface PendingProblemSet {
   solutionDocPath: string | null; // absolute, .pdf or .docx fallback from sibling "Assignment solutions" folder
 }
 
-export type PendingItem = PendingTerm | PendingRecipe | PendingProblemSet;
+export interface PendingLecture {
+  kind: "lecture";
+  slug: string;
+  title: string;
+  sourceVaultPath: string;
+  sourceFolder: string;
+}
+
+export type PendingItem = PendingTerm | PendingRecipe | PendingProblemSet | PendingLecture;
 
 export interface ImageOp {
   from: string; // absolute vault path
