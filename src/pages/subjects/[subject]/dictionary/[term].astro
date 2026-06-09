@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import BacklinkList from "../../../../components/BacklinkList.astro";
 import { getCollection, getEntry } from "astro:content";
@@ -61,6 +62,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     <h3 class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">Appears in</h3>
     <div class="mt-3"><BacklinkList subject={subjectSlug} entries={entries} /></div>
   </section>
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
 <style is:global>

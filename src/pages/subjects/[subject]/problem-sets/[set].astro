@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
@@ -202,6 +203,7 @@ const hasToolkit =
       )}
     </div>
   </div>
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
 <style is:global>

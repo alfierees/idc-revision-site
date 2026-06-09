@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import DictionarySearch from "../../../../components/DictionarySearch";
 import { getCollection, getEntry } from "astro:content";
@@ -89,6 +90,7 @@ const flatEntries = allTerms.map((t) => {
       </section>
     </div>
   )}
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
 <style is:global>

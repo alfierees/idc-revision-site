@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import LectureSidebar from "../../../../components/LectureSidebar.astro";
 import Mermaid from "../../../../components/Mermaid.astro";
@@ -82,6 +83,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     </article>
   </div>
   <Mermaid />
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
 <style>

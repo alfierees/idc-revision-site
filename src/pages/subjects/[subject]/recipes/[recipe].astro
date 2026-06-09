@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
@@ -36,6 +37,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     </h2>
     <div class="recipe-body mt-6 text-base text-ink" set:html={html} />
   </article>
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
 <style is:global>

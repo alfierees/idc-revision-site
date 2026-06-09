@@ -1,0 +1,95 @@
+---
+import { getEntry } from "astro:content";
+import { parseGlossary } from "../lib/glossary";
+
+interface Props { subject: string; }
+const { subject } = Astro.props;
+
+const glossaryEntry = await getEntry("glossary", subject);
+const data: Record<string, { title: string; def: string; lecture: string | null }> = {};
+if (glossaryEntry) {
+  const g = parseGlossary(glossaryEntry.body ?? "");
+  for (const e of g.entries) {
+    // Plain-text definition: drop wiki-link markup, keep display text.
+    const def = e.definition
+      .replace(/\[\[#?[^\]|]+\|([^\]]+)\]\]/g, "$1")
+      .replace(/\[\[#?([^\]]+)\]\]/g, "$1");
+    const lecture = e.lectureRef
+      ? e.lectureRef.replace(/\[\[[^\]|]+\|([^\]]+)\]\]/, "$1").replace(/\[\[([^\]]+)\]\]/, "$1")
+      : null;
+    data[e.slug] = { title: e.term, def, lecture };
+  }
+}
+const json = JSON.stringify(data);
+const prefix = `/subjects/${subject}/dictionary/`;
+---
+<script type="application/json" id="concept-previews" set:html={json} data-prefix={prefix}></script>
+<div id="concept-preview-card" role="tooltip" hidden></div>
+
+<style is:global>
+  #concept-preview-card {
+    position: absolute;
+    z-index: 50;
+    max-width: 22rem;
+    padding: 0.75rem 0.9rem;
+    background: var(--color-card);
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 12%);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--color-ink-soft);
+  }
+  #concept-preview-card .cp-title { font-weight: 600; color: var(--color-ink); display: block; margin-bottom: 0.25rem; }
+  #concept-preview-card .cp-lecture { display: block; margin-top: 0.4rem; font-size: 0.75rem; color: var(--color-ink-muted); }
+</style>
+
+<script>
+  const el = document.getElementById("concept-previews");
+  const card = document.getElementById("concept-preview-card");
+  if (el && card) {
+    const data = JSON.parse(el.textContent || "{}");
+    const prefix = (el as HTMLElement).dataset.prefix || "";
+    let hideTimer: number | undefined;
+
+    const slugFromHref = (href: string): string | null => {
+      try {
+        const url = new URL(href, location.origin);
+        if (!url.pathname.startsWith(prefix)) return null;
+        return url.pathname.slice(prefix.length).split("#")[0].replace(/\/$/, "");
+      } catch { return null; }
+    };
+
+    const show = (a: HTMLAnchorElement) => {
+      const slug = slugFromHref(a.getAttribute("href") || "");
+      if (!slug || !data[slug]) return;
+      const d = data[slug];
+      card.innerHTML =
+        `<span class="cp-title">${d.title}</span>${d.def}` +
+        (d.lecture ? `<span class="cp-lecture">→ ${d.lecture}</span>` : "");
+      const r = a.getBoundingClientRect();
+      card.style.top = `${window.scrollY + r.bottom + 6}px`;
+      card.style.left = `${window.scrollX + Math.min(r.left, window.innerWidth - 360)}px`;
+      card.hidden = false;
+    };
+    const hide = () => { hideTimer = window.setTimeout(() => { card.hidden = true; }, 120); };
+    const cancelHide = () => { if (hideTimer) window.clearTimeout(hideTimer); };
+
+    document.body.addEventListener("mouseover", (e) => {
+      const a = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
+      if (a && slugFromHref(a.getAttribute("href") || "")) { cancelHide(); show(a); }
+    });
+    document.body.addEventListener("mouseout", (e) => {
+      const a = (e.target as HTMLElement).closest("a");
+      if (a) hide();
+    });
+    card.addEventListener("mouseenter", cancelHide);
+    card.addEventListener("mouseleave", hide);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") card.hidden = true; });
+    document.body.addEventListener("focusin", (e) => {
+      const a = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
+      if (a && slugFromHref(a.getAttribute("href") || "")) { cancelHide(); show(a); }
+    });
+  }
+</script>
