@@ -1,13 +1,5 @@
-import { resolveLink, type LinkMap } from "./known-links";
+import { resolveLink, KIND_TO_PATH, type LinkMap } from "./known-links";
 import { slugify } from "./slugify";
-
-const KIND_TO_PATH: Record<string, string> = {
-  term: "dictionary",
-  recipe: "recipes",
-  "problem-set": "problem-sets",
-  lecture: "lectures",
-  "past-paper": "past-papers",
-};
 
 export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap | Set<string>): string {
   return html.replace(/href="__WIKI__([^"]+)"/g, (_m, raw: string) => {
@@ -31,7 +23,7 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
 
     // Glossary-anchor links: [[_<Subject> Concepts#Term|Display]] resolves to
     // the per-term Dictionary page via its fragment, dropping the fragment.
-    if (fragmentPart && slugPart === `${subject}-concepts`) {
+    if (fragmentPart && slug === `${subject}-concepts`) {
       const gTarget = resolveLink(links, fragmentPart);
       if (gTarget) {
         return `href="/subjects/${subject}/${KIND_TO_PATH[gTarget.kind]}/${gTarget.slug}"`;
