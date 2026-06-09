@@ -63,9 +63,18 @@ const sorted = [...lectures].sort((a, b) => {
 
 <style>
   .lecture-sidebar {
-    position: sticky;
-    top: 5rem;
-    max-height: calc(100vh - 6rem);
-    overflow-y: auto;
+    /* Inline on small screens — sticky only kicks in at lg+ where the
+       page grid actually puts the sidebar in its own column. Without
+       this guard, the sticky sidebar bleeds over the lecture body as
+       the user scrolls on narrower viewports. */
+    background: var(--color-paper, transparent);
+  }
+  @media (min-width: 1024px) {
+    .lecture-sidebar {
+      position: sticky;
+      top: 5rem;
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
+    }
   }
 </style>

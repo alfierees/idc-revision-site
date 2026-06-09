@@ -2,6 +2,7 @@
 import Layout from "../../../../components/Layout.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
+import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
 import StatusPill from "../../../../components/StatusPill";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
@@ -33,6 +34,77 @@ const bodyHtml = set.body?.trim()
   : null;
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+
+// --- Toolkit panel computation ---
+
+// Aggregate all related_terms across questions, deduplicate.
+const allRelatedTerms = [...new Set(
+  set.data.questions.flatMap((q) => q.related_terms)
+)];
+
+// Partition into terms and recipes by resolving each slug.
+const toolkitTerms: { slug: string; href: string; label: string }[] = [];
+const toolkitRecipes: { slug: string; href: string; label: string }[] = [];
+
+for (const raw of allRelatedTerms) {
+  const target = resolveLink(links, raw);
+  if (!target) continue;
+  const entry = { slug: target.slug, href: linkHref(subjectSlug, target), label: raw };
+  if (target.kind === "term") toolkitTerms.push(entry);
+  else if (target.kind === "recipe") toolkitRecipes.push(entry);
+}
+
+// Deduplicate by canonical slug (in case two raw aliases resolve to same target).
+function dedupBySlug<T extends { slug: string }>(arr: T[]): T[] {
+  const seen = new Set<string>();
+  return arr.filter((x) => {
+    if (seen.has(x.slug)) return false;
+    seen.add(x.slug);
+    return true;
+  });
+}
+const uniqueToolkitTerms = dedupBySlug(toolkitTerms);
+const uniqueToolkitRecipes = dedupBySlug(toolkitRecipes);
+
+// Lectures group: from top-of-page tags + hrefs in rendered HTML.
+const allHtml = rendered.map((r) => r.questionHtml + r.solutionHtml).join("") + (bodyHtml ?? "");
+const lectureHrefRe = /href="\/subjects\/[^/]+\/lectures\/([^"]+)"/g;
+const lectureSlugSet = new Set<string>();
+
+// From top-of-page tags that resolve to lectures.
+for (const tag of set.data.tags) {
+  const target = resolveLink(links, tag);
+  if (target?.kind === "lecture") lectureSlugSet.add(target.slug);
+}
+
+// From rendered HTML hrefs.
+let lm: RegExpExecArray | null;
+while ((lm = lectureHrefRe.exec(allHtml)) !== null) {
+  lectureSlugSet.add(lm[1]);
+}
+
+// Fetch lecture titles.
+const allLectureEntries = await getCollection("lectures", (l) => l.data.subject === subjectSlug);
+const lectureBySlug = new Map(
+  allLectureEntries.map((l) => [l.id.split("/").pop()!, l.data.title])
+);
+
+// All sibling problem sets for the subject — feeds the sidebar's cross-PS nav.
+const siblingProblemSets = (await getCollection("problem-sets", (p) => p.data.subject === subjectSlug))
+  .map((p) => ({ slug: p.id.split("/").pop()!, title: p.data.title }));
+
+const toolkitLectures = [...lectureSlugSet]
+  .filter((slug) => lectureBySlug.has(slug))
+  .map((slug) => ({
+    slug,
+    href: `/subjects/${subjectSlug}/lectures/${slug}`,
+    label: lectureBySlug.get(slug)!,
+  }));
+
+const hasToolkit =
+  uniqueToolkitTerms.length > 0 ||
+  uniqueToolkitRecipes.length > 0 ||
+  toolkitLectures.length > 0;
 ---
 <Layout title={`${set.data.title} · ${subject.data.title}`}>
   <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
@@ -65,22 +137,71 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     </ul>
   )}
 
-  <ol class="space-y-6 list-none p-0">
-    {rendered.map((q) => (
-      <li id={q.id} class="scroll-mt-24 rounded border border-rule bg-card p-6">
-        <div class="flex items-start justify-between gap-4">
-          <span class="font-mono text-sm text-ink-soft tracking-wide">{q.id}</span>
-          <StatusPill client:load subject={subjectSlug} kind="problem-set" refSlug={setSlug} question={q.id} />
-        </div>
-        <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
-        <CollapsibleSolution html={q.solutionHtml} />
-      </li>
-    ))}
-  </ol>
+  <div class="pset-grid">
+    <QuestionSidebar
+      subject={subjectSlug}
+      problemSets={siblingProblemSets}
+      currentSlug={setSlug}
+      currentQuestions={rendered}
+    />
 
-  {bodyHtml && (
-    <section class="mt-8 rounded border border-rule bg-card p-6 question-body prose-card" set:html={bodyHtml} />
-  )}
+    <div>
+      {hasToolkit && (
+        <div class="mb-6 rounded border border-rule bg-card p-5">
+          <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mb-3">Toolkit</p>
+          <div class="flex flex-col gap-3">
+            {uniqueToolkitTerms.length > 0 && (
+              <div>
+                <span class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mr-2">Terms</span>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  {uniqueToolkitTerms.map((t) => (
+                    <a href={t.href} class="tag tag-link">{t.label}</a>
+                  ))}
+                </div>
+              </div>
+            )}
+            {uniqueToolkitRecipes.length > 0 && (
+              <div>
+                <span class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mr-2">Recipes</span>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  {uniqueToolkitRecipes.map((r) => (
+                    <a href={r.href} class="tag tag-link">{r.label}</a>
+                  ))}
+                </div>
+              </div>
+            )}
+            {toolkitLectures.length > 0 && (
+              <div>
+                <span class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mr-2">Lectures</span>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  {toolkitLectures.map((l) => (
+                    <a href={l.href} class="tag tag-link">{l.label}</a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      <ol class="space-y-6 list-none p-0">
+        {rendered.map((q) => (
+          <li id={q.id} class="scroll-mt-24 rounded border border-rule bg-card p-6">
+            <div class="flex items-start justify-between gap-4">
+              <span class="font-mono text-sm text-ink-soft tracking-wide">{q.id}</span>
+              <StatusPill client:load subject={subjectSlug} kind="problem-set" refSlug={setSlug} question={q.id} />
+            </div>
+            <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
+            <CollapsibleSolution html={q.solutionHtml} />
+          </li>
+        ))}
+      </ol>
+
+      {bodyHtml && (
+        <section class="mt-8 rounded border border-rule bg-card p-6 question-body prose-card" set:html={bodyHtml} />
+      )}
+    </div>
+  </div>
 </Layout>
 
 <style is:global>
@@ -89,5 +210,15 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
+  }
+  .pset-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media (min-width: 1024px) {
+    .pset-grid {
+      grid-template-columns: 200px 1fr;
+    }
   }
 </style>

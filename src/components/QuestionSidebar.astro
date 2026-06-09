@@ -1,0 +1,82 @@
+---
+interface ProblemSetEntry {
+  slug: string;
+  title: string;
+}
+interface QuestionEntry {
+  id: string;
+}
+interface Props {
+  subject: string;
+  problemSets: ProblemSetEntry[];
+  currentSlug: string;
+  currentQuestions: QuestionEntry[];
+}
+const { subject, problemSets, currentSlug, currentQuestions } = Astro.props;
+
+// Sort by extracted leading number (ex-1, ex-2 ... ; ps-1, ps-2 ...). Falls
+// back to alphabetical when no number is extractable.
+function sortKey(slug: string): [number, string] {
+  const m = slug.match(/(\d+)/);
+  return [m ? parseInt(m[1], 10) : Infinity, slug];
+}
+const sorted = [...problemSets].sort((a, b) => {
+  const [an, as] = sortKey(a.slug);
+  const [bn, bs] = sortKey(b.slug);
+  if (an !== bn) return an - bn;
+  return as.localeCompare(bs);
+});
+---
+<aside class="ps-sidebar font-ui text-sm">
+  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mb-4">Problem Sets</p>
+  <nav>
+    <ol class="space-y-1 list-none p-0">
+      {sorted.map((p) => (
+        <li>
+          {p.slug === currentSlug ? (
+            <>
+              <span class="block py-1 text-ink font-medium">{p.title}</span>
+              {currentQuestions.length > 0 && (
+                <ul class="ml-3 mt-1 mb-2 space-y-0.5 list-none p-0 border-l border-rule">
+                  {currentQuestions.map((q) => (
+                    <li>
+                      <a
+                        href={`#${q.id}`}
+                        class="block pl-3 py-0.5 text-ink-soft hover:text-accent font-mono text-xs tracking-wide"
+                      >
+                        {q.id}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          ) : (
+            <a
+              href={`/subjects/${subject}/problem-sets/${p.slug}`}
+              class="block py-1 text-ink-soft hover:text-accent"
+            >
+              {p.title}
+            </a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
+</aside>
+
+<style>
+  .ps-sidebar {
+    /* Inline on small screens — sticky only at lg+ where the grid puts
+       this in its own column. */
+    background: var(--color-paper, transparent);
+  }
+  @media (min-width: 1024px) {
+    .ps-sidebar {
+      position: sticky;
+      top: 5rem;
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
+    }
+  }
+</style>
