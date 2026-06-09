@@ -28,7 +28,9 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
           <li>
             <a href={`/subjects/${subjectSlug}/past-papers/${slug}`} class="group block rounded border border-rule bg-card p-5 transition-shadow hover:shadow-sm">
               <div class="font-display text-lg text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 500;">{p.data.title}</div>
-              <div class="mt-1 font-ui text-sm text-ink-muted">{p.data.questions.length} questions</div>
+              <div class="mt-1 font-ui text-sm text-ink-muted">
+                {[p.data.exam, p.data.year].filter(Boolean).join(" · ")}
+              </div>
             </a>
           </li>
         );

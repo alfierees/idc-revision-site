@@ -6,12 +6,12 @@ const { subject, entries } = Astro.props;
 function urlOf(e: BacklinkEntry, subject: string) {
   if (e.type === "recipe")      return `/subjects/${subject}/recipes/${e.ref}`;
   if (e.type === "problem-set") return `/subjects/${subject}/problem-sets/${e.ref}#${e.question}`;
-  return `/subjects/${subject}/past-papers/${e.ref}#${e.question}`;
+  return `/subjects/${subject}/past-papers/${e.ref}`;
 }
 function labelOf(e: BacklinkEntry) {
   if (e.type === "recipe")      return `Recipe · ${e.title}`;
   if (e.type === "problem-set") return `${e.title} · ${e.question}`;
-  return `${e.title} · ${e.question}`;
+  return `Past paper · ${e.title}`;
 }
 ---
 {entries.length === 0 ? (

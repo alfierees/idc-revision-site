@@ -76,11 +76,18 @@ const pastPapers = defineCollection({
   schema: z.object({
     title: z.string(),
     subject: z.string(),
+    exam: z.string().optional(),
+    dataset: z.string().optional(),
+    instructor: z.string().optional(),
+    status: z.string().optional(),
+    course: z.string().optional(),
+    semester: z.number().optional(),
     year: z.number().optional(),
+    week: z.number().optional(),
     source_doc: z.string().optional(),
     tags: z.array(z.string()).default([]),
-    questions: z.array(question),
-    ai_drafted: z.boolean().default(false),
+    aliases: z.array(z.string()).default([]),
+    in_scope: z.boolean().default(true),
   }),
 });
 

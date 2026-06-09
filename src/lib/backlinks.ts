@@ -3,7 +3,7 @@ import { slugifyTerm } from "./wikilinks";
 export type BacklinkEntry =
   | { type: "recipe";      ref: string; title: string }
   | { type: "problem-set"; ref: string; title: string; question: string }
-  | { type: "past-paper";  ref: string; title: string; question: string };
+  | { type: "past-paper";  ref: string; title: string };
 
 export interface BacklinkInput {
   subject: string;
@@ -11,7 +11,7 @@ export interface BacklinkInput {
   aliases: Map<string, string>;
   recipes: { slug: string; title: string; body: string }[];
   problemSets: { slug: string; title: string; questions: { id: string; text: string; solution: string }[] }[];
-  pastPapers:  { slug: string; title: string; questions: { id: string; text: string; solution: string }[] }[];
+  pastPapers:  { slug: string; title: string; body: string }[];
 }
 
 const WIKI = /\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
@@ -47,10 +47,8 @@ export function computeBacklinks(input: BacklinkInput): Map<string, BacklinkEntr
     }
   }
   for (const pp of input.pastPapers) {
-    for (const q of pp.questions) {
-      for (const slug of termsIn(`${q.text}\n${q.solution}`, input.knownTermSlugs, input.aliases)) {
-        push(slug, { type: "past-paper", ref: pp.slug, title: pp.title, question: q.id });
-      }
+    for (const slug of termsIn(pp.body, input.knownTermSlugs, input.aliases)) {
+      push(slug, { type: "past-paper", ref: pp.slug, title: pp.title });
     }
   }
   return out;

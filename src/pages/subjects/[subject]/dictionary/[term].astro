@@ -36,7 +36,7 @@ const recipes = (await getCollection("recipes", (r) => r.data.subject === subjec
 const problemSets = (await getCollection("problem-sets", (p) => p.data.subject === subjectSlug))
   .map((p) => ({ slug: slugOf(p.id), title: p.data.title, questions: p.data.questions }));
 const pastPapers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug))
-  .map((p) => ({ slug: slugOf(p.id), title: p.data.title, questions: p.data.questions }));
+  .map((p) => ({ slug: slugOf(p.id), title: p.data.title, body: p.body ?? "" }));
 
 const backlinks = computeBacklinks({
   subject: subjectSlug, knownTermSlugs: knownSlugs, aliases,

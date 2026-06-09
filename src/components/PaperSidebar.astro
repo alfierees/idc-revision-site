@@ -1,0 +1,51 @@
+---
+interface PaperEntry { slug: string; title: string; year?: number; }
+interface Section { id: string; text: string; level: number; }
+interface Props {
+  subject: string;
+  papers: PaperEntry[];
+  currentSlug: string;
+  currentSections: Section[];
+}
+const { subject, papers, currentSlug, currentSections } = Astro.props;
+const sorted = [...papers].sort((a, b) => {
+  if (a.year !== undefined && b.year !== undefined && a.year !== b.year) return b.year - a.year;
+  if (a.year !== undefined && b.year === undefined) return -1;
+  if (b.year !== undefined && a.year === undefined) return 1;
+  return a.title.localeCompare(b.title);
+});
+---
+<aside class="paper-sidebar font-ui text-sm">
+  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mb-4">Past Papers</p>
+  <nav>
+    <ol class="space-y-1 list-none p-0">
+      {sorted.map((p) => (
+        <li>
+          {p.slug === currentSlug ? (
+            <>
+              <span class="block py-1 text-ink font-medium">{p.title}</span>
+              {currentSections.length > 0 && (
+                <ul class="ml-3 mt-1 mb-2 space-y-0.5 list-none p-0 border-l border-rule">
+                  {currentSections.map((s) => (
+                    <li>
+                      <a href={`#${s.id}`} class={`block pl-3 py-0.5 text-ink-soft hover:text-accent ${s.level === 3 ? "pl-6 text-xs" : ""}`}>{s.text}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          ) : (
+            <a href={`/subjects/${subject}/past-papers/${p.slug}`} class="block py-1 text-ink-soft hover:text-accent">{p.title}</a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
+</aside>
+
+<style>
+  .paper-sidebar { background: var(--color-paper, transparent); }
+  @media (min-width: 1024px) {
+    .paper-sidebar { position: sticky; top: 5rem; max-height: calc(100vh - 6rem); overflow-y: auto; }
+  }
+</style>
