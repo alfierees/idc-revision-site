@@ -4,6 +4,7 @@ import HoverPreview from "../../../../components/HoverPreview.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
+import SidebarToggle from "../../../../components/SidebarToggle.astro";
 import StatusPill from "../../../../components/StatusPill";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
@@ -138,7 +139,8 @@ const hasToolkit =
     </ul>
   )}
 
-  <div class="pset-grid">
+  <SidebarToggle />
+  <div id="content-grid" class="pset-grid">
     <QuestionSidebar
       subject={subjectSlug}
       problemSets={siblingProblemSets}

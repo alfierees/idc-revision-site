@@ -225,3 +225,27 @@
     }
   }
 }
+
+/* Collapsible content sidebar (lecture / past-paper / problem-set pages) */
+.sidebar-collapsed > aside { display: none; }
+@media (min-width: 1024px) {
+  .sidebar-collapsed { grid-template-columns: 1fr !important; }
+}
+.sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--color-rule);
+  border-radius: 5px;
+  background: var(--color-card);
+  color: var(--color-ink-soft);
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+.sidebar-toggle:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.sidebar-toggle svg { width: 0.9rem; height: 0.9rem; }

@@ -4,6 +4,7 @@ import HoverPreview from "../../../../components/HoverPreview.astro";
 import TabNav from "../../../../components/TabNav.astro";
 import LectureSidebar from "../../../../components/LectureSidebar.astro";
 import Mermaid from "../../../../components/Mermaid.astro";
+import SidebarToggle from "../../../../components/SidebarToggle.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
@@ -51,7 +52,8 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
   <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
   <TabNav subject={subjectSlug} active="lectures" />
 
-  <div class="lecture-grid mt-6">
+  <SidebarToggle />
+  <div id="content-grid" class="lecture-grid mt-6">
     <LectureSidebar
       subject={subjectSlug}
       lectures={allLectures}

@@ -1,25 +1,10 @@
 ---
-import { getEntry } from "astro:content";
-import { parseGlossary } from "../lib/glossary";
+import { getConceptPreviews } from "../lib/concept-previews";
 
 interface Props { subject: string; }
 const { subject } = Astro.props;
 
-const glossaryEntry = await getEntry("glossary", subject);
-const data: Record<string, { title: string; def: string; lecture: string | null }> = {};
-if (glossaryEntry) {
-  const g = parseGlossary(glossaryEntry.body ?? "");
-  for (const e of g.entries) {
-    // Plain-text definition: drop wiki-link markup, keep display text.
-    const def = e.definition
-      .replace(/\[\[#?[^\]|]+\|([^\]]+)\]\]/g, "$1")
-      .replace(/\[\[#?([^\]]+)\]\]/g, "$1");
-    const lecture = e.lectureRef
-      ? e.lectureRef.replace(/\[\[[^\]|]+\|([^\]]+)\]\]/, "$1").replace(/\[\[([^\]]+)\]\]/, "$1")
-      : null;
-    data[e.slug] = { title: e.term, def, lecture };
-  }
-}
+const data = await getConceptPreviews(subject);
 const json = JSON.stringify(data);
 const prefix = `/subjects/${subject}/dictionary/`;
 ---
@@ -30,7 +15,9 @@ const prefix = `/subjects/${subject}/dictionary/`;
   #concept-preview-card {
     position: absolute;
     z-index: 50;
-    max-width: 22rem;
+    max-width: 24rem;
+    max-height: 60vh;
+    overflow-y: auto;
     padding: 0.75rem 0.9rem;
     background: var(--color-card);
     border: 1px solid var(--color-rule);
@@ -38,11 +25,12 @@ const prefix = `/subjects/${subject}/dictionary/`;
     box-shadow: 0 6px 24px rgb(0 0 0 / 12%);
     font-family: var(--font-ui);
     font-size: 0.85rem;
-    line-height: 1.45;
+    line-height: 1.5;
     color: var(--color-ink-soft);
   }
-  #concept-preview-card .cp-title { font-weight: 600; color: var(--color-ink); display: block; margin-bottom: 0.25rem; }
-  #concept-preview-card .cp-lecture { display: block; margin-top: 0.4rem; font-size: 0.75rem; color: var(--color-ink-muted); }
+  #concept-preview-card .cp-title { font-weight: 600; color: var(--color-ink); display: block; margin-bottom: 0.3rem; }
+  #concept-preview-card .cp-lecture { display: block; margin-top: 0.45rem; font-size: 0.75rem; color: var(--color-ink-muted); }
+  #concept-preview-card .katex { font-size: 1em; }
 </style>
 
 <script>
@@ -53,6 +41,9 @@ const prefix = `/subjects/${subject}/dictionary/`;
     const prefix = (el as HTMLElement).dataset.prefix || "";
     let hideTimer: number | undefined;
 
+    const esc = (s: string) =>
+      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
     const slugFromHref = (href: string): string | null => {
       try {
         const url = new URL(href, location.origin);
@@ -61,18 +52,18 @@ const prefix = `/subjects/${subject}/dictionary/`;
       } catch { return null; }
     };
 
-    const esc = (s: string) =>
-      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const show = (a: HTMLAnchorElement) => {
       const slug = slugFromHref(a.getAttribute("href") || "");
       if (!slug || !data[slug]) return;
       const d = data[slug];
+      // d.defHtml is trusted build-time-rendered KaTeX/markdown HTML from the
+      // user's own vault; title and lecture are plain text and are escaped.
       card.innerHTML =
-        `<span class="cp-title">${esc(d.title)}</span>${esc(d.def)}` +
+        `<span class="cp-title">${esc(d.title)}</span>${d.defHtml}` +
         (d.lecture ? `<span class="cp-lecture">→ ${esc(d.lecture)}</span>` : "");
       const r = a.getBoundingClientRect();
       card.style.top = `${window.scrollY + r.bottom + 6}px`;
-      card.style.left = `${window.scrollX + Math.min(r.left, window.innerWidth - 360)}px`;
+      card.style.left = `${window.scrollX + Math.min(r.left, window.innerWidth - 384)}px`;
       card.hidden = false;
     };
     const hide = () => { hideTimer = window.setTimeout(() => { card.hidden = true; }, 120); };
