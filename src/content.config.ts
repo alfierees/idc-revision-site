@@ -91,6 +91,17 @@ const pastPapers = defineCollection({
   }),
 });
 
+const glossary = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/glossary" }),
+  schema: z.object({
+    title: z.string(),
+    subject: z.string(),
+    description: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    aliases: z.array(z.string()).default([]),
+  }),
+});
+
 export const collections = {
   subjects,
   terms,
@@ -98,4 +109,5 @@ export const collections = {
   lectures,
   "problem-sets": problemSets,
   "past-papers": pastPapers,
+  glossary,
 };
