@@ -1,8 +1,9 @@
 ---
 import Layout from "../../../../components/Layout.astro";
-import TabNav from "../../../../components/TabNav.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+import { buildLinkMap } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const recipes = await getCollection("recipes", (r) => r.data.in_scope);
@@ -17,25 +18,21 @@ const recipeSlug  = Astro.params.recipe!;
 const entry = await getEntry("recipes", `${subjectSlug}/${recipeSlug}`);
 if (!entry) throw new Error(`recipe ${subjectSlug}/${recipeSlug} not found`);
 
-const allTerms = await getCollection("terms", (t) => t.data.subject === subjectSlug);
-const knownSlugs = new Set(allTerms.map((t) => t.id.split("/").pop()!));
+// Full subject link map so cross-kind wiki-links and aliases in recipe bodies
+// resolve (not just term→term links).
+const links = await buildLinkMap(subjectSlug);
 
-const html = await renderMarkdownString(entry.body ?? "", subjectSlug, knownSlugs);
+const html = await renderMarkdownString(entry.body ?? "", subjectSlug, links);
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`${entry.data.title} · ${subject.data.title}`}>
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
-  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  <TabNav subject={subjectSlug} active="recipes" />
-
+<Layout title={`${entry.data.title} · ${subject.data.title}`} subject={subjectSlug} active="recipes">
   <article>
-    <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Recipe</p>
-    <h2 class="mt-2 font-display text-2xl" style="font-variation-settings: 'opsz' 48, 'wght' 500;">
-      {entry.data.title}
-    </h2>
+    <p class="doc-meta">Recipe</p>
+    <h1 class="doc-title">{entry.data.title}</h1>
     <div class="recipe-body mt-6 text-base text-ink" set:html={html} />
   </article>
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
 <style is:global>

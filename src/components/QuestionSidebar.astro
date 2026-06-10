@@ -26,57 +26,26 @@ const sorted = [...problemSets].sort((a, b) => {
   if (an !== bn) return an - bn;
   return as.localeCompare(bs);
 });
+const current = sorted.find((p) => p.slug === currentSlug);
+const others = sorted.filter((p) => p.slug !== currentSlug);
 ---
-<aside class="ps-sidebar font-ui text-sm">
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mb-4">Problem Sets</p>
-  <nav>
-    <ol class="space-y-1 list-none p-0">
-      {sorted.map((p) => (
+<aside class="rail">
+  <p class="toc-label">Questions</p>
+  {current && <p class="toc-current">{current.title}</p>}
+  {currentQuestions.length > 0 && (
+    <ul class="toc-list">
+      {currentQuestions.map((q) => (
         <li>
-          {p.slug === currentSlug ? (
-            <>
-              <span class="block py-1 text-ink font-medium">{p.title}</span>
-              {currentQuestions.length > 0 && (
-                <ul class="ml-3 mt-1 mb-2 space-y-0.5 list-none p-0 border-l border-rule">
-                  {currentQuestions.map((q) => (
-                    <li>
-                      <a
-                        href={`#${q.id}`}
-                        class="block pl-3 py-0.5 text-ink-soft hover:text-accent font-mono text-xs tracking-wide"
-                      >
-                        {q.id}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
-          ) : (
-            <a
-              href={`/subjects/${subject}/problem-sets/${p.slug}`}
-              class="block py-1 text-ink-soft hover:text-accent"
-            >
-              {p.title}
-            </a>
-          )}
+          <a href={`#${q.id}`} class="lvl-2">{q.id}</a>
         </li>
       ))}
-    </ol>
-  </nav>
+    </ul>
+  )}
+  {others.length > 0 && (
+    <nav class="toc-other">
+      {others.map((p) => (
+        <a href={`/subjects/${subject}/problem-sets/${p.slug}`}>{p.title}</a>
+      ))}
+    </nav>
+  )}
 </aside>
-
-<style>
-  .ps-sidebar {
-    /* Inline on small screens — sticky only at lg+ where the grid puts
-       this in its own column. */
-    background: var(--color-paper, transparent);
-  }
-  @media (min-width: 1024px) {
-    .ps-sidebar {
-      position: sticky;
-      top: 5rem;
-      max-height: calc(100vh - 6rem);
-      overflow-y: auto;
-    }
-  }
-</style>

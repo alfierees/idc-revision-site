@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 
-export type LinkKind = "term" | "recipe" | "problem-set" | "lecture";
+export type LinkKind = "term" | "recipe" | "problem-set" | "lecture" | "past-paper";
 export type LinkTarget = { kind: LinkKind; slug: string };
 export type LinkMap = Map<string, LinkTarget>;
 
@@ -9,6 +9,7 @@ export const KIND_TO_PATH: Record<LinkKind, string> = {
   recipe: "recipes",
   "problem-set": "problem-sets",
   lecture: "lectures",
+  "past-paper": "past-papers",
 };
 
 export function linkHref(subject: string, target: LinkTarget): string {
@@ -37,7 +38,17 @@ export function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined
       candidate = target;
     }
   }
-  return candidate;
+  if (candidate) return candidate;
+  // Problem-set vault-name fallback: vault links like
+  // [[PS_04-Seatbelt Laws & Traffic Fatalities]] slugify to
+  // "ps-04-seatbelt-laws-traffic-fatalities", but the ingested page is "ps-4".
+  // Strip the leading zero-padded number off any trailing description and retry.
+  const psMatch = slug.match(/^ps-0*(\d+)(?:-.*)?$/);
+  if (psMatch) {
+    const ps = links.get(`ps-${psMatch[1]}`);
+    if (ps && ps.kind === "problem-set") return ps;
+  }
+  return undefined;
 }
 
 function slugOf(id: string): string {
@@ -64,11 +75,12 @@ function slugifyAlias(s: string): string {
  * slug but never override an existing entry.
  */
 export async function buildLinkMap(subject: string): Promise<LinkMap> {
-  const [lectures, terms, recipes, sets] = await Promise.all([
+  const [lectures, terms, recipes, sets, papers] = await Promise.all([
     getCollection("lectures", (l) => l.data.subject === subject),
     getCollection("terms", (t) => t.data.subject === subject),
     getCollection("recipes", (r) => r.data.subject === subject),
     getCollection("problem-sets", (p) => p.data.subject === subject),
+    getCollection("past-papers", (p) => p.data.subject === subject),
   ]);
   const map: LinkMap = new Map();
   for (const s of sets) {
@@ -78,7 +90,10 @@ export async function buildLinkMap(subject: string): Promise<LinkMap> {
   for (const l of lectures) {
     const slug = slugOf(l.id);
     map.set(slug, { kind: "lecture", slug });
-    const aliases = (l.data as { aliases?: string[] }).aliases ?? [];
+    // Title alias: the frontmatter `title` is the prefix-free lecture name
+    // (e.g. "Introduction & Treatment Effects"), so vault links that omit the
+    // `Lec_NN-` filename prefix resolve to this lecture.
+    const aliases = [l.data.title, ...((l.data as { aliases?: string[] }).aliases ?? [])];
     for (const a of aliases) {
       const aslug = slugifyAlias(a);
       if (aslug && !map.has(aslug)) {
@@ -86,9 +101,22 @@ export async function buildLinkMap(subject: string): Promise<LinkMap> {
       }
     }
   }
+  for (const p of papers) {
+    const slug = slugOf(p.id);
+    if (!map.has(slug)) map.set(slug, { kind: "past-paper", slug });
+    const aliases = (p.data as { aliases?: string[] }).aliases ?? [];
+    for (const a of aliases) {
+      const aslug = slugifyAlias(a);
+      if (aslug && !map.has(aslug)) map.set(aslug, { kind: "past-paper", slug });
+    }
+  }
   for (const r of recipes) {
     const slug = slugOf(r.id);
     map.set(slug, { kind: "recipe", slug });
+    // Title alias: recipe pages are referenced by their full title
+    // (e.g. [[Testing for heteroskedasticity]] → testing-heteroskedasticity).
+    const aslug = slugifyAlias(r.data.title);
+    if (aslug && !map.has(aslug)) map.set(aslug, { kind: "recipe", slug });
   }
   for (const t of terms) {
     const slug = slugOf(t.id);

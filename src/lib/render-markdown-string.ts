@@ -11,6 +11,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeStringify from "rehype-stringify";
 import wikiLinkPlugin from "remark-wiki-link";
 import { rewriteWikiHrefs } from "./wikilink-rewrite";
+import { rehypePaint } from "./rehype-paint";
 import type { LinkMap } from "./known-links";
 import { slugify } from "./slugify";
 
@@ -44,6 +45,16 @@ function rewriteObsidianEmbeds(md: string, subject: string): string {
   });
 }
 
+/**
+ * Pre-pass: Obsidian writes display math as a single line `$$...$$`, which
+ * remark-math parses as inline math inside a paragraph. Break the delimiters
+ * onto their own lines so it becomes a math-display block (and gets the
+ * framed .eqn treatment).
+ */
+function promoteDisplayMath(md: string): string {
+  return md.replace(/^\$\$([^$].*?)\$\$\s*$/gm, (_m, inner: string) => `$$\n${inner}\n$$`);
+}
+
 const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
@@ -61,6 +72,7 @@ const processor = unified()
   .use(remarkRehype, { allowDangerousHtml: false })
   .use(rehypeSlugLocal)
   .use(rehypeKatex)
+  .use(rehypePaint)
   .use(rehypeStringify);
 
 export async function renderMarkdownString(
@@ -68,7 +80,7 @@ export async function renderMarkdownString(
   subject: string,
   links: LinkMap | Set<string>,
 ): Promise<string> {
-  const pre = rewriteObsidianEmbeds(md, subject);
+  const pre = promoteDisplayMath(rewriteObsidianEmbeds(md, subject));
   const file = await processor.process(pre);
   return rewriteWikiHrefs(String(file), subject, links);
 }

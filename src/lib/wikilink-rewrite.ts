@@ -1,12 +1,5 @@
-import { resolveLink, type LinkMap } from "./known-links";
+import { resolveLink, KIND_TO_PATH, type LinkMap } from "./known-links";
 import { slugify } from "./slugify";
-
-const KIND_TO_PATH: Record<string, string> = {
-  term: "dictionary",
-  recipe: "recipes",
-  "problem-set": "problem-sets",
-  lecture: "lectures",
-};
 
 export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap | Set<string>): string {
   return html.replace(/href="__WIKI__([^"]+)"/g, (_m, raw: string) => {
@@ -26,6 +19,23 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
         return `href="${fragmentPart ? `${url}#${slugify(fragmentPart)}` : url}"`;
       }
       return `href="#" data-missing="true" title="Missing concept"`;
+    }
+
+    // Glossary-anchor links: [[_<Subject> Concepts#Term|Display]] resolves to
+    // the per-term Dictionary page via its fragment, dropping the fragment.
+    if (fragmentPart && slug === `${subject}-concepts`) {
+      const gTarget = resolveLink(links, fragmentPart);
+      if (gTarget) {
+        return `href="/subjects/${subject}/${KIND_TO_PATH[gTarget.kind]}/${gTarget.slug}"`;
+      }
+      return `href="#" data-missing="true" title="Missing concept"`;
+    }
+
+    // Subject-hub link: [[Econometrics]] (slug === subject slug) appears as
+    // "Part of: [[Subject]]" on every lecture/past-paper page and resolves to
+    // the subject hub at /subjects/<subject>.
+    if (slug === subject) {
+      return `href="/subjects/${subject}"`;
     }
 
     const target = resolveLink(links, slugPart);

@@ -1,10 +1,11 @@
 ---
 import Layout from "../../../../components/Layout.astro";
-import TabNav from "../../../../components/TabNav.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
 import BacklinkList from "../../../../components/BacklinkList.astro";
 import { getCollection, getEntry } from "astro:content";
 import { computeBacklinks } from "../../../../lib/backlinks";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+import { buildLinkMap } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const terms = await getCollection("terms", (t) => t.data.in_scope);
@@ -29,14 +30,19 @@ for (const t of allTerms) {
   for (const a of t.data.aliases) aliases.set(a.toLowerCase(), s);
 }
 
-const html = await renderMarkdownString(termEntry.body ?? "", subjectSlug, knownSlugs);
+// Render with the full subject link map (terms + recipes + lectures + papers +
+// problem-sets + aliases + subject hub) so cross-kind wiki-links and aliases in
+// term bodies resolve, not just term→term links. knownSlugs is still used for
+// backlink computation below.
+const links = await buildLinkMap(subjectSlug);
+const html = await renderMarkdownString(termEntry.body ?? "", subjectSlug, links);
 
 const recipes = (await getCollection("recipes", (r) => r.data.subject === subjectSlug))
   .map((r) => ({ slug: slugOf(r.id), title: r.data.title, body: r.body ?? "" }));
 const problemSets = (await getCollection("problem-sets", (p) => p.data.subject === subjectSlug))
   .map((p) => ({ slug: slugOf(p.id), title: p.data.title, questions: p.data.questions }));
 const pastPapers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug))
-  .map((p) => ({ slug: slugOf(p.id), title: p.data.title, questions: p.data.questions }));
+  .map((p) => ({ slug: slugOf(p.id), title: p.data.title, body: p.body ?? "" }));
 
 const backlinks = computeBacklinks({
   subject: subjectSlug, knownTermSlugs: knownSlugs, aliases,
@@ -46,14 +52,11 @@ const entries = backlinks.get(termSlug) ?? [];
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`${termEntry.data.title} · ${subject.data.title}`}>
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
-  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  <TabNav subject={subjectSlug} active="dictionary" />
+<Layout title={`${termEntry.data.title} · ${subject.data.title}`} subject={subjectSlug} active="dictionary">
   <article>
-    <h2 class="font-display text-2xl text-ink" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{termEntry.data.title}</h2>
+    <h1 class="doc-title" style="margin-top:0;">{termEntry.data.title}</h1>
     {termEntry.data.aliases.length > 0 && (
-      <p class="mt-1 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Also known as · {termEntry.data.aliases.join(" · ")}</p>
+      <p class="mt-2 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Also known as · {termEntry.data.aliases.join(" · ")}</p>
     )}
     <div class="term-body mt-6 text-base text-ink" set:html={html} />
   </article>
@@ -61,6 +64,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     <h3 class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">Appears in</h3>
     <div class="mt-3"><BacklinkList subject={subjectSlug} entries={entries} /></div>
   </section>
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
 <style is:global>

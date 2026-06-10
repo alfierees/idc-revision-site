@@ -1,14 +1,15 @@
 ---
 import Layout from "../../../../components/Layout.astro";
-import TabNav from "../../../../components/TabNav.astro";
-import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
-import StatusPill from "../../../../components/StatusPill";
-import PaperProgress from "../../../../components/PaperProgress";
+import HoverPreview from "../../../../components/HoverPreview.astro";
+import PaperSidebar from "../../../../components/PaperSidebar.astro";
+import Mermaid from "../../../../components/Mermaid.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
+import { decodeHtmlEntities } from "../../../../lib/html-entities";
 
 export async function getStaticPaths() {
-  const papers = await getCollection("past-papers");
+  const papers = await getCollection("past-papers", (p) => p.data.in_scope);
   return papers.map((p) => {
     const slug = p.id.split("/").pop()!;
     return { params: { subject: p.data.subject, paper: slug } };
@@ -16,57 +17,54 @@ export async function getStaticPaths() {
 }
 
 const subjectSlug = Astro.params.subject!;
-const paperSlug   = Astro.params.paper!;
+const paperSlug = Astro.params.paper!;
 const paper = await getEntry("past-papers", `${subjectSlug}/${paperSlug}`);
 if (!paper) throw new Error(`past paper ${subjectSlug}/${paperSlug} not found`);
 
-const allTerms = await getCollection("terms", (t) => t.data.subject === subjectSlug);
-const knownSlugs = new Set(allTerms.map((t) => t.id.split("/").pop()!));
+const links = await buildLinkMap(subjectSlug);
+const html = await renderMarkdownString(paper.body ?? "", subjectSlug, links);
 
-const rendered = await Promise.all(paper.data.questions.map(async (q) => ({
-  id: q.id,
-  questionHtml: await renderMarkdownString(q.text, subjectSlug, knownSlugs),
-  solutionHtml: await renderMarkdownString(q.solution, subjectSlug, knownSlugs),
-})));
-const ids = paper.data.questions.map((q) => q.id);
+const allPapers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug && p.data.in_scope))
+  .map((p) => ({ slug: p.id.split("/").pop()!, title: p.data.title, year: p.data.year }));
 
+// Keep the inner HTML so KaTeX in headings renders as real math in the TOC.
+const sectionRe = /<(h2|h3)[^>]*id="([^"]+)"[^>]*>(.*?)<\/\1>/g;
+const sections: { id: string; text: string; html: string; level: number }[] = [];
+let m: RegExpExecArray | null;
+while ((m = sectionRe.exec(html)) !== null) {
+  sections.push({ id: m[2], text: decodeHtmlEntities(m[3].replace(/<[^>]+>/g, "")).trim(), html: m[3], level: m[1] === "h2" ? 2 : 3 });
+}
+
+const meta = [paper.data.exam, paper.data.instructor, paper.data.status].filter(Boolean);
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`${paper.data.title} · ${subject.data.title}`}>
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
-  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  <TabNav subject={subjectSlug} active="past-papers" />
-
-  <div class="mb-6 flex items-baseline justify-between">
-    <h2 class="font-display text-2xl" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{paper.data.title}</h2>
-    {paper.data.source_doc && (
-      <a href={paper.data.source_doc} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent underline underline-offset-4">
-        Original PDF ↗
-      </a>
-    )}
+<Layout title={`${paper.data.title} · ${subject.data.title}`} subject={subjectSlug} active="past-papers" hasSidebar>
+  <div id="content-grid" class="content-grid">
+    <PaperSidebar subject={subjectSlug} papers={allPapers} currentSlug={paperSlug} currentSections={sections} />
+    <article class="paper-body">
+      {meta.length > 0 && (
+        <p class="doc-meta">{meta.join(" · ")}</p>
+      )}
+      <h1 class="doc-title">{paper.data.title}</h1>
+      {paper.data.dataset && (
+        <p class="mt-2 font-ui text-sm text-ink-muted italic">Dataset: {paper.data.dataset}</p>
+      )}
+      {paper.data.tags.length > 0 && (
+        <ul class="mt-4 flex flex-wrap gap-2 list-none p-0">
+          {paper.data.tags.map((tag) => {
+            const target = resolveLink(links, tag);
+            return target ? (
+              <li><a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a></li>
+            ) : (
+              <li><span class="tag tag-muted">#{tag}</span></li>
+            );
+          })}
+        </ul>
+      )}
+      <div class="mt-8 paper-prose prose-card" set:html={html} />
+    </article>
   </div>
-
-  <PaperProgress client:load subject={subjectSlug} refSlug={paperSlug} questionIds={ids} />
-
-  <ol class="mt-8 space-y-6 reading list-none p-0">
-    {rendered.map((q) => (
-      <li id={q.id} class="scroll-mt-24 rounded border border-rule bg-card p-6">
-        <div class="flex items-start justify-between gap-4">
-          <span class="font-mono text-sm text-ink-soft tracking-wide">{q.id}</span>
-          <StatusPill client:load subject={subjectSlug} kind="past-paper" refSlug={paperSlug} question={q.id} />
-        </div>
-        <div class="mt-3 text-base text-ink question-body" set:html={q.questionHtml} />
-        <CollapsibleSolution html={q.solutionHtml} />
-      </li>
-    ))}
-  </ol>
+  <Mermaid />
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
-<style is:global>
-  .question-body a {
-    color: var(--color-accent);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
-  }
-</style>

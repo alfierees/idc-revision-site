@@ -16,16 +16,14 @@ describe("computeBacklinks", () => {
         ] },
       ],
       pastPapers: [
-        { slug: "2023-exam", title: "2023 Final Exam", questions: [
-          { id: "Q1a", text: "Define [[Heteroskedasticity]].", solution: "" },
-        ] },
+        { slug: "2023-exam", title: "2023 Final Exam", body: "Define [[Heteroskedasticity]]." },
       ],
     });
 
     expect(result.get("heteroskedasticity")).toEqual([
       { type: "recipe",       ref: "testing-heteroskedasticity", title: "Testing for heteroskedasticity" },
       { type: "problem-set",  ref: "ps1",         title: "Problem Set 1",      question: "Q1"  },
-      { type: "past-paper",   ref: "2023-exam",   title: "2023 Final Exam",    question: "Q1a" },
+      { type: "past-paper",   ref: "2023-exam",   title: "2023 Final Exam" },
     ]);
     expect(result.get("ols-estimator")).toEqual([
       { type: "recipe", ref: "testing-heteroskedasticity", title: "Testing for heteroskedasticity" },

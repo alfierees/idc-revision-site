@@ -1,6 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
-import TabNav from "../../../../components/TabNav.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
 import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
 import StatusPill from "../../../../components/StatusPill";
@@ -106,15 +106,11 @@ const hasToolkit =
   uniqueToolkitRecipes.length > 0 ||
   toolkitLectures.length > 0;
 ---
-<Layout title={`${set.data.title} · ${subject.data.title}`}>
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
-  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  <TabNav subject={subjectSlug} active="problem-sets" />
-
+<Layout title={`${set.data.title} · ${subject.data.title}`} subject={subjectSlug} active="problem-sets" hasSidebar>
   <div class="mb-3 flex items-baseline justify-between">
-    <h2 class="font-display text-2xl" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{set.data.title}</h2>
+    <h1 class="doc-title" style="margin-top:0;">{set.data.title}</h1>
     {set.data.source_doc && (
-      <a href={set.data.source_doc} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent underline underline-offset-4">
+      <a href={set.data.source_doc} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent">
         Original PDF ↗
       </a>
     )}
@@ -137,7 +133,7 @@ const hasToolkit =
     </ul>
   )}
 
-  <div class="pset-grid">
+  <div id="content-grid" class="content-grid wide-toc">
     <QuestionSidebar
       subject={subjectSlug}
       problemSets={siblingProblemSets}
@@ -147,7 +143,7 @@ const hasToolkit =
 
     <div>
       {hasToolkit && (
-        <div class="mb-6 rounded border border-rule bg-card p-5">
+        <div class="mb-6 rounded-card bg-card p-5 shadow-soft">
           <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mb-3">Toolkit</p>
           <div class="flex flex-col gap-3">
             {uniqueToolkitTerms.length > 0 && (
@@ -186,9 +182,9 @@ const hasToolkit =
 
       <ol class="space-y-6 list-none p-0">
         {rendered.map((q) => (
-          <li id={q.id} class="scroll-mt-24 rounded border border-rule bg-card p-6">
+          <li id={q.id} class="qcard rounded-card bg-card p-7 shadow-soft">
             <div class="flex items-start justify-between gap-4">
-              <span class="font-mono text-sm text-ink-soft tracking-wide">{q.id}</span>
+              <span class="qid"><span class="qnum">{q.id}</span></span>
               <StatusPill client:load subject={subjectSlug} kind="problem-set" refSlug={setSlug} question={q.id} />
             </div>
             <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
@@ -198,27 +194,36 @@ const hasToolkit =
       </ol>
 
       {bodyHtml && (
-        <section class="mt-8 rounded border border-rule bg-card p-6 question-body prose-card" set:html={bodyHtml} />
+        <section class="mt-8 rounded-card bg-card p-7 shadow-soft question-body prose-card" set:html={bodyHtml} />
       )}
     </div>
   </div>
+  <HoverPreview subject={subjectSlug} />
 </Layout>
 
 <style is:global>
-  .question-body a {
+  .qcard { scroll-margin-top: calc(var(--toc-top) + 1rem); }
+  .qid {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--color-accent);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
   }
-  .pset-grid {
+  .qid .qnum {
+    min-width: 1.7rem;
+    height: 1.7rem;
+    padding: 0 0.3rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    color: var(--color-accent-ink);
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  @media (min-width: 1024px) {
-    .pset-grid {
-      grid-template-columns: 200px 1fr;
-    }
+    place-items: center;
+    font-size: 0.8rem;
+    letter-spacing: 0;
   }
 </style>

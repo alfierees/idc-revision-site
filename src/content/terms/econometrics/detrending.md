@@ -1,7 +1,7 @@
 ---
 title: Detrending
 subject: econometrics
-aliases: ["detrended", "trend removal"]
+aliases: ["detrended", "trend removal", "Frisch-Waugh-Lovell theorem", "FWL"]
 related: ["deterministic-time-trend", "spurious-regression"]
 source_folder: econometrics
 ai_drafted: true

@@ -1,0 +1,43 @@
+---
+interface PaperEntry { slug: string; title: string; year?: number; }
+interface Section { id: string; text: string; html?: string; level: number; }
+interface Props {
+  subject: string;
+  papers: PaperEntry[];
+  currentSlug: string;
+  currentSections: Section[];
+}
+const { subject, papers, currentSlug, currentSections } = Astro.props;
+const sorted = [...papers].sort((a, b) => {
+  if (a.year !== undefined && b.year !== undefined && a.year !== b.year) return b.year - a.year;
+  if (a.year !== undefined && b.year === undefined) return -1;
+  if (b.year !== undefined && a.year === undefined) return 1;
+  return a.title.localeCompare(b.title);
+});
+const current = sorted.find((p) => p.slug === currentSlug);
+const others = sorted.filter((p) => p.slug !== currentSlug);
+---
+<aside class="rail">
+  <p class="toc-label">Past Papers</p>
+  {current && <p class="toc-current">{current.title}</p>}
+  {currentSections.length > 0 && (
+    <ul class="toc-list">
+      {currentSections.map((s) => (
+        <li>
+          {s.html ? (
+            <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : "lvl-2"} set:html={s.html} />
+          ) : (
+            <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : "lvl-2"}>{s.text}</a>
+          )}
+        </li>
+      ))}
+    </ul>
+  )}
+  {others.length > 0 && (
+    <nav class="toc-other">
+      {others.map((p) => (
+        <a href={`/subjects/${subject}/past-papers/${p.slug}`}>{p.title}</a>
+      ))}
+    </nav>
+  )}
+</aside>

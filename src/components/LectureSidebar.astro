@@ -6,7 +6,8 @@ interface LectureEntry {
 }
 interface Section {
   id: string;       // the rehype-slug id, e.g. "cournot-1838-quantity-competition"
-  text: string;     // human heading text, e.g. "Cournot (1838) — Quantity competition"
+  text: string;     // plain heading text (fallback)
+  html?: string;    // heading inner HTML — lets KaTeX render as math in the TOC
   level: number;    // 2 for h2, 3 for h3, etc.
 }
 interface Props {
@@ -22,59 +23,30 @@ const sorted = [...lectures].sort((a, b) => {
   if (b.week !== undefined) return 1;
   return a.title.localeCompare(b.title);
 });
+const current = sorted.find((l) => l.slug === currentSlug);
+const others = sorted.filter((l) => l.slug !== currentSlug);
 ---
-<aside class="lecture-sidebar font-ui text-sm">
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mb-4">Lectures</p>
-  <nav>
-    <ol class="space-y-1 list-none p-0">
-      {sorted.map((l) => (
+<aside class="rail">
+  <p class="toc-label">Lectures</p>
+  {current && <p class="toc-current">{current.title}</p>}
+  {currentSections.length > 0 && (
+    <ul class="toc-list">
+      {currentSections.map((s) => (
         <li>
-          {l.slug === currentSlug ? (
-            <>
-              <span class="block py-1 text-ink font-medium">{l.title}</span>
-              {currentSections.length > 0 && (
-                <ul class="ml-3 mt-1 mb-2 space-y-0.5 list-none p-0 border-l border-rule">
-                  {currentSections.map((s) => (
-                    <li>
-                      <a
-                        href={`#${s.id}`}
-                        class={`block pl-3 py-0.5 text-ink-soft hover:text-accent ${s.level === 3 ? "pl-6 text-xs" : ""}`}
-                      >
-                        {s.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
+          {s.html ? (
+            <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : "lvl-2"} set:html={s.html} />
           ) : (
-            <a
-              href={`/subjects/${subject}/lectures/${l.slug}`}
-              class="block py-1 text-ink-soft hover:text-accent"
-            >
-              {l.title}
-            </a>
+            <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : "lvl-2"}>{s.text}</a>
           )}
         </li>
       ))}
-    </ol>
-  </nav>
+    </ul>
+  )}
+  {others.length > 0 && (
+    <nav class="toc-other">
+      {others.map((l) => (
+        <a href={`/subjects/${subject}/lectures/${l.slug}`}>{l.title}</a>
+      ))}
+    </nav>
+  )}
 </aside>
-
-<style>
-  .lecture-sidebar {
-    /* Inline on small screens — sticky only kicks in at lg+ where the
-       page grid actually puts the sidebar in its own column. Without
-       this guard, the sticky sidebar bleeds over the lecture body as
-       the user scrolls on narrower viewports. */
-    background: var(--color-paper, transparent);
-  }
-  @media (min-width: 1024px) {
-    .lecture-sidebar {
-      position: sticky;
-      top: 5rem;
-      max-height: calc(100vh - 6rem);
-      overflow-y: auto;
-    }
-  }
-</style>

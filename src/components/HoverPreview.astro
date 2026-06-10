@@ -1,0 +1,88 @@
+---
+import { getConceptPreviews } from "../lib/concept-previews";
+
+interface Props { subject: string; }
+const { subject } = Astro.props;
+
+const data = await getConceptPreviews(subject);
+const json = JSON.stringify(data);
+const prefix = `/subjects/${subject}/dictionary/`;
+---
+<script type="application/json" id="concept-previews" set:html={json} data-prefix={prefix}></script>
+<div id="concept-preview-card" role="tooltip" hidden></div>
+
+<style is:global>
+  #concept-preview-card {
+    position: absolute;
+    z-index: 50;
+    max-width: 24rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 0.75rem 0.9rem;
+    background: var(--color-card);
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 12%);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-ink-soft);
+  }
+  #concept-preview-card .cp-title { font-weight: 600; color: var(--color-ink); display: block; margin-bottom: 0.3rem; }
+  #concept-preview-card .cp-lecture { display: block; margin-top: 0.45rem; font-size: 0.75rem; color: var(--color-ink-muted); }
+  #concept-preview-card .katex { font-size: 1em; }
+</style>
+
+<script>
+  const el = document.getElementById("concept-previews");
+  const card = document.getElementById("concept-preview-card");
+  if (el && card) {
+    const data = JSON.parse(el.textContent || "{}");
+    const prefix = (el as HTMLElement).dataset.prefix || "";
+    let hideTimer: number | undefined;
+
+    const esc = (s: string) =>
+      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    const slugFromHref = (href: string): string | null => {
+      try {
+        const url = new URL(href, location.origin);
+        if (!url.pathname.startsWith(prefix)) return null;
+        return url.pathname.slice(prefix.length).split("#")[0].replace(/\/$/, "");
+      } catch { return null; }
+    };
+
+    const show = (a: HTMLAnchorElement) => {
+      const slug = slugFromHref(a.getAttribute("href") || "");
+      if (!slug || !data[slug]) return;
+      const d = data[slug];
+      // d.defHtml is trusted build-time-rendered KaTeX/markdown HTML from the
+      // user's own vault; title and lecture are plain text and are escaped.
+      card.innerHTML =
+        `<span class="cp-title">${esc(d.title)}</span>${d.defHtml}` +
+        (d.lecture ? `<span class="cp-lecture">→ ${esc(d.lecture)}</span>` : "");
+      const r = a.getBoundingClientRect();
+      card.style.top = `${window.scrollY + r.bottom + 6}px`;
+      card.style.left = `${window.scrollX + Math.min(r.left, window.innerWidth - 384)}px`;
+      card.hidden = false;
+    };
+    const hide = () => { hideTimer = window.setTimeout(() => { card.hidden = true; }, 120); };
+    const cancelHide = () => { if (hideTimer) window.clearTimeout(hideTimer); };
+
+    document.body.addEventListener("mouseover", (e) => {
+      const a = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
+      if (a && slugFromHref(a.getAttribute("href") || "")) { cancelHide(); show(a); }
+    });
+    document.body.addEventListener("mouseout", (e) => {
+      const a = (e.target as HTMLElement).closest("a");
+      if (a) hide();
+    });
+    card.addEventListener("mouseenter", cancelHide);
+    card.addEventListener("mouseleave", hide);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") card.hidden = true; });
+    document.body.addEventListener("focusin", (e) => {
+      const a = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
+      if (a && slugFromHref(a.getAttribute("href") || "")) { cancelHide(); show(a); }
+    });
+  }
+</script>
