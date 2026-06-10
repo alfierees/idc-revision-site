@@ -1,6 +1,5 @@
 ---
 import Layout from "../../../../components/Layout.astro";
-import TabNav from "../../../../components/TabNav.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -26,23 +25,19 @@ const lectures = (await getCollection("lectures", (l) => l.data.subject === subj
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`Lectures · ${subject.data.title}`}>
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
-  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  <TabNav subject={subjectSlug} active="lectures" />
-
+<Layout title={`Lectures · ${subject.data.title}`} subject={subjectSlug} active="lectures">
   {lectures.length === 0 ? (
     <p class="mt-6 font-ui text-ink-muted">No lectures ingested for this subject yet.</p>
   ) : (
-    <ol class="mt-8 space-y-3 list-none p-0">
+    <ol class="mt-2 space-y-4 list-none p-0">
       {lectures.map((l) => (
-        <li class="rounded border border-rule bg-card p-5 hover:border-rule-strong">
-          <a href={`/subjects/${subjectSlug}/lectures/${l.slug}`} class="block">
+        <li>
+          <a href={`/subjects/${subjectSlug}/lectures/${l.slug}`} class="list-card">
             {l.week !== undefined && (
-              <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Week {l.week}</p>
+              <p class="font-ui text-xs font-bold uppercase tracking-[0.15em] text-accent">Week {l.week}</p>
             )}
-            <h2 class="mt-1 font-display text-xl text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 500;">{l.title}</h2>
-            {l.instructor && <p class="mt-1 font-ui text-sm text-ink-soft">{l.instructor}</p>}
+            <h2 class="mt-1 font-display text-xl text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 520;">{l.title}</h2>
+            {l.instructor && <p class="mt-1 font-ui text-sm text-ink-muted">{l.instructor}</p>}
           </a>
         </li>
       ))}

@@ -1,6 +1,5 @@
 ---
 import Layout from "../../../../components/Layout.astro";
-import TabNav from "../../../../components/TabNav.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -14,20 +13,17 @@ const papers = (await getCollection("past-papers", (p) => p.data.subject === sub
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`${subject.data.title} · Past Papers`}>
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
-  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  <TabNav subject={subjectSlug} active="past-papers" />
+<Layout title={`${subject.data.title} · Past Papers`} subject={subjectSlug} active="past-papers">
   {papers.length === 0 ? (
     <p class="font-ui text-sm text-ink-muted italic">No past papers yet — content not yet ingested.</p>
   ) : (
-    <ul class="space-y-3 reading">
+    <ul class="mt-2 space-y-4 list-none p-0">
       {papers.map((p) => {
         const slug = p.id.split("/").pop()!;
         return (
           <li>
-            <a href={`/subjects/${subjectSlug}/past-papers/${slug}`} class="group block rounded border border-rule bg-card p-5 transition-shadow hover:shadow-sm">
-              <div class="font-display text-lg text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 500;">{p.data.title}</div>
+            <a href={`/subjects/${subjectSlug}/past-papers/${slug}`} class="list-card">
+              <div class="font-display text-lg text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 520;">{p.data.title}</div>
               <div class="mt-1 font-ui text-sm text-ink-muted">
                 {[p.data.exam, p.data.year && p.data.year >= 2000 ? p.data.year : null].filter(Boolean).join(" · ")}
               </div>

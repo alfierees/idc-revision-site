@@ -9,10 +9,10 @@ interface Props {
 }
 
 const COLOR: Record<StatusValue, string> = {
-  untried: "bg-paper-deep text-ink-muted border-rule",
-  done:    "bg-status-done-bg text-status-done border-status-done/40",
-  wrong:   "bg-status-wrong-bg text-status-wrong border-status-wrong/40",
-  skipped: "bg-status-skipped-bg text-status-skipped border-status-skipped/40",
+  untried: "bg-paper-deep text-ink-muted",
+  done:    "bg-status-done-bg text-status-done",
+  wrong:   "bg-status-wrong-bg text-status-wrong",
+  skipped: "bg-status-skipped-bg text-status-skipped",
 };
 
 const LABEL: Record<StatusValue, string> = {
@@ -38,7 +38,7 @@ export default function StatusPill({ subject, kind, refSlug, question }: Props) 
   return (
     <button
       onClick={onClick}
-      class={`rounded-full border px-3 py-1 font-ui text-xs tracking-wide transition-all duration-150 ease-out ${COLOR[value]} ${pulse ? "scale-[1.06]" : "scale-100"}`}
+      class={`rounded-full px-3 py-1 font-ui text-xs font-bold uppercase tracking-[0.08em] transition-all duration-150 ease-out ${COLOR[value]} ${pulse ? "scale-[1.06]" : "scale-100"}`}
       aria-label={`Question ${question}, status: ${LABEL[value]}. Click to change.`}
     >
       {LABEL[value]}

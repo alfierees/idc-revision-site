@@ -1,10 +1,8 @@
 ---
 import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
-import TabNav from "../../../../components/TabNav.astro";
 import LectureSidebar from "../../../../components/LectureSidebar.astro";
 import Mermaid from "../../../../components/Mermaid.astro";
-import SidebarToggle from "../../../../components/SidebarToggle.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
@@ -33,27 +31,24 @@ const allLectures = (await getCollection("lectures", (l) => l.data.subject === s
     week: l.data.week,
   }));
 
-// Extract section headings from the rendered HTML for the sidebar.
+// Extract section headings from the rendered HTML for the sidebar. Keep the
+// inner HTML so KaTeX in headings renders as real math in the TOC.
 const sectionRe = /<(h2|h3)[^>]*id="([^"]+)"[^>]*>(.*?)<\/\1>/g;
-const sections: { id: string; text: string; level: number }[] = [];
+const sections: { id: string; text: string; html: string; level: number }[] = [];
 let m: RegExpExecArray | null;
 while ((m = sectionRe.exec(html)) !== null) {
   sections.push({
     id: m[2],
     text: decodeHtmlEntities(m[3].replace(/<[^>]+>/g, "")).trim(),
+    html: m[3],
     level: m[1] === "h2" ? 2 : 3,
   });
 }
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`${lecture.data.title} · ${subject.data.title}`}>
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
-  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  <TabNav subject={subjectSlug} active="lectures" />
-
-  <SidebarToggle />
-  <div id="content-grid" class="lecture-grid mt-6">
+<Layout title={`${lecture.data.title} · ${subject.data.title}`} subject={subjectSlug} active="lectures" hasSidebar>
+  <div id="content-grid" class="content-grid">
     <LectureSidebar
       subject={subjectSlug}
       lectures={allLectures}
@@ -61,14 +56,14 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       currentSections={sections}
     />
     <article class="lecture-body">
-      <h2 class="font-display text-2xl text-ink" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{lecture.data.title}</h2>
       {(lecture.data.week !== undefined || lecture.data.instructor) && (
-        <p class="mt-1 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">
+        <p class="doc-meta">
           {lecture.data.week !== undefined && <span>Week {lecture.data.week}</span>}
           {lecture.data.week !== undefined && lecture.data.instructor && <span> · </span>}
           {lecture.data.instructor && <span>{lecture.data.instructor}</span>}
         </p>
       )}
+      <h1 class="doc-title">{lecture.data.title}</h1>
       {lecture.data.tags.length > 0 && (
         <ul class="mt-4 flex flex-wrap gap-2 list-none p-0">
           {lecture.data.tags.map((tag) => {
@@ -88,40 +83,3 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
   <HoverPreview subject={subjectSlug} />
 </Layout>
 
-<style>
-  .lecture-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  @media (min-width: 1024px) {
-    .lecture-grid {
-      grid-template-columns: 260px 1fr;
-    }
-  }
-  .lecture-prose :global(h2) {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-variation-settings: "opsz" 48, "wght" 500;
-    color: var(--color-ink);
-    scroll-margin-top: 5rem;
-  }
-  .lecture-prose :global(h3) {
-    margin-top: 1.75rem;
-    margin-bottom: 0.5rem;
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    font-variation-settings: "opsz" 36, "wght" 500;
-    color: var(--color-ink);
-    scroll-margin-top: 5rem;
-  }
-  .lecture-prose :global(p) { margin-top: 1rem; }
-  .lecture-prose :global(a) {
-    color: var(--color-accent);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
-  }
-</style>

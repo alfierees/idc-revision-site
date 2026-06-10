@@ -19,7 +19,7 @@ subjects.sort((a, b) => {
       Five subjects. Pick one to open its dictionary, recipes, problem sets and past papers.
     </p>
   </section>
-  <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+  <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {subjects.map((s, i) => (
       <SubjectCard title={s.data.title} slug={s.data.slug} placeholder={s.data.placeholder} index={i} />
     ))}

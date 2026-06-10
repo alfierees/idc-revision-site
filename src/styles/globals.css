@@ -12,15 +12,22 @@
   /* Colours — editorial / academic palette */
   --color-paper:        #faf7f2;
   --color-paper-deep:   #f4efe6;
+  --color-paper-tint:   #f7f2ea;
   --color-card:         #ffffff;
   --color-rule:         #e6dfd2;
   --color-rule-strong:  #cfc6b3;
   --color-ink:          #1c1814;
   --color-ink-soft:     #4a423a;
   --color-ink-muted:    #8a8275;
+  --color-ink-faint:    #a9a193;
 
   --color-accent:       #b8451f;
   --color-accent-soft:  #f2dccf;
+  --color-accent-ink:   #963718;
+
+  /* second accent — calm ink-teal (tip callouts, inline code, figures) */
+  --color-accent-2:      #2c6e6a;
+  --color-accent-2-soft: #dcebe8;
 
   --color-status-done:        #5a6b3a;
   --color-status-wrong:       #9a3a32;
@@ -28,14 +35,29 @@
   --color-status-done-bg:     #e9ecd9;
   --color-status-wrong-bg:    #f1d9d6;
   --color-status-skipped-bg:  #f1e6c8;
+
+  /* radius scale */
+  --radius-card: 16px;
+  --radius-chip: 8px;
+
+  /* floating-card shadows */
+  --shadow-soft:  0 1px 2px rgba(28, 24, 20, 0.04), 0 14px 36px -16px rgba(28, 24, 20, 0.18);
+  --shadow-sheet: 0 1px 2px rgba(28, 24, 20, 0.04), 0 20px 50px -28px rgba(28, 24, 20, 0.20);
+  --shadow-lift:  0 2px 4px rgba(28, 24, 20, 0.05), 0 26px 50px -24px rgba(28, 24, 20, 0.28);
 }
 
 @layer base {
+  :root {
+    /* sticky one-row header height + breathing room; drives rail top and
+       heading scroll offsets */
+    --toc-top: 4.9rem;
+  }
   html {
     font-family: var(--font-body);
-    font-size: 17px;
-    line-height: 1.6;
+    font-size: 17.5px;
+    line-height: 1.66;
     color-scheme: light;
+    scroll-behavior: smooth;
   }
   body {
     background: var(--color-paper);
@@ -47,13 +69,16 @@
   h1, h2, h3 {
     font-family: var(--font-display);
     font-feature-settings: "ss01", "kern", "liga";
-    letter-spacing: -0.01em;
+    letter-spacing: -0.012em;
     line-height: 1.15;
     color: var(--color-ink);
+    text-wrap: balance;
   }
-  h1 { font-variation-settings: "opsz" 96, "wght" 500; }
-  h2 { font-variation-settings: "opsz" 72, "wght" 500; }
-  h3 { font-variation-settings: "opsz" 48, "wght" 500; }
+  h1 { font-variation-settings: "opsz" 110, "wght" 480; }
+  h2 { font-variation-settings: "opsz" 64,  "wght" 480; }
+  h3 { font-variation-settings: "opsz" 40,  "wght" 520; }
+
+  ::selection { background: var(--color-accent-soft); color: var(--color-accent-ink); }
 
   :focus-visible {
     outline: 2px solid var(--color-accent);
@@ -64,122 +89,343 @@
   .katex { font-size: 1.05em; }
   .katex-display { margin: 1.25rem 0; }
 
-  .reading { max-width: 68ch; }
+  .reading { max-width: 70ch; }
 
-  /* Obsidian-style callouts (remark-callouts) */
+  /* ============ long-form content ============
+     Shared by every rendered-markdown container. */
+
+  /* document title block (lecture / paper / problem-set heading) */
+  .doc-meta {
+    font-family: var(--font-ui);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .doc-title {
+    font-size: clamp(1.9rem, 3.2vw, 2.5rem);
+    font-variation-settings: "opsz" 60, "wght" 500;
+    line-height: 1.08;
+    margin-top: 0.5rem;
+  }
+
+  /* reading rhythm in lecture / paper bodies */
+  .lecture-prose p, .paper-prose p { margin-top: 1.15em; color: var(--color-ink-soft); }
+  .prose-card p { margin-top: 1em; }
+  .prose-card p:first-child { margin-top: 0; }
+  .lecture-prose h2, .paper-prose h2 {
+    margin-top: 2.6em;
+    margin-bottom: 0.4em;
+    font-family: var(--font-display);
+    font-size: 1.72rem;
+    font-variation-settings: "opsz" 52, "wght" 500;
+    color: var(--color-ink);
+    scroll-margin-top: calc(var(--toc-top) + 1rem);
+  }
+  .lecture-prose h3, .paper-prose h3 {
+    margin-top: 2em;
+    margin-bottom: 0.3em;
+    font-family: var(--font-display);
+    font-size: 1.28rem;
+    font-variation-settings: "opsz" 36, "wght" 540;
+    color: var(--color-ink);
+    scroll-margin-top: calc(var(--toc-top) + 1rem);
+  }
+
+  /* links — highlight-sweep fill on hover */
+  .lecture-prose a:not(.tag),
+  .paper-prose a:not(.tag),
+  .question-body a:not(.tag),
+  .term-body a:not(.tag),
+  .concept-def a,
+  .prose-card a:not(.tag) {
+    color: var(--color-accent-ink);
+    text-decoration: none;
+    background-image: linear-gradient(var(--color-accent-soft), var(--color-accent-soft));
+    background-size: 100% 0.14em;
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    transition: background-size 0.18s ease, color 0.18s ease;
+  }
+  .lecture-prose a:not(.tag):hover,
+  .paper-prose a:not(.tag):hover,
+  .question-body a:not(.tag):hover,
+  .term-body a:not(.tag):hover,
+  .concept-def a:hover,
+  .prose-card a:not(.tag):hover {
+    color: var(--color-accent);
+    background-size: 100% 100%;
+  }
+
+  /* Obsidian-style callouts (remark-callouts markup) */
   .callout {
-    margin: 1.25rem 0;
-    border-radius: 4px;
-    border-left: 3px solid var(--callout-color, var(--color-rule-strong));
-    background-color: color-mix(in srgb, var(--callout-color, var(--color-rule-strong)) 6%, var(--color-card));
+    --callout-color: var(--color-rule-strong);
+    position: relative;
+    margin: 1.8em 0;
+    border-radius: var(--radius-chip);
+    border-left: none !important;
+    background-color: color-mix(in srgb, var(--callout-color) 5%, var(--color-card)) !important;
     overflow: hidden;
+  }
+  .callout::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--callout-color);
   }
   .callout-title {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.85rem;
+    gap: 0.55rem;
+    padding: 0.85rem 1.2rem 0.4rem 1.4rem;
     font-family: var(--font-ui);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    font-weight: 600;
-    color: var(--callout-color, var(--color-ink));
-    background-color: color-mix(in srgb, var(--callout-color, var(--color-rule-strong)) 10%, transparent);
+    font-weight: 700;
+    color: var(--callout-color);
+    background-color: transparent !important;
   }
-  .callout-title strong { font-weight: 600; }
-  .callout-icon { display: inline-flex; align-items: center; }
-  .callout-icon svg { width: 14px; height: 14px; }
+  .callout-title strong { font-weight: 700; }
+  .callout-icon { display: inline-flex; align-items: center; color: var(--callout-color) !important; }
+  .callout-icon svg { width: 15px; height: 15px; }
   .callout-content {
-    padding: 0.65rem 0.85rem 0.85rem;
+    padding: 0.1rem 1.4rem 1.05rem;
     font-family: var(--font-body);
     color: var(--color-ink-soft);
+    border: none !important;
   }
-  .callout-content > :first-child { margin-top: 0; }
+  .callout-content > :first-child { margin-top: 0.2em; }
   .callout-content > :last-child  { margin-bottom: 0; }
-  .callout-content p { margin: 0.4rem 0; }
+  .callout-content p { margin: 0.55em 0; }
+  .callout-content strong { color: var(--color-ink); }
 
   .callout.note     { --callout-color: #4a6fa5; }
-  .callout.tip      { --callout-color: #0e9e8b; }
+  .callout.tip      { --callout-color: var(--color-accent-2); }
   .callout.abstract { --callout-color: #2b8aaa; }
-  .callout.info     { --callout-color: #2b8aaa; }
+  .callout.info     { --callout-color: #4a6fa5; }
   .callout.todo     { --callout-color: #2b8aaa; }
-  .callout.success  { --callout-color: #5a6b3a; }
-  .callout.question { --callout-color: #6a8a2c; }
+  .callout.success  { --callout-color: #5a7a3a; }
+  .callout.question { --callout-color: #7a5a9a; }
   .callout.warning  { --callout-color: #b5762a; }
-  .callout.failure  { --callout-color: #9a3a32; }
-  .callout.danger   { --callout-color: #8a2a26; }
-  .callout.bug      { --callout-color: #9a3a32; }
-  .callout.example  { --callout-color: #7c4dff; }
-  .callout.quote    { --callout-color: #8a8275; }
+  .callout.failure  { --callout-color: #a23a30; }
+  .callout.danger   { --callout-color: #a23a30; }
+  .callout.bug      { --callout-color: #a23a30; }
+  .callout.example  { --callout-color: #7a5a9a; }
+  .callout.quote    { --callout-color: var(--color-ink-muted); }
 
-  /* Tables inside rendered markdown */
-  .question-body table,
-  .prose-card table {
+  /* tables — rounded clipped container with zebra rows (renderer wraps
+     each <table> in .tbl-wrap) */
+  .tbl-wrap {
+    margin: 1.7em 0;
+    border-radius: var(--radius-chip);
+    overflow-x: auto;
+    background: color-mix(in srgb, var(--color-paper-deep) 35%, var(--color-card));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-rule) 65%, transparent);
+  }
+  .tbl-wrap table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1rem 0;
-    font-size: 0.95em;
+    margin: 0;
+    font-size: 0.94rem;
   }
-  .question-body th, .prose-card th,
-  .question-body td, .prose-card td {
-    border-bottom: 1px solid var(--color-rule);
-    padding: 0.5rem 0.75rem;
-    text-align: left;
-    vertical-align: top;
-  }
-  .question-body th, .prose-card th {
+  .tbl-wrap thead th {
     font-family: var(--font-ui);
-    font-size: 0.78rem;
+    font-size: 0.7rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     color: var(--color-ink-muted);
-    border-bottom: 1px solid var(--color-rule-strong);
+    text-align: left;
+    padding: 0.7rem 1rem;
+    vertical-align: bottom;
+    background: color-mix(in srgb, var(--color-paper-deep) 55%, var(--color-card));
+    border-bottom: 1.5px solid var(--color-rule-strong);
+  }
+  .tbl-wrap tbody td {
+    padding: 0.7rem 1rem;
+    vertical-align: top;
+    text-align: left;
+    color: var(--color-ink-soft);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-rule) 70%, transparent);
+  }
+  .tbl-wrap tbody tr:last-child td { border-bottom: none; }
+  .tbl-wrap tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--color-paper-deep) 26%, transparent); }
+  .tbl-wrap tbody td:first-child, .tbl-wrap tbody td strong { color: var(--color-ink); }
+  .tbl-wrap tbody td .katex { font-size: 1em; }
+
+  /* code — R source in a dark editor slab (Cobalt-style, matching RStudio) */
+  .codeblock {
+    margin: 1.7em 0;
+    border-radius: var(--radius-chip);
+    overflow: hidden;
+    background: #06223f;
+    box-shadow: 0 14px 30px -18px rgba(6, 34, 63, 0.55);
+  }
+  .codeblock .code-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.95rem;
+    background: #0a2c4e;
+    border-bottom: 1px solid #14395e;
+  }
+  .codeblock .code-bar .lang {
+    font-family: var(--font-ui);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8fb0cc;
+    white-space: nowrap;
+  }
+  .codeblock .code-bar .dots { display: flex; gap: 0.4rem; }
+  .codeblock .code-bar .dots i { width: 9px; height: 9px; border-radius: 50%; background: #1d4570; }
+  .codeblock pre {
+    margin: 0;
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    line-height: 1.65;
+    color: #e7eef5;
+    background: transparent;
+    border: none;
+  }
+  /* R syntax tint — Cobalt palette */
+  .codeblock .tok-cm  { color: #5b9fd8; font-style: italic; }
+  .codeblock .tok-str { color: #4ed954; }
+  .codeblock .tok-num { color: #ff628c; }
+  .codeblock .tok-kw  { color: #ff9d00; }
+  .codeblock .tok-fn  { color: #ffdd66; }
+
+  /* R console output — light typeset slab, not a dark terminal */
+  .outblock {
+    margin: 1.7em 0;
+    border-radius: var(--radius-chip);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-paper-deep) 45%, var(--color-card));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-rule) 65%, transparent);
+  }
+  .outblock .out-bar {
+    padding: 0.45rem 0.95rem;
+    font-family: var(--font-ui);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-rule) 65%, transparent);
+  }
+  .outblock pre {
+    margin: 0;
+    padding: 0.9rem 1.15rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+    background: transparent;
+    border: none;
   }
 
-  /* Headings within rendered solution markdown */
-  .prose-card h2, .prose-card h3, .prose-card h4 {
-    font-family: var(--font-display);
-    color: var(--color-ink);
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
+  /* ascii diagram block (X → Y figures) — teal-tinted */
+  .asciiblock {
+    margin: 1.7em 0;
+    padding: 1.3rem 1.4rem;
+    border-radius: var(--radius-chip);
+    background: color-mix(in srgb, var(--color-accent-2) 6%, var(--color-card));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-accent-2) 16%, transparent);
   }
-  .prose-card h3 { font-variation-settings: "opsz" 36, "wght" 500; font-size: 1.15rem; }
-  .prose-card h4 { font-variation-settings: "opsz" 24, "wght" 600; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink-soft); }
-  .prose-card ul, .prose-card ol { padding-left: 1.5rem; margin: 0.5rem 0; }
-  .prose-card li { margin: 0.2rem 0; }
-  .prose-card strong { color: var(--color-ink); }
-  .prose-card hr { border: none; border-top: 1px solid var(--color-rule); margin: 1.5rem 0; }
+  .asciiblock pre {
+    margin: 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--color-accent-2);
+    background: transparent;
+    border: none;
+  }
 
-  /* Code blocks inside rendered solution markdown (R, etc.) — keep inside cards */
-  .prose-card pre, .question-body pre {
+  /* fallback for fenced code the renderer didn't wrap (other languages) */
+  .prose-card pre:not(.codeblock pre):not(.outblock pre):not(.asciiblock pre),
+  .question-body pre:not(.codeblock pre):not(.outblock pre):not(.asciiblock pre),
+  .term-body pre:not(.codeblock pre):not(.outblock pre):not(.asciiblock pre) {
     overflow-x: auto;
     max-width: 100%;
     background: color-mix(in srgb, var(--color-ink) 4%, var(--color-card));
     border: 1px solid var(--color-rule);
-    border-radius: 4px;
+    border-radius: var(--radius-chip);
     padding: 0.75rem 1rem;
     margin: 0.75rem 0;
     font-size: 0.88rem;
     line-height: 1.55;
   }
-  .prose-card code, .question-body code {
+
+  .prose-card code, .question-body code, .term-body code {
     font-family: var(--font-mono);
     font-size: 0.9em;
   }
-  .prose-card :not(pre) > code, .question-body :not(pre) > code {
-    background: color-mix(in srgb, var(--color-ink) 5%, transparent);
-    padding: 0.1em 0.35em;
-    border-radius: 3px;
+  /* inline code → teal */
+  .prose-card :not(pre) > code,
+  .question-body :not(pre) > code,
+  .term-body :not(pre) > code,
+  .concept-def :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: color-mix(in srgb, var(--color-accent-2) 9%, transparent);
+    color: color-mix(in srgb, var(--color-accent-2) 88%, var(--color-ink));
+    padding: 0.12em 0.38em;
+    border-radius: 5px;
   }
-  /* Wide tables scroll inside their card instead of overflowing it */
-  .prose-card table, .question-body table {
-    display: block;
+
+  /* display math — framed equation slab (renderer wraps .katex-display) */
+  .eqn {
+    position: relative;
+    margin: 1.7em 0;
+    padding: 1.1rem 1.4rem;
+    border-radius: var(--radius-chip);
+    background: color-mix(in srgb, var(--color-paper-deep) 45%, var(--color-card));
+    box-shadow: inset 3px 0 0 var(--color-accent);
     overflow-x: auto;
-    max-width: 100%;
   }
-  .prose-card img, .question-body img { max-width: 100%; height: auto; }
-  /* Math display blocks shouldn't bust out of cards either */
+  .eqn .katex-display { margin: 0; }
+
+  /* prose headings (shared) */
+  .prose-card h2, .prose-card h3, .prose-card h4 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    scroll-margin-top: calc(var(--toc-top) + 1rem);
+  }
+  .prose-card h3 { font-variation-settings: "opsz" 36, "wght" 540; font-size: 1.28rem; }
+  .prose-card h4 {
+    font-family: var(--font-ui);
+    font-variation-settings: normal;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-soft);
+  }
+  .prose-card ul, .prose-card ol { padding-left: 1.4rem; margin: 0.6rem 0; }
+  .prose-card li { margin: 0.35rem 0; padding-left: 0.25em; }
+  .prose-card li::marker { color: var(--color-accent); }
+  .prose-card ol li::marker { color: var(--color-ink-muted); font-family: var(--font-ui); font-size: 0.85em; }
+  .prose-card strong { color: var(--color-ink); }
+  .prose-card hr {
+    border: none;
+    height: 1px;
+    margin: 2.4em 0;
+    background: linear-gradient(90deg, var(--color-rule-strong), transparent);
+  }
+
+  .prose-card img, .question-body img { max-width: 100%; height: auto; border-radius: var(--radius-chip); }
   .prose-card .katex-display, .question-body .katex-display {
     overflow-x: auto;
     overflow-y: hidden;
@@ -187,34 +433,52 @@
     padding-bottom: 0.25rem;
   }
 
-  /* Tag pills (used on lecture + problem-set pages) */
+  /* tag pills */
   .tag {
     display: inline-block;
     font-family: var(--font-ui);
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    padding: 0.18rem 0.55rem;
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 0.3rem 0.7rem;
     border-radius: 999px;
-    border: 1px solid var(--color-rule);
-    background-color: var(--color-card);
-    transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
+    background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-card));
+    transition: background-color 150ms ease, color 150ms ease;
   }
   .tag-link {
-    color: var(--color-accent);
+    color: var(--color-accent-ink);
     cursor: pointer;
+    text-decoration: none;
   }
   .tag-link:hover {
-    border-color: var(--color-accent);
-    background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-card));
+    background-color: var(--color-accent);
+    color: #fff;
   }
   .tag-muted {
+    background-color: color-mix(in srgb, var(--color-ink) 5%, transparent);
     color: var(--color-ink-muted);
     font-style: italic;
   }
 
+  /* floating list cards (lecture / paper / problem-set / recipe indexes) */
+  .list-card {
+    display: block;
+    border-radius: var(--radius-card);
+    background: var(--color-card);
+    box-shadow: var(--shadow-soft);
+    padding: 1.4rem 1.7rem;
+    text-decoration: none;
+    transition: transform 0.24s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.24s ease;
+  }
+  .list-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* transform-only entrance (content stays visible if animations never run) */
   @keyframes rise-in {
-    from { opacity: 0; transform: translateY(4px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { transform: translateY(10px); }
+    to   { transform: translateY(0); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -222,30 +486,283 @@
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
+      scroll-behavior: auto;
     }
   }
 }
 
-/* Collapsible content sidebar (lecture / past-paper / problem-set pages) */
-.sidebar-collapsed > aside { display: none; }
-@media (min-width: 1024px) {
-  .sidebar-collapsed { grid-template-columns: 1fr !important; }
+/* ===================== chrome: sticky one-row header ===================== */
+
+.read-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2.5px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-accent), color-mix(in srgb, var(--color-accent) 60%, var(--color-accent-2)));
+  z-index: 50;
 }
-.sidebar-toggle {
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--color-paper) 88%, transparent);
+  backdrop-filter: saturate(1.1) blur(12px);
+  -webkit-backdrop-filter: saturate(1.1) blur(12px);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-rule) 60%, transparent);
+}
+.site-header .bar {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 1.6rem);
+}
+.brand {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  font-variation-settings: "opsz" 36, "wght" 540;
+  color: var(--color-ink);
+  text-decoration: none;
+  letter-spacing: -0.01em;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-top: 1rem;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid var(--color-rule);
-  border-radius: 5px;
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+.brand .mark {
+  width: 1.5rem; height: 1.5rem;
+  border-radius: 7px;
+  background: var(--color-accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--color-accent) 60%, transparent);
+}
+.crumb { display: flex; align-items: center; gap: 0.7rem; min-width: 0; flex: none; }
+.crumb .sep { color: var(--color-ink-faint); font-size: 1.1rem; }
+
+/* subject switcher dropdown */
+.subject-menu { position: relative; }
+.subject-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-variation-settings: "opsz" 30, "wght" 500;
+  color: var(--color-ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem 0.2rem 0;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+.subject-trigger:hover { color: var(--color-accent); }
+.subject-trigger .chev {
+  width: 16px; height: 16px;
+  display: inline-flex;
+  color: var(--color-ink-faint);
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+.subject-trigger .chev svg { width: 100%; height: 100%; stroke: currentColor; }
+.subject-trigger[aria-expanded="true"] .chev { transform: rotate(-90deg); color: var(--color-accent); }
+.subject-pop {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: -0.4rem;
+  z-index: 60;
+  min-width: 16rem;
+  padding: 0.5rem;
   background: var(--color-card);
-  color: var(--color-ink-soft);
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(28, 24, 20, 0.06), 0 24px 50px -20px rgba(28, 24, 20, 0.32);
+  border: 1px solid color-mix(in srgb, var(--color-rule) 70%, transparent);
+}
+.subject-pop[hidden] { display: none; }
+.subject-pop-label {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  padding: 0.4rem 0.6rem 0.5rem;
+}
+.subject-opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-variation-settings: "opsz" 24, "wght" 480;
+  color: var(--color-ink);
+  text-decoration: none;
+  padding: 0.55rem 0.6rem;
+  border-radius: 9px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, transparent); color: var(--color-accent-ink); }
+.subject-opt.current { color: var(--color-accent-ink); }
+.subject-opt.disabled { color: var(--color-ink-faint); cursor: default; }
+.subject-opt .so-tick { color: var(--color-accent); font-size: 0.6rem; }
+.subject-opt .so-await {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-faint);
+}
+
+/* section tabs — active is a terracotta pill */
+.header-tabs {
+  display: flex;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.header-tabs::-webkit-scrollbar { display: none; }
+.header-tabs a {
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  padding: 0.4rem 0.7rem;
+  border-radius: 9px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.header-tabs a:hover { color: var(--color-ink); }
+.header-tabs a.active {
+  background: color-mix(in srgb, var(--color-accent) 11%, transparent);
+  color: var(--color-accent-ink);
+  font-weight: 600;
+}
+
+.bar-right { display: flex; align-items: center; gap: 1rem; flex: none; margin-left: auto; }
+.header-meta {
   font-family: var(--font-ui);
   font-size: 0.7rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  cursor: pointer;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
 }
-.sidebar-toggle:hover { color: var(--color-accent); border-color: var(--color-accent); }
-.sidebar-toggle svg { width: 0.9rem; height: 0.9rem; }
+.panel-toggle {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-ink-muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.panel-toggle:hover { background: color-mix(in srgb, var(--color-ink) 6%, transparent); color: var(--color-ink); }
+.panel-toggle.active { background: color-mix(in srgb, var(--color-accent) 11%, transparent); color: var(--color-accent); }
+.panel-toggle svg { width: 17px; height: 17px; stroke: currentColor; }
+.panel-toggle[hidden] { display: none; }
+
+/* ===================== sidebar rail + TOC ===================== */
+
+/* pages put .content-grid on the wrapper; collapsed = rail column vanishes */
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+@media (min-width: 1024px) {
+  .content-grid { grid-template-columns: 12.5rem minmax(0, 1fr); gap: clamp(2rem, 4vw, 4rem); }
+  .content-grid.wide-toc { grid-template-columns: 13rem minmax(0, 1fr); }
+  .content-grid.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); }
+}
+.sidebar-collapsed > aside { display: none; }
+
+.rail { font-family: var(--font-ui); }
+@media (min-width: 1024px) {
+  .rail {
+    position: sticky;
+    top: var(--toc-top);
+    align-self: start;
+    max-height: calc(100vh - var(--toc-top) - 2rem);
+    overflow-y: auto;
+    padding-right: 0.4rem;
+    scrollbar-width: thin;
+  }
+}
+.rail .toc-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  margin-bottom: 1rem;
+}
+.rail .toc-current {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-variation-settings: "opsz" 24, "wght" 560;
+  color: var(--color-ink);
+  margin-bottom: 0.7rem;
+  line-height: 1.25;
+}
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1.5px solid var(--color-rule);
+}
+.toc-list a {
+  display: block;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-ink-soft);
+  padding: 0.4rem 0 0.4rem 0.95rem;
+  margin-left: -1.5px;
+  border-left: 1.5px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.toc-list a.lvl-3 {
+  padding-left: 1.9rem;
+  padding-top: 0.28rem;
+  padding-bottom: 0.28rem;
+  font-size: 0.76rem;
+  font-weight: 450;
+  color: var(--color-ink-muted);
+}
+.toc-list a:hover { color: var(--color-accent); }
+.toc-list a.active { color: var(--color-accent-ink); border-left-color: var(--color-accent); }
+.toc-list a.lvl-3.active { color: var(--color-accent-ink); font-weight: 600; }
+/* KaTeX inside TOC entries — compact inline math */
+.toc-list .katex { font-size: 1em; }
+.toc-list .katex-display { display: inline; margin: 0; }
+.toc-list .katex-display > .katex { white-space: normal; text-align: left; }
+
+.toc-other { margin-top: 1.8rem; padding-top: 1.4rem; border-top: 1px solid var(--color-rule); }
+.toc-other a {
+  display: block;
+  text-decoration: none;
+  font-size: 0.88rem;
+  color: var(--color-ink-muted);
+  padding: 0.4rem 0;
+  transition: color 0.15s ease;
+}
+.toc-other a:hover { color: var(--color-accent); }

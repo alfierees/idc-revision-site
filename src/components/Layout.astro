@@ -1,6 +1,32 @@
 ---
 import "../styles/globals.css";
-const { title = "IDC Revision" } = Astro.props;
+import { getCollection } from "astro:content";
+
+interface Props {
+  title?: string;
+  /** Subject slug — when set, the header shows the subject switcher + section tabs. */
+  subject?: string;
+  active?: "lectures" | "dictionary" | "recipes" | "problem-sets" | "past-papers";
+  /** Show the sidebar collapse toggle (pages with a #content-grid rail). */
+  hasSidebar?: boolean;
+}
+const { title = "IDC Revision", subject, active, hasSidebar = false } = Astro.props;
+
+const subjects = await getCollection("subjects");
+subjects.sort((a, b) => {
+  if (a.data.placeholder !== b.data.placeholder) return a.data.placeholder ? 1 : -1;
+  return a.data.title.localeCompare(b.data.title);
+});
+const current = subject ? subjects.find((s) => s.data.slug === subject) : undefined;
+
+const tabs = [
+  { id: "lectures",     label: "Lectures" },
+  { id: "dictionary",   label: "Dictionary" },
+  { id: "recipes",      label: "Recipes" },
+  { id: "problem-sets", label: "Problem Sets" },
+  { id: "past-papers",  label: "Past Papers" },
+] as const;
+const section = active ?? "dictionary";
 ---
 <html lang="en">
   <head>
@@ -9,16 +35,149 @@ const { title = "IDC Revision" } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="min-h-screen">
-    <header class="border-b border-rule">
-      <div class="mx-auto max-w-6xl px-6 py-5 flex items-center justify-between">
-        <a href="/" class="font-display text-lg text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 500;">
-          IDC&nbsp;Revision
-        </a>
-        <span class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">Year 2 · Semester 2</span>
+    <div class="read-progress" id="read-progress" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="bar">
+        <div class="crumb">
+          <a href="/" class="brand"><span class="mark">IDC</span> Revision</a>
+          {current && <span class="sep" aria-hidden="true">/</span>}
+          {current && (
+            <div class="subject-menu" id="subject-menu">
+              <button
+                type="button"
+                class="subject-trigger"
+                aria-expanded="false"
+                aria-haspopup="menu"
+              >
+                {current.data.title}
+                <span class="chev" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                </span>
+              </button>
+              <div class="subject-pop" hidden role="menu">
+                <p class="subject-pop-label">Switch subject</p>
+                {subjects.map((s) =>
+                  s.data.placeholder ? (
+                    <span class="subject-opt disabled" role="menuitem" aria-disabled="true">
+                      {s.data.title}
+                      <span class="so-await">Awaiting</span>
+                    </span>
+                  ) : (
+                    <a
+                      href={`/subjects/${s.data.slug}/${section}`}
+                      class={`subject-opt ${s.data.slug === subject ? "current" : ""}`}
+                      role="menuitem"
+                    >
+                      {s.data.title}
+                      {s.data.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
+                    </a>
+                  ),
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+        {current && (
+          <nav class="header-tabs" aria-label="Subject sections">
+            {tabs.map((t) => (
+              <a
+                href={`/subjects/${subject}/${t.id}`}
+                class={active === t.id ? "active" : ""}
+                aria-current={active === t.id ? "page" : undefined}
+              >
+                {t.label}
+              </a>
+            ))}
+          </nav>
+        )}
+        <div class="bar-right">
+          {hasSidebar && (
+            <button id="sidebar-toggle" type="button" class="panel-toggle" aria-pressed="false" title="Toggle sidebar">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
+            </button>
+          )}
+          {!current && <span class="header-meta">Year 2 · Sem 2</span>}
+        </div>
       </div>
     </header>
-    <main class="mx-auto max-w-6xl px-6 py-12">
+    <main class="mx-auto max-w-6xl px-6 py-10">
       <slot />
     </main>
+
+    <script>
+      // ---- reading progress bar ----
+      const prog = document.getElementById("read-progress");
+      if (prog) {
+        const onScroll = () => {
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          prog.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + "%";
+        };
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+      }
+
+      // ---- subject dropdown ----
+      const menu = document.getElementById("subject-menu");
+      const trigger = menu?.querySelector<HTMLButtonElement>(".subject-trigger");
+      const pop = menu?.querySelector<HTMLElement>(".subject-pop");
+      if (menu && trigger && pop) {
+        const setOpen = (open: boolean) => {
+          pop.hidden = !open;
+          trigger.setAttribute("aria-expanded", String(open));
+        };
+        trigger.addEventListener("click", () => setOpen(pop.hidden));
+        document.addEventListener("mousedown", (e) => {
+          if (!menu.contains(e.target as Node)) setOpen(false);
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") setOpen(false);
+        });
+      }
+
+      // ---- sidebar collapse (toggle lives in the header) ----
+      const KEY = "idc-sidebar-hidden";
+      const grid = document.getElementById("content-grid");
+      const toggleBtn = document.getElementById("sidebar-toggle");
+      if (grid && toggleBtn) {
+        const apply = (hidden: boolean) => {
+          grid.classList.toggle("sidebar-collapsed", hidden);
+          toggleBtn.classList.toggle("active", !hidden);
+          toggleBtn.setAttribute("aria-pressed", String(!hidden));
+          toggleBtn.setAttribute("title", hidden ? "Show sidebar" : "Hide sidebar");
+        };
+        apply(localStorage.getItem(KEY) === "1");
+        toggleBtn.addEventListener("click", () => {
+          const hidden = !grid.classList.contains("sidebar-collapsed");
+          localStorage.setItem(KEY, hidden ? "1" : "0");
+          apply(hidden);
+        });
+      }
+
+      // ---- TOC scroll-spy ----
+      const tocLinks = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>('.toc-list a[href^="#"]'),
+      );
+      if (tocLinks.length > 0) {
+        const targets = tocLinks
+          .map((a) => {
+            const el = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+            return el ? { a, el } : null;
+          })
+          .filter((x): x is { a: HTMLAnchorElement; el: HTMLElement } => x !== null);
+        const header = document.querySelector<HTMLElement>(".site-header");
+        const onSpy = () => {
+          const off = (header?.offsetHeight ?? 85) + 40;
+          const y = window.scrollY + off;
+          let cur: HTMLAnchorElement | null = null;
+          for (const t of targets) {
+            if (t.el.offsetTop <= y) cur = t.a;
+          }
+          for (const t of targets) t.a.classList.toggle("active", t.a === cur);
+        };
+        onSpy();
+        window.addEventListener("scroll", onSpy, { passive: true });
+      }
+    </script>
   </body>
 </html>

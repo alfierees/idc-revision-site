@@ -1,11 +1,11 @@
 ---
 import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
-import TabNav from "../../../../components/TabNav.astro";
 import BacklinkList from "../../../../components/BacklinkList.astro";
 import { getCollection, getEntry } from "astro:content";
 import { computeBacklinks } from "../../../../lib/backlinks";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+import { buildLinkMap } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const terms = await getCollection("terms", (t) => t.data.in_scope);
@@ -30,7 +30,12 @@ for (const t of allTerms) {
   for (const a of t.data.aliases) aliases.set(a.toLowerCase(), s);
 }
 
-const html = await renderMarkdownString(termEntry.body ?? "", subjectSlug, knownSlugs);
+// Render with the full subject link map (terms + recipes + lectures + papers +
+// problem-sets + aliases + subject hub) so cross-kind wiki-links and aliases in
+// term bodies resolve, not just term→term links. knownSlugs is still used for
+// backlink computation below.
+const links = await buildLinkMap(subjectSlug);
+const html = await renderMarkdownString(termEntry.body ?? "", subjectSlug, links);
 
 const recipes = (await getCollection("recipes", (r) => r.data.subject === subjectSlug))
   .map((r) => ({ slug: slugOf(r.id), title: r.data.title, body: r.body ?? "" }));
@@ -47,14 +52,11 @@ const entries = backlinks.get(termSlug) ?? [];
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`${termEntry.data.title} · ${subject.data.title}`}>
-  <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">{subject.data.title}</p>
-  <h1 class="mt-2 font-display text-3xl">{subject.data.title}</h1>
-  <TabNav subject={subjectSlug} active="dictionary" />
+<Layout title={`${termEntry.data.title} · ${subject.data.title}`} subject={subjectSlug} active="dictionary">
   <article>
-    <h2 class="font-display text-2xl text-ink" style="font-variation-settings: 'opsz' 48, 'wght' 500;">{termEntry.data.title}</h2>
+    <h1 class="doc-title" style="margin-top:0;">{termEntry.data.title}</h1>
     {termEntry.data.aliases.length > 0 && (
-      <p class="mt-1 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Also known as · {termEntry.data.aliases.join(" · ")}</p>
+      <p class="mt-2 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Also known as · {termEntry.data.aliases.join(" · ")}</p>
     )}
     <div class="term-body mt-6 text-base text-ink" set:html={html} />
   </article>
