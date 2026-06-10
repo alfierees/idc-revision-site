@@ -117,14 +117,22 @@ type LinkMap = Map<string, LinkTarget>;
 async function buildLinkMap(subject: string): Promise<LinkMap> {
   const map: LinkMap = new Map();
 
-  const addEntries = async (kind: LinkKind, dir: string, withAliases = false) => {
+  const addEntries = async (
+    kind: LinkKind,
+    dir: string,
+    opts: { withAliases?: boolean; withTitleAlias?: boolean } = {},
+  ) => {
     const files = await mdFiles(dir);
     for (const f of files) {
       const slug = basename(f, ".md");
       if (!map.has(slug)) map.set(slug, { kind, slug });
-      if (withAliases) {
+      if (opts.withAliases || opts.withTitleAlias) {
         const { fm } = parseFrontmatter(readMd(f));
-        const aliases = (fm.aliases as string[] | undefined) ?? [];
+        const aliases: string[] = [];
+        // Title alias: lecture/recipe pages are referenced by their full title
+        // (prefix-free for lectures), so vault links resolve to the page.
+        if (opts.withTitleAlias && typeof fm.title === "string") aliases.push(fm.title);
+        if (opts.withAliases) aliases.push(...((fm.aliases as string[] | undefined) ?? []));
         for (const a of aliases) {
           const aslug = slugifyAlias(a);
           if (aslug && !map.has(aslug)) map.set(aslug, { kind, slug });
@@ -135,9 +143,9 @@ async function buildLinkMap(subject: string): Promise<LinkMap> {
 
   // Build order matches buildLinkMap: sets → lectures → recipes → terms
   await addEntries("problem-set", contentDir("problem-sets", subject));
-  await addEntries("lecture", contentDir("lectures", subject), true);
-  await addEntries("recipe", contentDir("recipes", subject));
-  await addEntries("term", contentDir("terms", subject), true);
+  await addEntries("lecture", contentDir("lectures", subject), { withAliases: true, withTitleAlias: true });
+  await addEntries("recipe", contentDir("recipes", subject), { withTitleAlias: true });
+  await addEntries("term", contentDir("terms", subject), { withAliases: true });
 
   return map;
 }
@@ -155,7 +163,14 @@ function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
       candidate = target;
     }
   }
-  return candidate;
+  if (candidate) return candidate;
+  // Problem-set vault-name fallback: [[PS_04-…]] → "ps-04-…" resolves to "ps-4".
+  const psMatch = slug.match(/^ps-0*(\d+)(?:-.*)?$/);
+  if (psMatch) {
+    const ps = links.get(`ps-${psMatch[1]}`);
+    if (ps && ps.kind === "problem-set") return ps;
+  }
+  return undefined;
 }
 
 // ─── intentionally-muted slugs (subject's own slug + metadata) ───────────────

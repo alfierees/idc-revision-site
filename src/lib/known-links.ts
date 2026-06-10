@@ -38,7 +38,17 @@ export function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined
       candidate = target;
     }
   }
-  return candidate;
+  if (candidate) return candidate;
+  // Problem-set vault-name fallback: vault links like
+  // [[PS_04-Seatbelt Laws & Traffic Fatalities]] slugify to
+  // "ps-04-seatbelt-laws-traffic-fatalities", but the ingested page is "ps-4".
+  // Strip the leading zero-padded number off any trailing description and retry.
+  const psMatch = slug.match(/^ps-0*(\d+)(?:-.*)?$/);
+  if (psMatch) {
+    const ps = links.get(`ps-${psMatch[1]}`);
+    if (ps && ps.kind === "problem-set") return ps;
+  }
+  return undefined;
 }
 
 function slugOf(id: string): string {
@@ -80,7 +90,10 @@ export async function buildLinkMap(subject: string): Promise<LinkMap> {
   for (const l of lectures) {
     const slug = slugOf(l.id);
     map.set(slug, { kind: "lecture", slug });
-    const aliases = (l.data as { aliases?: string[] }).aliases ?? [];
+    // Title alias: the frontmatter `title` is the prefix-free lecture name
+    // (e.g. "Introduction & Treatment Effects"), so vault links that omit the
+    // `Lec_NN-` filename prefix resolve to this lecture.
+    const aliases = [l.data.title, ...((l.data as { aliases?: string[] }).aliases ?? [])];
     for (const a of aliases) {
       const aslug = slugifyAlias(a);
       if (aslug && !map.has(aslug)) {
@@ -100,6 +113,10 @@ export async function buildLinkMap(subject: string): Promise<LinkMap> {
   for (const r of recipes) {
     const slug = slugOf(r.id);
     map.set(slug, { kind: "recipe", slug });
+    // Title alias: recipe pages are referenced by their full title
+    // (e.g. [[Testing for heteroskedasticity]] → testing-heteroskedasticity).
+    const aslug = slugifyAlias(r.data.title);
+    if (aslug && !map.has(aslug)) map.set(aslug, { kind: "recipe", slug });
   }
   for (const t of terms) {
     const slug = slugOf(t.id);

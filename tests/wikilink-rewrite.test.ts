@@ -109,6 +109,69 @@ describe("resolveLink — prefix fallback", () => {
   });
 });
 
+describe("rewriteWikiHrefs — subject hub", () => {
+  it("resolves [[Subject]] (slug === subject) to the subject hub", () => {
+    const html = rewriteWikiHrefs(
+      '<a href="__WIKI__econometrics">Econometrics</a>',
+      "econometrics", new Map(),
+    );
+    expect(html).toContain('href="/subjects/econometrics"');
+    expect(html).not.toContain("data-missing");
+  });
+});
+
+describe("resolveLink — problem-set vault-name fallback", () => {
+  const map: LinkMap = new Map([
+    ["ps-4", { kind: "problem-set", slug: "ps-4" }],
+    ["ps-2", { kind: "problem-set", slug: "ps-2" }],
+  ]);
+
+  it("resolves a zero-padded full vault name to the ingested ps-N page", () => {
+    // [[PS_04-Seatbelt Laws & Traffic Fatalities]] slugifies to this.
+    expect(resolveLink(map, "ps-04-seatbelt-laws-traffic-fatalities")?.slug).toBe("ps-4");
+  });
+
+  it("resolves a bare zero-padded number", () => {
+    expect(resolveLink(map, "ps-02")?.slug).toBe("ps-2");
+  });
+
+  it("returns undefined when the target ps-N page does not exist", () => {
+    expect(resolveLink(map, "ps-09-nonexistent")).toBeUndefined();
+  });
+});
+
+describe("rewriteWikiHrefs — lecture title & recipe title aliases", () => {
+  // Mirrors the alias entries buildLinkMap registers from frontmatter `title`.
+  const links: LinkMap = new Map([
+    ["lec-01-introduction-treatment-effects",
+      { kind: "lecture", slug: "lec-01-introduction-treatment-effects" }],
+    ["introduction-treatment-effects",
+      { kind: "lecture", slug: "lec-01-introduction-treatment-effects" }],
+    ["testing-heteroskedasticity", { kind: "recipe", slug: "testing-heteroskedasticity" }],
+    ["testing-for-heteroskedasticity", { kind: "recipe", slug: "testing-heteroskedasticity" }],
+  ]);
+
+  it("resolves a prefix-free lecture title to the Lec_NN page", () => {
+    const html = rewriteWikiHrefs(
+      '<a href="__WIKI__introduction-treatment-effects">x</a>',
+      "econometrics", links,
+    );
+    expect(html).toContain(
+      'href="/subjects/econometrics/lectures/lec-01-introduction-treatment-effects"',
+    );
+  });
+
+  it("resolves a recipe referenced by its full title", () => {
+    const html = rewriteWikiHrefs(
+      '<a href="__WIKI__testing-for-heteroskedasticity">x</a>',
+      "econometrics", links,
+    );
+    expect(html).toContain(
+      'href="/subjects/econometrics/recipes/testing-heteroskedasticity"',
+    );
+  });
+});
+
 describe("rewriteWikiHrefs — past papers & glossary anchors", () => {
   const links: LinkMap = new Map([
     ["pp-01-emotions-risky-choice-practice-exam",

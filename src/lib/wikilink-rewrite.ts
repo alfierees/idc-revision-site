@@ -31,6 +31,13 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
       return `href="#" data-missing="true" title="Missing concept"`;
     }
 
+    // Subject-hub link: [[Econometrics]] (slug === subject slug) appears as
+    // "Part of: [[Subject]]" on every lecture/past-paper page and resolves to
+    // the subject hub at /subjects/<subject>.
+    if (slug === subject) {
+      return `href="/subjects/${subject}"`;
+    }
+
     const target = resolveLink(links, slugPart);
     if (target) {
       const url = `/subjects/${subject}/${KIND_TO_PATH[target.kind]}/${target.slug}`;
