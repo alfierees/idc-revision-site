@@ -33,14 +33,27 @@ const R_KEYWORDS = new Set([
 const R_PLAIN_RE =
   /\b(?:function|if|else|for|while|repeat|in|next|break|TRUE|FALSE|NULL|NA|NaN|Inf)\b|(?<![\w.])\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b|\b[A-Za-z.][\w.]*(?=\s*\()/g;
 
-function tokenizePlainR(chunk: string): ElementContent[] {
+const PY_KEYWORDS = new Set([
+  "def", "class", "return", "if", "elif", "else", "for", "while", "in", "not",
+  "and", "or", "is", "import", "from", "as", "with", "try", "except", "finally",
+  "raise", "pass", "break", "continue", "yield", "lambda", "global", "nonlocal",
+  "assert", "del", "None", "True", "False", "async", "await",
+]);
+
+/** Word-ish tokens inside non-string, non-comment Python source. */
+const PY_PLAIN_RE =
+  /\b(?:def|class|return|if|elif|else|for|while|in|not|and|or|is|import|from|as|with|try|except|finally|raise|pass|break|continue|yield|lambda|global|nonlocal|assert|del|None|True|False|async|await)\b|(?<![\w.])\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b|\b[A-Za-z_][\w]*(?=\s*\()/g;
+
+/** Highlight keywords (kw), numbers (num) and call-position identifiers (fn)
+ * in a non-string, non-comment chunk. Shared by the R and Python tokenizers. */
+function tokenizePlain(chunk: string, keywords: Set<string>, re: RegExp): ElementContent[] {
   const out: ElementContent[] = [];
   let last = 0;
-  for (const m of chunk.matchAll(R_PLAIN_RE)) {
+  for (const m of chunk.matchAll(re)) {
     const idx = m.index!;
     if (idx > last) out.push(text(chunk.slice(last, idx)));
     const tok = m[0];
-    if (R_KEYWORDS.has(tok)) out.push(span("tok-kw", tok));
+    if (keywords.has(tok)) out.push(span("tok-kw", tok));
     else if (/^[\d.]/.test(tok)) out.push(span("tok-num", tok));
     else out.push(span("tok-fn", tok));
     last = idx + tok.length;
@@ -49,12 +62,23 @@ function tokenizePlainR(chunk: string): ElementContent[] {
   return out;
 }
 
-export function tokenizeR(src: string): ElementContent[] {
+function tokenizePlainR(chunk: string): ElementContent[] {
+  return tokenizePlain(chunk, R_KEYWORDS, R_PLAIN_RE);
+}
+
+function tokenizePlainPy(chunk: string): ElementContent[] {
+  return tokenizePlain(chunk, PY_KEYWORDS, PY_PLAIN_RE);
+}
+
+/** Core tokenizer: pulls out string literals (" or ') and `#` line comments,
+ * delegating the remaining chunks to `plain`. R and Python share both lexical
+ * features, so they differ only in their plain-token highlighter. */
+function tokenizeCode(src: string, plain: (chunk: string) => ElementContent[]): ElementContent[] {
   const out: ElementContent[] = [];
-  let plain = "";
+  let buf = "";
   const flush = () => {
-    if (plain) out.push(...tokenizePlainR(plain));
-    plain = "";
+    if (buf) out.push(...plain(buf));
+    buf = "";
   };
   let i = 0;
   while (i < src.length) {
@@ -73,12 +97,20 @@ export function tokenizeR(src: string): ElementContent[] {
       out.push(span("tok-cm", src.slice(i, j)));
       i = j;
     } else {
-      plain += ch;
+      buf += ch;
       i += 1;
     }
   }
   flush();
   return out;
+}
+
+export function tokenizeR(src: string): ElementContent[] {
+  return tokenizeCode(src, tokenizePlainR);
+}
+
+export function tokenizePython(src: string): ElementContent[] {
+  return tokenizeCode(src, tokenizePlainPy);
 }
 
 const LEADING_EMOJI_RE =
@@ -138,7 +170,12 @@ function buildCodeblock(lang: string, code: Element): Element {
             type: "element",
             tagName: "code",
             properties: {},
-            children: lang === "r" ? tokenizeR(src) : [text(src)],
+            children:
+              lang === "r"
+                ? tokenizeR(src)
+                : lang === "python" || lang === "py"
+                  ? tokenizePython(src)
+                  : [text(src)],
           },
         ],
       },

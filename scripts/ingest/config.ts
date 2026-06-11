@@ -46,6 +46,24 @@ export const subjects: Record<string, SubjectConfig> = {
     assignmentsDir: "Problem Sets",
     problemSetSlugPrefix: "assignment",
   },
+  "machine-learning": {
+    slug: "machine-learning",
+    title: "Machine Learning",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Machine Learning",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Machine learning",
+    lecturesDir: "Lecture notes",
+  },
+  // The Data Science course covers the same ML curriculum (EDA, classification,
+  // regression, clustering/PCA); its lectures + registry terms are ingested into
+  // the SAME `machine-learning` subject. Run `cli.ts data-science` after
+  // `cli.ts machine-learning` — it writes into machine-learning/ via the shared slug.
+  "data-science": {
+    slug: "machine-learning",
+    title: "Machine Learning",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Data Science",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Data Science",
+    lecturesDir: "Lectures",
+  },
 };
 
 export function getSubjectConfig(slug: string): SubjectConfig {

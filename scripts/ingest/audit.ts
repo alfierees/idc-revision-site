@@ -186,6 +186,10 @@ const ALWAYS_MUTED = new Set([
   "problem-set",         // generic metadata pill used in econometrics
   "recap",               // accounting Session 9 metadata, not a concept
   "exam-prep",           // accounting Session 9 metadata, not a concept
+  // The Data Science course name — appears as a lecture metadata pill on the
+  // ingested DS lectures; not a glossary concept. (The DS *concepts* — pandas,
+  // matplotlib, EDA, dataframes, etc. — all have term pages and resolve.)
+  "data-science",
 ]);
 
 // ─── bucket 1: muted-tag candidates ──────────────────────────────────────────
@@ -211,8 +215,10 @@ async function findMutedTagCandidates(
     const tags = (fm.tags as string[] | undefined) ?? [];
 
     for (const tag of tags) {
-      if (ALWAYS_MUTED.has(tag)) continue;
       const slugged = slugifyAlias(tag);
+      // Muted check is case-insensitive: match the raw tag or its slug form so
+      // entries like "EDA" resolve against a lowercase "eda" in ALWAYS_MUTED.
+      if (ALWAYS_MUTED.has(tag) || ALWAYS_MUTED.has(slugged)) continue;
       if (seen.has(slugged)) continue;
       if (resolveLink(links, tag)) continue;
 
