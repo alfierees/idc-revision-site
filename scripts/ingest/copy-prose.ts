@@ -76,6 +76,37 @@ export async function copyPastPapers(cfg: SubjectConfig, contentRoot: string): P
   return copied;
 }
 
+/**
+ * Copy every lecture `.md` from the vault lectures folder into
+ * src/content/lectures/<subject>/ verbatim (frontmatter `subject:`/`in_scope:`
+ * injected if absent). Idempotent: existing destination files are skipped so
+ * any manual edits survive a re-run. Mirrors the deterministic copyPastPapers
+ * pattern — no AI drafting; the body is preserved exactly.
+ */
+export async function copyLectures(cfg: SubjectConfig, contentRoot: string): Promise<string[]> {
+  const dir = join(cfg.vaultPath, cfg.lecturesDir ?? "Lectures");
+  if (!existsSync(dir)) return [];
+  const attachmentsDir = join(cfg.vaultPath, "Attachments");
+  const imagesDestDir = join(contentRoot, "..", "..", "public", "images", cfg.slug);
+  const destDir = join(contentRoot, "lectures", cfg.slug);
+  await mkdir(destDir, { recursive: true });
+
+  const copied: string[] = [];
+  const files = (await readdir(dir)).filter((f) => f.endsWith(".md") && !f.endsWith(".excalidraw.md"));
+  for (const f of files) {
+    const slug = slugify(f.replace(/\.md$/, ""));
+    const destFile = join(destDir, `${slug}.md`);
+    if (existsSync(destFile)) continue; // idempotent: preserve existing copies/edits
+    const raw = await readFile(join(dir, f), "utf8");
+    const withFm = injectFrontmatter(raw, cfg.slug);
+    const withDiagrams = transformExcalidrawEmbeds(withFm, (name) => findExcalidrawExport(attachmentsDir, name));
+    await copyImagesFromBody(withDiagrams, attachmentsDir, imagesDestDir);
+    await writeFile(destFile, withDiagrams, "utf8");
+    copied.push(slug);
+  }
+  return copied;
+}
+
 /** Copy `_<Subject> Concepts.md` into src/content/glossary/<subject>.md (overwrite). */
 export async function copyGlossary(cfg: SubjectConfig, contentRoot: string): Promise<boolean> {
   const dir = cfg.vaultPath;

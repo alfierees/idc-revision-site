@@ -164,10 +164,11 @@ function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
     }
   }
   if (candidate) return candidate;
-  // Problem-set vault-name fallback: [[PS_04-…]] → "ps-04-…" resolves to "ps-4".
-  const psMatch = slug.match(/^ps-0*(\d+)(?:-.*)?$/);
+  // Problem-set vault-name fallback: [[PS_04-…]] → "ps-04-…" → "ps-4",
+  // [[Assignment 3 - CoreWeave …]] → "assignment-3-…" → "assignment-3".
+  const psMatch = slug.match(/^(ps|assignment|ex|hw)-0*(\d+)(?:-.*)?$/);
   if (psMatch) {
-    const ps = links.get(`ps-${psMatch[1]}`);
+    const ps = links.get(`${psMatch[1]}-${psMatch[2]}`);
     if (ps && ps.kind === "problem-set") return ps;
   }
   return undefined;
@@ -183,6 +184,8 @@ const ALWAYS_MUTED = new Set([
   "macroeconomics",
   "assignment-solution",
   "problem-set",         // generic metadata pill used in econometrics
+  "recap",               // accounting Session 9 metadata, not a concept
+  "exam-prep",           // accounting Session 9 metadata, not a concept
 ]);
 
 // ─── bucket 1: muted-tag candidates ──────────────────────────────────────────
@@ -270,6 +273,9 @@ async function findBrokenWikiLinks(subject: string, links: LinkMap): Promise<Bro
         // canonical slugify (underscores collapse to hyphens) before lookup.
         // Audit must do the same or it false-positives on `[[Lec_04-Foo]]`.
         const pageSlug = slugify(pagePart);
+        // Subject-hub link: [[Accounting]] (slug === subject) resolves to the
+        // subject landing /subjects/<subject> in the renderer — not a break.
+        if (pageSlug === subject) continue;
         if (!resolveLink(links, pageSlug)) {
           results.push({ file: `src/content/${kind}/${subject}/${basename(f)}`, rawLink: inner });
         }

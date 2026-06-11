@@ -35,6 +35,17 @@ export const subjects: Record<string, SubjectConfig> = {
     requireSolutionKeyword: false,
     problemSetSlugPrefix: "ps",
   },
+  accounting: {
+    slug: "accounting",
+    title: "Accounting",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Accounting",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Accounting",
+    lecturesDir: "Lectures",
+    vaultSolutionsDir: "Problem Sets",
+    requireSolutionKeyword: false,
+    assignmentsDir: "Problem Sets",
+    problemSetSlugPrefix: "assignment",
+  },
 };
 
 export function getSubjectConfig(slug: string): SubjectConfig {
