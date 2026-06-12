@@ -1,7 +1,7 @@
 ---
 title: Macro-Economics
 slug: macro-economics
-placeholder: true
+placeholder: false
 ---
 
-Awaiting Plan 2 ingestion.
+Macro-Economics I — national accounts and measurement, consumption and saving, production and growth, investment, goods-market equilibrium, the labor market and unemployment, inequality and polarization, and fiscal policy.

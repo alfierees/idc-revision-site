@@ -45,10 +45,15 @@ export function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined
   // to "assignment-3-coreweave-…", but the ingested pages are "ps-4" /
   // "assignment-3". Strip the leading zero-padded number off any trailing
   // description and retry against the prefix-number slug.
-  const psMatch = slug.match(/^(ps|assignment|ex|hw)-0*(\d+)(?:-.*)?$/);
+  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|ex|hw)-0*(\d+)(?:-.*)?$/);
   if (psMatch) {
-    const ps = links.get(`${psMatch[1]}-${psMatch[2]}`);
-    if (ps && ps.kind === "problem-set") return ps;
+    const n = psMatch[1];
+    // The canonical slug prefix depends on the subject's problemSetSlugPrefix
+    // (ps-N, assignment-N, …); try the known prefixes for a problem-set match.
+    for (const pref of ["ps", "assignment", "ex", "hw", "problem-set"]) {
+      const t = links.get(`${pref}-${n}`);
+      if (t && t.kind === "problem-set") return t;
+    }
   }
   return undefined;
 }

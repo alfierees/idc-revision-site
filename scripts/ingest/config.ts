@@ -64,6 +64,17 @@ export const subjects: Record<string, SubjectConfig> = {
     sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Data Science",
     lecturesDir: "Lectures",
   },
+  "macro-economics": {
+    slug: "macro-economics",
+    title: "Macro-Economics",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Macro-Economics",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Macro-Economics",
+    lecturesDir: "Lectures",
+    vaultSolutionsDir: "Problem Sets",
+    requireSolutionKeyword: false,
+    assignmentsDir: "Problem Sets",
+    problemSetSlugPrefix: "ps",
+  },
 };
 
 export function getSubjectConfig(slug: string): SubjectConfig {

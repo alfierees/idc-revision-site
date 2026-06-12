@@ -2,7 +2,7 @@ import { readFile, writeFile, readdir, mkdir, copyFile } from "node:fs/promises"
 import { existsSync } from "node:fs";
 import { join, basename, extname } from "node:path";
 import type { SubjectConfig } from "./config.js";
-import { slugify, extractImageRefs } from "./text.js";
+import { slugify, extractImageRefs, resolveAttachment } from "./text.js";
 
 /** Insert `subject:` and `in_scope: true` into YAML frontmatter if absent. */
 export function injectFrontmatter(md: string, subject: string): string {
@@ -43,11 +43,11 @@ function findExcalidrawExport(attachmentsDir: string, name: string): string | nu
   return null;
 }
 
-async function copyImagesFromBody(md: string, attachmentsDir: string, imagesDestDir: string): Promise<void> {
+async function copyImagesFromBody(md: string, vaultPath: string, imagesDestDir: string): Promise<void> {
   await mkdir(imagesDestDir, { recursive: true });
   for (const ref of extractImageRefs(md)) {
-    const src = ref.startsWith("/") ? ref : join(attachmentsDir, basename(ref));
-    if (!existsSync(src)) continue;
+    const src = resolveAttachment(vaultPath, ref);
+    if (!src) continue;
     const safe = slugify(basename(ref).replace(/\.[^.]+$/, "")) + extname(ref);
     await copyFile(src, join(imagesDestDir, safe));
   }
@@ -68,7 +68,7 @@ export async function copyPastPapers(cfg: SubjectConfig, contentRoot: string): P
     const raw = await readFile(join(dir, f), "utf8");
     const withFm = injectFrontmatter(raw, cfg.slug);
     const withDiagrams = transformExcalidrawEmbeds(withFm, (name) => findExcalidrawExport(attachmentsDir, name));
-    await copyImagesFromBody(withDiagrams, attachmentsDir, imagesDestDir);
+    await copyImagesFromBody(withDiagrams, cfg.vaultPath, imagesDestDir);
     const slug = slugify(f.replace(/\.md$/, ""));
     await writeFile(join(destDir, `${slug}.md`), withDiagrams, "utf8");
     copied.push(slug);
@@ -100,7 +100,7 @@ export async function copyLectures(cfg: SubjectConfig, contentRoot: string): Pro
     const raw = await readFile(join(dir, f), "utf8");
     const withFm = injectFrontmatter(raw, cfg.slug);
     const withDiagrams = transformExcalidrawEmbeds(withFm, (name) => findExcalidrawExport(attachmentsDir, name));
-    await copyImagesFromBody(withDiagrams, attachmentsDir, imagesDestDir);
+    await copyImagesFromBody(withDiagrams, cfg.vaultPath, imagesDestDir);
     await writeFile(destFile, withDiagrams, "utf8");
     copied.push(slug);
   }
