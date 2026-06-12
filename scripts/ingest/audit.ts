@@ -164,11 +164,15 @@ function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
     }
   }
   if (candidate) return candidate;
-  // Problem-set vault-name fallback: [[PS_04-…]] → "ps-04-…" resolves to "ps-4".
-  const psMatch = slug.match(/^ps-0*(\d+)(?:-.*)?$/);
+  // Problem-set vault-name fallback: [[PS_04-…]] → "ps-04-…" → "ps-4",
+  // [[Assignment 3 - CoreWeave …]] → "assignment-3-…" → "assignment-3".
+  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|ex|hw)-0*(\d+)(?:-.*)?$/);
   if (psMatch) {
-    const ps = links.get(`ps-${psMatch[1]}`);
-    if (ps && ps.kind === "problem-set") return ps;
+    const n = psMatch[1];
+    for (const pref of ["ps", "assignment", "ex", "hw", "problem-set"]) {
+      const t = links.get(`${pref}-${n}`);
+      if (t && t.kind === "problem-set") return t;
+    }
   }
   return undefined;
 }
@@ -183,6 +187,12 @@ const ALWAYS_MUTED = new Set([
   "macroeconomics",
   "assignment-solution",
   "problem-set",         // generic metadata pill used in econometrics
+  "recap",               // accounting Session 9 metadata, not a concept
+  "exam-prep",           // accounting Session 9 metadata, not a concept
+  // The Data Science course name — appears as a lecture metadata pill on the
+  // ingested DS lectures; not a glossary concept. (The DS *concepts* — pandas,
+  // matplotlib, EDA, dataframes, etc. — all have term pages and resolve.)
+  "data-science",
 ]);
 
 // ─── bucket 1: muted-tag candidates ──────────────────────────────────────────
@@ -208,8 +218,10 @@ async function findMutedTagCandidates(
     const tags = (fm.tags as string[] | undefined) ?? [];
 
     for (const tag of tags) {
-      if (ALWAYS_MUTED.has(tag)) continue;
       const slugged = slugifyAlias(tag);
+      // Muted check is case-insensitive: match the raw tag or its slug form so
+      // entries like "EDA" resolve against a lowercase "eda" in ALWAYS_MUTED.
+      if (ALWAYS_MUTED.has(tag) || ALWAYS_MUTED.has(slugged)) continue;
       if (seen.has(slugged)) continue;
       if (resolveLink(links, tag)) continue;
 
@@ -270,6 +282,9 @@ async function findBrokenWikiLinks(subject: string, links: LinkMap): Promise<Bro
         // canonical slugify (underscores collapse to hyphens) before lookup.
         // Audit must do the same or it false-positives on `[[Lec_04-Foo]]`.
         const pageSlug = slugify(pagePart);
+        // Subject-hub link: [[Accounting]] (slug === subject) resolves to the
+        // subject landing /subjects/<subject> in the renderer — not a break.
+        if (pageSlug === subject) continue;
         if (!resolveLink(links, pageSlug)) {
           results.push({ file: `src/content/${kind}/${subject}/${basename(f)}`, rawLink: inner });
         }

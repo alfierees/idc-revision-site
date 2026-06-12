@@ -45,7 +45,9 @@ const lectures = defineCollection({
     tags: z.array(z.string()).default([]),
     aliases: z.array(z.string()).default([]),
     week: z.number().optional(),
-    lecture: z.string().optional(),
+    // Vault lecture frontmatter uses `lecture:` as either a number (e.g. `2`)
+    // or a descriptive string — coerce so verbatim copies validate either way.
+    lecture: z.coerce.string().optional(),
     instructor: z.string().optional(),
     in_scope: z.boolean().default(true),
   }),

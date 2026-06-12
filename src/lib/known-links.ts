@@ -39,14 +39,21 @@ export function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined
     }
   }
   if (candidate) return candidate;
-  // Problem-set vault-name fallback: vault links like
-  // [[PS_04-Seatbelt Laws & Traffic Fatalities]] slugify to
-  // "ps-04-seatbelt-laws-traffic-fatalities", but the ingested page is "ps-4".
-  // Strip the leading zero-padded number off any trailing description and retry.
-  const psMatch = slug.match(/^ps-0*(\d+)(?:-.*)?$/);
+  // Problem-set vault-name fallback: vault links carry the full descriptive
+  // name, e.g. [[PS_04-Seatbelt Laws & Traffic Fatalities]] slugifies to
+  // "ps-04-seatbelt-laws-traffic-fatalities" and [[Assignment 3 - CoreWeave …]]
+  // to "assignment-3-coreweave-…", but the ingested pages are "ps-4" /
+  // "assignment-3". Strip the leading zero-padded number off any trailing
+  // description and retry against the prefix-number slug.
+  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|ex|hw)-0*(\d+)(?:-.*)?$/);
   if (psMatch) {
-    const ps = links.get(`ps-${psMatch[1]}`);
-    if (ps && ps.kind === "problem-set") return ps;
+    const n = psMatch[1];
+    // The canonical slug prefix depends on the subject's problemSetSlugPrefix
+    // (ps-N, assignment-N, …); try the known prefixes for a problem-set match.
+    for (const pref of ["ps", "assignment", "ex", "hw", "problem-set"]) {
+      const t = links.get(`${pref}-${n}`);
+      if (t && t.kind === "problem-set") return t;
+    }
   }
   return undefined;
 }

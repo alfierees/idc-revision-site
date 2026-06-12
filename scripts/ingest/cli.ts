@@ -6,7 +6,7 @@ import { getSubjectConfig } from "./config.js";
 import { scan } from "./scan.js";
 import { copyAssets } from "./copy-assets.js";
 import { writeQueue } from "./queue.js";
-import { copyPastPapers, copyGlossary } from "./copy-prose.js";
+import { copyLectures, copyPastPapers, copyGlossary } from "./copy-prose.js";
 import { reconcileTerms } from "./reconcile-terms.js";
 
 export interface RunCliInput {
@@ -26,6 +26,7 @@ export async function runCli(input: RunCliInput): Promise<RunCliSummary> {
 
   const result = await scan(input.subject, contentRoot);
   await copyAssets({ imageOps: result.imageOps, docOps: result.docOps });
+  await copyLectures(input.subject, contentRoot);
   const pastPapers = await copyPastPapers(input.subject, contentRoot);
   const glossaryCopied = await copyGlossary(input.subject, contentRoot);
   const reconciledTerms = glossaryCopied ? await reconcileTerms(input.subject, contentRoot) : [];

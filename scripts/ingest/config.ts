@@ -35,6 +35,46 @@ export const subjects: Record<string, SubjectConfig> = {
     requireSolutionKeyword: false,
     problemSetSlugPrefix: "ps",
   },
+  accounting: {
+    slug: "accounting",
+    title: "Accounting",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Accounting",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Accounting",
+    lecturesDir: "Lectures",
+    vaultSolutionsDir: "Problem Sets",
+    requireSolutionKeyword: false,
+    assignmentsDir: "Problem Sets",
+    problemSetSlugPrefix: "assignment",
+  },
+  "machine-learning": {
+    slug: "machine-learning",
+    title: "Machine Learning",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Machine Learning",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Machine learning",
+    lecturesDir: "Lecture notes",
+  },
+  // The Data Science course covers the same ML curriculum (EDA, classification,
+  // regression, clustering/PCA); its lectures + registry terms are ingested into
+  // the SAME `machine-learning` subject. Run `cli.ts data-science` after
+  // `cli.ts machine-learning` — it writes into machine-learning/ via the shared slug.
+  "data-science": {
+    slug: "machine-learning",
+    title: "Machine Learning",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Data Science",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Data Science",
+    lecturesDir: "Lectures",
+  },
+  "macro-economics": {
+    slug: "macro-economics",
+    title: "Macro-Economics",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Macro-Economics",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Macro-Economics",
+    lecturesDir: "Lectures",
+    vaultSolutionsDir: "Problem Sets",
+    requireSolutionKeyword: false,
+    assignmentsDir: "Problem Sets",
+    problemSetSlugPrefix: "ps",
+  },
 };
 
 export function getSubjectConfig(slug: string): SubjectConfig {

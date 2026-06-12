@@ -36,9 +36,12 @@ function rehypeSlugLocal() {
  */
 function rewriteObsidianEmbeds(md: string, subject: string): string {
   return md.replace(/!\[\[([^\]|]+?)(?:\|([^\]]+))?\]\]/g, (_match, fname: string, alias: string | undefined) => {
-    const extMatch = fname.match(/\.[^.]+$/);
+    // Strip any folder prefix (e.g. `attachments/foo.png`) — the ingest copies
+    // attachments by basename, so the rewritten URL must use the basename too.
+    const fileName = fname.split("/").pop() ?? fname;
+    const extMatch = fileName.match(/\.[^.]+$/);
     const ext = extMatch ? extMatch[0] : "";
-    const stem = ext ? fname.slice(0, -ext.length) : fname;
+    const stem = ext ? fileName.slice(0, -ext.length) : fileName;
     const slug = slugify(stem) + ext;
     const alt = alias && !/^\d+$/.test(alias.trim()) ? alias.trim() : stem;
     return `![${alt}](/images/${subject}/${slug})`;

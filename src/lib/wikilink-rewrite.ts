@@ -38,6 +38,20 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
       return `href="/subjects/${subject}"`;
     }
 
+    // The Data Science course is ingested into the machine-learning subject;
+    // its lectures carry "Part of: [[Data Science]]" — resolve that to the ML hub.
+    if (subject === "machine-learning" && slug === "data-science") {
+      return `href="/subjects/${subject}"`;
+    }
+
+    // Meta-file links: the vault index "_Wiki-Link Registry" and the bare
+    // glossary file "_<Subject> Concepts" (no fragment) have no standalone page
+    // — resolve both to the subject's Dictionary landing (the on-site concept
+    // index). The fragment form [[_<Subject> Concepts#Term]] is handled above.
+    if (slug === "wiki-link-registry" || slug === `${subject}-concepts`) {
+      return `href="/subjects/${subject}/dictionary"`;
+    }
+
     const target = resolveLink(links, slugPart);
     if (target) {
       const url = `/subjects/${subject}/${KIND_TO_PATH[target.kind]}/${target.slug}`;

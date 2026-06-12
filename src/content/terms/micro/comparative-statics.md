@@ -1,7 +1,7 @@
 ---
 title: Comparative Statics
 subject: micro
-aliases: []
+aliases: ["N-complementary firms"]
 related: ["double-marginalization", "complementary-monopolist", "cournot-competition"]
 source_folder: micro
 ai_drafted: true

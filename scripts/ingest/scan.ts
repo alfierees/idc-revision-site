@@ -5,7 +5,7 @@ import type { SubjectConfig } from "./config.js";
 import type { ScanResult, PendingItem, ImageOp, DocOp } from "./types.js";
 import { parseRegistry } from "./registry.js";
 import { detectRecipes } from "./recipes.js";
-import { slugify, extractImageRefs } from "./text.js";
+import { slugify, extractImageRefs, resolveAttachment } from "./text.js";
 
 // dest is the absolute path to site/src/content
 export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise<ScanResult> {
@@ -77,8 +77,8 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
       }
 
       for (const img of extractImageRefs(md)) {
-        const fromAbs = img.startsWith("/") ? img : join(cfg.vaultPath, "Attachments", basename(img));
-        if (!existsSync(fromAbs)) continue; // silent skip; logged in scan summary by CLI
+        const fromAbs = resolveAttachment(cfg.vaultPath, img);
+        if (!fromAbs) continue; // silent skip; logged in scan summary by CLI
         const safe = slugify(basename(img).replace(/\.[^.]+$/, "")) + extname(img);
         const toAbs = join(destContentRoot, "..", "..", "public", "images", cfg.slug, safe);
         imageOps.push({ from: fromAbs, to: toAbs });
@@ -95,8 +95,8 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
     for (const f of files) {
       const md = await readFile(join(vaultSolutionsDir, f), "utf8");
       for (const img of extractImageRefs(md)) {
-        const fromAbs = img.startsWith("/") ? img : join(cfg.vaultPath, "Attachments", basename(img));
-        if (!existsSync(fromAbs)) continue;
+        const fromAbs = resolveAttachment(cfg.vaultPath, img);
+        if (!fromAbs) continue;
         const safe = slugify(basename(img).replace(/\.[^.]+$/, "")) + extname(img);
         const toAbs = join(destContentRoot, "..", "..", "public", "images", cfg.slug, safe);
         imageOps.push({ from: fromAbs, to: toAbs });
@@ -141,7 +141,7 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
 // Extracts the assignment number from a slug. Handles "ex-1-micro-3" → 1, "appliedmetrics2026-hw1" → 1, "ps-2-something" → 2.
 // Matches the first occurrence of ex/hw/ps/assignment followed by digits, anywhere in the slug.
 function extractExerciseNumberFromSlug(slug: string): number | null {
-  const m = slug.match(/(?:^|[^a-z])(?:ex|hw|ps|assignment)[-_ ]?(\d+)/i);
+  const m = slug.match(/(?:^|[^a-z])(?:ex|hw|ps|assignment|problem[-_ ]?set)[-_ ]?(\d+)/i);
   return m ? parseInt(m[1], 10) : null;
 }
 
@@ -149,7 +149,7 @@ function extractExerciseNumberFromSlug(slug: string): number | null {
 // e.g. "EX1_Micro3_Answers.docx" → [1] (the "3" in "Micro3" is ignored).
 // "AppliedMetrics2026-HW1.pdf" → [1]. "PS_02-Fertility & Education.md" → [2].
 function exerciseNumbersInFilename(filename: string): number[] {
-  return [...filename.matchAll(/(?:exercise|ex|hw|ps|assignment)[-_ ]?(\d+)/gi)].map(m => parseInt(m[1], 10));
+  return [...filename.matchAll(/(?:problem[-_ ]?set|exercise|ex|hw|ps|assignment)[-_ ]?(\d+)/gi)].map(m => parseInt(m[1], 10));
 }
 
 async function listVaultSolutions(vaultPath: string, dirName: string, requireKeyword: boolean): Promise<string[]> {
