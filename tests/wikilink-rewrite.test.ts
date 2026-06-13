@@ -225,3 +225,45 @@ describe("renderMarkdownString — Obsidian image embeds", () => {
     expect(html).toContain('alt="A causal DAG"');
   });
 });
+
+describe("renderMarkdownString — escaped dollars in math (currency)", () => {
+  const SENTINEL = String.fromCharCode(0xe000); // internal sentinel must never leak into output
+
+  it("renders inline math containing an escaped dollar without a KaTeX error", async () => {
+    // `$P^{**} = \$1{,}062.50$` — currency inside inline math. remark-math used
+    // to treat the `$` in `\$` as a closing delimiter, breaking the span.
+    const html = await renderMarkdownString(
+      "$q^{**} = 47.5$, $P^{**} = \\$1{,}062.50$.",
+      "micro", new Map(),
+    );
+    expect(html).not.toContain("katex-error");
+    expect(html).not.toContain(SENTINEL)
+  });
+
+  it("renders \\Delta with an escaped dollar in the same span", async () => {
+    const html = await renderMarkdownString(
+      "Price rose by $\\Delta P = 1{,}062.5 - 987.5 = \\$75$ here.",
+      "micro", new Map(),
+    );
+    expect(html).not.toContain("katex-error");
+    expect(html).not.toContain(SENTINEL)
+  });
+
+  it("renders an escaped dollar in display math", async () => {
+    const html = await renderMarkdownString(
+      "$$\\$10 < \\$20 \\implies \\textbf{UNDERPRICED}$$",
+      "micro", new Map(),
+    );
+    expect(html).not.toContain("katex-error");
+    expect(html).not.toContain(SENTINEL)
+  });
+
+  it("renders an escaped dollar in prose as a literal $", async () => {
+    const html = await renderMarkdownString(
+      "The current ticket price is \\$10 per seat.",
+      "micro", new Map(),
+    );
+    expect(html).toContain("$10 per seat");
+    expect(html).not.toContain(SENTINEL)
+  });
+});
