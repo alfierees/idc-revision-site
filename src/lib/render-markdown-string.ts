@@ -58,6 +58,45 @@ function promoteDisplayMath(md: string): string {
   return md.replace(/^\$\$([^$].*?)\$\$\s*$/gm, (_m, inner: string) => `$$\n${inner}\n$$`);
 }
 
+// Private-use sentinel standing in for an escaped dollar `\$` while remark-math
+// runs. Currency written inside inline math (`$P = \$10$`, `$\Delta P = \$75$`)
+// would otherwise break: remark-math treats the `$` in `\$` as a closing
+// delimiter, so KaTeX receives a dangling `\` and the rest leaks out as text.
+const DOLLAR_SENTINEL = "\uE000";
+
+/**
+ * Pre-pass: replace every escaped dollar `\$` with a sentinel so remark-math
+ * sees clean `$…$` spans. `restoreEscapedDollars` puts it back once the math
+ * spans are delimited — see that plugin for the restoration rules.
+ */
+function protectEscapedDollars(md: string): string {
+  return md.replace(/\\\$/g, DOLLAR_SENTINEL);
+}
+
+/**
+ * rehype plugin (after remark-rehype, before rehype-katex): restore the dollar
+ * sentinel now that math spans are delimited. It must run on hast, not mdast —
+ * remark-math freezes each math node's rendered children into `data.hChildren`
+ * at parse time, so a later mdast mutation of `node.value` is ignored. Here the
+ * immediate parent tells us the context: inside a `math` span or a `code`/`pre`
+ * element the sentinel becomes `\$` (KaTeX renders a literal dollar; code is
+ * verbatim); everywhere else (prose) it becomes a plain `$`.
+ */
+function restoreEscapedDollars() {
+  return (tree: Root) => {
+    visit(tree, "text", (node: { value: string }, _i, parent) => {
+      if (!node.value.includes(DOLLAR_SENTINEL)) return;
+      const el = parent as Element | undefined;
+      const cls = el?.properties?.className;
+      const classList = Array.isArray(cls) ? cls.map(String) : [];
+      const inMath = classList.some((c) => c.includes("math"));
+      const inCode = el?.tagName === "code" || el?.tagName === "pre";
+      const replacement = inMath || inCode ? "\\$" : "$";
+      node.value = node.value.split(DOLLAR_SENTINEL).join(replacement);
+    });
+  };
+}
+
 const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
@@ -74,6 +113,7 @@ const processor = unified()
   })
   .use(remarkRehype, { allowDangerousHtml: false })
   .use(rehypeSlugLocal)
+  .use(restoreEscapedDollars)
   .use(rehypeKatex)
   .use(rehypePaint)
   .use(rehypeStringify);
@@ -83,7 +123,7 @@ export async function renderMarkdownString(
   subject: string,
   links: LinkMap | Set<string>,
 ): Promise<string> {
-  const pre = promoteDisplayMath(rewriteObsidianEmbeds(md, subject));
+  const pre = promoteDisplayMath(protectEscapedDollars(rewriteObsidianEmbeds(md, subject)));
   const file = await processor.process(pre);
   return rewriteWikiHrefs(String(file), subject, links);
 }
