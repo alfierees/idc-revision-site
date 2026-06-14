@@ -266,4 +266,31 @@ describe("renderMarkdownString — escaped dollars in math (currency)", () => {
     expect(html).toContain("$10 per seat");
     expect(html).not.toContain(SENTINEL)
   });
+
+  it("does not turn bare currency dollars into a math span", async () => {
+    // `($2,000) and **debit ...** for the $250` — two bare `$` used to pair up
+    // into one inline-math span, swallowing the prose (words ran together, the
+    // `**bold**` showed as `∗∗`). Each `$` is currency and must stay literal.
+    const html = await renderMarkdownString(
+      "credit Equipment for its full cost ($2,000) and **debit Accumulated Depreciation** for the $250 built up.",
+      "accounting", new Map(),
+    );
+    expect(html).not.toMatch(/class="katex/);          // no math rendered at all
+    expect(html).toContain("$2,000");
+    expect(html).toContain("$250");
+    expect(html).toContain("<strong>debit Accumulated Depreciation</strong>"); // bold survives
+    expect(html).not.toContain(SENTINEL);
+  });
+
+  it("still renders a pure-number inline math span ($0.68$)", async () => {
+    const html = await renderMarkdownString("the probability is $0.68$ today", "micro", new Map());
+    expect(html).toMatch(/class="katex/);              // 0.68 is real math
+    expect(html).not.toContain(SENTINEL);
+  });
+
+  it("keeps real math that contains numbers ($P = 40 - 0.5Q$)", async () => {
+    const html = await renderMarkdownString("demand is $P = 40 - 0.5Q$ here", "micro", new Map());
+    expect(html).toMatch(/class="katex/);
+    expect(html).not.toContain(SENTINEL);
+  });
 });

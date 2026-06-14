@@ -65,12 +65,26 @@ function promoteDisplayMath(md: string): string {
 const DOLLAR_SENTINEL = "\uE000";
 
 /**
- * Pre-pass: replace every escaped dollar `\$` with a sentinel so remark-math
- * sees clean `$…$` spans. `restoreEscapedDollars` puts it back once the math
- * spans are delimited — see that plugin for the restoration rules.
+ * Pre-pass: replace literal dollar signs with a sentinel so remark-math only
+ * sees the dollars that genuinely delimit math. Two kinds are protected:
+ *
+ *   1. Escaped `\$` — a dollar the author escaped, including currency written
+ *      inside inline math (`$P = \$10$`). remark-math treats the `$` in `\$` as
+ *      a closing delimiter, leaving KaTeX a dangling `\`.
+ *   2. Bare currency `$2,000`, `$50K`, `$1M`, `$2.50` — a `$` (not part of
+ *      `$$`) followed by digits that is NOT immediately closed by another `$`.
+ *      Without this, prose like `($2,000) and … for the $250` pairs the two
+ *      `$` into a math span and swallows everything between them (words run
+ *      together and `**bold**` shows as `∗∗`).
+ *
+ * Pure-number math (`$0.68$`, `$200$` — digits immediately closed by `$`) is
+ * left alone, as is `$$…$$` display math. `restoreEscapedDollars` puts the
+ * sentinel back once the math spans are delimited — see that plugin.
  */
-function protectEscapedDollars(md: string): string {
-  return md.replace(/\\\$/g, DOLLAR_SENTINEL);
+function protectLiteralDollars(md: string): string {
+  return md
+    .replace(/\\\$/g, DOLLAR_SENTINEL)
+    .replace(/(?<!\$)\$(?=[\d][\d.,]*(?:[^\d.,$]|$))/g, DOLLAR_SENTINEL);
 }
 
 /**
@@ -123,7 +137,7 @@ export async function renderMarkdownString(
   subject: string,
   links: LinkMap | Set<string>,
 ): Promise<string> {
-  const pre = promoteDisplayMath(protectEscapedDollars(rewriteObsidianEmbeds(md, subject)));
+  const pre = promoteDisplayMath(protectLiteralDollars(rewriteObsidianEmbeds(md, subject)));
   const file = await processor.process(pre);
   return rewriteWikiHrefs(String(file), subject, links);
 }
