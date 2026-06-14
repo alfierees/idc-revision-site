@@ -49,13 +49,26 @@ function rewriteObsidianEmbeds(md: string, subject: string): string {
 }
 
 /**
- * Pre-pass: Obsidian writes display math as a single line `$$...$$`, which
- * remark-math parses as inline math inside a paragraph. Break the delimiters
- * onto their own lines so it becomes a math-display block (and gets the
- * framed .eqn treatment).
+ * Pre-pass: normalise a `$$…$$` display block that STARTS a line so its
+ * delimiters sit on their own lines. Handles both single-line `$$…$$`
+ * (Obsidian's style — remark-math would otherwise read it as inline math in a
+ * paragraph) and a `$$<content>` block whose body begins on the opening line
+ * and closes on a later line (micromark treats that trailing text as a
+ * code-fence-style *info string* and then fails to find a close, swallowing the
+ * rest of the block).
+ *
+ * The `^\$\$` anchor (column 0, no indent) is deliberate. Display math inside a
+ * callout begins with `> `, and math indented under a list item begins with
+ * spaces — both are left untouched so remark-callouts + remark-math handle them
+ * (rewriting across a `> ` prefix, or promoting an indented block, corrupts
+ * them). `$$` never appears in fenced code in the content, so this never
+ * touches code.
  */
 function promoteDisplayMath(md: string): string {
-  return md.replace(/^\$\$([^$].*?)\$\$\s*$/gm, (_m, inner: string) => `$$\n${inner}\n$$`);
+  return md.replace(
+    /^\$\$([^$][\s\S]*?)\$\$[ \t]*$/gm,
+    (_m, inner: string) => `$$\n${inner.trim()}\n$$`,
+  );
 }
 
 // Private-use sentinel standing in for an escaped dollar `\$` while remark-math
@@ -64,27 +77,43 @@ function promoteDisplayMath(md: string): string {
 // delimiter, so KaTeX receives a dangling `\` and the rest leaks out as text.
 const DOLLAR_SENTINEL = "\uE000";
 
+// Sentinels bracketing a stashed inline-math span while currency is neutralised.
+const MATH_OPEN = "\uE003";
+const MATH_CLOSE = "\uE004";
+
+// A valid (Pandoc-style) inline-math span: a single `$` — not `$$`, not escaped
+// — that is NOT followed by whitespace, up to a closing `$` that is NOT preceded
+// by whitespace and NOT followed by a digit. This is the discriminator between
+// real math like `$1-\alpha$` (closed by a tight `$`) and currency like
+// `$250 … for the $150` (whose next `$` is preceded by a space, so it never
+// validly closes — those dollars fall through to the currency pass below).
+const INLINE_MATH = /(?<![$\\])\$(?![\s$])[^$\n]*?(?<![\s$])\$(?!\d)/g;
+
 /**
  * Pre-pass: replace literal dollar signs with a sentinel so remark-math only
- * sees the dollars that genuinely delimit math. Two kinds are protected:
+ * sees the dollars that genuinely delimit math.
  *
- *   1. Escaped `\$` — a dollar the author escaped, including currency written
- *      inside inline math (`$P = \$10$`). remark-math treats the `$` in `\$` as
- *      a closing delimiter, leaving KaTeX a dangling `\`.
- *   2. Bare currency `$2,000`, `$50K`, `$1M`, `$2.50` — a `$` (not part of
- *      `$$`) followed by digits that is NOT immediately closed by another `$`.
- *      Without this, prose like `($2,000) and … for the $250` pairs the two
- *      `$` into a math span and swallows everything between them (words run
- *      together and `**bold**` shows as `∗∗`).
+ *   1. Escaped `\$` — a dollar the author escaped, including currency inside
+ *      inline math (`$P = \$10$`). remark-math treats the `$` in `\$` as a
+ *      closing delimiter, leaving KaTeX a dangling `\`.
+ *   2. Bare currency `$2,000`, `$50K`, `$1M` — without protection, prose like
+ *      `($2,000) and … for the $250` pairs the two `$` into a math span and
+ *      swallows everything between them (words run together, `**bold**` shows
+ *      as `∗∗`).
  *
- * Pure-number math (`$0.68$`, `$200$` — digits immediately closed by `$`) is
- * left alone, as is `$$…$$` display math. `restoreEscapedDollars` puts the
- * sentinel back once the math spans are delimited — see that plugin.
+ * To avoid misreading real math like `$1-\alpha$` as currency, valid inline
+ * math spans are stashed FIRST, then only the leftover `$<digits>` is treated
+ * as currency, then the spans are restored. Pure-number math (`$0.68$`,
+ * `$200$`) is a valid span and survives; `$$…$$` display math is untouched.
+ * `restoreEscapedDollars` puts the sentinel back once parsing is done.
  */
 function protectLiteralDollars(md: string): string {
-  return md
-    .replace(/\\\$/g, DOLLAR_SENTINEL)
-    .replace(/(?<!\$)\$(?=[\d][\d.,]*(?:[^\d.,$]|$))/g, DOLLAR_SENTINEL);
+  md = md.replace(/\\\$/g, DOLLAR_SENTINEL);
+  const spans: string[] = [];
+  md = md.replace(INLINE_MATH, (m) => `${MATH_OPEN}${spans.push(m) - 1}${MATH_CLOSE}`);
+  md = md.replace(/(?<!\$)\$(?=[\d][\d.,]*(?:[^\d.,$]|$))/g, DOLLAR_SENTINEL);
+  md = md.replace(new RegExp(`${MATH_OPEN}(\\d+)${MATH_CLOSE}`, "g"), (_m, i) => spans[Number(i)]);
+  return md;
 }
 
 /**

@@ -293,4 +293,25 @@ describe("renderMarkdownString — escaped dollars in math (currency)", () => {
     expect(html).toMatch(/class="katex/);
     expect(html).not.toContain(SENTINEL);
   });
+
+  it("keeps inline math that STARTS with a digit ($1-\\alpha$)", async () => {
+    // The currency heuristic must not eat a real span that opens with a digit.
+    const html = await renderMarkdownString(
+      "exponents $\\alpha$ and $1-\\alpha$ sum to 1.",
+      "macro-economics", new Map(),
+    );
+    expect(html).not.toContain("katex-error");
+    expect(html).toMatch(/class="katex/);
+    expect(html).not.toContain(SENTINEL);
+  });
+
+  it("renders a multi-line $$…$$ display block (content on the opening line)", async () => {
+    const html = await renderMarkdownString(
+      "inputs:\n\n$$Y = A \\cdot F(K, L\n)$$\n\nFor Cobb–Douglas:",
+      "macro-economics", new Map(),
+    );
+    expect(html).not.toContain("katex-error");
+    expect(html).toMatch(/katex-display/);             // rendered as display math
+    expect(html).not.toContain(SENTINEL);
+  });
 });
