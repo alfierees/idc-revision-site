@@ -134,6 +134,9 @@ Instruments only weakly correlated with $x$ (first-stage $F<10$); produce biased
 ### Wu-Hausman Test
 Tests for endogeneity; rejection ⇒ OLS is inconsistent and IV is needed. → [[Lec_08-Fixed Effects in Panel Data|Lec 8]]
 
+### Overidentifying Restrictions Test
+Sargan/Hansen test, available only when instruments outnumber endogenous regressors (overidentified); tests the joint null that **all** instruments are valid (uncorrelated with the error). Rejection ⇒ at least one instrument violates the exclusion restriction (assuming ≥1 is valid). → [[PP_03-Time Preferences & Discounting (2023 Moed B)|PP3 Q2c]]
+
 ---
 
 ## Sample selection (Heckman)
