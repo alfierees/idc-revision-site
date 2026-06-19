@@ -1,5 +1,7 @@
 # AI Revision Tutor Implementation Plan
 
+> **STATUS (2026-06-19): Built, verified, then reverted from `main`.** It worked end-to-end (grounded answers + citations) but felt redundant over the site's existing search/navigation. The complete implementation is preserved on branch **`archive/ai-revision-tutor`** (tag `archive/ai-revision-tutor-2026-06-19`). To revisit: `git checkout archive/ai-revision-tutor`. Most likely improvement if retried: swap lexical retrieval for **semantic embeddings** (Voyage AI) — see Task 6 / spec §2.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a grounded AI chat tutor to the IDC revision site that answers conceptual questions and coaches exam technique using only the site's own content, always citing the source pages.
