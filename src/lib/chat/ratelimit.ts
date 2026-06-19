@@ -21,7 +21,11 @@ export async function checkRateLimit(redis: RedisLike, ip: string, perMinute: nu
   return count <= perMinute;
 }
 
-/** Returns true if spending is still under the monthly cap. */
+/**
+ * Best-effort monthly spend gate (check-then-act, not atomic): concurrent
+ * requests near the cap can overshoot by a few cents. Acceptable for a small
+ * personal cap; not a hard transactional ceiling.
+ */
 export async function checkBudget(redis: RedisLike, yearMonth: string, capUsd: number): Promise<boolean> {
   const spent = Number((await redis.get<number>(`chat:cost:${yearMonth}`)) ?? 0);
   return spent < capUsd;

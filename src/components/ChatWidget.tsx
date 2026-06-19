@@ -24,7 +24,8 @@ export default function ChatWidget() {
       renderMathInElement(bodyRef.current, {
         delimiters: [
           { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
         ],
         throwOnError: false,
       });
@@ -106,7 +107,13 @@ export default function ChatWidget() {
             {msgs.map((m) => (
               <div class={`chat-msg chat-${m.role}`}>
                 {m.role === "assistant"
-                  ? <div dangerouslySetInnerHTML={{ __html: marked.parse(m.content || "…") as string }} />
+                  ? (
+                    <>
+                      {/* Model output is grounded in our own vetted content and the audience is trusted;
+                          marked does not sanitize, so pipe through DOMPurify before widening the audience. */}
+                      <div dangerouslySetInnerHTML={{ __html: marked.parse(m.content || "…") as string }} />
+                    </>
+                  )
                   : <p>{m.content}</p>}
                 {m.sources && m.sources.length > 0 && (
                   <div class="chat-sources">

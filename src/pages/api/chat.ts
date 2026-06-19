@@ -36,17 +36,31 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const lastUser = [...history].reverse().find((m) => m.role === "user");
   if (!lastUser) return new Response("No question", { status: 400 });
 
-  const redis = new Redis({
-    url: import.meta.env.UPSTASH_REDIS_REST_URL,
-    token: import.meta.env.UPSTASH_REDIS_REST_TOKEN,
-  });
   const ym = currentYearMonth(new Date());
+  // Rate-limit by IP. Astro's Vercel adapter populates clientAddress; fall back to
+  // the forwarded header, then a shared bucket, so the key is never undefined.
+  const ip =
+    clientAddress ??
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown";
 
-  if (!(await checkRateLimit(redis, clientAddress ?? "unknown", PER_MINUTE))) {
-    return new Response(JSON.stringify({ error: "rate_limited" }), { status: 429 });
-  }
-  if (!(await checkBudget(redis, ym, MONTHLY_CAP_USD))) {
-    return new Response(JSON.stringify({ error: "budget_exceeded" }), { status: 429 });
+  let redis: Redis;
+  try {
+    redis = new Redis({
+      url: import.meta.env.UPSTASH_REDIS_REST_URL,
+      token: import.meta.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+    if (!(await checkRateLimit(redis, ip, PER_MINUTE))) {
+      return new Response(JSON.stringify({ error: "rate_limited" }), { status: 429 });
+    }
+    if (!(await checkBudget(redis, ym, MONTHLY_CAP_USD))) {
+      return new Response(JSON.stringify({ error: "budget_exceeded" }), { status: 429 });
+    }
+  } catch {
+    // Misconfigured/unreachable Redis must not 500 — degrade gracefully.
+    return new Response(line({ type: "error", message: "The tutor is unavailable right now." }), {
+      headers: { "Content-Type": "application/x-ndjson; charset=utf-8", "Cache-Control": "no-store" },
+    });
   }
 
   const chunks = retrieve(INDEX, lastUser.content, 8);
