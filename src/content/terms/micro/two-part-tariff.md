@@ -1,7 +1,7 @@
 ---
 title: Two-Part Tariff
 subject: micro
-aliases: ["TPT", "two-part pricing"]
+aliases: ["TPT", "two-part pricing", "franchise contract", "franchise-contract"]
 related: ["first-degree-price-discrimination", "consumer-surplus", "price-discrimination"]
 source_folder: micro
 ai_drafted: true

@@ -48,6 +48,12 @@ A price is consistent with the inferences agents draw from it — the implied po
 ### Common Resource
 A rivalrous but non-excludable good; absent coordination each user ignores the externality they impose, causing over-extraction (tragedy of the commons). → [[Topic 1 - Asymmetric Information|Topic 1]]
 
+### Risk Aversion
+A preference for a certain outcome over a fair gamble with the same expected value (concave utility); the reason a consumer will pay a premium above expected loss to be insured. → [[Topic 1 - Asymmetric Information|Topic 1]]
+
+### Actuarially Fair Premium
+An insurance premium equal to the insurer's expected pay-out, so the insurer breaks even; under [[Moral Hazard]] it is computed on the *insured* (over-consumed) quantities, so it exceeds the consumer's expected uninsured spending. → [[Topic 1 - Asymmetric Information|Topic 1]]
+
 ---
 
 ## Market structures & costs
@@ -57,6 +63,24 @@ The characteristics of a market — number of sellers, product differentiation, 
 
 ### Perfect Competition
 Many buyers and sellers, a homogeneous product, and free entry; every participant is a **price taker** and the market clears at $P = MC$. → [[Topic 2 - Equilibrium in Different Market Structures|Topic 2]]
+
+### Price Taker
+A firm so small relative to the market that it treats price as given; its own output choice does not move the market price, so it maximises profit by setting $P = MC$. → [[Topic 2 - Equilibrium in Different Market Structures|Topic 2]]
+
+### Long-Run Equilibrium
+With [[Free Entry]] and exit, economic profit is competed to **zero**: price settles at minimum average cost and each firm produces at its [[Minimum Efficient Scale|efficient scale]]. Demand then fixes only the *number* of firms, not the price (constant-cost industry). → [[Topic 2 - Equilibrium in Different Market Structures|Topic 2]]
+
+### Free Entry
+The absence of entry/exit barriers; firms enter while profit is positive and exit while it is negative, which is what drives the [[Zero-Profit Condition]] in the [[Long-Run Equilibrium]]. → [[Topic 2 - Equilibrium in Different Market Structures|Topic 2]]
+
+### Zero-Profit Condition
+The long-run condition $P = AC$: entry/exit eliminates economic profit, so price equals (minimum) average cost. Also underlies no-arbitrage across activities (e.g. the Airbnb/rental indifference). → [[Topic 2 - Equilibrium in Different Market Structures|Topic 2]]
+
+### Minimum Efficient Scale
+The output that minimises average cost (where $MC = AC$); in the long run every competitive firm produces here and the market price equals that minimum $AC$. → [[Topic 2 - Equilibrium in Different Market Structures|Topic 2]]
+
+### Shutdown Condition
+A firm operates in the short run only if price covers average *variable* cost, $P \ge \min AVC$; otherwise it shuts down. Fixed costs are sunk, so losses are tolerated as long as variable costs are covered. → [[Topic 2 - Equilibrium in Different Market Structures|Topic 2]]
 
 ### Monopoly
 A single seller facing whole-market demand; optimum at $MR = MC$ gives price above MC, output below the competitive level, and deadweight loss. → [[Topic 2 - Equilibrium in Different Market Structures|Topic 2]]
@@ -149,6 +173,12 @@ A strategy strictly dominated by another (worse for every opponent action) is ne
 
 ### Dominated Strategy
 A strategy $s_i$ strictly dominated by $s_i'$ when $s_i'$ yields a strictly higher payoff for every opponent strategy. → [[Topic 3 - Game Theory|Topic 3]]
+
+### Dominant Strategy
+A strategy that is a [[Best Response]] to *every* possible opponent action; if all players have one, their joint play is a (dominant-strategy) equilibrium. Most games have none. → [[Topic 3 - Game Theory|Topic 3]]
+
+### Zero-Sum Game
+A game of pure conflict where one player's gain is exactly the other's loss (e.g. matching-pennies / odd-or-even); typically has no pure-strategy Nash Equilibrium but a unique [[Mixed Strategy]] one. → [[Topic 3 - Game Theory|Topic 3]]
 
 ### Iterated Dominance
 IESDS: successively remove strictly [[Dominated Strategy|dominated strategies]]; never eliminates a Nash Equilibrium, order-independent. → [[Topic 3 - Game Theory|Topic 3]]
