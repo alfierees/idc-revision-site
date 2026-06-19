@@ -13,6 +13,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0",
     "@astrojs/mdx": "^6.0.2",
     "@astrojs/preact": "^5.1.5",
     "@astrojs/vercel": "^10.0.8",
@@ -21,10 +22,12 @@
     "@fontsource-variable/manrope": "^5.2.8",
     "@fontsource-variable/source-serif-4": "^5.2.9",
     "@tailwindcss/vite": "^4.3.0",
+    "@upstash/redis": "^1.38.0",
     "astro": "^6.4.4",
     "fuse.js": "^7.4.2",
     "hast-util-to-string": "^3.0.1",
     "katex": "^0.17.0",
+    "marked": "^18.0.5",
     "preact": "^10.29.2",
     "rehype-katex": "^7.0.1",
     "rehype-stringify": "^10.0.1",
@@ -38,6 +41,7 @@
     "unified": "^11.0.5"
   },
   "devDependencies": {
+    "gray-matter": "^4.0.3",
     "vitest": "^4.1.8"
   }
 }
