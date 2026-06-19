@@ -10,7 +10,7 @@
     "build": "npm run chat:index && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "chat:index": "npx tsx scripts/build-chat-index.ts",
+    "chat:index": "tsx scripts/build-chat-index.ts",
     "test": "vitest run"
   },
   "dependencies": {
@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "gray-matter": "^4.0.3",
+    "tsx": "^4.22.4",
     "vitest": "^4.1.8"
   }
 }
