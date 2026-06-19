@@ -31,3 +31,9 @@ scripts/ingest/.backup-pre-vault-solutions/
 
 # git worktrees
 .worktrees/
+
+# vercel adapter output
+.vercel/
+
+# generated chat index
+src/generated/
