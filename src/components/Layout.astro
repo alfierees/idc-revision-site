@@ -1,7 +1,6 @@
 ---
 import "../styles/globals.css";
 import { getCollection } from "astro:content";
-import ChatWidget from "./ChatWidget.tsx";
 
 interface Props {
   title?: string;
@@ -180,35 +179,5 @@ const section = active ?? "dictionary";
         window.addEventListener("scroll", onSpy, { passive: true });
       }
     </script>
-    <ChatWidget client:idle />
-    <style is:global>
-      .chat-widget { position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 50; }
-      .chat-fab { background: var(--color-accent, #b4532a); color: #fff; border: 0; border-radius: 999px;
-        padding: 0.7rem 1.2rem; font-family: var(--font-ui, sans-serif); font-weight: 600; cursor: pointer;
-        box-shadow: 0 4px 14px rgba(0,0,0,.18); }
-      .chat-panel { width: min(380px, 92vw); height: min(560px, 80vh); display: flex; flex-direction: column;
-        background: var(--color-paper, #fff); border: 1px solid var(--color-rule, #ddd); border-radius: 14px; overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0,0,0,.22); }
-      .chat-head { display: flex; justify-content: space-between; align-items: center; padding: .7rem 1rem;
-        border-bottom: 1px solid var(--color-rule, #eee); font-family: var(--font-ui, sans-serif); font-weight: 600; }
-      .chat-head button { background: none; border: 0; font-size: 1.3rem; cursor: pointer; line-height: 1; }
-      .chat-body { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: .9rem; }
-      .chat-starters { display: flex; flex-direction: column; gap: .5rem; }
-      .chat-starters button { text-align: left; padding: .55rem .8rem; border: 1px solid var(--color-rule, #ddd);
-        border-radius: 8px; background: transparent; cursor: pointer; font-family: var(--font-ui, sans-serif); }
-      .chat-msg { font-size: .92rem; line-height: 1.5; }
-      .chat-user { align-self: flex-end; background: var(--color-paper-deep, #f0ece3); padding: .5rem .8rem;
-        border-radius: 10px; max-width: 85%; }
-      .chat-assistant p { margin: 0 0 .6rem; }
-      .chat-sources { margin-top: .6rem; font-size: .8rem; }
-      .chat-sources span { font-weight: 600; color: var(--color-ink-muted, #888); }
-      .chat-sources ul { margin: .3rem 0 0; padding-left: 1rem; }
-      .chat-doc { margin-left: .4rem; font-size: .72rem; color: var(--color-ink-muted, #888); }
-      .chat-input { display: flex; gap: .5rem; padding: .7rem; border-top: 1px solid var(--color-rule, #eee); }
-      .chat-input input { flex: 1; border: 1px solid var(--color-rule, #ddd); border-radius: 8px; padding: .5rem .7rem;
-        font-family: var(--font-ui, sans-serif); }
-      .chat-input button { border: 0; background: var(--color-accent, #b4532a); color: #fff; border-radius: 8px;
-        padding: 0 1rem; cursor: pointer; }
-    </style>
   </body>
 </html>
