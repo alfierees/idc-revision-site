@@ -28,3 +28,6 @@ scripts/ingest/.queue/
 
 # ad-hoc backups from interactive ingest re-runs
 scripts/ingest/.backup-pre-vault-solutions/
+
+# git worktrees
+.worktrees/
