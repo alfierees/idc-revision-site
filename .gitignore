@@ -34,3 +34,6 @@ scripts/ingest/.backup-pre-vault-solutions/
 
 # vercel adapter output
 .vercel/
+
+# generated chat index
+src/generated/
