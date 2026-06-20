@@ -1,0 +1,69 @@
+---
+import Layout from "../../../../components/Layout.astro";
+import HoverPreview from "../../../../components/HoverPreview.astro";
+import ExamPrepSidebar from "../../../../components/ExamPrepSidebar.astro";
+import Mermaid from "../../../../components/Mermaid.astro";
+import { getCollection, getEntry } from "astro:content";
+import { renderMarkdownString } from "../../../../lib/render-markdown-string";
+import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
+import { decodeHtmlEntities } from "../../../../lib/html-entities";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("exam-prep", (e) => e.data.in_scope);
+  return docs.map((e) => {
+    const slug = e.id.split("/").pop()!;
+    return { params: { subject: e.data.subject, doc: slug } };
+  });
+}
+
+const subjectSlug = Astro.params.subject!;
+const docSlug = Astro.params.doc!;
+const doc = await getEntry("exam-prep", `${subjectSlug}/${docSlug}`);
+if (!doc) throw new Error(`exam-prep doc ${subjectSlug}/${docSlug} not found`);
+
+const links = await buildLinkMap(subjectSlug);
+const html = await renderMarkdownString(doc.body ?? "", subjectSlug, links);
+
+const allDocs = (await getCollection("exam-prep", (e) => e.data.subject === subjectSlug && e.data.in_scope))
+  .map((e) => ({ slug: e.id.split("/").pop()!, title: e.data.title, order: e.data.order }));
+
+// Keep the inner HTML so KaTeX in headings renders as real math in the TOC.
+const sectionRe = /<(h2|h3)[^>]*id="([^"]+)"[^>]*>(.*?)<\/\1>/g;
+const sections: { id: string; text: string; html: string; level: number }[] = [];
+let m: RegExpExecArray | null;
+while ((m = sectionRe.exec(html)) !== null) {
+  sections.push({ id: m[2], text: decodeHtmlEntities(m[3].replace(/<[^>]+>/g, "")).trim(), html: m[3], level: m[1] === "h2" ? 2 : 3 });
+}
+
+const meta = [doc.data.course, doc.data.instructor].filter(Boolean);
+const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+---
+<Layout title={`${doc.data.title} · ${subject.data.title}`} subject={subjectSlug} active="exam-prep" hasSidebar>
+  <div id="content-grid" class="content-grid">
+    <ExamPrepSidebar subject={subjectSlug} docs={allDocs} currentSlug={docSlug} currentSections={sections} />
+    <article class="paper-body">
+      {meta.length > 0 && (
+        <p class="doc-meta">{meta.join(" · ")}</p>
+      )}
+      <h1 class="doc-title">{doc.data.title}</h1>
+      {doc.data.description && (
+        <p class="mt-2 font-ui text-sm text-ink-muted italic">{doc.data.description}</p>
+      )}
+      {doc.data.tags.length > 0 && (
+        <ul class="mt-4 flex flex-wrap gap-2 list-none p-0">
+          {doc.data.tags.map((tag) => {
+            const target = resolveLink(links, tag);
+            return target ? (
+              <li><a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a></li>
+            ) : (
+              <li><span class="tag tag-muted">#{tag}</span></li>
+            );
+          })}
+        </ul>
+      )}
+      <div class="mt-8 paper-prose prose-card" set:html={html} />
+    </article>
+  </div>
+  <Mermaid />
+  <HoverPreview subject={subjectSlug} />
+</Layout>
