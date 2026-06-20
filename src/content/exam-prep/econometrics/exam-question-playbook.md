@@ -65,10 +65,42 @@ What each column unlocks:
 - **Fixed within unit** (a personality trait, a village, intrinsic preferences) ⇒ if it's the confounder and it's *unobserved*, the fix is [[_Econometrics Concepts#Fixed Effects|fixed effects]] (it demeans away). **Time-varying** confounder ⇒ FE won't save you; you need IV or a design.
 - **Panel structure** (same unit over many rounds) ⇒ opens FE *and* requires [[_Econometrics Concepts#Clustered Standard Errors|clustered SEs]] (cluster at the unit level).
 
-> [!example] How triage instantly maps to the three past papers
-> - *Emotions (PP1):* `chose.B` binary ⇒ LPM. `emotion`/`energy` observed + driven by fixed `risk.preferences` ⇒ OVB ⇒ FE (trait is time-invariant) **or** IV (`celsius`, `sleep`). Exam shock (Wed final) ⇒ DiD.
-> - *Holdup (PP2):* `invest`/`accept` binary ⇒ LPM/logit; `offer` continuous ⇒ OLS. Treatments randomised ⇒ clean. But `offer` is only observed *if* invest=1 ⇒ [[_Econometrics Concepts#Endogenous Selection|endogenous selection]].
-> - *Time prefs (PP3):* `choice` continuous ⇒ OLS; `today.always` binary ⇒ LPM. `A.delay`/`A.payment` researcher-set ⇒ exogenous; `income` survey covariate ⇒ endogenous ⇒ IV.
+**How triage maps to the three past papers — the same four-column table, filled in.** Swap in the new paper's variable names and the answers fall out.
+
+#### PP1 · Emotions & Risky Choice — panel: 243 subjects × 15 rounds
+
+| Variable | Outcome or regressor? | Type | Randomised or observed? | Time-varying or fixed within unit? |
+| --- | --- | --- | --- | --- |
+| `chose.B` | outcome | binary | observed | time-varying |
+| `diff.E` | regressor | continuous | researcher-set (lottery design) | time-varying (by round) |
+| `emotion`, `energy` | regressor | continuous (1–7) | observed (self-report) | time-varying |
+| `celsius`, `sleep` | regressor (IV candidates) | continuous | observed (natural variation) | time-varying |
+| `risk.preferences` | omitted confounder | — | **unobserved** | **fixed within unit** |
+
+> *Reading:* binary outcome ⇒ [[_Econometrics Concepts#Linear Probability Model|LPM]] (cluster SEs by subject — it's a panel). `emotion`/`energy` are observed and driven by the fixed, unobserved `risk.preferences` ⇒ [[_Econometrics Concepts#Omitted Variable Bias|OVB]] ⇒ [[_Econometrics Concepts#Fixed Effects|fixed effects]] (demeans the time-invariant trait) **or** [[_Econometrics Concepts#Instrumental Variables|IV]] (`celsius`, `sleep`). The Wed-final exam shock ⇒ [[_Econometrics Concepts#Difference-in-Differences|DiD]].
+
+#### PP2 · Holdup Game — cross-section: 103 Buyer–Seller pairs (one game each)
+
+| Variable | Outcome or regressor? | Type | Randomised or observed? | Time-varying or fixed within unit? |
+| --- | --- | --- | --- | --- |
+| `control` / `promises` / `threats` | regressor (dummies) | categorical | **randomised** (assigned) | — (cross-section) |
+| `invest` | outcome (Stage 1) | binary | observed | — |
+| `offer` | outcome (Stage 2) | continuous (0–100) | observed | **NA unless `invest`=1** |
+| `accept` | outcome (Stage 3) | binary | observed | **NA unless `invest`=1** |
+
+> *Reading:* `invest`/`accept` binary ⇒ [[_Econometrics Concepts#Linear Probability Model|LPM]] / [[_Econometrics Concepts#Logit Model|logit]]; `offer` continuous ⇒ OLS. Treatments randomised ⇒ clean (treatment coefficients are causal). But `offer`/`accept` exist only when `invest`=1 ⇒ [[_Econometrics Concepts#Endogenous Selection|endogenous selection]], and the sequential stages make earlier choices endogenous regressors for later ones. One game per pair ⇒ no panel / no FE.
+
+#### PP3 · Time Preferences — panel: 178 subjects × 15 rounds (2,670 obs)
+
+| Variable | Outcome or regressor? | Type | Randomised or observed? | Time-varying or fixed within unit? |
+| --- | --- | --- | --- | --- |
+| `choice` | outcome | continuous | observed | time-varying |
+| `today.always`, `delay.always` | outcome | binary | observed | time-varying |
+| `A.payment`, `A.delay` | regressor | continuous | **researcher-set** (each round) | time-varying |
+| `income` | regressor | continuous | observed (2002 survey) | **fixed within unit** |
+| subject's fixed traits | omitted confounder | — | **unobserved** | **fixed within unit** |
+
+> *Reading:* `choice` continuous ⇒ OLS; `today.always` binary ⇒ [[_Econometrics Concepts#Linear Probability Model|LPM]] (robust SEs). `A.delay`/`A.payment` researcher-set ⇒ exogenous (clean). `income` is an observed survey covariate ⇒ [[_Econometrics Concepts#Endogeneity|endogenous]] ⇒ [[_Econometrics Concepts#Instrumental Variables|IV]]. Panel + unobserved fixed traits ⇒ OVB ⇒ fixed effects + cluster by subject.
 
 ---
 
