@@ -1,0 +1,43 @@
+---
+interface DocEntry { slug: string; title: string; order?: number; }
+interface Section { id: string; text: string; html?: string; level: number; }
+interface Props {
+  subject: string;
+  docs: DocEntry[];
+  currentSlug: string;
+  currentSections: Section[];
+}
+const { subject, docs, currentSlug, currentSections } = Astro.props;
+const sorted = [...docs].sort((a, b) => {
+  const ao = a.order ?? Number.POSITIVE_INFINITY;
+  const bo = b.order ?? Number.POSITIVE_INFINITY;
+  if (ao !== bo) return ao - bo;
+  return a.title.localeCompare(b.title);
+});
+const current = sorted.find((d) => d.slug === currentSlug);
+const others = sorted.filter((d) => d.slug !== currentSlug);
+---
+<aside class="rail">
+  <p class="toc-label">Exam Prep</p>
+  {current && <p class="toc-current">{current.title}</p>}
+  {currentSections.length > 0 && (
+    <ul class="toc-list">
+      {currentSections.map((s) => (
+        <li>
+          {s.html ? (
+            <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : "lvl-2"} set:html={s.html} />
+          ) : (
+            <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : "lvl-2"}>{s.text}</a>
+          )}
+        </li>
+      ))}
+    </ul>
+  )}
+  {others.length > 0 && (
+    <nav class="toc-other">
+      {others.map((d) => (
+        <a href={`/subjects/${subject}/exam-prep/${d.slug}`}>{d.title}</a>
+      ))}
+    </nav>
+  )}
+</aside>

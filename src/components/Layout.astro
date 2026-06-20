@@ -6,7 +6,7 @@ interface Props {
   title?: string;
   /** Subject slug — when set, the header shows the subject switcher + section tabs. */
   subject?: string;
-  active?: "lectures" | "dictionary" | "recipes" | "problem-sets" | "past-papers";
+  active?: "lectures" | "dictionary" | "recipes" | "problem-sets" | "past-papers" | "exam-prep";
   /** Show the sidebar collapse toggle (pages with a #content-grid rail). */
   hasSidebar?: boolean;
 }
@@ -22,7 +22,7 @@ const current = subject ? subjects.find((s) => s.data.slug === subject) : undefi
 const tabs = [
   { id: "lectures",     label: "Lectures" },
   { id: "dictionary",   label: "Dictionary" },
-  { id: "recipes",      label: "Recipes" },
+  { id: "exam-prep",    label: "Exam Prep" },
   { id: "problem-sets", label: "Problem Sets" },
   { id: "past-papers",  label: "Past Papers" },
 ] as const;

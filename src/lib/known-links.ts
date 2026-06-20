@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 
-export type LinkKind = "term" | "recipe" | "problem-set" | "lecture" | "past-paper";
+export type LinkKind = "term" | "recipe" | "problem-set" | "lecture" | "past-paper" | "exam-prep";
 export type LinkTarget = { kind: LinkKind; slug: string };
 export type LinkMap = Map<string, LinkTarget>;
 
@@ -10,6 +10,7 @@ export const KIND_TO_PATH: Record<LinkKind, string> = {
   "problem-set": "problem-sets",
   lecture: "lectures",
   "past-paper": "past-papers",
+  "exam-prep": "exam-prep",
 };
 
 export function linkHref(subject: string, target: LinkTarget): string {
@@ -82,12 +83,13 @@ function slugifyAlias(s: string): string {
  * slug but never override an existing entry.
  */
 export async function buildLinkMap(subject: string): Promise<LinkMap> {
-  const [lectures, terms, recipes, sets, papers] = await Promise.all([
+  const [lectures, terms, recipes, sets, papers, examPrep] = await Promise.all([
     getCollection("lectures", (l) => l.data.subject === subject),
     getCollection("terms", (t) => t.data.subject === subject),
     getCollection("recipes", (r) => r.data.subject === subject),
     getCollection("problem-sets", (p) => p.data.subject === subject),
     getCollection("past-papers", (p) => p.data.subject === subject),
+    getCollection("exam-prep", (e) => e.data.subject === subject),
   ]);
   const map: LinkMap = new Map();
   for (const s of sets) {
@@ -115,6 +117,18 @@ export async function buildLinkMap(subject: string): Promise<LinkMap> {
     for (const a of aliases) {
       const aslug = slugifyAlias(a);
       if (aslug && !map.has(aslug)) map.set(aslug, { kind: "past-paper", slug });
+    }
+  }
+  for (const e of examPrep) {
+    const slug = slugOf(e.id);
+    if (!map.has(slug)) map.set(slug, { kind: "exam-prep", slug });
+    // Title + alias slugs: a cross-reference like [[_Exam Formula Sheet (Lec 1-10)]]
+    // slugifies to the same key as the doc's `title`, so registering the title as
+    // an alias resolves it to this page.
+    const aliases = [e.data.title, ...((e.data as { aliases?: string[] }).aliases ?? [])];
+    for (const a of aliases) {
+      const aslug = slugifyAlias(a);
+      if (aslug && !map.has(aslug)) map.set(aslug, { kind: "exam-prep", slug });
     }
   }
   for (const r of recipes) {

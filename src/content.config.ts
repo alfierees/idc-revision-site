@@ -105,6 +105,30 @@ const glossary = defineCollection({
   }),
 });
 
+// Exam-prep references: cross-lecture revision material (formula/cheat sheets,
+// question playbooks) that doesn't fit a single lecture/term/recipe. Long-form,
+// rendered like a past paper. `pinned`/`order` float the headline docs to the
+// top of the section index.
+const examPrep = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/exam-prep" }),
+  schema: z.object({
+    title: z.string(),
+    subject: z.string(),
+    type: z.string().optional(),
+    description: z.string().optional(),
+    course: z.string().optional(),
+    instructor: z.string().optional(),
+    semester: z.number().optional(),
+    year: z.number().optional(),
+    tags: z.array(z.string()).default([]),
+    aliases: z.array(z.string()).default([]),
+    source_doc: z.string().optional(),
+    pinned: z.boolean().default(false),
+    order: z.number().optional(),
+    in_scope: z.boolean().default(true),
+  }),
+});
+
 export const collections = {
   subjects,
   terms,
@@ -113,4 +137,5 @@ export const collections = {
   "problem-sets": problemSets,
   "past-papers": pastPapers,
   glossary,
+  "exam-prep": examPrep,
 };
