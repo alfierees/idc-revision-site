@@ -55,6 +55,9 @@ const lectures = defineCollection({
 
 const question = z.object({
   id: z.string(),
+  // Optional display label for the card header + sidebar TOC. Problem sets omit
+  // it (the bold lead-in inside `text` carries the title); past papers set it.
+  title: z.string().optional(),
   text: z.string(),
   solution: z.string(),
   related_terms: z.array(z.string()).default([]),
@@ -88,6 +91,9 @@ const pastPapers = defineCollection({
     year: z.number().optional(),
     week: z.number().optional(),
     source_doc: z.string().optional(),
+    // When present, the paper renders as per-question cards (question shown,
+    // worked solution behind a "Show solution" toggle) instead of a flat body.
+    questions: z.array(question).optional(),
     tags: z.array(z.string()).default([]),
     aliases: z.array(z.string()).default([]),
     in_scope: z.boolean().default(true),
