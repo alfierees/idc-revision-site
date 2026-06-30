@@ -531,17 +531,11 @@
   gap: 0.55rem;
   white-space: nowrap;
 }
-.brand .mark {
-  width: 1.5rem; height: 1.5rem;
-  border-radius: 7px;
-  background: var(--color-accent);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-ui);
-  font-size: 0.6rem;
-  font-weight: 700;
-  box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--color-accent) 60%, transparent);
+.brand .brand-mark {
+  width: auto;
+  height: 1.6rem;
+  display: block;
+  flex: none;
 }
 .crumb { display: flex; align-items: center; gap: 0.7rem; min-width: 0; flex: none; }
 .crumb .sep { color: var(--color-ink-faint); font-size: 1.1rem; }
