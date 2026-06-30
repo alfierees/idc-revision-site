@@ -142,6 +142,14 @@ questions:
 
       > [!success] Answer (A)
       > $P = 10,\ x = 10,\ X = 100,\ \pi_{\text{firm}} = 37.5$ (industry profit $= 375$).
+
+      > [!tip] Interactive — short run vs long run (covers parts b–d)
+      > Here at $P = 10$ the firm makes a profit (green), so entry follows. Drag **price** down (a demand fall, part b) to see a short-run loss; cut **fixed cost** (a cost improvement, part c) to shift AC down. Long run: entry/exit drives $P$ to min AC $= 5$.
+
+      ```graph
+      type: perfect-competition-firm
+      p: 10
+      ```
     related_terms: ["perfect-competition", "price-taker"]
     source_doc_page: 1
   - id: "4b"

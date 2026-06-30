@@ -1,6 +1,7 @@
 ---
 import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
+import GraphMounter from "../../../../components/GraphMounter.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap } from "../../../../lib/known-links";
@@ -32,6 +33,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     <h1 class="doc-title">{entry.data.title}</h1>
     <div class="recipe-body mt-6 text-base text-ink" set:html={html} />
   </article>
+  <GraphMounter />
   <HoverPreview subject={subjectSlug} />
 </Layout>
 

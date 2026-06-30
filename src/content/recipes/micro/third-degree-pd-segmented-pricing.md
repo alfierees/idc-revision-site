@@ -14,6 +14,13 @@ When the firm can observe consumer type (student vs business, weekday vs weekend
 4. Read each segment's price off its own demand curve: $P_i^* = A_i - b_i Q_i^*$.
 5. Add up: total quantity, total revenue, total profit. If [[Consumer Surplus]] is asked for, compute $CS_i = \tfrac{1}{2}(A_i - P_i^*)\, Q_i^*$ per segment.
 
+> [!tip] Try it — two segments, side by side
+> An illustration with equal slopes ($b = 1$): drag each market's intercept and the shared MC. The higher-intercept (here, less elastic) segment is charged the higher price.
+
+```graph
+type: price-discrimination-3rd
+```
+
 ## Common pitfalls
 
 - Forgetting to **check that demands are consistent with total demand**: $Q_1^* + Q_2^* + \ldots$ should match the aggregate demand at any uniform price. The lecture's Elizabeth-Airlines example uses this as a sanity check ($Q_A + Q_B = 500 - P$).

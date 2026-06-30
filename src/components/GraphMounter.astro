@@ -1,0 +1,41 @@
+---
+// Mounts interactive graphs. The markdown renderer turns a ```graph fenced block
+// into <pre><code class="language-graph">type: ...</code></pre>; this finds each
+// such block, parses its config, and renders the registered preact component
+// into a host div that replaces the <pre>. Mirrors Mermaid.astro.
+---
+<script>
+  const blocks = Array.from(document.querySelectorAll<HTMLElement>("code.language-graph"));
+  if (blocks.length > 0) {
+    const [{ render, h }, { GRAPHS }] = await Promise.all([
+      import("preact"),
+      import("./graphs/registry"),
+    ]);
+
+    const parseConfig = (text: string): Record<string, string | number> => {
+      const cfg: Record<string, string | number> = {};
+      for (const line of text.trim().split("\n")) {
+        const i = line.indexOf(":");
+        if (i < 0) continue;
+        const k = line.slice(0, i).trim();
+        const raw = line.slice(i + 1).trim();
+        cfg[k] = raw !== "" && !Number.isNaN(Number(raw)) ? Number(raw) : raw;
+      }
+      return cfg;
+    };
+
+    blocks.forEach((code) => {
+      const pre = code.closest("pre");
+      const cfg = parseConfig(code.textContent ?? "");
+      const host = document.createElement("div");
+      host.className = "graph-embed";
+      (pre ?? code).replaceWith(host);
+      const Comp = GRAPHS[String(cfg.type)];
+      if (!Comp) {
+        host.textContent = `[unknown graph type: ${cfg.type}]`;
+        return;
+      }
+      render(h(Comp, cfg), host);
+    });
+  }
+</script>
