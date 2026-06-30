@@ -254,11 +254,12 @@ questions:
       >
       > Both consumers are left with **zero surplus** — the firm captures 100% of total surplus.
 
-      > [!tip] Interactive — toggle parts (a)–(e)
-      > Both consumers' demand (AR), MC = 6, and the fee / rent / per-unit-margin / deadweight-loss regions. Flip the parts to see how the single-contract cap (b), the value of discriminating (d), and the hidden-types menu (e) change the picture.
+      > [!tip] Visualise it
+      > Each consumer at $p = MC = 6$; the shaded triangle is the fee (their whole surplus). Tick **show MR** to overlay marginal revenue.
 
       ```graph
       type: two-part-tariff
+      part: a
       ```
 
   - id: "3b"
@@ -301,6 +302,14 @@ questions:
       >
       > Profit falls from \$294 (part a) to \$220.50 — the cost of being **unable to price discriminate**.
 
+      > [!tip] Visualise it
+      > Raising $p$ to 9.5 caps the fee at the small consumer's surplus (blue) and keeps a per-unit margin (green) from big C1; the red wedge is the deadweight loss from $p > MC$.
+
+      ```graph
+      type: two-part-tariff
+      part: b
+      ```
+
   - id: "3c"
     source_doc_page: 1
     related_terms:
@@ -319,6 +328,14 @@ questions:
 
       > [!success] Answer (c)
       > The **optimal contract is unchanged** at $p^* = \$9.50$, $T^* = \$55.13$. Total profit scales linearly to **\$22,050**.
+
+      > [!tip] Visualise it
+      > Identical to part (b) — only the *number* of each type changed, not the optimal $(p, T)$, so the per-pair picture is unchanged.
+
+      ```graph
+      type: two-part-tariff
+      part: c
+      ```
 
   - id: "3d"
     source_doc_page: 1
@@ -339,6 +356,14 @@ questions:
 
       > [!success] Answer (d)
       > The firm would pay up to **\$7,350** to regain the ability to set different contracts. This is the profit gain from perfect price discrimination across all 200 consumers.
+
+      > [!tip] Visualise it
+      > The dashed outline is what discriminating recovers versus the single contract (b): big C1's information rent **plus** the deadweight loss from $p > MC$ — \$73.5 per pair, \$7,350 across 100 of each.
+
+      ```graph
+      type: two-part-tariff
+      part: d
+      ```
 
   - id: "3e"
     source_doc_page: 1
@@ -412,4 +437,12 @@ questions:
       > 2. **Low type** gets $p > MC$ — quantity is distorted downward ($q_2 = 7$ vs 14 under first-degree PD).
       > 3. **[[Information Rent]]**: the high type retains $CS_2(p_2^*) = \$24.50$ — the firm cannot extract it without violating $IC_1$.
       > 4. The distortion to the low type ($p_2 > MC$) is the price the firm pays to reduce the information rent it must leave the high type.
+
+      > [!tip] Visualise it
+      > High type (left): efficient $q = 28$ at $p = MC$; the fee triangle splits into what's paid (171.5) and the **information rent** kept (24.5). Low type (right): pushed to $q = 7$ at $p = 13$ — the red wedge is the deliberate distortion that lets the firm shrink the high type's rent.
+
+      ```graph
+      type: two-part-tariff
+      part: e
+      ```
 ---

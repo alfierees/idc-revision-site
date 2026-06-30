@@ -45,8 +45,8 @@ const PARTS: Record<string, Part> = {
   },
   e: {
     cap: <>(e) Hidden types — a menu of two contracts (2nd-degree). High type efficient + rent; low type distorted down, zero surplus.</>,
-    pr: [6, 10.6667], fee: ["annot", "whole"],
-    stat: <><b>Self-selecting menu.</b> High type: q = 28 at p = MC = 6 (no distortion "at the top"), fee 174.22, keeps info rent 21.78. Low type: pushed down to q = 9.33 at p = 10.67, fee 43.56, zero surplus. <b>Profit = 261.33</b> — between (a) 294 and (b) 220.5.</>,
+    pr: [6, 13], fee: ["annot", "whole"],
+    stat: <><b>Self-selecting menu.</b> High type: q = 28 at p = MC = 6 (no distortion "at the top"), fee 171.5, keeps info rent 24.5. Low type: distorted down to q = 7 at p = 13, fee 24.5, zero surplus. <b>Profit = 245</b> — between (a) 294 and (b) 220.5.</>,
   },
 };
 
@@ -94,21 +94,25 @@ function panel(idx: number, partId: string, showMR: boolean): VNode {
     els.push(label(f, 2.5, (D.a + p) / 2 + 1, "fee", PALETTE.feeStroke, "start", 11, true));
     els.push(label(f, qOf(1, p) * 0.55 + 2, (D.a + p) / 2 - 1.5, "rent", PALETTE.rentStroke, "start", 11, true));
   } else if (feemode === "annot") {
-    els.push(label(f, 3, (D.a + p) / 2, "fee 174.2 + rent 21.8", PALETTE.feeStroke, "start", 11, true));
+    els.push(label(f, 3, (D.a + p) / 2, "fee 171.5 + rent 24.5", PALETTE.feeStroke, "start", 11, true));
   } else {
     els.push(label(f, 2.5, (D.a + p) / 2, "fee", PALETTE.feeStroke, "start", 11, true));
   }
   return <svg viewBox="0 0 440 300" width="100%" role="img" aria-label={`Two-part tariff, consumer ${idx + 1}, part ${partId}`}>{els}</svg>;
 }
 
-export default function TwoPartTariff(): VNode {
-  const [cur, setCur] = useState("a");
+// `part` fixes the graph to one part (a–e) and hides the part toggle — for
+// embedding inside that specific sub-question. Omit it for the standalone,
+// toggle-through-all-parts version (e.g. a lecture or summary).
+export default function TwoPartTariff({ part }: { part?: string }): VNode {
+  const fixed = typeof part === "string" && part in PARTS;
+  const [cur, setCur] = useState(fixed ? (part as string) : "a");
   const [mr, setMr] = useState(false);
 
   return (
     <div class="graph">
       <div class="graph-bar">
-        {["a", "b", "c", "d", "e"].map((p) => (
+        {!fixed && ["a", "b", "c", "d", "e"].map((p) => (
           <button type="button" class={`graph-btn${cur === p ? " on" : ""}`} onClick={() => setCur(p)}>Part {p}</button>
         ))}
         <label class="graph-toggle">
