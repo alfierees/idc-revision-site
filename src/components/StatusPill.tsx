@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { readStatus, cycleStatus, statusKey, type StatusValue } from "../lib/status";
+import { readStatus, cycleStatus, statusKey, STATUS_EVENT, type StatusValue } from "../lib/status";
 
 interface Props {
   subject: string;
@@ -27,7 +27,15 @@ export default function StatusPill({ subject, kind, refSlug, question }: Props) 
   const [value, setValue] = useState<StatusValue>("untried");
   const [pulse, setPulse] = useState(false);
 
-  useEffect(() => { setValue(readStatus(key)); }, [key]);
+  useEffect(() => {
+    setValue(readStatus(key));
+    const onChange = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.key === key) setValue(readStatus(key));
+    };
+    window.addEventListener(STATUS_EVENT, onChange);
+    return () => window.removeEventListener(STATUS_EVENT, onChange);
+  }, [key]);
 
   const onClick = () => {
     setValue(cycleStatus(key));
