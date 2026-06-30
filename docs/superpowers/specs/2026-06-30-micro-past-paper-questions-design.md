@@ -93,7 +93,27 @@ double marginalisation".
 - Links: `verify_links.py` for the vault subject.
 - Build: `npm run build` + preview the rendered page (toggle works, math renders).
 
+## Addendum (2026-06-30) — interactive multiple-choice
+
+PP01/PP02 originals were uploaded and all three micro papers restructured into
+`questions[]`. A second iteration replaced the "Show solution" toggle **for MC
+questions only** with an interactive block (user choice: commit-then-reveal-all;
+separate "Show working").
+
+- **Schema:** `question.options?: { label, text, correct, why }[]`. Presence of
+  `options` ⇒ MC rendering; absence ⇒ the plain solution toggle (open questions).
+- **Component:** `McQuestion.tsx` (preact island). Stem shown; each option a
+  clickable box. First click commits, locks all options, reveals every verdict
+  (correct = green ✓, others red ✗) + each option's `why`; the picked option is
+  badged. Auto-sets the shared status (done/wrong) via a new `STATUS_EVENT` that
+  `StatusPill` now listens for. A "Show full working" toggle exposes the full
+  derivation (`solution`); "Try again" clears the attempt. Trusted build-time
+  HTML is injected via a small ref helper (no raw-HTML React prop).
+- **Content:** each MC question's `text` becomes the stem; `options[]` carries
+  the verbatim option wording + per-option `why`; the existing worked solution
+  stays in `solution` as the "full working". Open questions unchanged.
+
 ## Out of scope
 
-- Restructuring PP01/PP02 (awaiting user's original uploads).
-- Econometrics past papers.
+- Econometrics past papers (still flat).
+- Converting problem-sets MC (none use options yet; schema supports it if wanted).

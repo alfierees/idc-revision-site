@@ -42,11 +42,31 @@ questions:
       | 3 (×20) | 60 | 60 |
 
       Now assume each unit of $X$ and each unit of $Y$ costs the firm **\$30** to produce. Which statement is correct?
-
-      **A.** Separate selling yields 8,000 and bundling yields 12,000.
-      **B.** Separate selling yields 5,600 and bundling yields 6,000.
-      **C.** Separate selling yields 6,000 and bundling yields 5,600.
-      **D.** Both yield 6,000.
+    options:
+      - label: "A"
+        text: |
+          Separate selling yields a profit of 8,000 and bundling yields 12,000.
+        correct: false
+        why: |
+          Both magnitudes are too high — separate selling makes **5,600** and bundling **6,000**.
+      - label: "B"
+        text: |
+          Separate selling yields a profit of 5,600 and bundling yields 6,000.
+        correct: true
+        why: |
+          Each good's best price is its high value, so separate $= 2\times2{,}800 = 5{,}600$. Every type values the bundle $X+Y$ at exactly 120 (cost 60), so bundling $= (120-60)\times100 = 6{,}000$.
+      - label: "C"
+        text: |
+          Separate selling yields a profit of 6,000 and bundling yields 5,600.
+        correct: false
+        why: |
+          The figures are swapped — bundling (6,000) beats separate selling (5,600), not the reverse.
+      - label: "D"
+        text: |
+          Separate selling and bundling both yield a profit of 6,000.
+        correct: false
+        why: |
+          Separate selling only reaches 5,600; bundling strictly beats it at 6,000.
     solution: |
       > [!success] Answer — **B.** Separate **5,600**, bundle **6,000**
       > Bundling beats separate selling here because every consumer values the *bundle* at exactly the same \$120.
@@ -78,10 +98,31 @@ questions:
     text: |
       Consider the statement: *"Insurance with a deductible may reduce the moral hazard problem but worsen the adverse selection problem."* Which best explains it?
 
-      **A.** A deductible increases medical consumption and therefore increases moral hazard.
-      **B.** A deductible reduces excessive utilisation of medical services but may discourage high-risk individuals from purchasing insurance.
-      **C.** A deductible eliminates both moral hazard and adverse selection.
-      **D.** A deductible has no effect on either.
+    options:
+      - label: "A"
+        text: |
+          A deductible increases medical consumption and therefore increases moral hazard.
+        correct: false
+        why: |
+          Backwards — a deductible makes patients bear part of the cost, so consumption **falls** and moral hazard is **reduced**.
+      - label: "B"
+        text: |
+          A deductible reduces excessive utilisation of medical services but may discourage high-risk individuals from purchasing insurance.
+        correct: true
+        why: |
+          Cost-sharing curbs over-use (moral hazard ↓), but makes coverage unattractive to high-expected-cost people, who are exactly the ones a pooling insurer wants to keep (adverse selection ↑).
+      - label: "C"
+        text: |
+          A deductible eliminates both moral hazard and adverse selection.
+        correct: false
+        why: |
+          Overclaim — a deductible *mitigates* moral hazard, it doesn't *eliminate* it, and it can *worsen* adverse selection.
+      - label: "D"
+        text: |
+          A deductible has no effect on either.
+        correct: false
+        why: |
+          False — a deductible changes incentives on both margins.
     solution: |
       > [!success] Answer — **B**
       > A deductible makes the insured **bear part of the cost** of care, curbing over-use ([[_Micro Concepts#Moral Hazard|moral hazard]]); but it makes coverage **less attractive to high-expected-cost people**, who are exactly the ones a pooling insurer most wants to keep — worsening [[_Micro Concepts#Adverse Selection|adverse selection]].
@@ -98,10 +139,31 @@ questions:
     text: |
       Consider: *"The fact that there are very few switches between health funds in Israel suggests that adverse selection through distortion of the benefit package is not a significant problem."* Best evaluation?
 
-      **A.** Necessarily true — low switching proves all funds provide identical services.
-      **B.** Necessarily false — adverse selection always exists in health-insurance markets.
-      **C.** Generally reasonable — if benefit-package distortions were important, one would expect larger differences in enrolment patterns and more switching.
-      **D.** False — adverse selection can occur only when switching costs are zero.
+    options:
+      - label: "A"
+        text: |
+          The statement is necessarily true because low switching rates prove that all health funds provide identical services.
+        correct: false
+        why: |
+          Overclaims certainty — low switching doesn't *prove* funds are identical.
+      - label: "B"
+        text: |
+          The statement is necessarily false because adverse selection always exists in health insurance markets.
+        correct: false
+        why: |
+          Overclaims the opposite certainty — "always exists" isn't established by this evidence.
+      - label: "C"
+        text: |
+          The statement is generally reasonable because if benefit-package distortions were important, one would expect larger differences in enrolment patterns and more switching between funds.
+        correct: true
+        why: |
+          If package distortion mattered, risk groups would sort and switch more; little switching is consistent (indirect) evidence the distortion is weak.
+      - label: "D"
+        text: |
+          The statement is false because adverse selection can occur only when switching costs are zero.
+        correct: false
+        why: |
+          Invents a knife-edge — zero switching cost is not required for adverse selection.
     solution: |
       > [!success] Answer — **C**
       > Low switching is **consistent with** funds not aggressively differentiating their benefit packages to attract or repel particular risk groups. If they *were* distorting packages to cream-skim, you'd see risk groups sorting across funds and **more** switching. So the statement is reasonable — but it's **indirect** evidence, not proof.
@@ -117,11 +179,37 @@ questions:
     text: |
       A monopolist sells $Q$ in two markets. Demands: $p_1 = 22 - q_1$ and $p_2 = 8 - q_2$. Marginal cost $MC = 2$, fixed cost $F = 99$ (paid only if output is positive). The firm may charge different prices across markets. Which statement is correct?
 
-      **A.** Consumer surplus is lower when the monopolist cannot price discriminate.
-      **B.** Total quantity sold is higher when it cannot price discriminate.
-      **C.** Quantity in Market 2 is higher when it cannot price discriminate.
-      **D.** Price in Market 1 is lower when it cannot price discriminate.
-      **E.** None of the answers is correct.
+    options:
+      - label: "A"
+        text: |
+          Consumer surplus is lower when the monopolist cannot price discriminate.
+        correct: true
+        why: |
+          With PD both markets are served, $CS = 54.5$; without PD the firm drops Market 2 and $CS = 50$. Discrimination is what makes the small market worth serving.
+      - label: "B"
+        text: |
+          Total quantity sold is higher when it cannot price discriminate.
+        correct: false
+        why: |
+          Reversed — total $Q$ is 13 with PD ($10+3$) versus 10 without.
+      - label: "C"
+        text: |
+          Quantity in Market 2 is higher when it cannot price discriminate.
+        correct: false
+        why: |
+          Without PD, Market 2 gets **0** (dropped); with PD it gets 3.
+      - label: "D"
+        text: |
+          Price in Market 1 is lower when it cannot price discriminate.
+        correct: false
+        why: |
+          Market 1 is identical in both regimes — $p_1 = 12$ either way.
+      - label: "E"
+        text: |
+          None of the answers is correct.
+        correct: false
+        why: |
+          A is correct, so E is wrong.
     solution: |
       > [!success] Answer — **A**
       > This is the counter-intuitive case where [[_Micro Concepts#Price Discrimination|price discrimination]] *raises* total consumer surplus, because discriminating is what makes the small market worth serving at all.
@@ -151,7 +239,37 @@ questions:
     text: |
       Two identical Cournot firms, each with marginal cost $k$, face demand $p = 100 - Q$. If they merge into a monopoly, marginal cost falls to **zero**. Consumer surplus increases after the merger as long as approximately:
 
-      **A.** $k < 25$ · **B.** $9k > 20$ · **C.** $k < 28$ · **D.** $k < 32$ · **E.** None of the answers is correct.
+    options:
+      - label: "A"
+        text: |
+          $k < 25$
+        correct: false
+        why: |
+          Backwards — consumer surplus rises when $k > 25$ (high pre-merger cost ⇒ the cost cut to 0 expands output a lot).
+      - label: "B"
+        text: |
+          $9k > 20$
+        correct: false
+        why: |
+          Not the condition; the threshold is $k > 25$.
+      - label: "C"
+        text: |
+          $k < 28$
+        correct: false
+        why: |
+          Wrong threshold and wrong direction — it's $k > 25$.
+      - label: "D"
+        text: |
+          $k < 32$
+        correct: false
+        why: |
+          Wrong threshold and wrong direction — it's $k > 25$.
+      - label: "E"
+        text: |
+          None of the answers is correct.
+        correct: true
+        why: |
+          The condition is $k > 25$, which none of A–D state.
     solution: |
       > [!success] Answer — **E**
       > The true condition is $k > 25$ (high pre-merger cost ⇒ the merger's cost saving outweighs the loss of competition). None of A–D state that, so **E**.
@@ -179,7 +297,37 @@ questions:
       2. Lower demand elasticity (in absolute value) increases the Lerner Index.
       3. The Lerner Index of a competitive firm is zero.
 
-      **A.** Only 1 · **B.** Only 2 and 3 · **C.** Only 1 and 2 · **D.** All · **E.** None.
+    options:
+      - label: "A"
+        text: |
+          Only statement 1 is correct.
+        correct: false
+        why: |
+          Statement 1 is the **false** one — at the optimum $L=-1/\varepsilon$, set by elasticity, not by $MC$.
+      - label: "B"
+        text: |
+          Only statements 2 and 3 are correct.
+        correct: true
+        why: |
+          (2) $L=-1/\varepsilon$ rises as $|\varepsilon|$ falls; (3) competition gives $p=MC$, so $L=0$. Statement 1 is false.
+      - label: "C"
+        text: |
+          Only statements 1 and 2 are correct.
+        correct: false
+        why: |
+          Includes the false statement 1.
+      - label: "D"
+        text: |
+          All statements are correct.
+        correct: false
+        why: |
+          Statement 1 is false, so not all.
+      - label: "E"
+        text: |
+          None of the answers is correct.
+        correct: false
+        why: |
+          B is correct, so not E.
     solution: |
       > [!success] Answer — **B.** Only statements 2 and 3.
 

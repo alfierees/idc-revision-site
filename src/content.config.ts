@@ -60,6 +60,20 @@ const question = z.object({
   title: z.string().optional(),
   text: z.string(),
   solution: z.string(),
+  // When present, the question renders as an interactive multiple-choice block:
+  // each option is a clickable box; the first click commits and reveals every
+  // option's verdict + per-option `why`, with the full derivation (`solution`)
+  // behind a "Show working" toggle. Absent → the plain "Show solution" toggle.
+  options: z
+    .array(
+      z.object({
+        label: z.string(),
+        text: z.string(),
+        correct: z.boolean().default(false),
+        why: z.string().default(""),
+      }),
+    )
+    .optional(),
   related_terms: z.array(z.string()).default([]),
   source_doc_page: z.number().optional(),
 });

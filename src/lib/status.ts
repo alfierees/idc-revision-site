@@ -17,9 +17,16 @@ export function readStatus(key: string): StatusValue {
   return "untried";
 }
 
+// Fired whenever a status changes so any mounted StatusPill for the same key
+// re-reads (e.g. when the MC island auto-sets status on commit).
+export const STATUS_EVENT = "idc-status-change";
+
 export function writeStatus(key: string, value: StatusValue): void {
   if (value === "untried") localStorage.removeItem(key);
   else localStorage.setItem(key, value);
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(STATUS_EVENT, { detail: { key, value } }));
+  }
 }
 
 export function cycleStatus(key: string): StatusValue {
