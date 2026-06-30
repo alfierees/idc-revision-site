@@ -95,5 +95,27 @@ export function Axes(props: { f: Frame; xTicks: number[]; yTicks: number[]; xLab
   );
 }
 
+// Evenly-spaced rounded axis ticks 0..max.
+export function ticks(max: number, n = 4): number[] {
+  return Array.from({ length: n + 1 }, (_, i) => Math.round((max * i) / n));
+}
+
+// Labelled range slider for graph parameters.
+export function Slider(props: {
+  label: string; value: number; min: number; max: number; step: number;
+  onInput: (v: number) => void; suffix?: string;
+}): VNode {
+  return (
+    <label class="graph-slider">
+      <span class="graph-slider-lab">{props.label}</span>
+      <input
+        type="range" min={props.min} max={props.max} step={props.step} value={props.value}
+        onInput={(e) => props.onInput(Number((e.currentTarget as HTMLInputElement).value))}
+      />
+      <span class="graph-slider-val">{props.value}{props.suffix ?? ""}</span>
+    </label>
+  );
+}
+
 // Re-export common token colours for components.
 export const C = { INK, INK_SOFT, RULE, ACCENT: "var(--color-accent)" };

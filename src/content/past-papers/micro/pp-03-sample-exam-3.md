@@ -464,6 +464,13 @@ questions:
 
       *The three structures, ranked. Stackelberg pushes the most output (lowest price); vertical separation the least (highest price); integrated monopoly sits between on quantity but earns the most profit.*
 
+      > [!tip] Interactive — drag the marginal cost
+      > All four structures on one demand curve (Cournot added for reference). Each dot is that structure's $(Q, p)$; move $c$ and watch them slide along the demand curve.
+
+      ```graph
+      type: oligopoly-structures
+      ```
+
       > [!tip] One sentence each
       > - **Stackelberg** — strategic rivalry: the leader floods the market, total output is highest, price lowest.
       > - **Vertical separation** — double marginalisation: two stacked markups choke output, price highest.
