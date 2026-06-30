@@ -141,6 +141,13 @@ questions:
 
       > [!success] Nash Equilibrium
       > $P_1 = P_2 = 56$, $q_1 = q_2 = 112$, $\pi_1 = \pi_2 = 6{,}272$.
+
+      > [!tip] Visualise it — reaction functions
+      > Unlike Cournot, the best responses slope **up** (prices are strategic complements) and cross at $P_1 = P_2 = 56$. Increase substitutability $\gamma$ and watch competition intensify and the Nash price fall.
+
+      ```graph
+      type: bertrand-diff-reaction
+      ```
     related_terms: ["monopolistic-competition", "best-response-function", "nash-equilibrium"]
     source_doc_page: 2
   - id: "3b"

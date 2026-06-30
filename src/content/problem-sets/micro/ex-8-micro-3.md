@@ -76,6 +76,13 @@ questions:
 
       > [!success] First-mover advantage
       > Moving first is a credible commitment: Firm 1 produces a large quantity *before* Firm 2 chooses, and the rational follower scales back. The leader captures a bigger slice of a slightly bigger pie; the follower loses on both fronts. Consumers gain because total output is higher.
+
+      > [!tip] Visualise it — reaction functions
+      > The two best-response lines cross at the Cournot–Nash point ($q_1 = q_2 = 50/3$). The Stackelberg leader moves first and slides out along Firm 2's reaction line to $(25, 12.5)$. Drag the marginal cost to see both shift.
+
+      ```graph
+      type: cournot-reaction
+      ```
     related_terms: ["stackelberg-model", "cournot-competition"]
     source_doc_page: 1
   - id: "2a"
