@@ -766,3 +766,50 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   transition: color 0.15s ease;
 }
 .toc-other a:hover { color: var(--color-accent); }
+
+/* ---- Interactive graphs (GraphMounter + src/components/graphs/*) ---- */
+.graph-embed { margin: 1.5rem 0; }
+.graph { padding: 0.25rem 0; }
+.graph-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 10px; }
+.graph-btn {
+  font: 13px var(--font-ui);
+  padding: 6px 12px;
+  border: 1px solid var(--color-rule);
+  background: var(--color-card);
+  color: var(--color-ink-soft);
+  border-radius: var(--radius-chip);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.graph-btn:hover { border-color: var(--color-accent); }
+.graph-btn.on {
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.graph-toggle {
+  font: 12px var(--font-ui);
+  color: var(--color-ink-soft);
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.graph-cap { font: 500 13px var(--font-ui); color: var(--color-ink); margin: 2px 0 10px; }
+.graph-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+.graph-pt { font: 600 13px var(--font-ui); color: var(--color-ink); margin-bottom: 2px; }
+.graph-legend {
+  display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 0;
+  font: 11px var(--font-ui); color: var(--color-ink-soft);
+}
+.graph-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.graph-legend .gsw { width: 14px; height: 10px; border-radius: 2px; display: inline-block; }
+.graph-stat {
+  font: 12.5px var(--font-ui); color: var(--color-ink-soft); line-height: 1.6;
+  background: var(--color-card); border: 1px solid var(--color-rule); border-radius: 8px;
+  padding: 10px 12px; margin-top: 10px;
+}
+.graph-stat b { color: var(--color-ink); font-weight: 600; }
+@media (max-width: 640px) { .graph-grid2 { grid-template-columns: 1fr; } }

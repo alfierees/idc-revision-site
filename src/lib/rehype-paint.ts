@@ -254,7 +254,9 @@ export function rehypePaint() {
         );
         if (!code) return;
         const lang = langOf(code);
-        if (lang === "mermaid") return;
+        // Leave mermaid and graph blocks intact — their classes are the mount
+        // points for client-side rendering (Mermaid.astro / GraphMounter.astro).
+        if (lang === "mermaid" || lang === "graph") return;
         if (lang) {
           parent.children[index] = buildCodeblock(lang, code);
         } else {

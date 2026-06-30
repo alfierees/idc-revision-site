@@ -254,6 +254,13 @@ questions:
       >
       > Both consumers are left with **zero surplus** — the firm captures 100% of total surplus.
 
+      > [!tip] Interactive — toggle parts (a)–(e)
+      > Both consumers' demand (AR), MC = 6, and the fee / rent / per-unit-margin / deadweight-loss regions. Flip the parts to see how the single-contract cap (b), the value of discriminating (d), and the hidden-types menu (e) change the picture.
+
+      ```graph
+      type: two-part-tariff
+      ```
+
   - id: "3b"
     source_doc_page: 1
     related_terms:

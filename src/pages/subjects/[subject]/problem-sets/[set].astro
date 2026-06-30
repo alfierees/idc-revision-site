@@ -2,6 +2,7 @@
 import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
 import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
+import GraphMounter from "../../../../components/GraphMounter.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
 import StatusPill from "../../../../components/StatusPill";
 import { getCollection, getEntry } from "astro:content";
@@ -198,6 +199,7 @@ const hasToolkit =
       )}
     </div>
   </div>
+  <GraphMounter />
   <HoverPreview subject={subjectSlug} />
 </Layout>
 
