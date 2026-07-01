@@ -44,6 +44,12 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
       return `href="/subjects/${subject}"`;
     }
 
+    // The micro subject's slug is "micro" but its lectures/exam-prep carry
+    // "Part of: [[Microeconomics]]" — resolve that display name to the hub.
+    if (subject === "micro" && slug === "microeconomics") {
+      return `href="/subjects/${subject}"`;
+    }
+
     // Meta-file links: the vault index "_Wiki-Link Registry" and the bare
     // glossary file "_<Subject> Concepts" (no fragment) have no standalone page
     // — resolve both to the subject's Dictionary landing (the on-site concept
