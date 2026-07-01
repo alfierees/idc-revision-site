@@ -61,9 +61,48 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
           })}
         </ul>
       )}
-      <div class="mt-8 paper-prose prose-card" set:html={html} />
+      {doc.data.pdf ? (
+        <div class="mt-6">
+          <a href={doc.data.pdf} target="_blank" rel="noopener" class="pdf-open">
+            Open in new tab / download
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+          <div class="pdf-frame mt-4">
+            <iframe src={doc.data.pdf} title={doc.data.title} loading="lazy"></iframe>
+          </div>
+        </div>
+      ) : (
+        <div class="mt-8 paper-prose prose-card" set:html={html} />
+      )}
     </article>
   </div>
   <Mermaid />
   <HoverPreview subject={subjectSlug} />
 </Layout>
+
+<style>
+  .pdf-open {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .pdf-open svg { width: 15px; height: 15px; }
+  .pdf-open:hover { color: var(--color-accent-ink); }
+  .pdf-frame {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    background: var(--color-card);
+  }
+  .pdf-frame iframe {
+    display: block;
+    width: 100%;
+    height: min(85vh, 1100px);
+    border: 0;
+  }
+</style>

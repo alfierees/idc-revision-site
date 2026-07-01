@@ -143,6 +143,9 @@ const examPrep = defineCollection({
     tags: z.array(z.string()).default([]),
     aliases: z.array(z.string()).default([]),
     source_doc: z.string().optional(),
+    // When set (a path under /public, e.g. "/papers/micro/foo.pdf"), the doc
+    // renders as an embedded PDF viewer instead of a markdown body.
+    pdf: z.string().optional(),
     pinned: z.boolean().default(false),
     order: z.number().optional(),
     in_scope: z.boolean().default(true),
