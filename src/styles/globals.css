@@ -539,6 +539,12 @@
 }
 .crumb { display: flex; align-items: center; gap: 0.7rem; min-width: 0; flex: none; }
 .crumb .sep { color: var(--color-ink-faint); font-size: 1.1rem; }
+/* narrow screens: logo-only brand so the header never overflows the viewport */
+@media (max-width: 640px) {
+  .brand-name { display: none; }
+  .crumb { flex: 0 1 auto; }
+  .subject-trigger { min-width: 0; }
+}
 
 /* subject switcher dropdown */
 .subject-menu { position: relative; }

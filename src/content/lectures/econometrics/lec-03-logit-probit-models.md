@@ -345,9 +345,9 @@ $$\text{employed}_i = G(\beta_0 + \beta_1 \text{schooly}_i + \beta_2 \text{chld0
 
 ## 📚 8. Analogy: [[Likelihood Ratio Test|LR Test]] vs. [[F-test]]
 
-| Feature | [[F-test]] ([[OLS Estimation|OLS]]) | [[Likelihood Ratio Test|LR Test]] ([[Maximum Likelihood Estimation|MLE]]) |
+| Feature | [[F-test]] ([[OLS Estimation\|OLS]]) | [[Likelihood Ratio Test\|LR Test]] ([[Maximum Likelihood Estimation\|MLE]]) |
 |---|---|---|
-| Used with | [[Linear Probability Model|LPM]] / OLS regression | [[Logit Model|Logit]] / [[Probit Model|Probit]] |
+| Used with | [[Linear Probability Model\|LPM]] / OLS regression | [[Logit Model\|Logit]] / [[Probit Model\|Probit]] |
 | Compares | SSR of restricted vs unrestricted | Log-likelihood of restricted vs unrestricted |
 | Test statistic | $F = \frac{(SSR_R - SSR_{UR})/q}{SSR_{UR}/(n-k-1)}$ | $LR = 2[\log \mathcal{L}_{UR} - \log \mathcal{L}_R]$ |
 | Distribution | $F(q, n-k-1)$ | $\chi^2(q)$ |
@@ -361,14 +361,14 @@ The intuition is the same: if restricting the model makes the fit significantly 
 
 | Task | R Code |
 |---|---|
-| Estimate [[Probit Model|Probit]] | `glm(y ~ x1 + x2, family = binomial(link = "probit"), data = df)` |
-| Estimate [[Logit Model|Logit]] | `glm(y ~ x1 + x2, family = binomial(link = "logit"), data = df)` |
+| Estimate [[Probit Model\|Probit]] | `glm(y ~ x1 + x2, family = binomial(link = "probit"), data = df)` |
+| Estimate [[Logit Model\|Logit]] | `glm(y ~ x1 + x2, family = binomial(link = "logit"), data = df)` |
 | Logistic CDF (G for Logit) | `plogis(xb)` |
 | Logistic PDF (g for Logit) | `dlogis(xb)` |
 | Normal CDF (G for Probit) | `pnorm(xb)` |
 | Normal PDF (g for Probit) | `dnorm(xb)` |
 | Predicted probability | `predict(model, type = "response")` |
-| [[Likelihood Ratio Test|LR test]] | `lrtest(unrestricted_model, restricted_model)` |
+| [[Likelihood Ratio Test\|LR test]] | `lrtest(unrestricted_model, restricted_model)` |
 
 ---
 

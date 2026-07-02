@@ -73,7 +73,7 @@ if (structured) {
 } else {
   const sectionRe = /<(h2|h3)[^>]*id="([^"]+)"[^>]*>(.*?)<\/\1>/g;
   for (const m of flatHtml.matchAll(sectionRe)) {
-    sections.push({ id: m[2], text: decodeHtmlEntities(m[3].replace(/<[^>]+>/g, "")).trim(), html: m[3], level: m[1] === "h2" ? 2 : 3 });
+    sections.push({ id: m[2], text: decodeHtmlEntities(m[3].replace(/<[^>]+>/g, "")).trim(), html: m[3].replace(/<\/?a\b[^>]*>/g, ""), level: m[1] === "h2" ? 2 : 3 });
   }
 }
 
