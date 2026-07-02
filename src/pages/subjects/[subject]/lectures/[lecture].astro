@@ -41,7 +41,9 @@ while ((m = sectionRe.exec(html)) !== null) {
   sections.push({
     id: m[2],
     text: decodeHtmlEntities(m[3].replace(/<[^>]+>/g, "")).trim(),
-    html: m[3],
+    // drop nested <a> (wikilinks): TOC entries are themselves links, and
+    // nested anchors get split apart by the browser
+    html: m[3].replace(/<\/?a\b[^>]*>/g, ""),
     level: m[1] === "h2" ? 2 : 3,
   });
 }

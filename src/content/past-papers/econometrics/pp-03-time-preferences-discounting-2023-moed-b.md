@@ -288,14 +288,14 @@ effect       -0.03583    0.07612     -0.471    0.638
 
 | Q | Tool | Answer in one line |
 | --- | --- | --- |
-| 1a | Baseline OLS + [[_Econometrics Concepts#Hypothesis Testing|H-test]] | `choice = β₀+β₁delay+β₂payment+u`; test $H_0:\beta_1=0$ |
-| 1b | [[_Econometrics Concepts#Omitted Variable Bias|OVB]] + [[_Econometrics Concepts#Serial Correlation|serial corr.]] | `Round` is in the error → add it; then plain OLS SEs are fine |
-| 1c | [[_Econometrics Concepts#Individual Fixed Effect|Individual FE]] + [[_Econometrics Concepts#Clustered Standard Errors|cluster]] | `feols(choice ~ delay+payment | id)` — within-est., clustered by `id` |
-| 2a | [[_Econometrics Concepts#Causal Diagram|Causal DAG]] | time prefs `u` → income & choice ⇒ income [[_Econometrics Concepts#Endogeneity|endogenous]] |
-| 2b | [[_Econometrics Concepts#Two Stage Least Squares|2SLS]] | `fit_income = −0.0049***` ⇒ lower income → higher choice |
-| 2c | [[_Econometrics Concepts#Instrument Validity|Validity]] & [[_Econometrics Concepts#Instrument Relevance|relevance]] | relevant (1st-stage F=97); valid by 2002-vs-2005 timing — but **Sargan rejects** |
-| 3 | [[_Econometrics Concepts#Linear Probability Model|LPM]] | `A.payment = −2.68e-07**` ⇒ +30k → −0.8 pp P(today.always) |
-| 4a | [[_Econometrics Concepts#Difference-in-Differences|DiD]] setup | treat=N3, control=N4; pre=rounds 1–5, post=6–15; `effect`=interaction |
+| 1a | Baseline OLS + [[_Econometrics Concepts#Hypothesis Testing\|H-test]] | `choice = β₀+β₁delay+β₂payment+u`; test $H_0:\beta_1=0$ |
+| 1b | [[_Econometrics Concepts#Omitted Variable Bias\|OVB]] + [[_Econometrics Concepts#Serial Correlation\|serial corr.]] | `Round` is in the error → add it; then plain OLS SEs are fine |
+| 1c | [[_Econometrics Concepts#Individual Fixed Effect\|Individual FE]] + [[_Econometrics Concepts#Clustered Standard Errors\|cluster]] | `feols(choice ~ delay+payment | id)` — within-est., clustered by `id` |
+| 2a | [[_Econometrics Concepts#Causal Diagram\|Causal DAG]] | time prefs `u` → income & choice ⇒ income [[_Econometrics Concepts#Endogeneity\|endogenous]] |
+| 2b | [[_Econometrics Concepts#Two Stage Least Squares\|2SLS]] | `fit_income = −0.0049***` ⇒ lower income → higher choice |
+| 2c | [[_Econometrics Concepts#Instrument Validity\|Validity]] & [[_Econometrics Concepts#Instrument Relevance\|relevance]] | relevant (1st-stage F=97); valid by 2002-vs-2005 timing — but **Sargan rejects** |
+| 3 | [[_Econometrics Concepts#Linear Probability Model\|LPM]] | `A.payment = −2.68e-07**` ⇒ +30k → −0.8 pp P(today.always) |
+| 4a | [[_Econometrics Concepts#Difference-in-Differences\|DiD]] setup | treat=N3, control=N4; pre=rounds 1–5, post=6–15; `effect`=interaction |
 | 4b | DiD inference | `effect = −0.036` ($p=0.638$) ⇒ no typhoon effect |
 
 ---

@@ -260,16 +260,16 @@ The fitted LPM line climbs at 0.93 pp per SEK; the orange step shows the +10 SEK
 
 | Q | Tool | Answer in one line |
 | --- | --- | --- |
-| 1a | [[_Econometrics Concepts#Dummy Variables|Dummy interpretation]] | $\beta_1,\beta_2$ = P(invest) gap vs control; test $H_0:\beta_1=0$ |
-| 1b | [[_Econometrics Concepts#Linear Probability Model|LPM]] + [[_Econometrics Concepts#Robust Standard Errors|robust SE]] | `feols(invest ~ promises + threats, se="hetero")` |
-| 1c | [[_Econometrics Concepts#Hypothesis Testing|Inference]] | promises p=0.130 → **no significant effect** on investing |
-| 2a | [[_Econometrics Concepts#Logit Model|Logit]] | $\mathbb{P}(\textit{invest})=G(\beta_0+\beta_1 prom+\beta_2 thr)$, $G$ = logistic CDF |
-| 2b | [[_Econometrics Concepts#Marginal Effects|Marginal effect]] | **Option 3**: $g(\text{index})\cdot\hat\beta$ via `dlogis(sum(coef·avg))` |
+| 1a | [[_Econometrics Concepts#Dummy Variables\|Dummy interpretation]] | $\beta_1,\beta_2$ = P(invest) gap vs control; test $H_0:\beta_1=0$ |
+| 1b | [[_Econometrics Concepts#Linear Probability Model\|LPM]] + [[_Econometrics Concepts#Robust Standard Errors\|robust SE]] | `feols(invest ~ promises + threats, se="hetero")` |
+| 1c | [[_Econometrics Concepts#Hypothesis Testing\|Inference]] | promises p=0.130 → **no significant effect** on investing |
+| 2a | [[_Econometrics Concepts#Logit Model\|Logit]] | $\mathbb{P}(\textit{invest})=G(\beta_0+\beta_1 prom+\beta_2 thr)$, $G$ = logistic CDF |
+| 2b | [[_Econometrics Concepts#Marginal Effects\|Marginal effect]] | **Option 3**: $g(\text{index})\cdot\hat\beta$ via `dlogis(sum(coef·avg))` |
 | 2c | LPM vs logit | logit keeps $\hat P\in(0,1)$; LPM predictions unbounded |
 | 3a | OLS on continuous `offer` | promises +21.4 (sig 5%); threats +14.8 (sig 10% only) |
-| 3b | [[_Econometrics Concepts#Omitted Variable Bias|OVB]] / [[_Econometrics Concepts#Causal Diagram|DAG]] | fairness type → promise.made & offer ⇒ `promise.made` endogenous |
-| 4a | [[_Econometrics Concepts#Instrument Validity|IV validity]] | threat confounds offer→accept; threats-assignment has 2nd path ⇒ invalid IV |
-| 4b | [[_Econometrics Concepts#Endogenous Selection|Endogenous selection]] | offer +9.3 pp/10 SEK (p=0.005) but **n=14**, self-selected |
+| 3b | [[_Econometrics Concepts#Omitted Variable Bias\|OVB]] / [[_Econometrics Concepts#Causal Diagram\|DAG]] | fairness type → promise.made & offer ⇒ `promise.made` endogenous |
+| 4a | [[_Econometrics Concepts#Instrument Validity\|IV validity]] | threat confounds offer→accept; threats-assignment has 2nd path ⇒ invalid IV |
+| 4b | [[_Econometrics Concepts#Endogenous Selection\|Endogenous selection]] | offer +9.3 pp/10 SEK (p=0.005) but **n=14**, self-selected |
 
 ---
 

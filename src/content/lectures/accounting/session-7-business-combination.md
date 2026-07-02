@@ -292,7 +292,7 @@ $$
 > Break Inc. F/S (Dec 31, 2025): Assets $24M, Liabilities $16M → Book Equity = **$8M**
 >
 > ---
-> **PPA Work: **
+> **PPA Work:**
 >
 > | Asset / Liability | Book Value | Fair Value | Adjustment | Notes |
 > |---|---|---|---|---|

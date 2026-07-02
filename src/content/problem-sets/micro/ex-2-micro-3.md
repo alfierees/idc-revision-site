@@ -185,7 +185,7 @@ questions:
 
       | Explanation | Mechanism | Verdict |
       |---|---|---|
-      | [[Screening|Adverse selection]] | Safe drivers know their own risk. The device *confirms* low risk to the insurer. Risky drivers refuse monitoring (it would expose them). Autograph users self-select as low-risk; the savings reflect who chose in, not the device's effect on behaviour. | Yes, consistent |
+      | [[Screening\|Adverse selection]] | Safe drivers know their own risk. The device *confirms* low risk to the insurer. Risky drivers refuse monitoring (it would expose them). Autograph users self-select as low-risk; the savings reflect who chose in, not the device's effect on behaviour. | Yes, consistent |
       | [[Moral Hazard]] | Drivers know they're monitored. They drive more carefully — fewer late-night trips, shorter distances. Improved behaviour reduces claims and premiums. The device acts like a permanent speed camera. | Yes, consistent |
 
       > [!tip] How to actually distinguish them
