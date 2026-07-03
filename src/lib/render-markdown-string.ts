@@ -2,7 +2,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
-import remarkCallouts from "remark-callouts";
+import { remarkCalloutsLocal } from "./remark-callouts";
 import remarkRehype from "remark-rehype";
 import type { Root, Element } from "hast";
 import { toString as hastToString } from "hast-util-to-string";
@@ -144,7 +144,7 @@ const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkMath)
-  .use(remarkCallouts)
+  .use(remarkCalloutsLocal)
   .use(wikiLinkPlugin, {
     pageResolver: (n: string) => {
       const [page, fragment] = n.split("#", 2);

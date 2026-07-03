@@ -132,7 +132,9 @@ questions:
   - id: q3
     title: "Q3 — Will a risk-averse person buy full insurance?"
     text: |
-      **Continuing with the data from the previous question**, the actuarially fair premium for full insurance. Which of the following statements is correct?
+      **Continuing with the data from the previous question**, suppose the individual is offered **full insurance at the actuarially fair premium**. Which of the following statements is correct?
+
+      *(The original paper's wording is truncated here — "…, the actuarially fair premium for full insurance." — this is the intended reading.)*
     options:
       - label: "A"
         text: |
