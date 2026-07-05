@@ -75,6 +75,17 @@ export const subjects: Record<string, SubjectConfig> = {
     assignmentsDir: "Problem Sets",
     problemSetSlugPrefix: "ps",
   },
+  // Qualitative subject: hand-ported (readings → lectures, concepts+acronyms →
+  // glossary, cram sheet → exam-prep). No problem sets. `lecturesDir: "Readings"`
+  // maps the reading notes to the lectures collection. Visual lecture decks and
+  // worked past papers are added in later passes.
+  "digital-marketing": {
+    slug: "digital-marketing",
+    title: "Digital Marketing",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Digital Marketing",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Digital marketing",
+    lecturesDir: "Readings",
+  },
 };
 
 export function getSubjectConfig(slug: string): SubjectConfig {

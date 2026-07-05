@@ -8,6 +8,10 @@ subjects.sort((a, b) => {
   if (a.data.placeholder !== b.data.placeholder) return a.data.placeholder ? 1 : -1;
   return a.data.title.localeCompare(b.data.title);
 });
+const liveCount = subjects.filter((s) => !s.data.placeholder).length;
+const countWord =
+  ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"][liveCount] ??
+  String(liveCount);
 ---
 <Layout title="IDC Revision">
   <section class="reading">
@@ -16,7 +20,7 @@ subjects.sort((a, b) => {
       Revise.
     </h1>
     <p class="mt-4 text-base text-ink-soft">
-      Five subjects. Pick one to open its dictionary, exam prep, problem sets and past papers.
+      {countWord} subjects. Pick one to open its dictionary, exam prep, problem sets and past papers.
     </p>
   </section>
   <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
