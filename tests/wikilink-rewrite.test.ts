@@ -109,14 +109,27 @@ describe("resolveLink — prefix fallback", () => {
   });
 });
 
-describe("rewriteWikiHrefs — subject hub", () => {
-  it("resolves [[Subject]] (slug === subject) to the subject hub", () => {
+describe("rewriteWikiHrefs — subject self-hub", () => {
+  it("renders [[Subject]] (slug === subject) as plain text, not a link", () => {
     const html = rewriteWikiHrefs(
       '<a href="__WIKI__econometrics">Econometrics</a>',
       "econometrics", new Map(),
     );
-    expect(html).toContain('href="/subjects/econometrics"');
+    // The self-hub route only redirects to the dictionary, so a subject
+    // referencing itself is unwrapped to plain text rather than a link.
+    expect(html).toBe("Econometrics");
+    expect(html).not.toContain("<a");
     expect(html).not.toContain("data-missing");
+    expect(html).not.toContain("data-selfhub");
+  });
+
+  it("keeps an aliased self-hub link ([[Subject|alias]]) as plain alias text", () => {
+    const html = rewriteWikiHrefs(
+      '<a href="__WIKI__econometrics" class="internal">the course</a>',
+      "econometrics", new Map(),
+    );
+    expect(html).toBe("the course");
+    expect(html).not.toContain("<a");
   });
 });
 

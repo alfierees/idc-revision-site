@@ -22,11 +22,11 @@ in_scope: true
 
 # Acronyms & Key Terms
 
-> The exam **explicitly tests acronyms** ("yes, you need to know the meaning of the acronyms…"). This is the master list. Reading-derived terms are confirmed from our notes; metrics/model acronyms marked **[deck]** are standard digital-marketing terms that recur in past exams and almost certainly come from the **presentations** — verify exact wording against the decks once added. Hub: [[Digital Marketing]] · Readings cram: [[_Exam Cram Sheet - Readings]].
+> The exam **explicitly tests acronyms** ("yes, you need to know the meaning of the acronyms…"). This is the master list — reading-derived terms confirmed from our notes, plus the standard digital-marketing metrics and models that recur in the past exams. Readings cram: [[_Exam Cram Sheet - Readings]].
 
 ---
 
-## Media buying & pricing models  [mostly deck — high exam yield]
+## Media buying & pricing models
 
 | Acronym | Stands for                    | Meaning                                                                                              |
 | ------- | ----------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -40,7 +40,7 @@ in_scope: true
 > [!example] Past-exam application
 > Influencers paid by **revenue generated via their coupon code** → this is a **CPA** model (pay on action), not CPC/CPL. (2024-A Q17)
 
-## Performance metrics & KPIs  [mostly deck]
+## Performance metrics & KPIs
 
 | Acronym | Stands for | Meaning |
 |---|---|---|
@@ -60,13 +60,13 @@ in_scope: true
 
 | Acronym | Stands for | Meaning |
 |---|---|---|
-| **POEM** | Paid, Owned, Earned Media | The cross-platform media framework; planning across all three is the goal. **[deck]** |
-| **GDN** | Google Display Network | Google's display/banner network across publisher sites; reaches audiences **not active on social media**; gives publishers more certain ad revenue. **[deck]** |
-| **SEM** | Search Engine Marketing | Paid search advertising. **⚠ collides with "Structural Equation Modelling" (research method) — context matters.** **[deck]** |
-| **SEO** | Search Engine Optimization | Organic improvement of search ranking. **[deck]** |
-| **SERP** | Search Engine Results Page | The page returned for a query. **[deck]** |
+| **POEM** | Paid, Owned, Earned Media | The cross-platform media framework; planning across all three is the goal. |
+| **GDN** | Google Display Network | Google's display/banner network across publisher sites; reaches audiences **not active on social media**; gives publishers more certain ad revenue. |
+| **SEM** | Search Engine Marketing | Paid search advertising. **⚠ collides with "Structural Equation Modelling" (research method) — context matters.** |
+| **SEO** | Search Engine Optimization | Organic improvement of search ranking. |
+| **SERP** | Search Engine Results Page | The page returned for a query. |
 | **UGC** | User Generated Content | Brand-relevant content created by users/consumers. |
-| **FAST** | Free Ad-supported Streaming TV | Ad-funded streaming channels (vs subscription/linear TV). **[deck]** |
+| **FAST** | Free Ad-supported Streaming TV | Ad-funded streaming channels (vs subscription/linear TV). |
 
 > [!info] Linear viewing (term, not acronym)
 > **Linear viewing** = watching content **at the time of its original broadcast/distribution as set by the publisher** (e.g. live TV) — contrast with on-demand. (Defined in past exams.)
@@ -82,8 +82,8 @@ in_scope: true
 | **CRM** | Customer Relationship Management | Systems/strategy for managing customer relationships and data. |
 | **CDJ** | Customer Decision Journey | Loyalty-loop model replacing the linear sales funnel (esp. B2B — Dell). |
 | **CBBE** | Customer-Based Brand Equity | Keller's model of brand equity from the consumer's perspective. (Ebrahim) |
-| **STEPPS** | Social currency, Triggers, Emotion, Public, Practical value, Stories | Berger's *Contagious* virality model. **[deck — appeared in past exam]** |
-| **AIDA** | Awareness, Interest, Desire, Action | Classic purchase-funnel stages. **[deck]** |
+| **STEPPS** | Social currency, Triggers, Emotion, Public, Practical value, Stories | Berger's *Contagious* virality model. |
+| **AIDA** | Awareness, Interest, Desire, Action | Classic purchase-funnel stages. |
 | **B2B / B2C** | Business-to-Business / -Consumer | Market type; B2B has derived demand, DMUs, longer cycles. |
 | **DMU** | Decision-Making Unit | The group of people involved in a B2B purchase decision. |
 | **CSR** | Corporate Social Responsibility | Corporate accountability for social/environmental impact. (BrandFusion §3.13) |
@@ -125,4 +125,4 @@ in_scope: true
 ---
 
 > [!note] To expand with the presentations
-> When the class decks arrive, this sheet should grow with any deck-only acronyms/terms (e.g. growth-hacking, native advertising types, high-value-features model, the 6-stage content/customer-journey model, specific platform metrics) and the **[deck]** items above should be re-checked against the lecturer's exact definitions.
+> When the class decks arrive, this sheet can grow with any deck-only acronyms/terms (e.g. growth-hacking, native advertising types, the high-value-features model, the 6-stage content/customer-journey model, specific platform metrics).

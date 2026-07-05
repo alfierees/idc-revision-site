@@ -2,7 +2,7 @@ import { resolveLink, KIND_TO_PATH, type LinkMap } from "./known-links";
 import { slugify } from "./slugify";
 
 export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap | Set<string>): string {
-  return html.replace(/href="__WIKI__([^"]+)"/g, (_m, raw: string) => {
+  const rewritten = html.replace(/href="__WIKI__([^"]+)"/g, (_m, raw: string) => {
     const [slugPart, fragmentPart] = raw.split("#", 2);
 
     // Same-page [[#Section]] links: no page slug, just an anchor on this page.
@@ -31,11 +31,12 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
       return `href="#" data-missing="true" title="Missing concept"`;
     }
 
-    // Subject-hub link: [[Econometrics]] (slug === subject slug) appears as
-    // "Part of: [[Subject]]" on every lecture/past-paper page and resolves to
-    // the subject hub at /subjects/<subject>.
+    // Subject self-hub link: [[Econometrics]] (slug === subject slug) appears as
+    // "Part of: [[Subject]]" on a subject's own pages. There is no hub page — the
+    // route only redirects to the dictionary — so render it as plain text rather
+    // than a pointless self-link. Marked here, then unwrapped after the pass.
     if (slug === subject) {
-      return `href="/subjects/${subject}"`;
+      return `data-selfhub`;
     }
 
     // The Data Science course is ingested into the machine-learning subject;
@@ -65,4 +66,7 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
     }
     return `href="#" data-missing="true" title="Missing concept"`;
   });
+  // Subject self-hub references were tagged with `data-selfhub` above; unwrap the
+  // anchor so [[Subject]] renders as plain text instead of a dictionary redirect.
+  return rewritten.replace(/<a\b[^>]*\bdata-selfhub\b[^>]*>([\s\S]*?)<\/a>/g, "$1");
 }

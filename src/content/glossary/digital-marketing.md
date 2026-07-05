@@ -356,25 +356,25 @@ Share of users opting out of tracking; a confound when reading Analytics (a high
 ## Channels, platforms & media
 
 ### POEM
-Paid, Owned, Earned Media — The cross-platform media framework; planning across all three is the goal. **[deck]**
+Paid, Owned, Earned Media — The cross-platform media framework; planning across all three is the goal.
 
 ### GDN
-Google Display Network — Google's display/banner network across publisher sites; reaches audiences **not active on social media**; gives publishers more certain ad revenue. **[deck]**
+Google Display Network — Google's display/banner network across publisher sites; reaches audiences **not active on social media**; gives publishers more certain ad revenue.
 
 ### SEM
-Search Engine Marketing — Paid search advertising. **⚠ collides with "Structural Equation Modelling" (research method) — context matters.** **[deck]**
+Search Engine Marketing — Paid search advertising. **⚠ collides with "Structural Equation Modelling" (research method) — context matters.**
 
 ### SEO
-Search Engine Optimization — Organic improvement of search ranking. **[deck]**
+Search Engine Optimization — Organic improvement of search ranking.
 
 ### SERP
-Search Engine Results Page — The page returned for a query. **[deck]**
+Search Engine Results Page — The page returned for a query.
 
 ### UGC
 User Generated Content — Brand-relevant content created by users/consumers.
 
 ### FAST
-Free Ad-supported Streaming TV — Ad-funded streaming channels (vs subscription/linear TV). **[deck]**
+Free Ad-supported Streaming TV — Ad-funded streaming channels (vs subscription/linear TV).
 
 ### Linear viewing
 Watching content **at the time of its original broadcast/distribution as set by the publisher** (e.g. live TV) — contrast with on-demand. (Defined in past exams.)
@@ -403,10 +403,10 @@ Customer Decision Journey — Loyalty-loop model replacing the linear sales funn
 Customer-Based Brand Equity — Keller's model of brand equity from the consumer's perspective. (Ebrahim)
 
 ### STEPPS
-Social currency, Triggers, Emotion, Public, Practical value, Stories — Berger's *Contagious* virality model. **[deck]**
+Social currency, Triggers, Emotion, Public, Practical value, Stories — Berger's *Contagious* virality model.
 
 ### AIDA
-Awareness, Interest, Desire, Action — Classic purchase-funnel stages. **[deck]**
+Awareness, Interest, Desire, Action — Classic purchase-funnel stages.
 
 ### B2B / B2C
 Business-to-Business / -Consumer — Market type; B2B has derived demand, DMUs, longer cycles.
