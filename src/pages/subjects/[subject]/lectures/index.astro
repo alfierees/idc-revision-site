@@ -8,13 +8,14 @@ export async function getStaticPaths() {
 }
 
 const subjectSlug = Astro.params.subject!;
-const lectures = (await getCollection("lectures", (l) => l.data.subject === subjectSlug))
+const entries = (await getCollection("lectures", (l) => l.data.subject === subjectSlug))
   .map((l) => ({
     slug: l.id.split("/").pop()!,
     title: l.data.title,
     week: l.data.week,
     lecture: l.data.lecture,
     instructor: l.data.instructor,
+    tags: l.data.tags ?? [],
   }))
   .sort((a, b) => {
     if (a.week !== undefined && b.week !== undefined) return a.week - b.week;
@@ -23,24 +24,44 @@ const lectures = (await getCollection("lectures", (l) => l.data.subject === subj
     return a.title.localeCompare(b.title);
   });
 
+// Split class lectures (reconstructed slide decks) from the assigned readings.
+// Class decks are tagged `class-slides`; assigned-article notes are tagged `reading`.
+const isReading = (e: (typeof entries)[number]) =>
+  e.tags.includes("reading") && !e.tags.includes("class-slides");
+const lectures = entries.filter((e) => !isReading(e));
+const readings = entries.filter((e) => isReading(e));
+
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+
+const groups = [
+  { key: "lectures", label: "Lectures", blurb: "In-class slide decks, reconstructed as notes.", items: lectures },
+  { key: "readings", label: "Readings", blurb: "Assigned articles from the syllabus.", items: readings },
+].filter((g) => g.items.length > 0);
 ---
 <Layout title={`Lectures · ${subject.data.title}`} subject={subjectSlug} active="lectures">
-  {lectures.length === 0 ? (
+  {groups.length === 0 ? (
     <p class="mt-6 font-ui text-ink-muted">No lectures ingested for this subject yet.</p>
   ) : (
-    <ol class="mt-2 space-y-4 list-none p-0">
-      {lectures.map((l) => (
-        <li>
-          <a href={`/subjects/${subjectSlug}/lectures/${l.slug}`} class="list-card">
-            {l.week !== undefined && (
-              <p class="font-ui text-xs font-bold uppercase tracking-[0.15em] text-accent">Week {l.week}</p>
-            )}
-            <h2 class="mt-1 font-display text-xl text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 520;">{l.title}</h2>
-            {l.instructor && <p class="mt-1 font-ui text-sm text-ink-muted">{l.instructor}</p>}
-          </a>
-        </li>
-      ))}
-    </ol>
+    groups.map((g) => (
+      <section class="mt-8 first:mt-2">
+        <div class="border-b border-rule pb-2">
+          <h2 class="font-ui text-xs font-bold uppercase tracking-[0.18em] text-accent">{g.label}</h2>
+          <p class="mt-0.5 font-ui text-sm text-ink-muted">{g.blurb}</p>
+        </div>
+        <ol class="mt-3 space-y-4 list-none p-0">
+          {g.items.map((l) => (
+            <li>
+              <a href={`/subjects/${subjectSlug}/lectures/${l.slug}`} class="list-card">
+                {l.week !== undefined && (
+                  <p class="font-ui text-xs font-bold uppercase tracking-[0.15em] text-accent">Week {l.week}</p>
+                )}
+                <h3 class="mt-1 font-display text-xl text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 520;">{l.title}</h3>
+                {l.instructor && <p class="mt-1 font-ui text-sm text-ink-muted">{l.instructor}</p>}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))
   )}
 </Layout>

@@ -479,3 +479,82 @@ Persuasion Knowledge Model — How consumers recognise/cope with persuasion atte
 
 ### MTA
 Multi-Touch Attribution — Distributes conversion credit across touchpoints (Buhalis & Volchek).
+
+---
+
+## Data, bias & measurement
+
+### Survivorship Bias
+Drawing conclusions only from the cases that "survived" a process while ignoring those that didn't — skews the result (Abraham Wald armoured the parts of *returning* WWII bombers with no bullet holes). → [[Digital Marketing Lecture 10|L10]]
+
+### Selection Bias
+Distortion from a non-representative sample — when *how* cases were chosen makes them differ from the population (umbrella for sampling, self-selection, survivorship, exclusion). → [[Digital Marketing Lecture 10|L10]]
+
+### Sampling Bias
+A selection bias where some population members are more likely to be sampled than others, so the sample misrepresents the whole. → [[Digital Marketing Lecture 10|L10]]
+
+### Correlation vs Causation
+Two variables moving together doesn't mean one causes the other — ice-cream and sunglasses sales rise together, both driven by sunny weather. → [[Digital Marketing Lecture 10|L10]]
+
+### SMART Goals
+Objectives that are Specific, Measurable, Attainable, Relevant, Time-based; turns vague aims into measurable KPIs. → [[Digital Marketing Lecture 10|L10]]
+
+## App-economy & performance metrics
+
+### Bounce Rate
+Share of visitors who land on a page and leave without further interaction — a site/landing-page engagement metric, not a campaign KPI. → [[Digital Marketing Lecture 10|L10]]
+
+### ARPU
+Average Revenue Per User = revenue ÷ users in a period; short-term unit-economics metric (e.g. streaming revenue per subscriber). → [[Digital Marketing Lecture 10|L10]]
+
+### CAC
+Customer Acquisition Cost = acquisition spend ÷ customers acquired; weighed against ARPU/CLV to judge profitable growth. → [[Digital Marketing Lecture 10|L10]]
+
+### CPI
+Cost Per Install = ad spend ÷ app installs; a user-acquisition metric specific to app marketing. → [[Digital Marketing Lecture 10|L10]]
+
+### ASO
+App Store Optimization — tuning a store listing (title, keywords, icon, screenshots, ratings) to rank higher and convert store visitors into installs; the app-store SEO. → [[Digital Marketing Lecture 10|L10]]
+
+### Churn Rate
+Share of customers/users who stop using a product over a period; the inverse of retention. → [[Digital Marketing Lecture 10|L10]]
+
+## Emerging platforms & ad formats
+
+### Native Advertising
+Paid content matching the form and feel of its platform — in-feed ads, content recommendations (Taboola), advertiser-initiated branded content. Blends in rather than interrupts. → [[Digital Marketing Lecture 8|L8]]
+
+### Connected TV
+CTV — TV streamed over the internet (smart TVs, sticks, consoles) vs linear broadcast; enables addressable, data-driven TV ads. → [[Digital Marketing Lecture 9|L9]]
+
+### Streaming Models
+How streaming monetises: SVOD (subscription), AVOD (ad-supported), TVOD (transactional), HVOD (hybrid), FAST (free ad-supported linear channels). → [[Digital Marketing Lecture 9|L9]]
+
+### Geofencing
+Location-based marketing that triggers an ad/message when a device enters a virtual boundary around a real-world place. → [[Digital Marketing Lecture 9|L9]]
+
+### Location-Based Marketing
+Targeting by physical location via IP address, GPS/proximity and geofencing. → [[Digital Marketing Lecture 9|L9]]
+
+### Spatial Computing
+Blending digital content into physical space via VR/AR/XR (Apple Vision Pro, AI glasses); an emerging immersive channel. → [[Digital Marketing Lecture 9|L9]]
+
+### Banner Blindness
+Users' learned habit of ignoring banner/ad-like page elements (eye-tracking); a driver of declining display-ad effectiveness. → [[Digital Marketing Lecture 8|L8]]
+
+### Ad Blocker
+Software that stops ads loading in a browser/app, shrinking digital advertising's reach and measurability. → [[Digital Marketing Lecture 8|L8]]
+
+## Engagement & growth tactics
+
+### Growth Hacking
+Rapid, low-cost, data-driven experimentation across the funnel for sustainable, scalable growth; favoured by resource-constrained startups. → [[Digital Marketing Lecture 10|L10]]
+
+### Relationship Marketing
+Building long-term, engaged customer relationships (retention, loyalty, lifetime value) over one-off transactions. → [[Digital Marketing Lecture 8|L8]]
+
+### Contextual Marketing
+Right message, right moment — aligning Content, Context and Channel (the 3Cs), e.g. a pizza brand inside a dating app at dinnertime. → [[Digital Marketing Lecture 8|L8]]
+
+### EEAT
+Experience, Expertise, Authoritativeness, Trustworthiness — Google's content-quality framework; content marketing signals all four to earn ranking and trust. → [[Digital Marketing Lecture 7|L7]]

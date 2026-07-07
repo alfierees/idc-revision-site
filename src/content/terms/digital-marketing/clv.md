@@ -1,7 +1,7 @@
 ---
 title: CLV
 subject: digital-marketing
-aliases: []
+aliases: [CLTV, LTV, Customer Lifetime Value]
 related: []
 source_folder: digital-marketing
 ai_drafted: true
