@@ -72,7 +72,17 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
           </div>
         </div>
       ) : (
-        <div class="mt-8 paper-prose prose-card" set:html={html} />
+        <>
+          {doc.data.source_doc?.startsWith("/") && doc.data.source_doc.endsWith(".pdf") && (
+            <div class="mt-6">
+              <a href={doc.data.source_doc} download class="pdf-open">
+                Download the original PDF
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+              </a>
+            </div>
+          )}
+          <div class="mt-8 paper-prose prose-card" set:html={html} />
+        </>
       )}
     </article>
   </div>
