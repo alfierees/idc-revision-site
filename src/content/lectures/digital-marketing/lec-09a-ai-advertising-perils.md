@@ -3,7 +3,7 @@ title: Promises and Perils of AI and Advertising
 subject: digital-marketing
 week: 9
 lecture: "09a"
-instructor: Ofir Richman
+instructor: Rodgers (2021)
 tags:
   - digital-marketing
   - reading

@@ -3,7 +3,7 @@ title: Corporate Brand Identity Co-Creation in B2B
 subject: digital-marketing
 week: 7
 lecture: "07b"
-instructor: Ofir Richman
+instructor: Iglesias et al. (2020)
 tags:
   - digital-marketing
   - reading

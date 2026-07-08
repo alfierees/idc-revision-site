@@ -3,7 +3,7 @@ title: GenAI in Marketing — Applications, Opportunities & Research Agenda
 subject: digital-marketing
 week: 7
 lecture: "07a"
-instructor: Ofir Richman
+instructor: Kshetri, Dwivedi, Davenport & Panteli (2024)
 tags:
   - digital-marketing
   - reading

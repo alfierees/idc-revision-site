@@ -3,7 +3,7 @@ title: Why Marketers Are Returning to Traditional Advertising
 subject: digital-marketing
 week: 2
 lecture: "02b"
-instructor: Ofir Richman
+instructor: Moorman, Ryan & Tavassoli (2022)
 tags:
   - digital-marketing
   - reading

@@ -3,7 +3,7 @@ title: Social Conscience & Social Marketing
 subject: digital-marketing
 week: 11
 lecture: "11"
-instructor: Ofir Richman
+instructor: Smith & Williams (2022)
 tags:
   - digital-marketing
   - reading

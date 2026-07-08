@@ -3,7 +3,7 @@ title: Silence of the Brands
 subject: digital-marketing
 week: 4
 lecture: "04a"
-instructor: Ofir Richman
+instructor: Salzer-Mörling & Strannegård (2004)
 tags:
   - digital-marketing
   - reading
