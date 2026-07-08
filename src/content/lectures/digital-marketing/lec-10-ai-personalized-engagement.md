@@ -3,7 +3,7 @@ title: AI in Personalized Engagement Marketing
 subject: digital-marketing
 week: 10
 lecture: "10"
-instructor: Ofir Richman
+instructor: Kumar et al. (2019)
 tags:
   - digital-marketing
   - reading

@@ -3,7 +3,7 @@ title: GenAI in Innovation & Marketing Processes
 subject: digital-marketing
 week: 6
 lecture: "06a"
-instructor: Ofir Richman
+instructor: Cillo & Rubera (2025)
 tags:
   - digital-marketing
   - reading

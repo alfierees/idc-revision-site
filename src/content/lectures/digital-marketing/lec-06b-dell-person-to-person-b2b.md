@@ -3,7 +3,7 @@ title: Dell Technologies — Person to Person in B2B
 subject: digital-marketing
 week: 6
 lecture: "06b"
-instructor: Ofir Richman
+instructor: Smith & Williams (2022)
 tags:
   - digital-marketing
   - reading

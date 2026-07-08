@@ -3,7 +3,7 @@ title: Sharing Consumers' Brand Storytelling — Influence on Brand Attitude via
 subject: digital-marketing
 week: 3
 lecture: "03a"
-instructor: Ofir Richman
+instructor: Hong et al. (2022)
 tags:
   - digital-marketing
   - reading

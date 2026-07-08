@@ -3,7 +3,7 @@ title: Embedding the Marketing Angle into Entrepreneurial Propensity
 subject: digital-marketing
 week: 1
 lecture: "01"
-instructor: Ofir Richman
+instructor: Kariv et al. (2025)
 tags:
   - digital-marketing
   - reading

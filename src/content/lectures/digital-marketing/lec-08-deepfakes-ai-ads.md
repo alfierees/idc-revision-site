@@ -3,7 +3,7 @@ title: Preparing for an Era of Deepfakes & AI-Generated Ads
 subject: digital-marketing
 week: 8
 lecture: "08"
-instructor: Ofir Richman
+instructor: Campbell et al. (2022)
 tags:
   - digital-marketing
   - reading

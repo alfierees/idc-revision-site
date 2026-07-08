@@ -3,7 +3,7 @@ title: The Superstar Social Media Influencer
 subject: digital-marketing
 week: 9
 lecture: "09b"
-instructor: Ofir Richman
+instructor: Lee & Theokary (2021)
 tags:
   - digital-marketing
   - reading

@@ -3,7 +3,7 @@ title: "BrandFusion Ch4 — Managing the Alignment of Strategy: Purpose, Proposi
 subject: digital-marketing
 week: 3
 lecture: "03b"
-instructor: Ofir Richman
+instructor: Smith & Williams (2022)
 tags:
   - digital-marketing
   - reading

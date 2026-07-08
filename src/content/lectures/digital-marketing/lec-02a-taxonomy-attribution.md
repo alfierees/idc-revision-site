@@ -3,7 +3,7 @@ title: Bridging Marketing Theory and Big Data Analytics — The Taxonomy of Mark
 subject: digital-marketing
 week: 2
 lecture: "02a"
-instructor: Ofir Richman
+instructor: Buhalis & Volchek (2021)
 tags:
   - digital-marketing
   - reading

@@ -3,7 +3,7 @@ title: The Dynamic Construction of Brand Storytelling
 subject: digital-marketing
 week: 4
 lecture: "04b"
-instructor: Ofir Richman
+instructor: Aimé (2021)
 tags:
   - digital-marketing
   - reading

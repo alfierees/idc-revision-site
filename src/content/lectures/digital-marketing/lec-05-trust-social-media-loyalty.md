@@ -3,7 +3,7 @@ title: Trust, Social Media Marketing, Brand Equity & Loyalty
 subject: digital-marketing
 week: 5
 lecture: "05"
-instructor: Ofir Richman
+instructor: Ebrahim (2020)
 tags:
   - digital-marketing
   - reading
