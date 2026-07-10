@@ -28,6 +28,7 @@ const rendered = await Promise.all(set.data.questions.map(async (q) => ({
   id: q.id,
   questionHtml: await renderMarkdownString(q.text, subjectSlug, links),
   solutionHtml: await renderMarkdownString(q.solution, subjectSlug, links),
+  hasSolution: q.solution.trim().length > 0,
 })));
 
 const bodyHtml = set.body?.trim()
@@ -189,7 +190,7 @@ const hasToolkit =
               <StatusPill client:load subject={subjectSlug} kind="problem-set" refSlug={setSlug} question={q.id} />
             </div>
             <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
-            <CollapsibleSolution html={q.solutionHtml} />
+            {q.hasSolution && <CollapsibleSolution html={q.solutionHtml} />}
           </li>
         ))}
       </ol>
