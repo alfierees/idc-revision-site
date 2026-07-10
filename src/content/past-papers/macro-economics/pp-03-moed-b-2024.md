@@ -34,18 +34,18 @@ questions:
       **(a)** Briefly explain what can drive the negative relationship between income and being liquidity constrained. What can explain the fact that even among households in the top quintiles some are still liquidity constrained? *(3 pts)*
 
       **(b)** Using the principles of the consumption model, would you expect the **marginal propensity to consume (MPC)** to be positively or negatively correlated with income quintile? (No formal reasoning required.) *(3 pts)*
-
-      > [!tip] 🗣️ In plain English
-      > You're looking at a chart showing that poorer households are more likely to be **"maxed out"** — unable to borrow any more to keep spending steady — and asked to explain the pattern and what it means for spending behaviour.
-      >
-      > - **(a) explain the chart:** why would having less income make you more likely to hit a borrowing wall, and why do even some rich households hit it too?
-      > - **(b) who spends an extra pound?** if you handed households £1 of extra income, would poorer or richer households spend more of it — i.e. how does the **MPC** (the fraction of extra income that gets spent rather than saved) line up with income?
     solution: |
       **(a) Why the relationship is negative.** When household income is higher, households can simply save more and accumulate more wealth. With a larger buffer of wealth to draw on, fewer of them are liquidity constrained, so the fraction of constrained households **falls as we move up the income distribution.**
 
       Why some high-income households are *still* constrained: in class we described the **"wealthy hand-to-mouth"** households. They own positive amounts of wealth, but most of that wealth is held in **illiquid assets** (e.g. housing, retirement accounts) that can't easily be tapped to smooth consumption. So even at the top quintiles a slice of households behaves as if constrained.
 
+      > [!tip] 🗣️ In plain English
+      > Richer households have a **savings cushion**, so they rarely hit a borrowing wall — that's the downward slope. The rich exceptions are the **"wealthy hand-to-mouth"**: plenty of wealth, but locked up in houses and pensions they can't quickly turn into cash.
+
       **(b) Sign of the MPC–income relationship.** In class we showed that **liquidity-constrained consumers have a higher MPC** because they are pushed *away* from their optimal (smoothed) consumption choice — an extra dollar of income relaxes the constraint and gets spent rather than saved. Combining this with the figure (constraints concentrate at low incomes), we expect a **negative correlation between income quintile and the MPC**: the MPC is highest at the bottom of the distribution and declines with income.
+
+      > [!tip] 🗣️ In plain English
+      > Hand a constrained household an extra pound and they **spend most of it** — they were being forced to underspend. Since constraints pile up at the bottom of the income ladder, the **MPC falls as income rises**.
 
       > [!success] Answer — **Negative relationship (constraints fall with income); MPC is negatively correlated with income** (constrained low-income households have the highest MPC, with "wealthy hand-to-mouth" as the top-quintile exception).
 
@@ -70,9 +70,6 @@ questions:
       In addition, 20 years ago real GDP per capita was $10{,}000$, this year it is $18{,}000$, and it is expected to grow in the future at the **same rate as the average growth over the last 20 years**.
 
       What is your forecast?
-
-      > [!tip] 🗣️ In plain English
-      > You're playing government forecaster: given how much the country owes relative to what it earns, predict whether that debt burden grows or shrinks next year. The catch is that two ingredients the debt formula needs — the **real interest rate** (interest after stripping out inflation) and the **growth rate** — aren't handed to you: you have to back the first out from the nominal rate and expected inflation, and the second from how much GDP per capita grew over 20 years. Then it's a plug-in. ($d$ is the **primary deficit** — how much the government overspends before interest; $b$ is debt as a share of GDP.)
     solution: |
       Use the debt-dynamics equation and substitute the data:
 
@@ -96,6 +93,9 @@ questions:
 
       > [!success] Answer — **The debt-to-GDP ratio rises by about 3 points, to roughly 103%.**
 
+      > [!tip] 🗣️ In plain English
+      > Two missing ingredients had to be dug out first: the **real rate** ($5\%$ nominal minus $3\%$ expected inflation $= 2\%$) and **growth** ($\approx 3\%$ a year, from GDP per head rising 1.8× over 20 years). Growth slightly outpaces the interest rate, which nibbles at the burden — but the $4\%$ deficit swamps that, so the debt ratio still **climbs about 3 points to ~103%**.
+
       > [!note] Formula sheet — debt dynamics + Fisher
       > Two sheet entries combine here: [[Macro Equation Sheet#Fiscal policy & public debt|debt dynamics]] $\Delta b = d + \frac{r-g}{1+g}b$ and the [[Macro Equation Sheet#Prices, inflation & exchange rates|Fisher equation]] $r = i - \pi^e$. The exam's game is that the data never gives $r$ or $g$ directly — get $r$ from Fisher, get $g$ from the 20-year compound-growth relation, *then* plug in. See [[public-debt-dynamics]], [[primary-deficit]], [[fisher-equation]].
     related_terms:
@@ -114,9 +114,6 @@ questions:
       For year $t$: GDP $= 10{,}000$ units, capital stock $K = 5{,}000$, labor input $N = 10{,}000$. To use capital, producers rent it at real rental price $R = 0.5$. What is **total factor productivity** $A$ in year $t$?
 
       *(Hint: which parameter is missing from your data, and how can you find it?)*
-
-      > [!tip] 🗣️ In plain English
-      > You know how much the economy produced and how much capital and labour it used — the question wants $A$, the **"secret sauce"** (TFP) that measures how productively those inputs get turned into output. But you can't rearrange the formula until you know the exponent $\alpha$, and that's the puzzle: the rental price of capital is your clue, because with this production function $\alpha$ equals **capital's slice of total income** — the share of GDP paid out for renting capital. Find $\alpha$ from the rental data, then solve for $A$.
     solution: |
       To get $A$, rearrange the production function:
 
@@ -131,6 +128,9 @@ questions:
       $$A = \frac{10{,}000}{5{,}000^{0.25} \times 10{,}000^{0.75}} \approx 1.19$$
 
       > [!success] Answer — **$\alpha = 0.25$ and TFP $A \approx 1.19$.**
+
+      > [!tip] 🗣️ In plain English
+      > The missing exponent $\alpha$ is **capital's slice of national income**: rental payments ($0.5 \times 5{,}000 = 2{,}500$) are a quarter of GDP, so $\alpha = 0.25$. With that in hand, TFP is just what's left when you divide output by the inputs — about $1.19$.
 
       > [!note] Formula sheet — Cobb-Douglas + capital's share
       > This uses the [[Macro Equation Sheet#Production & factor demands|Cobb-Douglas production function]] $Y = AK^{\alpha}N^{1-\alpha}$ together with the fact that under competition each exponent equals that factor's income share — capital's share is $\frac{R K}{Y} = \alpha$. The trick is recognising that the "missing" exponent is recoverable from the rental data, after which $A$ is just a plug-in. See [[cobb-douglas]], [[solow-residual]], [[labor-share]].
@@ -151,9 +151,6 @@ questions:
       - current capital stock $K = 700$; labor constant at $N = 1{,}000$.
 
       The government wants to pick a **capital tax rate that keeps the capital stock constant**. What tax rate achieves this *(5 pts)*, and what is the implied level of current investment *(1 pt)*?
-
-      > [!tip] 🗣️ In plain English
-      > The government wants firms to neither expand nor shrink their machine stock, and you have to find the **tax on capital** that makes firms *choose* exactly that. Firms invest up to the point where the extra output from one more machine (the **marginal product of capital**) just covers the **user cost** — what it effectively costs to own the machine for a period, tax included. "Keep capital constant" pins down every number in that equation except the tax rate, so it becomes one equation with one unknown. The investment part is easier than it looks: if the stock isn't changing, firms only buy enough new machines to **replace the ones wearing out** ($\delta$ is the depreciation rate — the fraction of machines that break each period).
     solution: |
       **Step 1 — investment needed to hold capital constant.** If the stock is constant, firms only have to replace depreciated capital, so investment equals depreciation:
 
@@ -175,6 +172,9 @@ questions:
 
       > [!success] Answer — **$\tau_K \approx 29\%$; implied current investment $I = 70$ units.**
 
+      > [!tip] 🗣️ In plain English
+      > Keeping the capital stock steady means investment only has to cover wear and tear — **$I = \delta K = 70$**. Then the firm's rule (future MPK = user cost) has just one dial left to turn: the **tax rate**, which has to sit at about **29%** for firms to be happy holding exactly the capital they've already got.
+
       > [!note] Formula sheet — user cost = future MPK
       > This is the [[Macro Equation Sheet#Investment & the user cost of capital|investment rule]]: firms set $MPK^{f} = \dfrac{(1+r)p_k - (1-\delta)p_k^{f}}{1-\tau_K}$ (the user cost). Because "keep capital constant" fixes $K^{f} = K$, the only free variable is $\tau_K$, so you solve one equation for it. Investment then comes from the [[Macro Equation Sheet#Investment & the user cost of capital|capital-accumulation equation]] $K_{t+1} = (1-\delta)K_t + I_t$ with $K_{t+1} = K_t$, giving $I = \delta K$. See [[marginal-product-of-capital]], [[depreciation]], [[capital-accumulation-equation]].
     related_terms:
@@ -189,9 +189,6 @@ questions:
       An economy is at its goods-market equilibrium. Consumers and firms become **pessimistic about the future level of productivity**, believing it will be lower than usual starting next period. Describe the new goods-market equilibrium. In equilibrium, will consumption and investment change **in the same direction** (both up or both down)?
 
       *(Assume (i) no change in the labor market, and (ii) no government.)*
-
-      > [!tip] 🗣️ In plain English
-      > Everyone in the economy suddenly believes **tomorrow will be worse** — productivity, and hence incomes and profits, will be lower next period — and you have to trace what that gloom does *today*. Think through the two sides of the market for saving separately: how households who like to **smooth their spending over time** react to expecting lower future income (the saving curve), and how firms expecting less productive machines react (the investment curve). Then combine the two shifts to describe the new equilibrium interest rate, and use the economy's budget ($Y = C + I$ with output fixed in the short run) to decide whether consumption and investment can move together or must trade off.
     solution: |
       Analyse the **saving ($S$) curve** and the **investment ($I$) curve** in isolation, then combine.
 
@@ -204,6 +201,9 @@ questions:
       **Consumption vs. investment.** Output is fixed by the production function ($A$, $K$, $N$ all fixed in the short run), so it does not change. With no government, $Y = C + I$; since $Y$ is constant, any rise in $C$ must be matched by a fall in $I$. Therefore **consumption and investment move in opposite directions** — here $C$ rises and $I$ falls.
 
       > [!success] Answer — **The real interest rate falls; consumption and investment move in opposite directions** (current consumption rises, investment falls). The change in the level of $S$ and $I$ is ambiguous.
+
+      > [!tip] 🗣️ In plain English
+      > Gloomy households spend more *now* to soften the coming pain (**saving shifts right**); gloomy firms see less payoff from machines (**investment shifts left**). Both shifts drag the **interest rate down for certain**, but they fight over the quantities. And since output can't move in the short run, $Y = C + I$ forces **consumption up and investment down — opposite directions**.
 
       > [!tip] Two curves, opposite shifts → price certain, quantities ambiguous
       > When the $S$ and $I$ curves shift in opposite directions the price (here the real rate) is pinned down but the quantities are not. The clean anchor for the last part is the resource constraint $Y = C + I$: with $Y$ fixed, whatever leaves investment shows up as consumption. See [[business-cycles]], [[consumption-smoothing]], [[real-interest-rate]], [[marginal-product-of-capital]].
@@ -231,12 +231,6 @@ questions:
 
       **(a)** Compute the **growth rate of PPP GDP per capita** for each country. *(4 pts)*
       **(b)** If these growth rates persist forever, will the **poorer country ever catch up** with the richer one? (Explain, no calculation needed.) *(2 pts)*
-
-      > [!tip] 🗣️ In plain English
-      > Comparing living standards across countries is meaningless in raw local currency — the same basket of goods costs different amounts in different places — so you first convert each country's GDP into **comparable "US-price" units** (that's the PPP adjustment), then put it per person.
-      >
-      > - **(a) crunch the table:** for each country and each year, convert GDP to PPP terms, divide by population, then work out the percentage growth between the two years.
-      > - **(b) the race:** given who's currently poorer and who's growing faster, reason (no maths) about whether the gap eventually closes if these growth rates never change.
     solution: |
       **(a) PPP GDP per capita.** The PPP formula converts local-currency GDP to a common (US-price) basis:
 
@@ -253,7 +247,13 @@ questions:
 
       $$g^A = \frac{2{,}424}{1{,}800} - 1 \approx 34.68\%, \qquad g^B = \frac{2{,}963}{2{,}550} - 1 \approx 16.19\%$$
 
+      > [!tip] 🗣️ In plain English
+      > Strip out local prices, re-price everything at **US prices**, then divide by heads. On that common yardstick country $A$'s living standard grew about **34.7%** and country $B$'s about **16.2%**.
+
       **(b) Catch-up.** Country $A$ is **poorer in both years** ($1{,}800 < 2{,}550$ and $2{,}424 < 2{,}963$) but **grows faster** ($34.68\% > 16.19\%$). Since the poorer economy compounds at a higher rate, it will eventually **catch up with — and overtake — the richer country $B$**.
+
+      > [!tip] 🗣️ In plain English
+      > $A$ is behind but running nearly twice as fast. Keep compounding at a higher rate and the gap must close — **the poorer country catches up and eventually overtakes**.
 
       > [!success] Answer — **$g^A \approx 34.68\%$, $g^B \approx 16.19\%$; yes, the poorer country ($A$) catches up because it grows faster.**
 
@@ -282,22 +282,15 @@ questions:
       4. Suppose $\beta$ is unexpectedly **lower**. Effects on current consumption and current saving? Show mathematically and explain. *(5 pts)*
       5. Describe the new short-run **goods-market equilibrium**: does the $S$ curve shift? the $I$ curve? what is the resulting equilibrium? *(6 pts)*
       6. In a typical recession GDP, consumption **and** investment all fall. **(a)** Does the model generate this in the short run from a $\beta$ shock? *(2 pts)* **(b)** What happens to future capital and output? *(3 pts)*
-
-      > [!tip] 🗣️ In plain English
-      > The big question: if people suddenly become **more impatient** (a lower $\beta$ means they care less about tomorrow), does that actually produce a recession? You test the claim by grinding through the standard two-period consumer problem and then checking the model's prediction against what real recessions look like.
-      >
-      > - **(1) set up:** write down what the consumer maximises (lifetime happiness from spending in both periods), what limits them (the lifetime budget), and what they get to choose.
-      > - **(2) solve:** use the **Euler equation** — the rule linking today's and tomorrow's spending — plus the budget to get explicit formulas for consumption in each period.
-      > - **(3) saving:** saving is just income minus spending today, so express that.
-      > - **(4) impatience shock:** if $\beta$ falls, show which way today's consumption and saving move, both from the formula and in words.
-      > - **(5) whole-economy effect:** feed that household behaviour into the goods market — which of the saving and investment curves shifts, and what happens to the interest rate?
-      > - **(6) reality check:** real recessions have GDP, consumption *and* investment all falling — does this model's short run match that pattern, and what does the shock do to the economy further down the road?
     solution: |
       **Part 1 — the optimization problem.** Maximise discounted lifetime utility subject to the lifetime budget constraint:
 
       $$\max_{c_0, c_1}\ \frac{c_0^{\,1 - \frac{1}{\sigma}}}{1 - \frac{1}{\sigma}} + \beta\,\frac{c_1^{\,1 - \frac{1}{\sigma}}}{1 - \frac{1}{\sigma}} \qquad \text{s.t.}\quad c_0 + \frac{1}{1+r}c_1 = y_0 + \frac{1}{1+r}y_1$$
 
       The **choice variables are $c_0$ and $c_1$**.
+
+      > [!tip] 🗣️ In plain English
+      > The set-up in one line: pick spending now ($c_0$) and later ($c_1$) to make yourself happiest, with the pot fixed at the **present value of lifetime income** $y_0 + \frac{y_1}{1+r}$.
 
       **Part 2 — solve with the Euler equation.** The marginal utility here is $u'(c_t) = c_t^{-1/\sigma}$. Plug both periods into the Euler equation $u'(c_0) = \beta(1+r)u'(c_1)$:
 
@@ -313,6 +306,9 @@ questions:
 
       $$c_1 = \beta^{\sigma}(1+r)^{\sigma}c_0 = \frac{\beta^{\sigma}(1+r)^{\sigma}}{1 + \beta^{\sigma}(1+r)^{\sigma-1}}\left(y_0 + \frac{1}{1+r}y_1\right)$$
 
+      > [!tip] 🗣️ In plain English
+      > The **Euler equation** links tomorrow's spending to today's; feed that into the budget and today's consumption comes out as a fixed **fraction of lifetime wealth** — a fraction that shrinks the more patient the consumer is.
+
       **Part 3 — current saving.** Saving is income minus consumption, $s_1 = y_0 - c_0$:
 
       $$s_1 = y_0 - \frac{1}{1 + \beta^{\sigma}(1+r)^{\sigma-1}}\left(y_0 + \frac{1}{1+r}y_1\right)$$
@@ -321,7 +317,13 @@ questions:
 
       $$s_1 = \left(1 - \frac{1}{1 + \beta^{\sigma}(1+r)^{\sigma-1}}\right)y_0 - \frac{1}{1 + \beta^{\sigma}(1+r)^{\sigma-1}}\times \frac{1}{1+r}\,y_1$$
 
+      > [!tip] 🗣️ In plain English
+      > Saving is simply the income you don't spend: **$s_1 = y_0 - c_0$**, with the $c_0$ from part 2 plugged straight in.
+
       **Part 4 — a lower $\beta$.** In the denominator of $c_0$ the term $\beta^{\sigma}$ is **increasing in $\beta$** (since $\sigma > 0$). So a **lower $\beta$ shrinks the denominator, raising $c_0$**. Current income is unchanged, so with $s_1 = y_0 - c_0$, **current saving falls**. Intuitively, a lower $\beta$ means the consumer is **less patient** — they put less relative weight on future utility — so they shift consumption toward the present, consuming more now and saving less.
+
+      > [!tip] 🗣️ In plain English
+      > A **lower $\beta$ means less patience**: the consumer front-loads life, so **$c_0$ rises and saving falls**. You can read it straight off the algebra — $\beta^{\sigma}$ sits in the denominator of $c_0$, so shrinking it pumps consumption up.
 
       **Part 5 — new goods-market equilibrium.** Take each curve:
 
@@ -330,10 +332,16 @@ questions:
 
       With $S$ shifting left against a fixed $I$ curve, the **new equilibrium has a higher real interest rate and lower $S$ and $I$**. (The lower investment comes purely from the equilibrium adjustment: as $r$ rises, firms move *up along* the unchanged $I$ curve.)
 
+      > [!tip] 🗣️ In plain English
+      > Impatient households save less at every interest rate, so the **$S$ curve shifts left**; the $I$ curve doesn't care about $\beta$ and stays put. The new equilibrium has a **higher interest rate** and **less saving and investment**.
+
       **Part 6 — contrast with the data.**
 
       - **(a)** In the short run output $Y$ is **constant** (none of $A$, $K$, $N$ change), consumption is **higher**, and investment is **lower**. A real recession has all three *falling*, so the model **fails** to reproduce the recession pattern from a $\beta$ shock — GDP doesn't fall and consumption moves the wrong way.
       - **(b)** In the **future** period, the lower period-0 investment leaves a **lower capital stock**, which (with $A$ and $N$ unchanged) produces **lower future output**.
+
+      > [!tip] 🗣️ In plain English
+      > The punchline: an impatience shock leaves GDP flat and pushes consumption *up*, while a real recession has all three **falling** — so the story **fails in the short run**. The damage arrives later: less investment today means **less capital and lower output tomorrow**.
 
       > [!success] Answer — **A lower $\beta$ raises $c_0$ and lowers saving, pushing the real rate up and investment down, but leaves output up/flat and consumption higher in the short run — so the "recessions come from lower discount factors" story fails to match the data (though future capital and output do fall).**
 
@@ -361,14 +369,6 @@ questions:
          **(b)** Now let labor demand be standard so the **wage adjusts**. Is there a new equilibrium wage? How does it change revenue relative to (a)? Explain all sources of difference. *(5 pts)*
          **(c)** Use this to explain why the revenue-maximizing tax rate is **neither 0% nor 100%**. *(3 pts)*
       4. Now suppose new tax revenue is **invested in useful projects that immediately raise TFP** (instead of being thrown away). Is the revenue-maximizing tax rate **lower or higher** than before? Explain the labor-market differences. *(6 pts)*
-
-      > [!tip] 🗣️ In plain English
-      > This is the **Laffer curve** question: if the government hikes the tax on wages, does it actually collect more money — or do people work so much less that revenue shrinks? ($\tau_N$ is the slice taken from each pound of wages; $\psi$ controls how strongly workers cut hours when the take-home wage falls.)
-      >
-      > - **(1) how much do people work?** derive the formula for hours worked from the worker's optimality condition — showing that a bigger tax bite means fewer hours.
-      > - **(2) the government's take:** revenue is just the tax rate times total wages paid, so write that out using your answer to (1).
-      > - **(3) raise or cut the tax?** (a) holding the wage fixed, work out whether raising $\tau_N$ definitely raises revenue — there's a tug-of-war between taking a bigger slice and shrinking the pie; (b) let the wage respond via labour demand and ask how that changes the picture; (c) use the logic to explain why the revenue-maximising rate can't be at either extreme.
-      > - **(4) spend it well:** if the tax money is ploughed into projects that make workers more productive, does the revenue-maximising tax rate move up or down, and what's different in the labour market?
     solution: |
       **Part 1 — derive labor supply.** The general static optimality condition is $-U_N = \frac{1 - \tau_N}{1 + \tau_C}\,wU_C$. With only a labor income tax ($\tau_C = 0$) this is $-U_N = (1 - \tau_N)wU_C$. Take the derivatives of $U = \ln\!\left(C - \frac{1}{\psi+1}N^{\psi+1}\right)$:
 
@@ -380,9 +380,15 @@ questions:
 
       (This utility form is the classic "no wealth/income effect on labor supply" case — the lump-sum tax $T$ drops out of the labor-supply decision.)
 
+      > [!tip] 🗣️ In plain English
+      > Plug the utility into the static FOC and the messy log term **cancels clean out**, leaving $N = [(1-\tau_N)w]^{1/\psi}$. This utility has **no income effect** on hours — even the lump-sum tax vanishes from the labour choice.
+
       **Part 2 — tax revenue.** Revenue is the tax rate times the total wage bill, $\tau_N \times w \times N$:
 
       $$\text{Tax Revenue} = \tau_N\, w\, N = \tau_N\, w\,(1 - \tau_N)^{\frac{1}{\psi}} w^{\frac{1}{\psi}} = \tau_N\,(1 - \tau_N)^{\frac{1}{\psi}}\, w^{\,1 + \frac{1}{\psi}}$$
+
+      > [!tip] 🗣️ In plain English
+      > Revenue is just the **tax rate times the wage bill** — $\tau_N \times wN$ — with the part-1 labour-supply formula substituted in for $N$.
 
       **Part 3(a) — wage fixed.** Look at how revenue depends on $\tau_N$. The factor $\tau_N$ is **increasing** in $\tau_N$, but the factor $(1 - \tau_N)^{1/\psi}$ is **decreasing** in $\tau_N$ (since $\psi > 0$). These pull in opposite directions, so **you cannot sign the effect with certainty**. Economically: raising $\tau_N$ lets the government take a **larger fraction of the wage bill**, but the higher tax **lowers labor supply**, so the total wage bill being taxed shrinks. Whether revenue rises or falls depends on which effect dominates.
 
@@ -393,7 +399,13 @@ questions:
 
       **Part 3(c) — why the optimum is interior (not 0% or 100%).** Plug in the extremes: at **$\tau_N = 0\%$** revenue is zero (no tax); at **$\tau_N = 100\%$** revenue is also zero (labor supply collapses to zero — no one works for zero net wage). For any rate strictly between, revenue is positive. As you raise $\tau_N$ from 0, revenue **rises as long as labor doesn't fall too much**, but past some point the labor-supply contraction dominates and revenue **falls**. Hence the revenue-maximizing rate is **strictly between 0% and 100%** — this is the Laffer-curve logic.
 
+      > [!tip] 🗣️ In plain English
+      > This is the **Laffer curve**. With the wage frozen, a higher rate grabs a bigger slice of a shrinking pie — direction ambiguous. Let the wage rise in equilibrium and revenue fares **better** (bigger wage bill, and workers crawl back up the supply curve). And the extremes both raise **nothing** — 0% taxes nothing, at 100% nobody works — so the best rate sits strictly in between.
+
       **Part 4 — revenue recycled into TFP.** The revenue-maximizing tax rate is now **higher**. When tax proceeds raise **TFP ($A$)**, the **marginal product of labor rises**, shifting the **labor-demand curve right**. This **partially offsets** the leftward shift in labor supply caused by the tax. As a result the drop in equilibrium labor is **smaller** than before and the rise in the wage is **larger**, so the tax base holds up better as $\tau_N$ increases — pushing the revenue-maximizing rate **up** relative to the "thrown-away revenue" case.
+
+      > [!tip] 🗣️ In plain English
+      > If the tax money buys **higher TFP**, workers become more productive and labour demand shifts right — cushioning the blow from the tax. The tax base survives higher rates, so the **revenue-maximising rate rises**.
 
       > [!success] Answer — **$N = (1-\tau_N)^{1/\psi}w^{1/\psi}$; revenue $= \tau_N(1-\tau_N)^{1/\psi}w^{1+1/\psi}$; with the wage fixed the direction is ambiguous (Laffer trade-off), and letting the wage adjust makes higher $\tau_N$ more favourable; the revenue-maximizing rate is interior (0% and 100% both give zero); recycling revenue into TFP raises the revenue-maximizing tax rate.**
 
