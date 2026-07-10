@@ -147,6 +147,9 @@
     background-repeat: no-repeat;
     background-position: 0 88%;
     transition: background-size 0.18s ease, color 0.18s ease;
+    /* long bare URLs have no break opportunities and would widen the page on
+       narrow viewports — allow breaking anywhere as a last resort */
+    overflow-wrap: anywhere;
   }
   .lecture-prose a:not(.tag):hover,
   .paper-prose a:not(.tag):hover,
