@@ -115,6 +115,17 @@ questions:
 
       Utility: $U(c_0, c_1, c_2) = \ln(c_0) + \beta\ln(c_1) + \beta^2\ln(c_2)$
 
+      > [!tip] 🗣️ In plain English
+      > A person lives for **three periods** with a lumpy income — low, then high, then low (think: youth, prime working years, retirement). The whole question is: how do they choose to spend so life feels **smooth** rather than feast-then-famine?
+      >
+      > - **Q1.1 (the shape):** The income pattern (100, 300, 25) is the classic **life-cycle hump** — poor when young, rich in your prime, poor again in retirement.
+      > - **Q1.2 (equal spending?):** Do they want the *same* amount every period? **Yes** — their impatience exactly cancels the reward from saving ($\beta(1+r)=1$), so they smooth perfectly.
+      > - **Q1.3 (lifetime resources):** Add up all their income in **today's money** — about **412**.
+      > - **Q1.4 (the plan):** Split that evenly across the three periods → consume about **143** each period.
+      > - **Q1.5 (saving):** Saving is just income minus what they consume: they **borrow when young**, **save hard** in the prime years, and **run it down** in retirement.
+      > - **Q1.6 (wealth over time):** Wealth starts at zero, dips into **debt**, climbs to a **peak**, then falls back to zero at the end — the "wealth hump."
+      > - **Q1.7 (a more patient person):** A second person who values the future more (higher $\beta$) consumes a bit **less now** and **more later** — a gently *rising* path instead of a flat one.
+
       ---
 
       ### Q1.1 — What life-cycle does this income pattern represent?
@@ -267,6 +278,16 @@ questions:
       **Setup:** 2 periods (0 and 1). Discount factor $0 < \beta < 1$. Income $y_0$ (period 0), $y_1$ (period 1). No initial assets: $a_0 = 0$. Utility each period: $u(c) = \ln(c)$. Real interest rate $r > 0$.
 
       Objective: $\max_{c_0, c_1} \left\{\ln(c_0) + \beta\ln(c_1)\right\}$
+
+      > [!tip] 🗣️ In plain English
+      > Same two-period spending choice as Q1, but now solved with **letters instead of numbers** — the goal is a set of general formulas you can reuse for any income, patience, or interest rate.
+      >
+      > - **Q2.1 (the rule):** Write down the "you can't spend more than your lifetime resources" constraint.
+      > - **Q2.2–2.3 (the machinery):** Set up the standard optimisation tool (the Lagrangian) and take derivatives to get the first-order conditions — the maths that finds the best plan.
+      > - **Q2.4 (Euler equation):** Combining those gives $c_1=\beta(1+r)c_0$ — a simple rule that just says whether your spending should **rise, fall, or stay flat** over time.
+      > - **Q2.5 (the answer):** It boils down to a clean rule: **spend a fixed fraction $\tfrac{1}{1+\beta}$ of your lifetime resources today**, the rest later.
+      > - **Q2.6 (saving):** Saving is whatever's left of *today's* income after that spending.
+      > - **Q2.7 (the reactions):** More patient → **save more**; richer today → **save more** (spread the windfall); richer *tomorrow* → **save less / borrow** (lean on future income). Key takeaway: you only save *part* of any extra income — the marginal propensity to consume is **less than 1**, unlike the naive view.
 
       ---
 

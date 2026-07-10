@@ -34,6 +34,11 @@ questions:
       A rating agency (Moody's) forecasts that Israel's government debt ratio will rise to a peak of about **67% of GDP by 2025**, up from **60% in 2022** — whereas before the war it had expected the debt burden to *decline* towards **55% of GDP**.
 
       Using the short model for the evolution of the debt-to-GDP ratio studied in class, explain how each of the three contributing factors — the **primary deficit $d$**, the **growth rate $g$**, and the **interest rate $r$** — can be affected by the war in a way that is qualitatively consistent with this forecast.
+
+      > [!tip] 🗣️ In plain English
+      > Moody's now expects Israel's debt (measured against the size of the economy) to climb instead of fall, and your job is to explain *why* a war would do that, using the class formula for how the debt ratio evolves.
+      >
+      > That formula says the debt burden grows through three channels: the **primary deficit $d$** — how much the government overspends before interest — the **growth rate $g$** of the economy, and the **interest rate $r$** it pays on its debt. For each of the three, tell a believable story about how a war pushes it in a debt-raising direction.
     solution: |
       This is a "discussed-in-class" reasoning question built on the debt-dynamics equation. The ratio rises ($\Delta b > 0$) if the primary deficit rises, growth falls, or the interest rate rises. Start from the equation and read off the sign of each channel:
 
@@ -63,6 +68,11 @@ questions:
       There are **10,000,000** people in the labor force, of whom **600,000** are currently unemployed. The monthly **job-finding probability is $f = 35\%$** and the monthly **job-separation probability is $d = 3\%$**.
 
       How many workers will be employed next month? Is the economy in its steady state in the current period? In the next period?
+
+      > [!tip] 🗣️ In plain English
+      > You're tracking people flowing between "has a job" and "looking for one" from month to month, given the chance an unemployed person finds work ($f$) and the chance an employed person loses their job ($d$).
+      >
+      > First count next month's employed: take this month's workers, subtract the ones who get separated, and add the job-seekers who get hired. Then check for a **steady state** — the situation where the flows in and out of employment exactly cancel, so the numbers stop changing. Compare what you see with what the steady-state formula says.
     solution: |
       **Step 1 — current employment.** The labor force is $10{,}000{,}000$ and $600{,}000$ are unemployed, so
 
@@ -96,6 +106,11 @@ questions:
       A research assistant collects data on investment, the **current price of capital $p_K$**, and the **future price of capital $p_K^{f}$**, for firms that behave according to the investment model studied in class. The assistant plots investment against each price but forgets to label the two lines (one solid, one dashed).
 
       Which line describes investment vs. the **current** price of capital, and which describes investment vs. the **future** price of capital? Explain, and describe the economic interpretation of each price's effect on capital accumulation.
+
+      > [!tip] 🗣️ In plain English
+      > Someone plotted how much firms invest against two different machine prices — what a machine costs **today** ($p_K$) and what it will be worth **in the future** ($p_K^{f}$) — but forgot to label which line is which, and you have to sort it out.
+      >
+      > The key is that both prices feed into the **user cost of capital** — the effective cost of owning a machine for one period, counting what you pay now against what you can resell it for later. Work out whether a dearer machine today makes buying more or less attractive, do the same for a higher future resale value, and match each slope to its price.
     solution: |
       In the investment model, investment is higher when the chosen future capital stock $K^{f}$ is higher, and $K^{f}$ is chosen so that the **future marginal product of capital equals the user cost**. Both prices enter through the **user cost**, not the marginal product:
 
@@ -124,6 +139,11 @@ questions:
       An economy has production function $Y_t = A_t K_t^{\alpha} + N_t^{1-\alpha}$ (note the **additive** form). A ministry economist claims that encouraging permanent productivity ($A$) improvements will, already in the short run, deliver **more output, more investment, and stronger labor demand**. A news commentator agrees about output and investment but doubts the labor-demand claim.
 
       Do you agree about output and investment? What about labor demand? Explain.
+
+      > [!tip] 🗣️ In plain English
+      > A government economist claims a lasting productivity boost is good news on three fronts — more output, more investment, and more hiring — while a commentator only buys two of the three, and you have to referee.
+      >
+      > The catch is the unusual **additive** production function: productivity $A$ multiplies only the capital term instead of the whole thing. So before siding with anyone, actually differentiate *this* function to see where $A$ shows up in the marginal product of capital (which drives investment) and the marginal product of labour (which drives hiring).
     solution: |
       Evaluate each claim using the production function and its marginal products. The key is that this production function is **additively separable**, so $A$ multiplies only the capital term.
 
@@ -147,6 +167,11 @@ questions:
     title: "Q5 — Inequality ratios (90/10, 90/50, 50/10) and polarization"
     text: |
       Among the measures of inequality, briefly explain what the **90/10**, **90/50**, and **50/10** ratios are (focus on wages). Then explain briefly what **"polarization in the labor market"** is, and how some of these ratios can indicate a process of polarization.
+
+      > [!tip] 🗣️ In plain English
+      > A definitions question about measuring the wage gap with **percentile ratios** — comparing what a high earner, the middle earner, and a low earner take home.
+      >
+      > Explain what each ratio (90/10, 90/50, 50/10) compares — top vs bottom, top vs middle, middle vs bottom of the pay ladder — then describe **polarization** (what's happening to jobs at the two ends versus the middle) and say which of the ratios would move, and in which direction, if it were under way.
     solution: |
       This is an empirical / "discussed-in-class" question — no formula, just the stylized definitions.
 
@@ -185,6 +210,11 @@ questions:
       | 2023 | Industrial Robots | 101 | 450 |
 
       Compute inflation from the **GDP deflator** and from the **CPI** (2022 base / fixed 2022 basket). Is there a difference? If so, why?
+
+      > [!tip] 🗣️ In plain English
+      > Two rival ways of measuring inflation get set loose on the same economy: the **GDP deflator** tracks the prices of *everything* the country produces, while the **CPI** tracks the price of a fixed shopping basket that consumers actually buy.
+      >
+      > The twist is the robots — they're produced but never consumed, so one measure counts them and the other ignores them. Work out each consumer's basket (1,000 identical people splitting the pasta and tomatoes), compute both inflation numbers, and think about what the robot prices do to each measure.
     solution: |
       **GDP deflator** (2022 base). The deflator is $\dfrac{\text{Nominal GDP}}{\text{Real GDP}}$, where nominal GDP sums current prices × current quantities across **all** goods (robots included), and real GDP uses 2022 prices.
 
@@ -229,6 +259,15 @@ questions:
       1. Fill in **Total Labor** (total hours) and **implied TFP** (10 pts).
       2. Using the standard labor-market model: **(a)** if TFP shocks are perceived as *temporary*, what is the short-run effect of a **negative** TFP shock on labor-market equilibrium (employment, wages) and GDP? (6 pts) **(b)** Comparing 2008-vs-2007 and 2009-vs-2008, are the model's predictions consistent with the data? (3 pts) **(c)** Name two other factors (one demand-side, one supply-side) that could reconcile the model with the data (7 pts).
       3. In the investment model, if firms *expected* these TFP changes, is the observed capital-stock path consistent with the model? (6 pts)
+
+      > [!tip] 🗣️ In plain English
+      > You're playing detective with real UK data from around the 2008 financial crisis: first back out productivity from the raw numbers, then test whether the class models can actually explain what happened.
+      >
+      > - **(1) Fill the table:** total labour is just workers × average hours; **TFP** (productivity) is the leftover — whatever part of GDP capital and labour can't account for — so rearrange the production function to solve for $A$.
+      > - **(2a) Model prediction:** if a bad productivity shock is seen as a short-lived blip, what does the labour-market diagram say should happen to jobs, wages, and GDP?
+      > - **(2b) Reality check:** compare that prediction with the actual year-on-year moves for 2008 and 2009 — does the data behave as the model says?
+      > - **(2c) Patch the model:** suggest one demand-side force and one supply-side force that could explain any mismatch you found.
+      > - **(3) Investment check:** if firms saw these productivity changes coming, does the way the capital stock actually moved fit the investment model's prediction?
     solution: |
       ### Part 1 — Total labor and TFP
 
@@ -299,6 +338,15 @@ questions:
       3. Show $c_0 = \dfrac{1}{1+\tau_0}\dfrac{1}{1+\beta}\left(y_0 + \dfrac{y_1}{1+r}\right)$ (4 pts).
       4. The government raises $\tau_0$, effective immediately. What happens to $c_0$? Explain mathematically and intuitively (2 pts).
       5. Effect on aggregate saving and goods-market equilibrium (assume period-0 production $A,K,N$ unchanged): **(a)** what happens to consumption expenditure $(1+\tau_0)c_0$ and to private saving? (6 pts) **(b)** government tax revenue and government saving, if $G$ rises with revenue in period 0 vs. period 1 (6 pts). **(c)** the new goods-market equilibrium for one of those scenarios (5 pts).
+
+      > [!tip] 🗣️ In plain English
+      > A classic "spend now vs save for later" problem — a consumer splitting spending between today ($c_0$) and tomorrow ($c_1$) — with a twist: a VAT-style **consumption tax** ($\tau_0$ today, $\tau_1$ tomorrow) makes every unit of consumption cost a bit extra.
+      >
+      > - **(1) Set up the maths:** write the **Lagrangian** (the standard tool for maximising utility subject to a budget) and take the first-order conditions.
+      > - **(2) Euler equation:** combine those conditions into the rule that links today's and tomorrow's consumption.
+      > - **(3) Solve:** grind out an explicit formula for today's consumption $c_0$.
+      > - **(4) Tax hike:** if the government raises today's tax rate, what happens to how much the consumer buys now — and what's the intuition?
+      > - **(5) Big picture:** trace the knock-on effects — total consumer *spending* (price × quantity, tax included) and private saving, then the government's budget under two timing choices for spending the extra revenue, and finally what all that does to the saving–investment equilibrium.
     solution: |
       ### Part 1 — Lagrangian and FOCs
 

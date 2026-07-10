@@ -37,6 +37,11 @@ questions:
       | 2 | 2 | 1,000 | 1 |
 
       Economist A says capital explains most of the GDP gap (country 1 has $8\times$ the capital). Economist B says TFP differences contribute much more. Who is right?
+
+      > [!tip] 🗣️ In plain English
+      > Two countries build output from the same recipe, and you're refereeing an argument about *why* country 1 is richer — its bigger pile of machines ($K$) or its better technology ($A$, the **TFP** term, roughly "how cleverly inputs get turned into output").
+      >
+      > The key notation: capital enters as $K^{1/3}$, so machines don't feed through one-for-one — the exponent shrinks their punch. Take the **ratio** of the two countries' outputs and see how much of the gap each ingredient actually accounts for before siding with either economist.
     options:
       - label: "1"
         text: |
@@ -83,6 +88,11 @@ questions:
     title: "Q2 — Immigration and the demand for robots"
     text: |
       Firms produce $Y = A K^{\alpha}[R + N]^{1-\alpha}$ with capital $K$ fixed in the short run, competitive wages, and a positive number of robots $R$. Immigration raises the supply of workers (new workers identical to residents); the price of robots is constant. Short-run effect on the demand for robots?
+
+      > [!tip] 🗣️ In plain English
+      > A wave of new workers arrives — do firms now want more robots, fewer, or the same?
+      >
+      > The tell is in the brackets: robots $R$ and workers $N$ are lumped together as $[R+N]$, i.e. the firm just counts "bodies doing the work" without caring which kind. Since the robot price is fixed, robot demand hangs entirely on the **marginal product of robots** (what one extra robot adds to output) — so work out what extra workers do to that.
     options:
       - label: "1"
         text: |
@@ -131,6 +141,11 @@ questions:
     title: "Q3 — Labor income tax with log-power utility"
     text: |
       Workers have $U(C,N) = \ln(C) - \theta\dfrac{N^{1+\psi}}{1+\psi}$ and budget constraint $C = (1-\tau_N)wN$ (labor income tax is the only tax). How does an increase in $\tau_N$ affect optimal labor supply?
+
+      > [!tip] 🗣️ In plain English
+      > The government takes a bigger slice of your wage — do you work more, less, or the same?
+      >
+      > Decoding the setup: $\ln(C)$ is how much you enjoy consumption, the $\theta N^{1+\psi}$ bit is how much you hate working, and $(1-\tau_N)w$ is your **take-home wage** after tax. Write the optimality condition (marginal pain of work = marginal value of the extra pay), plug in the budget constraint, and see whether $\tau_N$ survives into the answer.
     options:
       - label: "1"
         text: |
@@ -181,6 +196,11 @@ questions:
     title: "Q4 — Emigration: GDP, GNP and NFP"
     text: |
       Ukrainian workers leave Ukraine (not replaced) and take jobs abroad at the same wage they earned at home. What happens to Ukrainian **GDP**, **GNP** and **Net Factor Payments (NFP)**?
+
+      > [!tip] 🗣️ In plain English
+      > Workers move abroad but keep earning the same money — you're tracking which national accounts move and which don't.
+      >
+      > The jargon: **GDP** counts what's produced *inside* the country's borders (location); **GNP** counts what the country's *nationals* earn wherever they happen to be (passport); **NFP** is the bridge between the two — income flowing in from citizens abroad minus income flowing out to foreigners at home. Work through each one for the emigration scenario.
     options:
       - label: "1"
         text: |
@@ -227,6 +247,11 @@ questions:
     title: "Q5 — Unemployment rate from participation data"
     text: |
       Population $=5{,}000{,}000$; employed $=4{,}000{,}000$; not-employed $=1{,}000{,}000$; labor-force participation rate $=85\%$. The unemployment rate is:
+
+      > [!tip] 🗣️ In plain English
+      > A definitions workout: turn raw headcounts into the official unemployment rate.
+      >
+      > Careful with the wording — "not employed" just means "without a job", which lumps together the **unemployed** (jobless *and* looking) with people outside the **labour force** entirely (students, retirees, people not looking). The unemployment rate only counts the first group, measured against the labour force — and the 85% **participation rate** is what lets you work out how big that labour force is.
     options:
       - label: "1"
         text: |
@@ -286,6 +311,14 @@ questions:
       | 2024 | Machines | 125 | 180 |
 
       Find inflation from the **PCE deflator** and from the **CPI** (2023 basket).
+
+      > [!tip] 🗣️ In plain English
+      > Same price data, two different rulers: you're measuring inflation twice and seeing whether the rulers agree.
+      >
+      > - **PCE deflator:** compares what this year's *actual* shopping (this year's quantities) costs at today's prices versus at 2023 prices — the basket is allowed to change.
+      > - **CPI:** freezes the 2023 shopping basket and asks how much *that exact basket* costs each year.
+      >
+      > One catch to spot yourself: both are *consumer* measures, and the question tells you what consumers actually buy — so think about which products belong in the calculation at all.
     options:
       - label: "1"
         text: |
@@ -343,6 +376,11 @@ questions:
     title: "Q7 — Backing out depreciation and investment from the investment rule"
     text: |
       Data: at $t$, $(N,K,Y)=(1000,100,100)$; at $t{+}1$, $(1050,105,120)$. Production $Y=A_tK_t^{0.3}N_t^{0.7}$; real rate $r=2\%$; capital tax $\tau_K=10\%$; price of capital constant at $10$. Capital at $t{+}1$ was chosen optimally (firms knew $A_{t+1}$). Find depreciation $\delta$ and investment $I_t$.
+
+      > [!tip] 🗣️ In plain English
+      > You're playing detective: from data on workers, machines and output across two years, back out two hidden numbers — $\delta$ (**depreciation**, how fast machines wear out each year) and $I_t$ (**investment**, how many new machines were bought).
+      >
+      > The phrase "chosen optimally" is the crucial clue: it means firms set the **marginal product of capital** (what one more machine adds to output) equal to the **user cost** (what holding a machine effectively costs, including interest, wear-and-tear and the capital tax). That equation contains $\delta$ as its only unknown — and once you have $\delta$, the capital-accumulation relation links this year's machines, next year's machines, and investment.
     options:
       - label: "1"
         text: |
@@ -397,6 +435,11 @@ questions:
     title: "Q8 — Efficient labor allocation across firms"
     text: |
       Two firms, $Y_i = A_i K_i^{\alpha}N_i^{1-\alpha}$. Labor is fully mobile; capital is fixed at each firm with $K_1 > K_2$; TFP is equal, $A_1 = A_2$. In the efficient allocation:
+
+      > [!tip] 🗣️ In plain English
+      > Workers can move freely between two firms, but each firm's machines are bolted to the floor — how should the workers be split so total output is as big as possible?
+      >
+      > "Efficient" here has a precise meaning: you can't gain output by shifting one worker from one firm to the other. That happens when a worker's **marginal product** (the extra output they'd generate) is the same at both firms. Set those equal and see what it implies for who employs more people and for each firm's capital-per-worker ratio $K/N$.
     options:
       - label: "1"
         text: |
@@ -447,6 +490,11 @@ questions:
     title: "Q9 — Liquidity constraints and the MPC across the income distribution"
     text: |
       The empirical findings discussed in class on liquidity constraints across the income distribution indicate that:
+
+      > [!tip] 🗣️ In plain English
+      > A "what did the data say" question — no maths, just the stylised facts from class.
+      >
+      > Translating the jargon: **liquidity constrained** means you can't borrow (or dip into savings) to keep spending steady when money's tight; the **MPC** (marginal propensity to consume) is how much of an extra pound landing in your account you'd actually spend rather than save. The question is asking *who* tends to be constrained across the income ladder, and what that does to spending behaviour.
     options:
       - label: "1"
         text: |
@@ -489,6 +537,11 @@ questions:
     title: "Q10 — PPP-adjusted GDP growth"
     text: |
       You measure Israel's PPP-adjusted GDP in current US dollars between $t$ and $t{+}1$. Assume: in Israel, inflation $=$ nominal-GDP growth; in the US, inflation was positive; GDP reflects the same basket in both countries. PPP-adjusted GDP in Israel:
+
+      > [!tip] 🗣️ In plain English
+      > **PPP-adjusted GDP** is a way of comparing countries fairly: instead of converting Israel's GDP at the market exchange rate, you value its real output at *US prices* — so it depends on two moving parts, Israel's real output and the US price level.
+      >
+      > The assumptions are doing the work here: "inflation = nominal-GDP growth" in Israel pins down what one of those parts is doing, and "US inflation positive" pins down the other. Split the PPP formula into those two pieces and track each between $t$ and $t{+}1$.
     options:
       - label: "1"
         text: |
@@ -538,6 +591,11 @@ questions:
     title: "Q11 — Two-period consumption with CRRA utility and the role of β"
     text: |
       Consumers live two periods with income $y_0, y_1 > 0$, no initial assets, utility $u(c_t) = \dfrac{c_t^{1-1/\sigma}}{1-1/\sigma}$ each period ($\sigma > 1$), discount factor $0<\beta<1$, real rate $r>0$. Which is correct?
+
+      > [!tip] 🗣️ In plain English
+      > A saving-and-spending problem over a two-period life: derive the formula for today's consumption $c_0$, then check what patience does to how a pay rise gets spent.
+      >
+      > The Greek letters decoded: $\beta$ is **patience** (how much you value tomorrow's consumption relative to today's), $\sigma$ is how willing you are to shift consumption between periods, and $r$ is the reward for waiting. The standard recipe: use the **Euler equation** to link $c_1$ to $c_0$, substitute into the lifetime budget constraint, solve for $c_0$ — then eyeball where $\beta$ sits in the formula to get the comparative static.
     options:
       - label: "1"
         text: |
@@ -588,6 +646,11 @@ questions:
     title: "Q12 — Forecasting the debt-to-GDP ratio"
     text: |
       Forecast next year's change in debt-to-GDP. Current ratio $b = 100\%$; planned primary deficit $d = 4\%$ of GDP; nominal rate $i = 5\%$; expected inflation $\pi^e = 3\%$. Also: 20 years ago real GDP $=10{,}000$, now $=18{,}000$, and future growth equals the 20-year average. Next year's ratio is about:
+
+      > [!tip] 🗣️ In plain English
+      > You're the finance ministry forecaster: given today's debt pile and spending plans, where does the **debt-to-GDP ratio** $b$ land next year?
+      >
+      > The symbols: $d$ is the **primary deficit** — how much the government overspends *before* counting interest; $i$ is the interest rate in cash terms and $\pi^e$ is expected inflation. The debt-dynamics formula wants the **real** interest rate and the growth rate, and the question deliberately hands you neither directly — you have to build $r$ from $i$ and $\pi^e$ (Fisher), and back out average growth $g$ from the 20-year GDP figures, before plugging in.
     options:
       - label: "1"
         text: |
@@ -642,6 +705,11 @@ questions:
     title: "Q13 — GDP per capita vs. welfare"
     text: |
       The empirical findings discussed in class on GDP per capita vs. broader welfare / standard-of-living measures indicate that:
+
+      > [!tip] 🗣️ In plain English
+      > Another "what did the data say" question: how well does **GDP per person** (average income) track how *well-off* people actually are?
+      >
+      > "Broader welfare measures" fold in things GDP ignores — leisure time, life expectancy, inequality, actual consumption. The question wants the empirical relationship between the two: how tightly they move together, and whether one is a decent stand-in for the other.
     options:
       - label: "1"
         text: |
@@ -684,6 +752,11 @@ questions:
     title: "Q14 — Permanent TFP shock: investment vs. labor demand"
     text: |
       Production $Y_t = A_t K_t^{\alpha} + N_t^{1-\alpha}$ (note the **additive** form). Goods and labor markets in equilibrium. $A$ rises permanently. In the short run:
+
+      > [!tip] 🗣️ In plain English
+      > Technology improves for good — which curves shift? You're tracing a permanent TFP rise through to firms' **investment demand** (appetite for new machines) and **labor demand** (willingness to hire at a given wage).
+      >
+      > Don't autopilot: the production function here is *additive* — a $K$ term **plus** an $N$ term — not the usual everything-multiplied Cobb-Douglas. So differentiate the function as written and check which marginal products $A$ actually shows up in before shifting any curves.
     options:
       - label: "1"
         text: |
@@ -729,6 +802,11 @@ questions:
     title: "Q15 — Slope of the labor-supply curve with CRRA utility"
     text: |
       Workers have $U(C,N) = \dfrac{C^{1-\sigma}}{1-\sigma} - \theta\dfrac{N^{1+\psi}}{1+\psi}$ ($\sigma>0,\ \sigma\neq1,\ \theta,\psi>0$) with budget $C = wN$. Which is correct?
+
+      > [!tip] 🗣️ In plain English
+      > When wages rise, do people work more or less? Two forces pull in opposite directions: the **substitution effect** (work is better paid, so work more) and the **income effect** (you're richer, so you can afford more leisure) — and here the curvature parameter $\sigma$ decides which one wins.
+      >
+      > Derive the labour-supply function: set the marginal pain of working equal to the marginal value of the wage, substitute $C = wN$, and solve for $N$ as a function of $w$. The sign of the exponent on $w$ tells you the slope — then match it to the right income-vs-substitution story.
     options:
       - label: "1"
         text: |
@@ -778,6 +856,11 @@ questions:
     title: "Q16 — Consumption tax financing a TFP-raising project"
     text: |
       Labor market in equilibrium; utility has **no income/wealth effect** on labor supply. Government raises the consumption tax $\tau_c$ and uses the proceeds on a productive project that raises TFP immediately and permanently. In the short run:
+
+      > [!tip] 🗣️ In plain English
+      > Two things happen to the labour market at once: a **consumption tax** rise (everything you buy gets dearer, which changes whether working an extra hour is worth it) and a **TFP boost** (workers become more productive, which changes what firms will pay for them). Your job is to shift the right curve for each shock and read off wage and employment.
+      >
+      > The "no income/wealth effect" assumption matters: normally feeling poorer from a tax would push people to work *more*, partly offsetting things — here that channel is switched off, so only the pure incentive effect of the tax hits labour supply.
     options:
       - label: "1"
         text: |
@@ -833,6 +916,11 @@ questions:
       | 3 | 3 | 6 |
 
       Capital productivity in task 2 rises from $\psi_K(2)=4$ to $8$. Hold prices fixed first; supply curves upward-sloping; task allocation fixed after prices adjust. Which is correct?
+
+      > [!tip] 🗣️ In plain English
+      > Production is a checklist of **tasks**, and each task gets done by whoever is cheaper per unit — humans (cost = wage $w$ divided by their productivity $\psi_N$) or machines (cost = rental $r$ divided by $\psi_K$). Machines just got twice as good at task 2, so first re-run the cost comparison for that task at the old prices.
+      >
+      > Then translate into the course jargon: a **productivity effect** is a task getting cheaper to produce; a **displacement effect** is a task moving from workers to machines (a **reinstatement effect** is the reverse). Work out which effects fire, and what they do to factor demands, the wage and the rental rate.
     options:
       - label: "1"
         text: |
@@ -880,6 +968,11 @@ questions:
     title: "Q18 — Interest-rate rise with log utility and only initial assets"
     text: |
       A consumer lives two periods, has initial assets $a>0$, no income ($y_0=y_1=0$), can borrow/save at $r>0$, discount factor $0<\beta<1$, and maximizes $\ln c_0 + \beta\ln c_1$. After choosing optimally, $r$ **increases**. As a result:
+
+      > [!tip] 🗣️ In plain English
+      > Someone lives entirely off a pot of savings $a$ (no wages at all), splitting it between spending now ($c_0$) and spending later ($c_1$). Then the interest rate — the reward for leaving money in the pot — goes up. Do they spend more now, later, or both?
+      >
+      > Solve it properly: the **Euler equation** links the two periods' spending, the budget constraint says the pot has to cover both, and the **log utility** is the special ingredient — check carefully which of $c_0$ and $c_1$ actually has $r$ in its formula.
     options:
       - label: "1"
         text: |
@@ -928,6 +1021,11 @@ questions:
     title: "Q19 — Two claims: deflator/nominal-GDP and labor's share"
     text: |
       **Claim 1:** If the GDP deflator rises between two periods, nominal GDP grows faster than real GDP. **Claim 2:** If firms are competitive with $Y = AK^{\alpha}N^{1-\alpha}$ and hire labor optimally, labor's share of income is $(1-\alpha)$. Which is correct?
+
+      > [!tip] 🗣️ In plain English
+      > Two separate true-or-false claims to verify independently. Claim 1 is about the **GDP deflator** — the price gauge defined as nominal GDP (cash terms) divided by real GDP (quantity terms) — and what its rising says about the two growth rates. Claim 2 is about **labour's share** — the fraction of total income that ends up as wages ($wN/Y$) — when competitive firms pay workers their marginal product.
+      >
+      > Test each claim on its own from the definitions, then pick the option that matches your verdicts.
     options:
       - label: "1"
         text: |
@@ -976,6 +1074,11 @@ questions:
     title: "Q20 — Permanent capital-tax rise, proceeds rebated"
     text: |
       Standard consumption/labor/production/investment models; **no income/wealth effect** on labor supply. Government permanently raises the capital tax $\tau_K$ and **rebates** the proceeds lump-sum (net household income unchanged each period). "Short run" = before capital adjusts. As a result, in the short run:
+
+      > [!tip] 🗣️ In plain English
+      > The government makes owning capital more expensive to tax ($\tau_K$ up) but posts every shekel of the revenue straight back to households — so nobody is made poorer overall, only the *incentive* to invest changes. Trace what happens to investment, output and consumption before the capital stock has time to adjust.
+      >
+      > Two definitions carry the question: the **user cost of capital** (the all-in cost of holding a machine, which the tax feeds into) drives investment, and the goods-market identity $Y = C + I + G$ ties the three quantities together — whatever you conclude about two of them pins down the third.
     options:
       - label: "1"
         text: |

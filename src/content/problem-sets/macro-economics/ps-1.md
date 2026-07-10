@@ -44,6 +44,14 @@ questions:
       (e) Where does the tablet appear in the **expenditure components** of Israel's GDP? How much of its retail value shows up in Israel's GDP via the expenditure approach?
       (f) Effect on Israel's **trade balance** with China? With Vietnam?
 
+      > [!tip] 🗣️ In plain English
+      > You're following one phone through its supply chain — Chinese maker → Israeli importer → Israeli retailer → consumer — to see how much **value each step adds** and where that shows up in each country's GDP.
+      >
+      > - **(a–c) value added:** Each company's value added is simply **what it sells for minus what it paid** for the parts/goods it bought. That's *its own* contribution, not the whole price.
+      > - **(d) into GDP:** A country's GDP only counts value added **inside that country**, so you split the phone's value between Israel and China by where each bit of value was created.
+      > - **(e) expenditure view:** The same phone shows up **once** in Israel's GDP as spending — the consumer's purchase (consumption) — with imported parts netted out so you don't double-count.
+      > - **(f) trade balance:** Buying parts/phones from China and Vietnam counts as **imports**, which push the trade balance toward deficit — work out the effect with each country.
+
       > [!tip] Approach
       > Value added at each stage = sales price − cost of intermediates **bought at that stage**. See [[Lec_01-Data Review#Value added vs. final goods]].
     related_terms: ["gdp", "value-added"]
@@ -71,6 +79,14 @@ questions:
       (e) GDP deflator in 2010 and 2020 using **2020 base year**?
       (f) Inflation rate (GDP deflator) implied by (d) and (e)?
 
+      > [!tip] 🗣️ In plain English
+      > With a toy economy (apples, oranges, machines), the goal is to separate **real growth** (actually making more stuff) from growth that's just **higher prices**.
+      >
+      > - **(a) nominal GDP:** Value output at *each year's own* prices — this mixes real growth *and* inflation together.
+      > - **(b–c) real GDP:** Hold prices **fixed** (first at 2010 prices, then at 2020 prices) so only *quantities* move. The growth number depends on which year's prices you freeze.
+      > - **(d–e) the deflator:** The GDP deflator = nominal ÷ real. It's the economy-wide **price level**, and its value depends on the base year you chose.
+      > - **(f) inflation:** Inflation is just **how much that deflator rose** between the two years.
+
       > [!tip] Which formula?
       > $\text{Deflator} = \frac{\text{Nominal GDP}}{\text{Real GDP}}$. The base year matters — see [[Lec_01-Data Review#Fixed-weight real GDP]].
     related_terms: ["gdp", "gdp-deflator", "real-vs-nominal", "inflation"]
@@ -89,6 +105,14 @@ questions:
       (c) Inflation rate implied by (a) and (b)?
       (d) Why are the two inflation rates different?
       (e) Why do these differ from the **GDP-deflator** inflation rates in Q2?
+
+      > [!tip] 🗣️ In plain English
+      > This measures inflation the way it's done for **households** — with a **fixed shopping basket** (here, fruit only; machines don't count because families don't buy them).
+      >
+      > - **(a–b) price the baskets:** Work out what the 2010 basket and the 2020 basket each cost, at both years' prices.
+      > - **(c) inflation:** It's just **how much the basket's cost went up**.
+      > - **(d) why two answers:** The 2010 and 2020 baskets give *different* inflation because people **buy different amounts** as prices change (they switch away from what got dearer).
+      > - **(e) vs the deflator:** CPI **fixes** the basket and **leaves out** capital goods like machines, whereas the GDP deflator re-weights automatically and covers **everything produced** — so the two inflation numbers don't match.
 
       > [!tip] Key distinction
       > CPI uses a **fixed** consumption basket; the GDP deflator implicitly re-weights as quantities change. CPI also excludes capital goods like the machines. See [[Lec_01-Data Review#Differences between GDP deflator and CPI]].
@@ -125,6 +149,12 @@ questions:
 
       Briefly comment on how sub-period rates differ from the full-sample rate.
 
+      > [!tip] 🗣️ In plain English
+      > Using **real data** (the Penn World Table), you compare a country's **total** growth with its growth **per person** — the difference is what tells you about living standards.
+      >
+      > - **(i–ii) total vs per head:** Total GDP growth counts the whole economy; **GDP per capita** divides by population. Per-head growth is usually **lower** (population grows too) and is the honest way to describe whether people are actually **better off** — so it's the one to give a non-economist.
+      > - **(iii) decade by decade:** Splitting the years into decades shows growth **wasn't steady** — some decades ran hot, others slow — which the single full-sample average hides.
+
       > [!tip] Formula
       > $\bar{g} = (y_t / y_0)^{1/t} - 1$. See [[Lec_01-Data Review#Average Growth Rates]].
     related_terms: ["gdp"]
@@ -146,6 +176,14 @@ questions:
       (e) One measurement problem with PPP exchange rates?
 
       See [[Lec_01-Data Review#Purchasing Power Parity (PPP)]].
+
+      > [!tip] 🗣️ In plain English
+      > This compares how rich countries look using the **market exchange rate** versus a **purchasing-power (PPP)** rate that adjusts for the fact that things cost less in some countries.
+      >
+      > - **(a) market view:** Convert each country's income at the everyday **market** exchange rate.
+      > - **(b–c) PPP view:** Build a PPP rate from what a **representative product** costs locally, then re-convert income using that.
+      > - **(d) why they differ:** Poorer countries usually look **richer under PPP**, because their local prices are low, so each unit of currency buys more than the market rate suggests.
+      > - **(e) the catch:** PPP is **hard to measure** — a "representative product" is never exactly the same thing in every country.
     related_terms: ["purchasing-power-parity", "exchange-rates", "gdp"]
   - id: "6"
     text: |
@@ -156,6 +194,9 @@ questions:
       Go to <https://fred.stlouisfed.org>, find quarterly real GDP. Use **2020 Q2 and 2020 Q3** to compute growth.
 
       When 2020 Q3 was released, the headline was ~**33% GDP growth**. Is this the same as your calculation? Explain.
+
+      > [!tip] 🗣️ In plain English
+      > The point is to see why a scary headline like "**33% growth**" *doesn't* mean the economy grew by a third in three months. The official figure is **annualised** — it compounds the quarter's growth as if that same pace kept up for a **full year** ($(1+g_q)^4-1$). The actual quarter-on-quarter number ($g_q$) is much smaller. Same reality, two very different-looking numbers.
 
       > [!tip] Hint
       > The headline is an **annualised** rate. US BEA reports quarter-on-quarter growth as $(1+g_q)^4 - 1$, while the direct calculation gives just $g_q$.
@@ -174,6 +215,13 @@ questions:
       (b) Plot both on the same axes — any noticeable differences?
       (c) Compute the correlation coefficient. How similar are they? Why would you expect them to match or diverge?
       (d) Why is **seasonal adjustment** important? (Compare CPI with vs. without seasonal adjustment on a short window.)
+
+      > [!tip] 🗣️ In plain English
+      > You download the two main **inflation gauges** — the household CPI and the economy-wide GDP deflator — and check how alike they really are.
+      >
+      > - **(a–b) compute & plot:** Turn each price series into an inflation rate and put them on the **same chart** to eyeball the differences.
+      > - **(c) correlation:** Measure how tightly they move together — **high, but not identical**, because they cover different baskets of goods.
+      > - **(d) seasonal adjustment:** Prices swing in **predictable within-year patterns** (holidays, harvests). Adjusting for them strips out that noise so you see the **true underlying trend**.
     related_terms: ["cpi", "gdp-deflator", "inflation"]
   - id: "8"
     text: |
@@ -192,6 +240,12 @@ questions:
       (e) Around the 2022 spike: why were **5-year** expectations higher than the others? Why was expected inflation **lower than realised** inflation? Why does long-term expected inflation hover near **2%**?
 
       See [[Lec_01-Data Review#Nominal and Real Interest Rates]].
+
+      > [!tip] 🗣️ In plain English
+      > This backs out what markets **expect inflation to be** by comparing two bonds: an ordinary Treasury (which pays a **nominal** rate) and an inflation-protected one, TIPS (which pays a **real** rate). The gap between them is the market's expected inflation — the "**breakeven**" rate.
+      >
+      > - **(a–b) why it works:** A normal bond's yield includes expected inflation; a TIPS strips inflation out, so it shows the real rate. Subtract to get expected inflation. They must be the **same issuer and maturity** so the *only* difference is the inflation protection.
+      > - **(c–e) reading the data:** Plot expected inflation over 5, 10 and 30 years; they mostly move **together**. In the 2022 spike, **short-term (5yr)** expectations jumped most (people saw high inflation as temporary), realised inflation still came in **higher** than expected, and **long-run** expectations stay pinned near **2%** because markets trust the Fed's target.
     related_terms: ["fisher-equation", "inflation"]
 ---
 

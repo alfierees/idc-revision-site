@@ -39,6 +39,11 @@ questions:
       - Current investment $I = 53$; current TFP $A = 1$
 
       An analyst claims: "since we observe positive investment this period, firms must expect a **higher** future TFP." Is the analyst right? Assuming firms invest optimally, compute the implied future TFP $A^{f}$.
+
+      > [!tip] 🗣️ In plain English
+      > A pundit says "firms are buying machines, so they must expect a rosier future" — your job is to test that logic with the firm's own investment rule rather than take it on faith.
+      >
+      > Work out the **user cost of capital** (what holding one more machine really costs once interest, resale value, wear-and-tear and tax are netted off), figure out tomorrow's capital stock from today's capital plus investment, then ask: what future productivity level $A^{f}$ would make that last machine exactly worth buying? Compare it with today's $A$ to judge the analyst's claim.
     solution: |
       The whole question runs off the investment optimality condition **future MPK = user cost**.
 
@@ -84,6 +89,11 @@ questions:
       - Real interest rate $r = 4\%$
 
       Find the predicted **real GDP**, **debt-to-GDP ratio**, and **total debt** in 2021.
+
+      > [!tip] 🗣️ In plain English
+      > You're playing government forecaster: given 20 years of GDP history and today's debt position, predict next year's economy and debt load.
+      >
+      > First back out the **average yearly growth rate** the economy managed over 2000–2020 (compound, not a straight average), use it to grow GDP one more year, then feed the **primary deficit** $d$ — how much the government overspends before interest — and the interest rate into the debt-dynamics equation to see where the debt *ratio* heads. Finally multiply the ratio by forecast GDP to turn it back into debt in actual money.
     solution: |
       **Step 1 — average growth rate** over the 20-year window (compound):
 
@@ -127,6 +137,11 @@ questions:
       | Labor input | 20,000 | 22,000 |
 
       Calculate the level of TFP in 2020, the growth rate of TFP between 2020 and 2021, and the real wage in 2021.
+
+      > [!tip] 🗣️ In plain English
+      > You get two years of raw national accounts and have to work out how much of the output comes from pure know-how — **TFP**, the bit of GDP you can't credit to machines or workers.
+      >
+      > The catch is that the exponent $\alpha$ isn't given: the 2020 wage bill lets you recover it via the **labor share** (workers' slice of total income). Once you have $\alpha$, it's plug-and-chug — the level of $A$ in 2020, how it changed by 2021, and what a worker earns in 2021.
     solution: |
       **Step 1 — pin down $\alpha$ from the labor share.** Under competition, labor's share $= 1-\alpha = \frac{wN}{Y}$. Using 2020 data:
 
@@ -166,6 +181,12 @@ questions:
 
       1. Which line corresponds to the consumer with the **higher** $\sigma$? (You may reason from the Euler equation — no need to solve the full problem.)
       2. From the figure, what is the value of $\beta$? Explain.
+
+      > [!tip] 🗣️ In plain English
+      > Two savers react differently when interest rates change, and you have to identify who's who from a picture — then read a preference parameter straight off the graph.
+      >
+      > - **(1) Which line is which:** $\sigma$ measures how much someone dislikes a bumpy spending path; use the Euler equation to work out whether a bigger $\sigma$ makes consumption growth respond more or less strongly to $r$, and match that to the steeper vs flatter line.
+      > - **(2) Reading off β:** find the special point on the figure where consumption is flat over time ($c_{t+1}/c_t = 1$) — at that interest rate the Euler equation pins down the **discount factor** $\beta$, i.e. how much this person values tomorrow relative to today.
     solution: |
       **Part 1 — which line is the higher-σ consumer.** Start from the Euler equation for this CRRA utility ($u'(c) = c^{-\sigma}$):
 
@@ -204,6 +225,11 @@ questions:
       | 2 | 180,000 | 12,000 | 13,000 | 5,000 |
 
       "Continuing employed" = employed this month and last; "new employed" = employed this month but unemployed last month (similarly for unemployed). Calculate: the unemployment rates in months 1 and 2; the job-finding probability $f$; the separation probability $d$; and the steady-state unemployment rate if these probabilities persist.
+
+      > [!tip] 🗣️ In plain English
+      > You're doing a turnstile count on the labor market across two months: who stayed in work, who got hired, who lost their job.
+      >
+      > Compute the **unemployment rate** each month (the jobless as a share of everyone), then two odds: $f$, the chance an unemployed person lands a job by next month, and $d$, the chance an employed person loses theirs — being careful about *which month-1 group* each probability is measured out of. Finally, ask where the unemployment rate would settle if those two odds held forever (the **steady state**).
     solution: |
       **Step 1 — unemployment rates.** Total unemployed $=$ continuing $+$ new unemployed; labor force $=$ everyone. So:
 
@@ -239,6 +265,11 @@ questions:
     title: "Q6 — Optimistic firms, pessimistic consumers: the saving-investment market"
     text: |
       An economy is in goods-market equilibrium, labor is constant, and there is no government. News leads **firms to become more optimistic about future TFP** while **consumers become more pessimistic** (about their future income). Describe the new short-run goods-market equilibrium: how do the saving ($S$) and investment ($I$) curves shift, and what happens to saving, investment, and the real interest rate?
+
+      > [!tip] 🗣️ In plain English
+      > Businesses hear good news about future productivity while households brace for leaner times — you trace what that split mood does to the market where saving meets investment.
+      >
+      > Work out which way the **investment curve** moves (firms' appetite to buy capital at any given interest rate) and which way the **saving curve** moves (households' urge to set money aside today), then read off what happens to the quantities and the interest rate where the two curves cross — including whether every direction is actually pinned down.
     solution: |
       Work each curve separately, then combine.
 
@@ -268,6 +299,16 @@ questions:
       4. Solve for the optimal consumption plan $c_0, c_1, c_2$. (6 pts)
       5. Analyze the effect of a higher $\beta$ on $c_0$ (fully) and explain how you would sign $c_1, c_2$; give the intuition for $c_0$. (5 pts)
       6. Analyze the effect of a higher $r$ on $c_0, c_1, c_2$ and give the economic intuition. (6 pts)
+
+      > [!tip] 🗣️ In plain English
+      > A classic "eat the cake" puzzle: someone starts with a pot of money $a$, never earns another penny, and must decide how to spread spending across three periods of life.
+      >
+      > - **(1) Set-up:** state formally what's being chosen and the rule that total spending, valued in today's money, must equal the pot.
+      > - **(2) Lagrangian:** turn it into a constrained-optimisation problem and take derivatives — four conditions, one per unknown.
+      > - **(3) Euler equations:** combine those conditions into the "spend a bit now vs a bit later" trade-off linking each pair of adjacent periods.
+      > - **(4) Solve:** use those links plus the budget to get explicit formulas for $c_0$, $c_1$ and $c_2$.
+      > - **(5) More patience:** if $\beta$ rises (the person cares more about the future), which way does spending move in each period, and why?
+      > - **(6) Better returns:** if $r$ rises (saving pays more), same question — think about the tug-of-war between the incentive to save more and the feeling of being richer.
     solution: |
       **Part 1 — the problem.** The choice variables are $c_0, c_1, c_2$. The consumer maximizes discounted lifetime utility subject to the lifetime budget constraint (present value of consumption equals initial assets, since there is no income):
 
@@ -332,6 +373,14 @@ questions:
       2. What does this labor-supply curve look like? Is it increasing in $w$? What does it imply about income vs. substitution effects? (5 pts)
       3. TFP ($A$) is **permanently higher**. In the short run: (a) what happens to wages, labor input and output? (b) what happens to optimal future capital and current investment demand? (5+5 pts)
       4. Instead, $\theta$ is **permanently lower** ($A$ constant). In the short run: (a) wages, labor, output? (b) optimal future capital and investment demand? (5+5 pts)
+
+      > [!tip] 🗣️ In plain English
+      > You build a worker's labor-supply rule from their preferences ($\theta$ measures how much they dislike working, $\psi$ how fast that dislike grows with hours), then hit the economy with two different shocks and trace the fallout.
+      >
+      > - **(1) Derive labor supply:** balance the pain of one extra hour against the consumption its wage buys, and show hours worked collapse to a formula involving only $\theta$ and $\psi$.
+      > - **(2) Shape of the curve:** notice which variable is missing from that formula, say what the supply curve looks like as a result, and what that means for the income-vs-substitution tug-of-war.
+      > - **(3) TFP shock:** firms become permanently more productive — trace wages, hours and output in the labor market, then what firms want to do about future capital and today's investment.
+      > - **(4) θ shock:** people permanently mind working less — run the same checklist, but now it's the supply side of the labor market that moves.
     solution: |
       **Part 1 — labor supply function.** Start from the static first-order condition $-U_N = wU_C$. Here $U_N = -\theta N^{\psi}$ and $U_C = 1/C$, so:
 
@@ -372,6 +421,12 @@ questions:
 
       1. Briefly explain what **skill-biased technological change (SBTC)** is and how it may relate to rising **wage inequality** and the **college wage premium**. (6 pts)
       2. Does SBTC provide a good explanation for **polarization** in the labor market? Briefly explain. (4 pts)
+
+      > [!tip] 🗣️ In plain English
+      > An essay-style question about whether new technology plays favourites among workers — no maths, just the ideas and the evidence discussed in class.
+      >
+      > - **(1) SBTC basics:** explain the idea that technology raises demand for some workers more than others depending on skill, and connect it to the widening pay gap and the earnings boost a degree brings (**the college wage premium**).
+      > - **(2) Polarization test:** **polarization** is the pattern where the top *and* bottom of the job ladder do well while the middle stagnates — assess whether the SBTC story can generate that shape, or whether it needs help from another mechanism.
     solution: |
       **Part 1 — SBTC, inequality and the college premium.** Skill-biased technological change is the idea that new technology affects workers **asymmetrically**, benefiting **high-skill** workers more than low-skill workers. Through standard labor demand: technology raises the demand for skilled labor by more than for unskilled labor (it can even raise demand for one type while reducing demand for the other), which **widens the wage gap** between skilled and unskilled workers in equilibrium. To the extent that skill is proxied by education, this also matches the observation that the **wage gap between college and non-college graduates (the college wage premium) has risen** over time.
 

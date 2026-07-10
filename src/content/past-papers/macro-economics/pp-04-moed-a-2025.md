@@ -37,6 +37,10 @@ questions:
       | 2 | 2 | 1,000 | 1 |
 
       Two economists in country 2 debate the source of the GDP gap. The first says that because country 2's capital stock is smaller by a factor of $8$, capital differences are *mostly* responsible for the GDP difference. The second says TFP contributes *much more* than capital. **Calculate the relative importance of TFP and capital, and explain whether either economist is correct.**
+
+      > [!tip] 🗣️ In plain English
+      > Country 1 produces four times as much as country 2, and you're asked to split that gap into the bit that comes from **better technology** (TFP, the $A$ in the production function) and the bit that comes from **having more machines** (capital $K$).
+      > Two economists have taken opposite sides — one blames the capital gap, the other credits technology. Your job is to plug the numbers into the production function, work out how much of the output gap each factor is responsible for, and then say whether either economist has it right.
     solution: |
       To compare the relative importance, take the **ratio** of outputs implied by the production function (both $N=1$, so the labor terms cancel):
 
@@ -60,6 +64,10 @@ questions:
     title: "Q2 — Immigration and the demand for robots"
     text: |
       Firms behave competitively and produce with three factors — capital ($K$), labor ($N$) and robots ($R$) — using $Y = A K^{\alpha}[R + N]^{1-\alpha}$. Immigration raises the number of workers available (new immigrants are identical to residents in all relevant respects) and the price of robots is constant. **What is the effect on the demand for robots?**
+
+      > [!tip] 🗣️ In plain English
+      > In this economy robots and workers do the same job — they're lumped together as one term, $[R+N]$, in the production function.
+      > Immigration means more workers show up, and you're asked what that does to firms' appetite for robots: buy more, buy fewer, or no change? Since the robot price is fixed, the whole answer hinges on the **marginal product of robots** — how much extra output one more robot brings in — and how that changes when there are suddenly more workers around.
     solution: |
       Because the robot price is constant, the effect on robot demand is driven entirely by what happens to the **marginal product of robots** ($MPR$): if $MPR$ rises/falls/stays, firms demand more/fewer/the same number of robots.
 
@@ -93,6 +101,10 @@ questions:
       $$C = (1-\tau_N)wN$$
 
       **Show that labor supply does not depend on the tax rate.** (You may use the general optimality condition directly — no Lagrangian needed.)
+
+      > [!tip] 🗣️ In plain English
+      > You'd expect taxing wages to change how much people work — this question asks you to prove that, with this particular utility function, it doesn't.
+      > The recipe: take the standard optimality condition (**marginal pain of an extra hour worked = after-tax wage × marginal value of an extra unit of consumption**), plug in this utility function and the budget constraint, and solve for hours worked $N$ — showing that the tax rate $\tau_N$ drops out along the way.
     solution: |
       Use the static optimality condition together with the budget constraint. The general first-order condition is
 
@@ -126,6 +138,9 @@ questions:
     title: "Q4 — Emigration: GDP, GNP and Net Factor Payments"
     text: |
       Because of the Russia–Ukraine war, Ukrainian workers leave Ukraine for a neighboring country and are **not** replaced. The workers who left find jobs abroad that pay exactly the same wage they used to earn in Ukraine. **Explain the effects on Ukrainian GDP, GNP and Net Factor Payments (NFP).**
+
+      > [!tip] 🗣️ In plain English
+      > Workers leave Ukraine but keep earning the same wage abroad — you have to track what that does to three national-accounts measures: **GDP** (what's produced *inside* Ukraine's borders), **GNP** (what *Ukrainians* earn, wherever in the world they are), and **NFP** (the bridge between the two — net income flowing in from nationals working abroad). Say which measures move, in which direction, and why.
     solution: |
       Anchor on the identity
 
@@ -158,6 +173,10 @@ questions:
       | Labor-force participation rate | 85% | 90% |
 
       **Calculate the employment-population ratios and the unemployment rates for the young and the old.**
+
+      > [!tip] 🗣️ In plain English
+      > A number-crunching question on labour-market stats: for each age group, work out the **employment-population ratio** (what share of *everyone* has a job) and the **unemployment rate** (what share of the *labour force* — people either working or actively looking — is jobless).
+      > The table hands you a "not employed" row, but be careful: not everyone without a job counts as unemployed. That's why you're also given the **participation rate** — it tells you who is actually in the labour force in the first place.
     solution: |
       **Employment-population ratio (EPOP)** comes straight from the data:
 
@@ -206,6 +225,10 @@ questions:
       | 2024 | Machines | 125 | 180 |
 
       **Compute the inflation rate from the PCE deflator (fixed-weight, 2023 base) and from the CPI (2023 representative basket). Is there a difference? If so, why?**
+
+      > [!tip] 🗣️ In plain English
+      > Same economy, two different inflation thermometers. The **PCE deflator** values what people *actually bought each year* at current vs. base-year prices, while the **CPI** prices one *fixed shopping basket* (frozen at its 2023 contents) in both years.
+      > Compute inflation both ways — remembering that only goods consumers actually buy should go into a consumer price measure — then check whether the two readings agree and explain what would drive any gap between them.
     solution: |
       **Ignore machines** for both measures — they aren't consumed.
 
@@ -251,6 +274,15 @@ questions:
          (b) If $\tau$ is **lower** than the optimal level, will voluntary saving be positive / negative / zero? Explain. *(3 pts)*
          (c) If $\tau$ is **higher** than optimal, how does voluntary saving respond? Explain. *(3 pts)*
       5. Now suppose there are two consumer types, $1$ and $2$, differing only in that $\beta_1 > \beta_2$. Can a single mandatory saving rate be optimal for both? Explain. *(5 pts)*
+
+      > [!tip] 🗣️ In plain English
+      > Someone earns everything while young and nothing in retirement, so they *have* to save — and the question is whether a compulsory pension scheme actually helps or just gets in the way of what they'd do anyway.
+      >
+      > - **(1) Set it up:** write down what the consumer is choosing (consumption young vs. old) and the lifetime budget they face.
+      > - **(2) Solve it:** use the **Euler equation** — the rule linking how much you consume today vs. tomorrow — plus the budget constraint to find the best consumption plan.
+      > - **(3) Saving rate:** turn that plan into a fraction of young-age income saved.
+      > - **(4) Forced saving:** the government now makes you contribute a slice $\tau$ of your income. What's the best $\tau$? And if it's set too low or too high, do people top it up with their own saving, undo it by borrowing, or do nothing?
+      > - **(5) Different people:** with a patient type and an impatient type ($\beta_1 > \beta_2$ — the impatient one cares less about the future), can one single mandatory rate suit them both?
     solution: |
       **Part 1 — the optimization problem.** The consumer chooses $c_0, c_1$ to maximize discounted utility subject to the lifetime budget constraint. Since income is positive only in period 0 ($y_1 = 0$):
 
@@ -317,6 +349,14 @@ questions:
          (a) If labor is hired optimally, what is the real wage? *(4 pts)*
          (b) Firms pay tax at rate $\tau_K$ on output minus labor expenditure (as in the investment model), and this revenue finances government spending $G$. What is $G$? *(4 pts)*
          (c) What is consumption? *(4 pts)*
+
+      > [!tip] 🗣️ In plain English
+      > You get two years of raw data — workers, machines, output — and have to reverse-engineer everything else the model can tell you about this economy.
+      >
+      > - **(1) TFP:** back out the technology level $A$ in each period from output and inputs — the "**Solow residual**", i.e. the part of output the inputs can't explain.
+      > - **(2) Sign it without computing:** argue which way TFP moved just by comparing how fast output grew vs. how fast the inputs grew.
+      > - **(3) Depreciation and investment:** use the firm's optimal-investment rule (the future return on capital must equal its **user cost** — what it costs to buy, hold and depreciate a machine) to pin down the wear-and-tear rate $\delta$, then use the capital-accumulation equation to find how much was invested.
+      > - **(4) Wage, government, consumption:** get the real wage from optimal hiring (wage = extra output from one more worker), government spending from the capital-tax revenue it's funded by, and consumption as whatever output is left over.
     solution: |
       **Part 1 — TFP in both periods.** Read TFP off as the Solow residual:
 
@@ -374,6 +414,12 @@ questions:
 
       1. Briefly explain the **trend** and **cyclical** components of a macroeconomic series (like GDP). *(4 pts)*
       2. Explain how the properties of the cyclical components of certain **consumption categories** support the idea of **consumption smoothing**. *(6 pts)*
+
+      > [!tip] 🗣️ In plain English
+      > A words-only question on business-cycle facts — no formulas needed.
+      >
+      > - **(1) Trend vs. cycle:** explain the two pieces any macro series (like GDP) splits into — the smooth long-run path it's expected to follow, and the shorter-run wiggles around that path.
+      > - **(2) Smoothing evidence:** explain how the way certain consumption categories fluctuate over the cycle, compared with how income fluctuates, backs up the **consumption smoothing** story — the idea that households use saving and borrowing to keep spending steadier than their income.
     solution: |
       **Part 1 — trend vs. cyclical.** Any macroeconomic time series can be decomposed into a **trend** component and a **cyclical** component:
 

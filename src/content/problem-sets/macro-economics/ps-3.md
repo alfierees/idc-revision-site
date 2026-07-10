@@ -89,6 +89,14 @@ questions:
     solution: |
       **Setup:** $Y = A K^{\alpha} N^{1-\alpha}$, with $A > 0$, $K, N > 0$, and $0 < \alpha < 1$.
 
+      > [!tip] 🗣️ In plain English
+      > This question **proves the four common-sense properties** a good production function should have — for the Cobb–Douglas formula. Each proof is really just checking the **sign of a derivative**.
+      >
+      > - **Q1.1 (more is better):** Adding more machines *or* more workers always raises output — the marginal products are positive. No "too much" point.
+      > - **Q1.2 (diminishing returns):** Each extra machine or worker adds **less** than the one before. The 100th worker helps less than the 99th.
+      > - **Q1.3 (they help each other):** More capital makes each worker more productive, and more workers make each machine more useful. Capital and labor are **complements**.
+      > - **Q1.4 (constant returns to scale):** Double *both* inputs and output **exactly doubles** — because the two exponents add up to 1.
+
       ---
        
       ### Q1.1 — The marginal products are always positive
@@ -109,7 +117,7 @@ questions:
 
       $$\boxed{MP_N > 0}$$
 
-      > [!info] Plain English
+      > [!info] 🗣️ In plain English
       > Adding more capital or more labor always increases output. There is no "saturation point" beyond which extra inputs become harmful. ✓
 
       ---
@@ -134,7 +142,7 @@ questions:
 
       $$\boxed{\frac{\partial MP_N}{\partial N} < 0}$$
 
-      > [!info] Plain English
+      > [!info] 🗣️ In plain English
       > The 100th worker adds less to output than the 99th, and the 100th machine adds less than the 99th. This is the classic "law of diminishing returns" — and it's exactly what makes capital deepening alone unable to sustain growth forever. ✓
 
       ---
@@ -153,7 +161,7 @@ questions:
 
       $$\frac{\partial MP_N}{\partial K} = \frac{\partial MP_K}{\partial N} > 0$$
 
-      > [!info] Plain English
+      > [!info] 🗣️ In plain English
       > Capital and labor make each other more valuable. Hand a worker a more powerful computer and they produce more — and conversely, a computer is more useful when there is a worker to operate it. This is why specialisation and capital accumulation reinforce each other. ✓
 
       ---
@@ -172,7 +180,7 @@ questions:
 
       $$\boxed{F(\lambda K, \lambda N) = \lambda \cdot Y \quad \text{(CRS)}}$$
 
-      > [!info] Plain English
+      > [!info] 🗣️ In plain English
       > Doubling capital *and* labor exactly doubles output. The exponents $\alpha + (1-\alpha) = 1$ are what make CRS happen — this is also why the labor share equals exactly $1-\alpha$ (Euler's theorem). ✓
 
       > [!tip] Why we want CRS
@@ -183,6 +191,13 @@ questions:
       Labor Shares: USA & UK
     solution: |
       I chose **United States (USA)** and **United Kingdom (GBR)** from PWT 11.0, using the series `labsh`.
+
+      > [!tip] 🗣️ In plain English
+      > This question uses **real-world data** to measure the slice of national income that goes to **workers** (as opposed to owners of machines and buildings), for the US and UK — then turns that slice into the model's capital exponent $\alpha$.
+      >
+      > - **Q2.1 (what it is):** The labor share is the fraction of GDP paid out as wages; whatever's left goes to capital. In this model that fraction is exactly $1-\alpha$.
+      > - **Q2.2 a–c (the picture):** Plot both countries from 1990–2023. The **US** share drifts steadily **down** (~0.60 → 0.57) — the well-known "declining labor share." The **UK** bounces around **~0.60** with no clear trend.
+      > - **Q2.2 d (get $\alpha$):** Since labor share $=1-\alpha$, just flip it: both countries land near **$\alpha\approx0.40$** — close to the textbook "one-third to capital, two-thirds to labor" rule.
 
       ---
 
@@ -274,6 +289,13 @@ questions:
 
       **Construction of labor input:** $N_t = \text{emp}_t \times \text{avh}_t$ (total hours worked).
 
+      > [!tip] 🗣️ In plain English
+      > **Productivity (TFP)** is the part of a country's output you *can't* explain from its machines and workers alone — the **leftover**. Here you compute that leftover from the data and check it against the official published series.
+      >
+      > - **Q3.1 (compute it):** Rearrange the production formula to isolate $A$ (the leftover), and calculate it for every year.
+      > - **Q3.2 (does it match?):** Almost perfectly for the **US** (correlation 0.995) and strongly for the **UK** (0.90). Both measure the same thing; the small gaps come from the official series also adjusting for workers' **education** (human capital).
+      > - **Q3.3 (the catch):** If you leave out an input like education, your "productivity" number **secretly absorbs it** — so measured TFP overstates true *technology* gains whenever the workforce gets more educated.
+
       ---
 
       ### Q3.1 — Computing implied TFP
@@ -335,6 +357,13 @@ questions:
       $$g_A = g_Y - \alpha\, g_K - (1-\alpha)\, g_N$$
 
       with cumulative growth rates from 1990 to 2023 (33-year span):
+
+      > [!tip] 🗣️ In plain English
+      > Instead of levels, this splits output **growth** into three parts: growth from **more machines**, growth from **more labor**, and the **leftover** — productivity growth.
+      >
+      > - **The numbers:** The US grew faster than the UK on every measure, including productivity (**~1.5%/yr vs ~0.8%/yr**). Roughly *half* of US growth came from productivity and half from piling up capital and labor.
+      > - **The UK puzzle:** The UK's productivity growth was notably weak — the famous "**UK productivity puzzle**."
+      > - **Why our number looks bigger than PWT's:** PWT credits some of the growth to a **more-educated workforce**, so it counts less as pure productivity than our simpler calculation does.
 
       | Country      | $g_Y$ (cum) | $g_K$ (cum) | $g_N$ (cum) | $\alpha$ | Implied $g_A$ (cum) | Annualised $g_A$ |
       | ------------ | ----------- | ----------- | ----------- | -------- | ------------------- | ---------------- |

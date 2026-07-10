@@ -45,6 +45,14 @@ questions:
 
       > **Read the slopes off the exponents.** Supply has a **positive** exponent on $w$ ($+\tfrac13$) → it slopes **up**. Demand has a **negative** exponent ($-\tfrac{10}{3}$) → it slopes **down**. This is exactly the labor market picture from [[Lec_07-Labor Market]].
 
+      > [!tip] 🗣️ In plain English
+      > This is the labor market with **all the numbers filled in**. You're given two formulas: one for how many hours people *want to work* at each wage (supply, slopes up — more pay, more work) and one for how many workers *firms want to hire* at each wage (demand, slopes down — cheaper labor, more hiring). Where they cross is the wage and the number of jobs the market settles at.
+      >
+      > - **Part 1 (find the equilibrium):** Set the two curves equal — that's the wage where the number of jobs offered exactly matches the number people want. Solving gives a wage of about **0.46** and employment of about **0.77**.
+      > - **Part 2 (GDP):** Feed that employment into the production function to get total output — about **0.51**. (Quick check: the wage bill is 70% of output, exactly the labor share, so it's consistent.)
+      > - **Part 3 (economy gets 25% more productive):** Make everything more productive ($A\uparrow$). Firms now get more out of each worker, so they want to hire more → the demand curve slides **right**. Wages, jobs and output **all rise**.
+      > - **Part 4 (economy gets 25% more machines instead):** More capital ($K\uparrow$) also makes workers more productive, so demand shifts right again — **same direction, smaller effect**. Extra machines run into diminishing returns, whereas raw productivity multiplies everything, so a productivity boost moves things more than the same-sized capital boost.
+
       ### Part 1 — Equilibrium $w$ and $N$
 
       **Step 1 — Market clearing: set supply = demand.** This kills $N$ and leaves one equation in $w$:
@@ -115,6 +123,15 @@ questions:
     solution: |
       The aid is a permanent stream of free **consumption** goods handed to households. It is **not** capital and **not** a productivity shock — so it works purely through the **wealth/income effect on labor supply**.
 
+      > [!tip] 🗣️ In plain English
+      > A rich country permanently gives your economy **free stuff to consume** every year — not machines, not know-how, just free consumption goods handed to households. Because it doesn't change the technology at all, it only works by making people **feel richer**.
+      >
+      > - **Part 1 (what shifts?):** Firms' hiring (labor demand) doesn't move — the technology is untouched. But people are permanently richer, so they choose to work a bit less at any wage → the **supply curve shifts left**.
+      > - **Part 2 (short-run effects):** With fewer people wanting to work, labor is scarcer, so the **wage rises** but **jobs and home-made output fall** (people take more leisure).
+      > - **Part 3 (investment):** Since people plan to work less in the future too, each machine has fewer workers to run it and is worth less, so firms **invest less** now.
+      > - **Part 4 (long run):** Less investment shrinks the capital stock, which drags hiring down further — so **output falls even more** over time.
+      > - **Part 5 (better or worse off?):** **Better off**, even though GDP falls. People consume the free aid *on top of* their own output and enjoy more free time, so they're happier. GDP measures **production, not wellbeing** — lower GDP here is people choosing leisure, not getting poorer.
+
       ### Part 1 — Do the curves shift (short run, $K$ fixed)?
 
       - **Labor demand: NO shift.** Demand depends on $A$, $K$ and $\alpha$ — none change. The production technology is untouched.
@@ -149,6 +166,15 @@ questions:
       Income effect on labor supply (permanent TFP rise)
     solution: |
       TFP jumps permanently to a higher level and stays there.
+
+      > [!tip] 🗣️ In plain English
+      > The economy becomes **permanently more productive** and stays that way. The twist versus a one-off good year: because the gain is permanent, people also feel **permanently richer**, and that pulls in the opposite direction.
+      >
+      > - **Part 1 (demand):** Each worker now produces more, so firms want to hire more → **demand shifts right**.
+      > - **Part 2 (supply):** But people feel richer for life, so they want more leisure → **supply shifts left**. (This is the new wrinkle — a *permanent* shock triggers this "feeling richer" effect; a temporary one barely does.)
+      > - **Part 3 (net result):** **Wages definitely rise** (both forces push the wage up). **Jobs could go either way** — the two forces fight. **Output probably rises** thanks to higher productivity, but it's not guaranteed if people cut their hours a lot.
+      > - **Part 4 (temporary instead):** If the boost is only temporary, the "feeling richer" effect is tiny, so supply barely moves. Only demand shifts right → **jobs, wages and output all clearly rise** (the textbook expansion).
+      > - **Part 5 (no income effect):** If people's tastes have no income effect at all, feeling richer never changes their work choice — so even the permanent case looks like the temporary one: **jobs, wages and output all rise**, no ambiguity.
 
       ### Part 1 — Labor demand (current period)?
 
@@ -186,6 +212,13 @@ questions:
 
       where $d$ = separation rate, $f$ = job-finding rate, $L=E+U$ (everyone is in the labor force).
 
+      > [!tip] 🗣️ In plain English
+      > Think of unemployment as a **bathtub**. Water flows *in* when people lose their jobs (the separation rate $d$) and drains *out* when they find new ones (the finding rate $f$). When inflow equals outflow the water level is steady, and the unemployment rate settles at $d/(d+f)$.
+      >
+      > - **Step 1 (find the finding rate):** Use Type A's known numbers — 10% unemployed and 7% losing their job each period — to back out how fast people find work: **$f=63\%$**, and both groups share it.
+      > - **Step 2 (find B's separation rate):** Type B finds jobs just as fast (63%) but has 12% unemployment, so solve for how often its jobs get destroyed: **$d_B\approx8.6\%$**.
+      > - **Punchline:** Both groups find jobs equally quickly, so Type B's higher unemployment is entirely because their **jobs get destroyed more often** — it's a job-*stability* problem, not a job-*finding* problem.
+
       **Given.** Both groups have $L=15{,}000$.
 
       | | Unemployed | $u=U/L$ | $d$ |
@@ -222,6 +255,12 @@ questions:
       $$\text{Use LABOR if}\quad \frac{w}{\psi_N(j)}<\frac{r}{\psi_K(j)}\quad\Longleftrightarrow\quad \frac{\psi_N(j)}{\psi_K(j)}>\frac{w}{r}$$
 
       So compare each task's **labor-to-capital productivity ratio** $\psi_N/\psi_K$ against the **factor-price ratio** $w/r$.
+
+      > [!tip] 🗣️ In plain English
+      > A job is split into separate **tasks**, and each task goes to whoever can do it **more cheaply** — a worker or a machine. For each task you compare *how much better labor is than capital at that task* ($\psi_N/\psi_K$) against *how expensive workers are relative to machines* ($w/r$). If labor's productivity edge beats its cost disadvantage, the task goes to workers; otherwise to machines.
+      >
+      > - **Part 1 (equal prices):** When a worker and a machine cost the same, labor wins the two tasks where it's relatively most productive (**Tasks 1 & 2**); machines take the other two (**Tasks 3 & 4**).
+      > - **Part 2 (machines get cheaper):** The rental price of capital drops, which *raises the bar* a task must clear to stay with labor. But no task falls into that new gap, so the **split doesn't change**. Workers are **neither better nor worse off** — same tasks, same wage; the whole gain from cheaper machines goes to capital owners. Only a *bigger* price drop would start taking tasks away from workers.
 
       | Task | $\psi_N$ | $\psi_K$ | $\psi_N/\psi_K$ |
       |---|---|---|---|

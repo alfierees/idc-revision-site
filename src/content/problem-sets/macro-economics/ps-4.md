@@ -27,6 +27,13 @@ questions:
 
       Production function: $Y_t = A_t (K_t)^{0.35}(N_t)^{0.65}$
 
+      > [!tip] 🗣️ In plain English
+      > A firm is deciding **how many machines to own next year**, with every number handed to you. The rule it follows: keep buying machines until the last one's yearly payoff (how much extra output it produces) just equals the yearly cost of owning it (the *user cost*).
+      >
+      > - **Part 1 (how much to invest):** First work out the yearly cost of owning a machine — that's the **user cost, 0.70**. Then find the payoff of the last machine (which shrinks as you pile on more), set payoff = cost, and you get the **desired future capital ≈ 123**. Investment is just the gap you must build to get from today's stock of 100 up to 123 → about **33**.
+      > - **Part 2 (saving & consumption):** With no government, output either gets consumed or invested, and **saving must equal investment**. So the economy saves ≈ **33** (funding the investment) and consumes the rest ≈ **196**.
+      > - **Part 3 (a temporary flood of workers):** Extra workers arrive but will leave (temporary visas). **Total output rises** (more hands), but **output per worker falls** — the same machines are now shared among more people. And desired future capital **doesn't change**, because firms plan around the workers who'll actually be there next year, not a temporary crowd today.
+
       ---
 
       ### Part 1 — Optimal $K^f$ and Investment $I$
@@ -166,6 +173,14 @@ questions:
     solution: |
       **Setup:** Firms suddenly expect $A^f$ to be higher than originally believed. Consumers do not share this optimism — their beliefs are unchanged.
 
+      > [!tip] 🗣️ In plain English
+      > **Firms** suddenly get optimistic that the economy will be more productive in the future, but **households don't share the mood**. We trace this through the market where a nation's savings meets firms' demand for investment — the market that sets the interest rate.
+      >
+      > - **Part 1 (savings):** The savings curve **doesn't move** — households didn't change their minds, so they save the same at every interest rate.
+      > - **Part 2 (investment):** The investment curve **shifts right** — optimistic firms want more machines, so they demand more funds to invest at every interest rate.
+      > - **Part 3 (new equilibrium):** More investment demand chasing the same pool of savings pushes the **interest rate up**; in the end both investment and saving settle a bit higher.
+      > - **Part 4 (does optimism cause a boom?):** Partly. **Future output does boom** (more machines *and* higher productivity) — that fits the story. But **current consumption falls**: the higher interest rate makes saving attractive, and households aren't optimistic, so they spend less now. There's no *current* consumption boom — that's the catch in the "waves of optimism" narrative.
+
       ---
 
       ### Part 1 — Does the Savings Curve Shift?
@@ -235,6 +250,14 @@ questions:
       | $\alpha_N$ | 0.7 | $\tau_k$ | 0.1 |
 
       Production function: $Y_t = A_t(K_t)^{0.3}(N_t)^{0.7}$
+
+      > [!tip] 🗣️ In plain English
+      > Same machine-buying decision as Q1, but now there's a **tax on capital income**. The interesting question isn't just "what does a higher tax do?" — it's **what the government spends the tax money on**.
+      >
+      > - **Part 1 (baseline):** Work out the yearly cost of owning a machine (**user cost ≈ 38.7**), the desired capital stock (**≈ 479**), and investment (**≈ 119**).
+      > - **Part 2 (tax up, money wasted):** A higher capital tax makes machines **more expensive to own** with nothing in return, so firms want **less** capital (≈ 441) and invest **less** (≈ 81).
+      > - **Part 3 (tax up, money funds productivity):** Same higher tax, but now the revenue builds infrastructure that makes the future economy **more productive**. Each machine now earns much more — enough to *outweigh* the higher cost — so firms want **far more** capital (≈ 572) and invest **much more** (≈ 212), even above the baseline.
+      > - **Part 4 (the lesson):** Whether a tax **chokes off** or **crowds in** private investment depends entirely on **how the money is used**. Waste it → less investment. Spend it productively → more.
 
       ---
 
