@@ -6,6 +6,7 @@ import OligopolyStructures from "./OligopolyStructures";
 import CournotReaction from "./CournotReaction";
 import PerfectCompetitionFirm from "./PerfectCompetitionFirm";
 import BertrandDiffReaction from "./BertrandDiffReaction";
+import GoodsMarketEquilibrium from "./GoodsMarketEquilibrium";
 
 // Maps a ```graph fenced block's `type:` to its component. Add new graphs here.
 export const GRAPHS: Record<string, ComponentType<any>> = {
@@ -16,4 +17,5 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "cournot-reaction": CournotReaction,
   "perfect-competition-firm": PerfectCompetitionFirm,
   "bertrand-diff-reaction": BertrandDiffReaction,
+  "goods-market": GoodsMarketEquilibrium,
 };
