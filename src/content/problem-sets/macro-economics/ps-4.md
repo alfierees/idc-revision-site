@@ -316,6 +316,13 @@ questions:
 
       $$\boxed{r \uparrow \quad I \uparrow \quad S \uparrow}$$
 
+      ```graph
+      type: goods-market
+      shift: investment
+      direction: right
+      label: optimism about future productivity (A^f up)
+      ```
+
       > **Note:** even though consumers did not change their beliefs, the equilibrium rise in $r$ induces more saving — graphically a movement along the existing $S$ curve, not a shift of it.
 
       > [!tip] 🗣️ In plain English

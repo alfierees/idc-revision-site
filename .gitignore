@@ -31,3 +31,5 @@ scripts/ingest/.backup-pre-vault-solutions/
 
 # git worktrees
 .worktrees/
+.vercel/
+src/generated/
