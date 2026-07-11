@@ -574,6 +574,8 @@ questions:
 
       $$\boxed{I \text{ curve: does NOT shift}}$$
 
+      *This is a statement about the **curve**, not the final quantity. "No shift" means firms want the same investment **at each given $r$**. The equilibrium *amount* of investment still changes in Part 5 — because $r$ itself moves — but that is a movement **along** this fixed curve, not a shift of it. ($r$ is on the axis, so it can only slide you along the curve; only a change in $A^f$, $p_k$, $\delta$ or $\tau_k$ could shift it.)*
+
       > [!tip] 🗣️ In plain English
       > Nothing about machines changed — not their price, not their productivity, not their tax treatment. Firms' willingness to invest **at each interest rate** is exactly what it was.
 
@@ -586,6 +588,15 @@ questions:
       $$\boxed{r \uparrow \qquad S \downarrow \qquad I \downarrow}$$
 
       Note that $I$ **declines even though the $I$ curve did not shift** — the higher $r$ causes a movement *along* the curve. This is consistent with the theory: a higher $r$ raises the user cost, and investment falls.
+
+      ```graph
+      type: goods-market
+      shift: savings
+      direction: left
+      label: tax-financed rise in G
+      ```
+
+      In the graph, drag the shock: the **savings curve slides left** (dashed = original), the **investment curve never moves**, and the equilibrium dot travels **up the fixed $I$ curve** — so $r$ rises while $I=S$ falls. That fall in $I$ is the movement-along-the-curve of Part 4, not a shift.
 
       > **Discussion — crowding out:** this is an illustration of the "crowding out" effect of government expenditure: the rise in $G$ lowers both private consumption and private investment. The typical conclusion is that GDP rises, **but by less** than the increase in $G$ (the "multiplier" is below one). The politics of small government often leans on this claim. Reality is more complex — the assumptions here are stark. If $G$ improved future productivity (as in Q3 Part 3), or if consumers valued $G$ directly, government spending would look considerably more attractive.
 
