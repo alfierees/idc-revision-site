@@ -71,6 +71,9 @@ questions:
 
       > [!success] Answer — **3. Both economists are wrong**
 
+      > [!tip] 🗣️ In plain English
+      > Neither economist wins. Country 1's better technology (**TFP**) doubles output — and its bigger pile of machines *also* doubles output, because capital enters as $K^{1/3}$, so an $8\times$ capital gap only buys $2\times$ the output. It's a dead heat, which sinks both one-sided claims.
+
       > [!note] Formula sheet — Cobb-Douglas + development accounting
       > This is the [[Macro Equation Sheet#Production & factor demands|Cobb-Douglas]] block. The trick the sheet sets up: because $K$ enters as $K^{\alpha}$ with $\alpha = \tfrac13$, an $8\times$ capital gap only buys $8^{1/3}=2\times$ output. Whenever a question compares two economies, take the **ratio** of $Y = AK^{\alpha}N^{1-\alpha}$ and let the shared terms cancel. See [[development-accounting]].
     related_terms:
@@ -118,6 +121,9 @@ questions:
       Immigration shifts labor **supply** right, so equilibrium $N$ rises. A higher $N$ lowers $MPR$, and since the robot price is unchanged, firms cut robot demand.
 
       > [!success] Answer — **3. The demand for robots declines**
+
+      > [!tip] 🗣️ In plain English
+      > Firms want **fewer robots**. Robots and workers sit in the same bracket $[R+N]$ — the firm just counts bodies doing the work — so when immigration supplies extra workers, each robot adds less output (its **marginal product** falls). With the robot price unchanged, robots are no longer worth it at the margin.
 
       > [!tip] The intuition to carry into the real exam
       > Anything that enters production **additively** with another factor (here $R+N$) is a **substitute** for it. Add more of one and the marginal product of the other falls. Robots-and-labor questions are just factor-demand questions in disguise — check the sign of the cross-partial. See [[labor-demand]], [[automation]].
@@ -169,6 +175,9 @@ questions:
 
       > [!success] Answer — **2. A tax increase does not affect labor supply**
 
+      > [!tip] 🗣️ In plain English
+      > People work exactly the same amount. The lower **take-home wage** makes work less rewarding (work less), but it also makes you poorer (work more) — and with $\ln(C)$ utility those two pulls are perfectly matched, so $\tau_N$ literally vanishes from the labour-supply formula.
+
       > [!note] Formula sheet — static first-order condition
       > This is the [[Macro Equation Sheet#Labor supply & consumption optimality|labor-consumption FOC]] $-U_N = \frac{1-\tau_N}{1+\tau_C}wU_C$ (here $\tau_C = 0$). With **log** consumption utility, the income effect of the tax (poorer → work more) exactly cancels the substitution effect (lower net wage → work less). You don't need a Lagrangian — plug utility and the budget constraint straight into the sheet's FOC. See [[labor-supply]], [[income-effect]].
     related_terms:
@@ -214,6 +223,9 @@ questions:
       - Rearranging, $NFP = GNP - GDP$. GNP flat while GDP falls ⟹ **NFP rises** (income now flows in from abroad).
 
       > [!success] Answer — **1. GDP declines, GNP unchanged, NFP increases**
+
+      > [!tip] 🗣️ In plain English
+      > **GDP** falls, **GNP** stays put, **NFP** rises. Production inside Ukraine's borders shrinks (fewer workers on site), but Ukrainians as a nationality earn just as much as before — only now some of that income flows in from abroad, which is exactly what a rising **NFP** records.
 
       > [!note] Formula sheet — the GNP identity
       > Reach for the [[Macro Equation Sheet#National accounts & GDP|GNP identity]] $GNP = GDP + NFP$. The exam loves the GDP-vs-GNP distinction: **GDP = where production happens; GNP = who earns the income.** Emigration separates the two and NFP is the plug that balances the identity. See [[gdp]], [[gnp]], [[national-accounts]].
@@ -262,6 +274,9 @@ questions:
       $$u = \frac{\text{Unemployed}}{\text{Labor force}} = \frac{250{,}000}{4{,}250{,}000} \approx 0.059 = 5.9\%$$
 
       > [!success] Answer — **2. 5.9%**
+
+      > [!tip] 🗣️ In plain English
+      > The answer is roughly **5.9%**, and the whole trap was the wording: "not employed" lumps the genuinely **unemployed** (jobless *and* looking) in with students, retirees and others outside the **labour force**. The 85% participation rate says the labour force is $4.25$m, so only $250{,}000$ of that million actually count as unemployed.
 
       > [!note] Formula sheet — unemployment rate
       > The [[Macro Equation Sheet#Unemployment & labor-market dynamics|unemployment-rate formula]] $u = \frac{U}{U+E}$. The whole trap is the denominator: the $1{,}000{,}000$ "not employed" includes people *outside* the labor force. Use participation to back out the labor force, subtract employment to isolate the unemployed. See [[labor-force-participation]], [[epop]].
@@ -331,6 +346,9 @@ questions:
 
       > [!success] Answer — **2. PCE deflator 42%, CPI 44%**
 
+      > [!tip] 🗣️ In plain English
+      > The two rulers disagree: **42%** on the PCE deflator, **44%** on the CPI. Machines get binned first — nobody consumes them — then the **CPI** comes out higher because it prices the frozen 2023 basket, while the **deflator** lets shoppers' actual (shifted) quantities soften the blow.
+
       > [!note] Formula sheet — deflator and inflation
       > Uses the [[Macro Equation Sheet#National accounts & GDP|GDP deflator]] $P = \text{nominal}/\text{real}$ and [[Macro Equation Sheet#Prices, inflation & exchange rates|inflation]] $\pi = \frac{P_{t+1}-P_t}{P_t}$. Two rules that win this question: **(1)** strip out non-consumption goods for both consumer measures; **(2)** deflator = changing basket, CPI = fixed basket — so in an inflation with shifting quantities the two generally disagree. See [[gdp-deflator]], [[cpi]], [[inflation]].
     related_terms:
@@ -385,6 +403,9 @@ questions:
 
       > [!success] Answer — **1. $\delta \approx 1\%$, investment $\approx 6$ units**
 
+      > [!tip] 🗣️ In plain English
+      > The detective work lands on **depreciation** of about $1\%$ and **investment** of about $6$ machines. "Chosen optimally" was the crucial clue: it let us set the **marginal product of capital** equal to the **user cost**, and $\delta$ was the only unknown left in that equation. Investment then isn't the naive gap $105-100=5$ — you also had to buy replacements for the machines that wore out.
+
       > [!warning] Why you can't shortcut with $I = K_{t+1}-K_t$
       > That naïve gap ($105-100=5$) ignores depreciation and matches a *wrong* option. You **must** find $\delta$ from the [[Macro Equation Sheet#Investment & the user cost of capital|user-cost condition]] first, then feed it into the [[Macro Equation Sheet#Investment & the user cost of capital|capital-accumulation equation]] $K_{t+1}=(1-\delta)K_t+I_t$. See [[marginal-product-of-capital]], [[depreciation]], [[capital-accumulation-equation]].
     related_terms:
@@ -435,6 +456,9 @@ questions:
 
       > [!success] Answer — **1. Firm 1 employs more labor; $K/N$ equalized**
 
+      > [!tip] 🗣️ In plain English
+      > Firm 1 — the one with more machines — should also employ more workers, and the split is efficient exactly when both firms end up with the **same capital-per-worker ratio** $K/N$. Efficiency means no output gain from moving one worker across, i.e. equal **marginal products** — and with identical technology that collapses to equal $K/N$.
+
       > [!tip] The efficiency principle
       > Efficient allocation of a mobile factor ⟹ **equalize its marginal product** everywhere it can go. With Cobb-Douglas and common $A,\alpha$ that collapses to equalizing $K/N$. See [[Macro Equation Sheet#Production & factor demands|MPN]], [[marginal-product-of-labor]], [[partial-vs-general-equilibrium]].
     related_terms:
@@ -476,6 +500,9 @@ questions:
       Lower-income households tend to hold little liquid wealth and can't borrow to smooth consumption, so they're more likely **liquidity constrained**. Some higher-income "**wealthy hand-to-mouth**" households are also constrained because their wealth is illiquid. Constrained households spend a larger share of any extra income, so the **marginal propensity to consume (MPC) is higher at low incomes and declines with income**.
 
       > [!success] Answer — **2. Lower incomes more constrained; MPC declines with income**
+
+      > [!tip] 🗣️ In plain English
+      > The data say poorer households are the ones who are **liquidity constrained** — they can't borrow or dip into savings to keep spending steady — plus a few "wealthy hand-to-mouth" types whose money is locked up in houses and pensions. Constrained households spend most of any extra pound that lands, so the **MPC falls as income rises**.
 
       > [!tip] Empirical/"discussed-in-class" questions
       > No formula here — these test the stylized facts. Key terms: **liquidity-constrained**, **wealthy hand-to-mouth**, **MPC decreasing in income**. See [[borrowing-constraints]], [[consumption-smoothing]], [[heterogeneity]].
@@ -526,6 +553,9 @@ questions:
 
       > [!success] Answer — **1. Increased**
 
+      > [!tip] 🗣️ In plain English
+      > It **increased**. **PPP-adjusted GDP** values Israel's real output at *US prices*, so it has two moving parts — and here Israel's real output went nowhere (nominal growth exactly matched by inflation) while US prices rose. Flat quantity times a rising price tag is a bigger number.
+
       > [!note] Formula sheet — PPP conversion
       > This is the [[Macro Equation Sheet#Prices, inflation & exchange rates|PPP conversion]] $GDP^{PPP} = \frac{\text{GDP in local currency}}{e^{pp}}$ with $e^{pp} = P_i / P_{US}$, i.e. $GDP^{PPP} = \frac{GDP^{local}}{P_i}P_{US}$. Split it into (real local GDP) $\times$ ($US$ price level) and track each piece. See [[purchasing-power-parity]], [[real-vs-nominal]].
     related_terms:
@@ -575,6 +605,9 @@ questions:
       The marginal response $\dfrac{\partial c_0}{\partial y_0} = \dfrac{1}{1+\beta^{\sigma}(1+r)^{\sigma-1}}$ **decreases in $\beta$**: a more patient consumer saves more of a windfall, so current consumption reacts less.
 
       > [!success] Answer — **2** (correct formula, responds *less* as $\beta$ rises)
+
+      > [!tip] 🗣️ In plain English
+      > Option 2 wins: the standard formula, and a more **patient** consumer (higher $\beta$) reacts *less* to a pay rise today. Patience sits in the denominator of $c_0$, so the patient type banks most of the windfall for tomorrow instead of spending it now.
 
       > [!note] Formula sheet — Euler + lifetime budget
       > The two tools are [[Macro Equation Sheet#Intertemporal choice (consumption & saving)|the Euler equation and the lifetime budget constraint]]. Standard recipe: Euler links $c_1$ to $c_0$, sub into the budget constraint, solve for $c_0$. Then read the comparative static off the denominator. Higher $\beta$ = more patience = smaller MPC out of current income. See [[euler-equation]], [[intertemporal-choice]], [[consumption-smoothing]].
@@ -630,6 +663,9 @@ questions:
 
       > [!success] Answer — **4. Approximately 103%**
 
+      > [!tip] 🗣️ In plain English
+      > The ratio drifts up to about **103%**. The 4-point **primary deficit** pushes debt up, but growth ($\approx 3\%$, backed out of the 20-year GDP figures) outruns the **real** interest rate ($2\%$, via Fisher), and that gap quietly shrinks the ratio by about a point — net effect, plus 3 points.
+
       > [!note] Formula sheet — debt dynamics + Fisher
       > Two sheet entries combine: [[Macro Equation Sheet#Fiscal policy & public debt|debt dynamics]] $\Delta b = d + \frac{r-g}{1+g}b$ and the [[Macro Equation Sheet#Prices, inflation & exchange rates|Fisher equation]] $r = i - \pi^e$. The data never hands you $r$ or $g$ directly — that's the exam's game: get $r$ from Fisher, get $g$ from the 20-year compound-growth relation, *then* plug in. See [[public-debt-dynamics]], [[primary-deficit]], [[fisher-equation]].
     related_terms:
@@ -671,6 +707,9 @@ questions:
       Broader welfare measures are **strongly positively correlated** with GDP per capita, so GDP is a useful proxy for living standards. But the relationship is **not one-to-one**: welfare also reflects consumption, leisure, life expectancy and inequality, so countries with similar GDP per capita can have substantially different welfare.
 
       > [!success] Answer — **2. Strong correlation, but substantial deviations from one-to-one**
+
+      > [!tip] 🗣️ In plain English
+      > **GDP per person** and welfare move strongly together — richer countries really are better off — but not one-for-one, because welfare also cares about things GDP ignores: leisure, life expectancy, inequality, actual consumption. So GDP is a decent stand-in, just not a perfect one.
 
       > [!tip] Reading these options
       > The right answer to a "welfare vs. GDP" question is almost always the **nuanced** one — strong correlation *and* important caveats. Extreme claims ("useless proxy", "exactly the same ranking", "systematic bias") are the distractors. See [[national-accounts]], [[inequality-measures]].
@@ -716,6 +755,9 @@ questions:
       - **Labor demand:** $MPN = (1-\alpha)N_t^{-\alpha}$ — **$A$ does not appear.** So higher $A$ leaves the labor-demand curve **unchanged.**
 
       > [!success] Answer — **2. Investment demand right; labor demand unchanged**
+
+      > [!tip] 🗣️ In plain English
+      > Investment demand shifts right; labour demand doesn't budge. The giveaway was the **additive** production function — a $K$ term *plus* an $N$ term — where $A$ multiplies only the capital part. So better technology raises the payoff to machines, but leaves what an extra worker adds (and hence hiring) completely untouched.
 
       > [!warning] Watch the functional form
       > This is the classic trap: with the usual **multiplicative** Cobb-Douglas, $A$ enters *both* $MPK$ and $MPN$. Here the production function is **additive** ($AK^{\alpha} + N^{1-\alpha}$), so $A$ multiplies only the capital term and drops out of $MPN$. Always differentiate the *given* function — don't autopilot the standard result. See [[Macro Equation Sheet#Investment & the user cost of capital|investment rule]], [[labor-demand]].
@@ -766,6 +808,9 @@ questions:
 
       > [!success] Answer — **1. $\sigma>1$: income effect dominates, downward-sloping supply**
 
+      > [!tip] 🗣️ In plain English
+      > With $\sigma > 1$, labour supply slopes **down**: a pay rise makes people work *less*, because feeling richer (the **income effect**) outmuscles the lure of better-paid hours (the **substitution effect**). The exponent $\frac{1-\sigma}{\psi+\sigma}$ on $w$ turns negative once $\sigma > 1$, and that sign is the whole story.
+
       > [!note] Formula sheet — static FOC again
       > Same [[Macro Equation Sheet#Labor supply & consumption optimality|static first-order condition]] $-U_N = wU_C$ machinery as Q3, but now the **curvature $\sigma$** decides the slope. The sign of $(1-\sigma)$ is the whole answer: it flips whether income or substitution effect wins. See [[labor-supply]], [[income-effect]].
     related_terms:
@@ -812,6 +857,9 @@ questions:
       Demand right + supply left ⟹ the **real wage rises unambiguously**, but the effect on the **quantity of labor is ambiguous** (the two shifts push it in opposite directions).
 
       > [!success] Answer — **3. Demand right, supply left; wage up, labor ambiguous**
+
+      > [!tip] 🗣️ In plain English
+      > Each shock moves its own curve: the **TFP boost** makes workers more valuable, pushing labour demand right; the **consumption tax** makes an extra hour's pay buy less, pushing supply left (with no income effect to offset it). Both shifts push the wage up, but they tug employment in opposite directions — so the wage is certain and the headcount isn't.
 
       > [!tip] Two curves, opposite directions → price certain, quantity ambiguous
       > When demand and supply shift in **opposite** directions, the price effect (here the wage) is pinned down but the quantity effect isn't. The "no income effect" assumption is doing real work — it strips the offset and leaves only the tax distortion on supply. See [[consumption-tax]], [[labor-supply]], [[labor-demand]].
@@ -868,6 +916,9 @@ questions:
 
       > [!success] Answer — **2. Switches to capital; productivity + displacement; wage↓, rental↑**
 
+      > [!tip] 🗣️ In plain English
+      > Machines take over task 2: at $12/8 = 1.5$ per unit they're now cheaper than workers at $2$. That switch is both a **productivity effect** (the task costs less to produce, $3 \to 1.5$) *and* a **displacement effect** (labour loses the task to capital) — so labour demand and the wage fall while capital demand and the rental rise.
+
       > [!tip] Task-based model = compare unit costs
       > A task goes to whichever factor is **cheaper per unit of the task**: $\frac{w}{\psi_N}$ vs. $\frac{r}{\psi_K}$. Automation news raises $\psi_K$, which can flip a task to capital — a **displacement** effect on labor — while also lowering its cost — a **productivity** effect. See [[automation]], [[routine-biased-technological-change]], [[labor-demand]].
     related_terms:
@@ -915,6 +966,9 @@ questions:
       So **$c_0$ is independent of $r$** (log utility: income and substitution effects exactly offset), while **$c_1$ rises with $r$** (saving earns a higher return).
 
       > [!success] Answer — **4. $c_0$ unchanged, $c_1$ increases**
+
+      > [!tip] 🗣️ In plain English
+      > Spending today doesn't move; spending tomorrow goes up. **Log utility** is the trick: the pull to save more at the better rate and the comfort of the pot now earning more cancel exactly, so $c_0$ stays a fixed slice $\frac{a}{1+\beta}$ of the savings pot — and the untouched savings simply grow into a bigger $c_1$.
 
       > [!note] Formula sheet — Euler + budget, log case
       > [[Macro Equation Sheet#Intertemporal choice (consumption & saving)|Euler + lifetime budget]] with $u=\ln c$. The signature of **log utility** is that current consumption is a fixed fraction of wealth, immune to $r$ — the cleanest case where income and substitution effects cancel. See [[euler-equation]], [[consumption-smoothing]], [[real-interest-rate]].
@@ -964,6 +1018,9 @@ questions:
 
       > [!success] Answer — **3. Both claims are correct**
 
+      > [!tip] 🗣️ In plain English
+      > Both claims check out. Nominal GDP is just the **deflator** times real GDP, so a rising deflator *means* nominal outpaces real — that's Claim 1 by construction. And under competition wages equal marginal product, so exactly $(1-\alpha)$ of income lands with workers: the Cobb-Douglas exponents *are* the income shares.
+
       > [!note] Formula sheet — two identities at once
       > Claim 1 is the [[Macro Equation Sheet#National accounts & GDP|nominal-GDP identity]] $\text{Nominal} = P\times Y$; Claim 2 is [[Macro Equation Sheet#Production & factor demands|labor's share]] $wN/Y$ evaluated at $w = MPN$. The Cobb-Douglas fact that **labor's share $= 1-\alpha$ exactly** (and capital's $= \alpha$) is one of the most reused results in the course. See [[gdp-deflator]], [[labor-share]].
     related_terms:
@@ -1009,6 +1066,9 @@ questions:
       **Consumption.** From the resource constraint $Y = C + I + G$ with $Y$ fixed, $I\downarrow$ and $G$ unchanged ⟹ **consumption rises.**
 
       > [!success] Answer — **2. Investment down, output unchanged, consumption up**
+
+      > [!tip] 🗣️ In plain English
+      > Investment falls, output holds still, and consumption rises. The tax makes holding machines dearer (the **user cost of capital** goes up) so firms invest less — but nothing that produces output ($A$, $K$, $N$) has changed yet, and the rebate means nobody's income moved. With $Y = C + I + G$ fixed and $I$ down, the freed-up output shows up as extra consumption.
 
       > [!note] Formula sheet — user cost drives it
       > The lever is the [[Macro Equation Sheet#Investment & the user cost of capital|user cost]] $\frac{(1+r)p_k-(1-\delta)p_k^f}{1-\tau_K}$: raising $\tau_K$ raises the user cost and cuts investment. Then close the loop with the goods-market identity $Y = C+I+G$ — with $Y$ and $G$ fixed, whatever leaves investment shows up as consumption. See [[crowding-out]], [[goods-market-equilibrium]] via [[Macro-Economics]].

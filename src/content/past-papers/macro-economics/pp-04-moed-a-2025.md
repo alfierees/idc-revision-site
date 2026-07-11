@@ -48,6 +48,9 @@ questions:
 
       > [!success] Answer — **Both economists are wrong; TFP and capital each contribute a factor of 2**
 
+      > [!tip] 🗣️ In plain English
+      > Country 1 makes four times as much as country 2, and the split is a dead heat: **better technology** doubles output and **more machines** double it again. The $8\times$ capital pile only counts through $K^{1/3}$, which tames it to $2\times$ — so both economists backed a winner in a race that ended in a tie.
+
       > [!note] Formula sheet — Cobb-Douglas + development accounting
       > This is the [[Macro Equation Sheet#Production & factor demands|Cobb-Douglas production function]] $Y = A K^{\alpha} N^{1-\alpha}$. Whenever a question compares two economies, take the **ratio** of $Y = A K^{\alpha} N^{1-\alpha}$ and let the shared terms cancel; the capital gap is dampened by the exponent $\alpha = \tfrac13$. See [[development-accounting]], [[cobb-douglas]].
     related_terms:
@@ -76,6 +79,9 @@ questions:
       Intuitively: $R$ and $N$ enter **additively** as $[R+N]$, which makes them **substitutes**. Adding more of one factor lowers the marginal product of the other. (Simply arguing that the additive $R+N$ makes them substitutes — so more $N$ reduces demand for $R$ — is an acceptable answer even without the derivative.)
 
       > [!success] Answer — **The demand for robots declines**
+
+      > [!tip] 🗣️ In plain English
+      > Because robots and workers are lumped together as $[R+N]$, they're **substitutes** — interchangeable ways of doing the same job. Immigration floods the market with workers, so an extra robot now adds less output than before — and firms buy **fewer robots**.
 
       > [!tip] The intuition to carry into the exam
       > Anything that enters production **additively** with another factor (here $R+N$) is a **substitute** for it: add more of one and the marginal product of the other falls. Robots-and-labor questions are just factor-demand questions in disguise — check the sign of the cross-partial. See [[labor-demand]], [[automation]], [[marginal-product-of-labor]].
@@ -114,6 +120,9 @@ questions:
 
       > [!success] Answer — **Labor supply $N = (1/\theta)^{1/(1+\psi)}$ is independent of $\tau_N$**
 
+      > [!tip] 🗣️ In plain English
+      > Work through the FOC and the tax rate simply **cancels out**: people work $N = (1/\theta)^{1/(1+\psi)}$ hours whatever $\tau_N$ is. With log utility the two forces balance exactly — the tax makes you poorer (work more) but makes an hour's pay worth less (work less) — so hours don't budge.
+
       > [!note] Formula sheet — static first-order condition
       > This is the [[Macro Equation Sheet#Labor supply & consumption optimality|static labor-consumption FOC]] $-U_N = \frac{1-\tau_N}{1+\tau_C}\,w\,U_C$. The recipe for any "how does a tax/wage affect labor supply" question: plug $U$ into the FOC, substitute the budget constraint, solve for $N(w)$. See [[labor-supply]], [[labor-income-tax]], [[income-effect]].
     related_terms:
@@ -136,6 +145,9 @@ questions:
       - Rearranging the identity, $NFP = GNP - GDP$. GNP is flat while GDP falls ⟹ **NFP rises.** (Equivalently, by definition NFP — payments to Ukrainians from abroad — has risen because they now work abroad.)
 
       > [!success] Answer — **GDP falls, GNP unchanged, NFP rises**
+
+      > [!tip] 🗣️ In plain English
+      > Production inside Ukraine shrinks, so **GDP falls**; the leavers earn the same money abroad, so Ukrainians' total income — **GNP** — doesn't move; and since $GNP = GDP + NFP$, the wages now flowing in from abroad mean **NFP rises** to plug the gap.
 
       > [!note] Formula sheet — the GNP identity
       > Reach for the [[Macro Equation Sheet#National accounts & GDP|GNP identity]] $GNP = GDP + NFP$. The exam loves the GDP-vs-GNP distinction: **GDP = where production happens; GNP = who earns the income.** Emigration separates the two and NFP is the plug that balances the identity. See [[gdp]], [[gnp]], [[national-accounts]].
@@ -182,6 +194,9 @@ questions:
       $$u_{\text{old}} = \frac{75{,}000}{675{,}000} \approx 0.111 = 11.1\%$$
 
       > [!success] Answer — **EPOP = 80% for both; unemployment ≈ 5.88% (young) and ≈ 11.1% (old)**
+
+      > [!tip] 🗣️ In plain English
+      > Both groups hold jobs at the same rate — **EPOP is 80% for each** — yet the old are nearly twice as likely to be unemployed (**11.1% vs 5.88%**). The trap was the denominator: "not employed" includes people who aren't even looking, so you had to use the participation rate to find the real labour force first.
 
       > [!note] Formula sheet — unemployment rate
       > The [[Macro Equation Sheet#Unemployment & labor-market dynamics|unemployment-rate formula]] $u = \frac{U}{U+E}$. The whole trap is the denominator: the "not employed" figures include people *outside* the labor force. Use participation to back out the labor force, then subtract employment to isolate the unemployed. See [[epop]], [[labor-force-participation]].
@@ -230,6 +245,9 @@ questions:
 
       > [!success] Answer — **PCE deflator inflation 42%; CPI inflation 44%; they differ because the deflator uses changing quantities while the CPI fixes the base-year basket**
 
+      > [!tip] 🗣️ In plain English
+      > The two thermometers disagree: the **deflator reads 42%**, the **CPI 44%**. The deflator prices what people actually bought each year, while the CPI keeps pricing the frozen 2023 basket — and because shoppers changed their mix between the years, the readings drift apart. (Machines never belonged in either measure: consumers don't buy them.)
+
       > [!note] Formula sheet — deflator and inflation
       > Uses the [[Macro Equation Sheet#National accounts & GDP|GDP deflator]] $P = \text{nominal}/\text{real}$ and [[Macro Equation Sheet#Prices, inflation & exchange rates|inflation]] $\pi = \frac{P_{t+1}-P_t}{P_t}$. Two rules win this question: **(1)** strip out non-consumption goods for both consumer measures; **(2)** deflator = changing basket, CPI = fixed basket, so with shifting quantities the two generally disagree. See [[gdp-deflator]], [[cpi]], [[inflation]].
     related_terms:
@@ -258,6 +276,9 @@ questions:
 
       The two choice variables are $c_0$ and $c_1$.
 
+      > [!tip] 🗣️ In plain English
+      > The set-up in one line: pick spending when young ($c_0$) and old ($c_1$) to make yourself happiest, knowing all the money you'll ever have is $y_0$ — so today's spending plus tomorrow's, discounted back to today, must exactly use it up.
+
       **Part 2 — optimal consumption plan.** With $u(c_t) = \ln(c_t)$, marginal utility is $u'(c_t) = 1/c_t$. The Euler equation gives
 
       $$\frac{1}{c_0} = \beta(1+r)\frac{1}{c_1} \quad\Longrightarrow\quad c_1 = \beta(1+r)c_0$$
@@ -268,6 +289,9 @@ questions:
 
       $$\boxed{c_0 = \frac{1}{1+\beta}\,y_0}, \qquad c_1 = \beta(1+r)c_0 = \beta(1+r)\frac{1}{1+\beta}\,y_0$$
 
+      > [!tip] 🗣️ In plain English
+      > The **Euler equation** says spending should grow at pace $\beta(1+r)$; combine that with the budget and the plan is tidy — spend the fraction $\frac{1}{1+\beta}$ of income while young, save the rest, and live off the savings plus interest when old.
+
       **Part 3 — optimal saving rate.** Saving in period 0 is income minus consumption:
 
       $$s_1 = y_0 - c_0 = y_0 - \frac{1}{1+\beta}y_0 = \left(1 - \frac{1}{1+\beta}\right)y_0 = \frac{\beta}{1+\beta}\,y_0$$
@@ -276,15 +300,24 @@ questions:
 
       $$\frac{s_1}{y_0} = \frac{\beta}{1+\beta}$$
 
+      > [!tip] 🗣️ In plain English
+      > The saving rate falls straight out: **$\frac{\beta}{1+\beta}$ of young-age income**. The more patient you are (bigger $\beta$), the bigger the slice you tuck away for retirement.
+
       **Part 4 — mandatory saving.** As long as mandatory savings earn the same return $1+r$, they are a perfect substitute for voluntary savings.
 
       - **(a)** The welfare-maximizing $\tau$ is exactly the optimal saving rate found in part 3: $\tau = \dfrac{\beta}{1+\beta}$. This forces consumers to save precisely their own optimal amount given preferences, income and prices. (It's enough to explain that the optimal mandatory rate equals the part-3 rate; the algebraic term is not strictly required.)
       - **(b)** If $\tau < \dfrac{\beta}{1+\beta}$, mandatory savings fall short of the consumer's optimal plan, so **voluntary saving is positive** and covers exactly the shortfall.
       - **(c)** If $\tau > \dfrac{\beta}{1+\beta}$, mandatory savings force the consumer to save *too much*, so **voluntary saving is negative** — the consumer borrows to offset the excess mandatory saving.
 
+      > [!tip] 🗣️ In plain English
+      > Forced saving earns the same return as your own, so it's a **perfect substitute**. Best policy: set $\tau$ to exactly what people would save anyway. Set it **too low** and people top up with voluntary saving; set it **too high** and they borrow to undo the excess.
+
       **Part 5 — heterogeneous $\beta$.** In general **no single $\tau$ is optimal for both types.** Each type still wants saving rate $\dfrac{\beta}{1+\beta}$, but with $\beta_1 > \beta_2$ these optimal rates differ, and no single $\tau$ can equal both.
 
       *Side note:* if the government sets $\tau$ at the high-$\beta$ (patient) consumer's rate, that consumer neither saves nor borrows voluntarily while the impatient one borrows; if $\tau$ is set in between, the patient consumer tops up with voluntary saving and the impatient one borrows.
+
+      > [!tip] 🗣️ In plain English
+      > Each person's ideal saving rate depends only on their own patience, so a patient type and an impatient type want **different** rates — no single mandatory $\tau$ can be optimal for both.
 
       > [!success] Answer — **$c_0 = \frac{y_0}{1+\beta}$, $c_1 = \frac{\beta(1+r)}{1+\beta}y_0$; optimal saving rate $\frac{\beta}{1+\beta}$; optimal $\tau = \frac{\beta}{1+\beta}$; below it → voluntary saving positive, above it → negative (borrowing); with $\beta_1 \neq \beta_2$ no single $\tau$ is optimal for both**
 
@@ -324,7 +357,13 @@ questions:
 
       $$A_t = \frac{100}{100^{0.3}\,1000^{0.7}} \approx 0.2, \qquad A_{t+1} = \frac{120}{105^{0.3}\,1050^{0.7}} \approx 0.23$$
 
+      > [!tip] 🗣️ In plain English
+      > TFP is the **Solow residual** — the slice of output that machines and workers can't account for. Plugging in gives roughly **0.2 in year $t$ and 0.23 in year $t+1$**: the economy got smarter.
+
       **Part 2 — sign the TFP change without computing.** Both capital and labor grew by $5\%$ between $t$ and $t+1$, but output grew by $20\%$. Under the production function, output can grow faster than *both* inputs only if **TFP also increased.** So $A$ rose.
+
+      > [!tip] 🗣️ In plain English
+      > No calculator needed: inputs grew 5% but output jumped 20%. Output outrunning *both* inputs can only mean the technology term did the extra work — **TFP rose**.
 
       **Part 3(a) — depreciation rate.** Optimal capital choice requires **future MPK = user cost**. With Cobb-Douglas, $MPK^f = \alpha A_{t+1}K_{t+1}^{\alpha-1}N_{t+1}^{1-\alpha}$:
 
@@ -342,6 +381,9 @@ questions:
 
       $$I_t = K_{t+1} - (1-\delta)K_t = 105 - (1-0.011)(100) = 105 - 98.9 \approx 6.1$$
 
+      > [!tip] 🗣️ In plain English
+      > The firm's rule — next year's machine must earn its **user cost** — has only one unknown left, so it pins down wear-and-tear at about **$\delta \approx 1.1\%$**. Feed that into the capital-accumulation equation and investment comes out at about **6.1 units**.
+
       **Part 4(a) — real wage.** Optimal hiring sets the real wage equal to $MPN$. With Cobb-Douglas, $MPN = (1-\alpha)A_t K_t^{\alpha}N_t^{-\alpha}$:
 
       $$w = MPN_t = 0.7 \times 0.2 \times 100^{0.3}\times 1000^{-0.3} \approx 0.07$$
@@ -355,6 +397,9 @@ questions:
       $$C = Y - I - G = 100 - 61 - 3 = 36$$
 
       where investment enters as $I = 61$ because the quantity is $6.1$ units at a price of $10$ units of output. (Because the price wasn't emphasized in class, using $I = 6.1$ — giving $C = 100 - 6.1 - 3 = 90.9$ — was also accepted.)
+
+      > [!tip] 🗣️ In plain English
+      > The wage is what one more worker adds to output, about **0.07**; the government spends whatever the capital tax raises, so **$G = 3$**; and consumption is what's left of output once investment and government take their share — **36** (or **90.9** if investment isn't converted into output units at price 10).
 
       > [!success] Answer — **$A_t \approx 0.2$, $A_{t+1} \approx 0.23$ (TFP rose); $\delta \approx 1.1\%$; $I_t \approx 6.1$; $w \approx 0.07$; $G = 3$; $C = 36$ (or $C \approx 90.9$ if $I$ is left as 6.1)**
 
@@ -380,7 +425,13 @@ questions:
       - The **trend** reflects the expected path of the series, driven by medium- and longer-term changes.
       - The **cyclical** component captures deviations of the actual series from its trend — typically the shorter-term fluctuations *around* the trend. (For example, recessions are periods where the cyclical component of output lies *below* its trend.)
 
+      > [!tip] 🗣️ In plain English
+      > Every macro series splits into a **trend** — the smooth path it's expected to follow — and a **cycle** — the wiggles around that path. A recession is just the cyclical bit dipping below trend.
+
       **Part 2 — consumption smoothing.** When we look at the consumption of **non-durables and services**, the variation in their **cyclical components is smaller than that of output** (output being aggregate income). In other words, consumption of these categories is more stable than income. That relative smoothness is exactly what **consumption smoothing** predicts: households use saving and borrowing to keep consumption steadier than their fluctuating income.
+
+      > [!tip] 🗣️ In plain English
+      > Spending on **non-durables and services** wiggles less over the cycle than income does — exactly what you'd expect if households use saving and borrowing to keep spending steady. That's the **consumption smoothing** evidence.
 
       > [!success] Answer — **Trend = expected long-run path; cyclical = short-run deviations around it. Non-durables/services consumption is less volatile than output, consistent with consumption smoothing**
 

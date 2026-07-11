@@ -49,6 +49,9 @@ questions:
 
       > [!success] Answer — a larger deficit ($d\uparrow$), slower growth ($g\downarrow$), and a higher interest rate ($r\uparrow$) all raise $\Delta b$, matching Moody's upward revision.
 
+      > [!tip] 🗣️ In plain English
+      > War makes the government **spend more** ($d\uparrow$), **slows the economy** as workers get called up and everyone turns cautious ($g\downarrow$), and makes lenders **charge more** to a riskier borrower ($r\uparrow$). All three push the debt burden the same way — up — which is exactly why Moody's flipped its forecast from falling to rising.
+
       > [!note] Formula sheet — debt dynamics
       > This is the [[Macro Equation Sheet#Fiscal policy & public debt|debt-dynamics equation]] $\Delta b_t = d_t + \frac{r-g}{1+g}\,b_{t-1}$. The exam wants you to map a real-world shock onto each term's sign: read off from the equation that $d\uparrow$, $g\downarrow$, $r\uparrow$ each raise $\Delta b$, then supply a plausible "story" for why the war moves each one. See [[public-debt-dynamics]], [[primary-deficit]], [[fiscal-policy]].
     related_terms:
@@ -82,6 +85,9 @@ questions:
 
       > [!success] Answer — $E_{t+1} = 9{,}328{,}000$; the economy is **not** in steady state in the current period (employment is changing), and it is not at the steady-state levels ($\approx 9{,}211{,}000$ employed / $789{,}000$ unemployed) in the next period either.
 
+      > [!tip] 🗣️ In plain English
+      > Next month's headcount: take the $9.4$m employed, drop the $3\%$ who lose their jobs, add the $35\%$ of the $600{,}000$ job-seekers who get hired — that lands on $9{,}328{,}000$. Because that's **different from this month's number**, the flows in and out don't cancel, so this isn't a **steady state**. The formula says the flows only balance at about $789{,}000$ unemployed — well above the current $600{,}000$ — so next period isn't at rest either.
+
       > [!note] Formula sheet — labor-market dynamics
       > Two blocks from the [[Macro Equation Sheet#Unemployment & labor-market dynamics|labor-market dynamics]] section: the employment law of motion $E_{t+1} = (1-d)E_t + fU_t$ and the steady-state rate $u = \frac{d}{d+f}$. In steady state the flows in and out of employment balance, so $E$ is constant; here they don't, which is the tell that the economy is off its steady state. See [[job-finding-rate]], [[separation-rate]], [[frictional-unemployment]].
     related_terms:
@@ -110,6 +116,9 @@ questions:
 
       > [!success] Answer — solid line = investment vs. **current** price $p_K$ (downward sloping: $p_K\uparrow \Rightarrow$ user cost $\uparrow \Rightarrow I\downarrow$); dashed line = investment vs. **future** price $p_K^{f}$ (upward sloping: $p_K^{f}\uparrow \Rightarrow$ user cost $\downarrow \Rightarrow I\uparrow$).
 
+      > [!tip] 🗣️ In plain English
+      > A machine that costs **more today** is a worse deal, so firms buy fewer — that's the downward-sloping solid line. A machine that will be **worth more later** is a better deal (you recoup more when you resell), so firms buy more — the upward-sloping dashed line. Both effects run through the **user cost**: the true cost of owning a machine for one period.
+
       > [!note] Formula sheet — user cost of capital
       > Everything hinges on the [[Macro Equation Sheet#Investment & the user cost of capital|user-cost condition]] $MPK^{f} = \frac{(1+r)p_K - (1-\delta)p_K^{f}}{1-\tau_K}$. The two prices enter with **opposite signs**: $p_K$ raises the user cost (fewer machines), $p_K^{f}$ lowers it (more machines). Firms set future MPK equal to this user cost, so anything that raises the user cost cuts optimal $K^{f}$ and hence investment. See [[capital-accumulation-equation]], [[marginal-product-of-capital]], [[depreciation]].
     related_terms:
@@ -134,6 +143,9 @@ questions:
       (Side note: this additive production function violates the standard assumptions — normally, with multiplicative Cobb-Douglas, $A$ enters *both* $MPK$ and $MPN$, so productivity *would* shift labor demand.)
 
       > [!success] Answer — agree on output and investment (both rise with $A$), but the **commentator is right on labor demand**: with $MPN = (1-\alpha)N^{-\alpha}$ independent of $A$, higher productivity does **not** shift labor demand.
+
+      > [!tip] 🗣️ In plain English
+      > The economist is right twice: more productivity means **more output** straight away and a juicier return on machines, so **more investment**. But in this odd **additive** function, $A$ never touches the labour term — an extra worker is worth exactly the same as before, so firms have **no reason to hire more**. The commentator wins on jobs.
 
       > [!warning] Watch the functional form
       > The trap is autopiloting the standard Cobb-Douglas result. Here production is **additive** ($A K^{\alpha} + N^{1-\alpha}$), so $A$ multiplies only capital and drops out of $MPN = (1-\alpha)N^{-\alpha}$. Always differentiate the *given* function. Investment still responds because $MPK^{f} = \alpha A^{f}(K^{f})^{\alpha-1}$ does contain $A$. See [[Macro Equation Sheet#Investment & the user cost of capital|investment rule]], [[Macro Equation Sheet#Production & factor demands|marginal products]], [[labor-demand]], [[marginal-product-of-capital]].
@@ -161,6 +173,9 @@ questions:
       **How the ratios reveal it.** Polarization typically shows up as a **widening 90/50 ratio** (the top pulls away from the middle) together with a **declining 50/10 ratio** (the middle no longer pulls away from — or even falls back toward — the bottom). So the gap between the rich and the middle widens while the gap between the middle and the poor shrinks.
 
       > [!success] Answer — 90/10, 90/50 and 50/10 are ratios of high/median/low percentile wages; polarization = employment and wage growth at the top and bottom with a hollowed-out middle, signalled by a **rising 90/50** alongside a **falling 50/10**.
+
+      > [!tip] 🗣️ In plain English
+      > The ratios are just wage gaps between rungs of the pay ladder: **90/10** top vs bottom, **90/50** top vs middle, **50/10** middle vs bottom. **Polarization** means jobs grow at both ends while the middle hollows out — so the top pulls away from the middle (90/50 rises) while the bottom closes in on it (50/10 falls).
 
       > [!tip] Empirical / "discussed-in-class" question
       > No equation to plug into — these test the stylized facts on inequality and the "hollowing of the middle." Key terms: **percentile wage ratios**, **polarization**, widening 90/50 vs. narrowing 50/10. See [[inequality-measures]], [[polarization]], [[routine-biased-technological-change]].
@@ -207,6 +222,9 @@ questions:
 
       > [!success] Answer — GDP-deflator inflation $\approx -5.5\%$; CPI inflation $= +10\%$. They differ because the deflator includes the robots (whose price fell 10% and are a big share of GDP), while the CPI covers only the two consumption goods (whose prices rose 10%).
 
+      > [!tip] 🗣️ In plain English
+      > The two measures wildly disagree — the deflator says prices *fell* $5.5\%$, the CPI says they *rose* $10\%$ — and the robots are the culprit. Robots are a huge chunk of what the country **produces**, and their price dropped $10\%$, dragging the deflator down. But nobody **buys** a robot at the supermarket, so the CPI only sees pasta and tomatoes, both up $10\%$.
+
       > [!note] Formula sheet — deflator and inflation
       > Uses the [[Macro Equation Sheet#National accounts & GDP|GDP deflator]] $P = \text{nominal}/\text{real}$ and [[Macro Equation Sheet#Prices, inflation & exchange rates|inflation]] $\pi = \frac{P_{t+1}-P_t}{P_t}$. The exam's twist: the **deflator covers all output** (so a non-consumption good with a falling price can pull it negative) while the **CPI fixes the consumer basket** — strip robots out for the CPI but not the deflator. See [[gdp-deflator]], [[cpi]], [[inflation]].
     related_terms:
@@ -250,6 +268,9 @@ questions:
 
       So **TFP falls in both years** (95.6 → 94.1 → 91.2).
 
+      > [!tip] 🗣️ In plain English
+      > Total labour is just **workers × hours**, and TFP is the **leftover** — the slice of GDP that capital and labour can't account for. Backing it out shows UK productivity **fell two years running** through the crisis (95.6 → 94.1 → 91.2).
+
       ### Part 2 — Labor-market model
 
       **(a) Effect of a temporary negative TFP shock.**
@@ -265,6 +286,9 @@ questions:
       - **Demand side — capital (we have data).** More capital raises the marginal product of labor (capital-labor complementarity), shifting labor **demand right**. The data show the **capital stock rising every year** (11,698 → 11,934 → 12,080), which could strengthen labor demand and **offset** some of the negative TFP shock — helping explain the 2008 rise in labor despite falling TFP.
       - **Supply side — PVLR / population (we lack data).** (i) A **PVLR effect**: if workers expect a broader economic slowdown, their present value of lifetime resources falls, and (poorer) they **supply more labor** — labor supply shifts right. Combined with falling demand, equilibrium labor becomes **ambiguous**. (ii) **Population growth** would also shift supply right, again making the equilibrium labor effect ambiguous (though one-year population changes are usually small).
 
+      > [!tip] 🗣️ In plain English
+      > The model says a short-lived productivity dip should cut **both jobs and GDP**. Reality half-agrees: GDP fell both years, but labour actually **rose in 2008** — so the model gets 2009 right and 2008 wrong. Two rescue stories: the **growing capital stock** propped up labour demand, and a gloomier outlook (lower lifetime wealth) may have pushed people to **work more**, shifting labour supply out.
+
       ### Part 3 — Investment model and the capital path
 
       In the investment model, firms choose future capital so that the **future marginal product of capital equals the user cost**; TFP drives $MPK^{f}$ but **not** the user cost. When future TFP is expected to be **lower**, the $MPK^{f}$ curve shifts **down**, so optimal $K^{f}$ should be **lower** — i.e. we would expect a **declining** capital stock.
@@ -272,6 +296,9 @@ questions:
       In the data, TFP falls over 2007–2009, so *if firms anticipated this fall*, the model predicts a **falling** capital stock. But the data show capital **rising** every year (11,698 → 11,934 → 12,080). So the observed capital path is **inconsistent** with the model under the assumption that firms expected the TFP decline.
 
       (Not for grading — useful context: capital *growth* does slow in the second year, where TFP falls more sharply; and firms plan investment over horizons longer than one year — over a longer window TFP actually rebounded, which can rationalize continued capital accumulation.)
+
+      > [!tip] 🗣️ In plain English
+      > If firms truly saw the productivity slump coming, they should have been **shrinking** their machine stock — but the data show it **growing** every year. So taken at face value, the investment model flunks this episode.
 
       > [!success] Answer — TFP falls each year (95.6, 94.1, 91.2); a temporary negative TFP shock shifts labor demand left (supply fixed) → lower employment, lower wage, lower GDP; predictions are **inconsistent for 2008** (labor rose) but **consistent for 2009**, with rising capital (demand) and PVLR/population (supply) as reconciling factors; and the **rising** capital stock is **inconsistent** with firms having expected the TFP decline.
 
@@ -314,6 +341,9 @@ questions:
 
       $$\frac{\partial\mathcal{L}}{\partial \lambda} = y_0 + \frac{y_1}{1+r} - (1+\tau_0)c_0 - \frac{(1+\tau_1)c_1}{1+r} = 0$$
 
+      > [!tip] 🗣️ In plain English
+      > Setup done: the consumer picks **spending today and tomorrow** ($c_0, c_1$), and the multiplier $\lambda$ prices the budget. The three conditions are just "marginal benefit = marginal cost" for each choice, plus the budget constraint itself.
+
       ### Part 2 — Euler equation
 
       Eliminate $\lambda$ between the first two FOCs. The first gives $\lambda = \dfrac{1}{c_0}\dfrac{1}{1+\tau_0}$. Substitute into the second:
@@ -325,6 +355,9 @@ questions:
       $$\frac{1}{c_0} = \beta(1+r)\frac{1+\tau_0}{1+\tau_1}\frac{1}{c_1}$$
 
       as required.
+
+      > [!tip] 🗣️ In plain English
+      > Merging the first two conditions kills $\lambda$ and leaves the **Euler equation** — the tilt rule for spending over time. The tax twist: only the **ratio** $\frac{1+\tau_0}{1+\tau_1}$ shows up, so what steers the choice is the *relative* price of consuming today versus tomorrow.
 
       ### Part 3 — Solve for $c_0$
 
@@ -342,9 +375,15 @@ questions:
 
       $$\boxed{c_0 = \frac{1}{1+\tau_0}\frac{1}{1+\beta}\left(y_0 + \frac{y_1}{1+r}\right)}$$
 
+      > [!tip] 🗣️ In plain English
+      > Substituting the Euler link back into the budget makes everything collapse: today's consumption is a **fixed fraction** $\frac{1}{1+\beta}$ of lifetime wealth, shrunk by today's tax through the $\frac{1}{1+\tau_0}$ factor. Tomorrow's tax $\tau_1$ has vanished from the formula entirely.
+
       ### Part 4 — Effect of raising $\tau_0$ on $c_0$
 
       In the solution, $\tau_0$ appears in the **denominator** (through $\tfrac{1}{1+\tau_0}$), so **raising $\tau_0$ lowers $c_0$**. Intuitively, a higher consumption tax makes each unit of current consumption more expensive, so consumers respond by consuming **less** today.
+
+      > [!tip] 🗣️ In plain English
+      > Hike today's consumption tax and people simply **buy less today** — $\tau_0$ sits in the denominator of $c_0$, and the intuition is plain: pricier consumption now means less of it.
 
       ### Part 5 — Saving and goods-market equilibrium
 
@@ -374,6 +413,9 @@ questions:
 
       - **Case i — $G_0$ rises with revenue (spend now):** government saving is unchanged, so **aggregate saving is unchanged**. (Equivalently, in $Y_0 - C_0 - G_0$, $G_0$ rises 1-for-1 with the fall in $C_0$.) So the **$S$ curve does not shift** and there is **no change in the goods-market equilibrium** — same $r$, same $I$.
       - **Case ii — $G_0$ unchanged, $G_1$ rises (spend later):** current government saving rises while private saving is unchanged, so **aggregate saving rises** — the **$S$ curve shifts right**. (In $Y_0 - C_0 - G_0$, $C_0$ falls while $G_0$ is unchanged.) The new equilibrium has **more saving and more investment at a lower real interest rate $r$**.
+
+      > [!tip] 🗣️ In plain English
+      > The magic of log utility: people buy fewer units but each unit costs proportionally more tax-inclusive, so **total spending — and hence private saving — doesn't budge**. What matters is when the government spends its windfall: **spend it now** and nothing in the goods market changes; **bank it for next period** and national saving rises, pushing the interest rate **down** and investment **up**.
 
       > [!success] Answer — $c_0 = \frac{1}{1+\tau_0}\frac{1}{1+\beta}\left(y_0 + \frac{y_1}{1+r}\right)$, so raising $\tau_0$ lowers $c_0$ but leaves **consumption expenditure and private saving unchanged**; if extra revenue is spent in period 0 the goods market is unchanged, but if spent in period 1 the $S$ curve shifts right → lower $r$, higher $I$.
 

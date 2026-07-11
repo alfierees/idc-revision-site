@@ -414,6 +414,10 @@
     color: var(--color-ink-soft);
   }
   .prose-card ul, .prose-card ol { padding-left: 1.4rem; margin: 0.6rem 0; }
+  /* Tailwind preflight strips list markers; restore them in prose containers */
+  .prose-card ul { list-style: disc; }
+  .prose-card ol { list-style: decimal; }
+  .prose-card ol ol, .prose-card ul ol { list-style: lower-alpha; }
   .prose-card li { margin: 0.35rem 0; padding-left: 0.25em; }
   .prose-card li::marker { color: var(--color-accent); }
   .prose-card ol li::marker { color: var(--color-ink-muted); font-family: var(--font-ui); font-size: 0.85em; }
