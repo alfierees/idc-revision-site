@@ -658,6 +658,52 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 }
 
 .bar-right { display: flex; align-items: center; gap: 1rem; flex: none; margin-left: auto; }
+
+/* mobile burger: replaces the scrolling tab row on narrow screens
+   (double class beats the later .panel-toggle display rule) */
+.panel-toggle.nav-burger { display: none; }
+.nav-burger .ic-burger,
+.nav-burger .ic-close { width: 18px; height: 18px; stroke: currentColor; }
+.nav-burger .ic-close { display: none; }
+.nav-burger[aria-expanded="true"] .ic-burger { display: none; }
+.nav-burger[aria-expanded="true"] .ic-close { display: block; }
+.nav-burger[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--color-accent) 11%, transparent);
+  color: var(--color-accent);
+}
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 1.1rem 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-rule) 60%, transparent);
+}
+.mobile-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  text-decoration: none;
+  font-family: var(--font-ui);
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  padding: 0.65rem 0.7rem;
+  border-radius: 9px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.mobile-nav a:hover { color: var(--color-ink); }
+.mobile-nav a.active {
+  background: color-mix(in srgb, var(--color-accent) 11%, transparent);
+  color: var(--color-accent-ink);
+  font-weight: 600;
+}
+.mobile-nav .mn-tick { color: var(--color-accent); font-size: 0.55rem; }
+@media (max-width: 720px) {
+  .header-tabs { display: none; }
+  .panel-toggle.nav-burger { display: inline-grid; }
+  .mobile-nav:not([hidden]) { display: flex; }
+}
 .header-meta {
   font-family: var(--font-ui);
   font-size: 0.7rem;
