@@ -192,21 +192,21 @@ questions:
     solution: |
       Analyse the **saving ($S$) curve** and the **investment ($I$) curve** in isolation, then combine.
 
-      **Saving curve.** Consumers who expect lower future productivity expect **lower future income**. Because they smooth consumption (current consumption depends on future income as well as current income), they **raise current consumption** to spread the anticipated loss over both periods. Higher current consumption at any given $r$ means lower saving, so the **$S$ curve shifts right** (equivalently, $S = Y - C$ falls with $Y$ fixed and $C$ up).
+      **Saving curve.** Consumers who expect lower future productivity expect **lower future income**, so their **lifetime wealth falls**. Because they smooth consumption (current consumption depends on future income as well as current income), they **cut current consumption** to spread the anticipated loss over both periods — bearing part of the hit now rather than letting it all land next period. Lower current consumption at any given $r$ means **higher desired saving**, so the **$S$ curve shifts right** (equivalently, $S = Y - C$ rises with $Y$ fixed and $C$ down).
 
       **Investment curve.** Firms who expect lower future productivity expect a **lower future marginal product of capital** ($A^{f}$ enters $MPK^{f}$). The user cost is unchanged, so firms choose **lower future capital and lower investment** — the **$I$ curve shifts left**.
 
       **New equilibrium.** With $S$ shifting right and $I$ shifting left, the **real interest rate falls with certainty**. But the two shifts push the *quantity* of saving/investment in opposite directions, so we **cannot sign the change in $S$ and $I$** without more information.
 
-      **Consumption vs. investment.** Output is fixed by the production function ($A$, $K$, $N$ all fixed in the short run), so it does not change. With no government, $Y = C + I$; since $Y$ is constant, any rise in $C$ must be matched by a fall in $I$. Therefore **consumption and investment move in opposite directions** — here $C$ rises and $I$ falls.
+      **Consumption vs. investment.** Output is fixed by the production function ($A$, $K$, $N$ all fixed in the short run), so it does not change. With no government, $Y = C + I$; since $Y$ is constant, any change in $C$ must be matched by an **equal and opposite** change in $I$. Therefore **consumption and investment move in opposite directions**. Their individual signs are **ambiguous** — the equilibrium quantity of $S = I$ can't be signed (per above), so we can't say which of $C$ and $I$ rises; we only know that whichever way one moves, the other moves the opposite way.
 
-      > [!success] Answer — **The real interest rate falls; consumption and investment move in opposite directions** (current consumption rises, investment falls). The change in the level of $S$ and $I$ is ambiguous.
+      > [!success] Answer — **The real interest rate falls for certain; consumption and investment move in opposite directions** (because $Y$ is fixed and $Y = C + I$). The change in the *level* of $S$, $I$ and $C$ is ambiguous — only the fact that $C$ and $I$ move oppositely is pinned down.
 
       > [!tip] 🗣️ In plain English
-      > Gloomy households spend more *now* to soften the coming pain (**saving shifts right**); gloomy firms see less payoff from machines (**investment shifts left**). Both shifts drag the **interest rate down for certain**, but they fight over the quantities. And since output can't move in the short run, $Y = C + I$ forces **consumption up and investment down — opposite directions**.
+      > Gloomy households **tighten their belts now** to soften the coming pain — they save more, so **saving shifts right**; gloomy firms see less payoff from machines, so **investment shifts left**. Both shifts drag the **interest rate down for certain**, but they fight over the quantities. And since output can't move in the short run, $Y = C + I$ forces $C$ and $I$ to move in **opposite directions** — even though we can't say which way each one lands.
 
       > [!tip] Two curves, opposite shifts → price certain, quantities ambiguous
-      > When the $S$ and $I$ curves shift in opposite directions the price (here the real rate) is pinned down but the quantities are not. The clean anchor for the last part is the resource constraint $Y = C + I$: with $Y$ fixed, whatever leaves investment shows up as consumption. See [[business-cycles]], [[consumption-smoothing]], [[real-interest-rate]], [[marginal-product-of-capital]].
+      > When the $S$ and $I$ curves shift in opposite directions the price (here the real rate) is pinned down but the quantities are not. The clean anchor for the last part is the resource constraint $Y = C + I$: with $Y$ fixed, any change in investment is mirrored by an equal and opposite change in consumption. See [[business-cycles]], [[consumption-smoothing]], [[real-interest-rate]], [[marginal-product-of-capital]].
     related_terms:
       - business-cycles
       - consumption-smoothing
