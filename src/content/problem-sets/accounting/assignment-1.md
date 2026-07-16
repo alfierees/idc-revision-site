@@ -130,15 +130,15 @@ questions:
     solution: |
       | Shareholder | Share class | Shares | Investment | Ownership |
       |-------------|-------------|--------|-----------|-----------|
-      | **Founders** | Common | 100,000 | $100,000 | 66.1% |
-      | **Investor A** | Preferred A (via SAFE) | 10,000 | $500,000 | 6.6% |
-      | **Investor B** | Preferred A | 41,250 | $3,000,000 | 27.3% |
-      | **Total** | | **151,250** | $3,600,000 | 100% |
+      | **Founders** | Common | 100,000 | $100,000 | 67.80% |
+      | **Investor A** | Preferred A (via SAFE) | 10,000 | $500,000 | 6.78% |
+      | **Investor B** | Preferred A | 37,500 | $3,000,000 | 25.42% |
+      | **Total** | | **147,500** | $3,600,000 | 100% |
 
-      **Investor B price:** $8,000,000 pre-money ÷ 110,000 shares (post-SAFE) = **$72.73/share** → $3,000,000 ÷ $72.73 ≈ **41,250 shares**.
+      **Investor B price:** the round is priced on the shares outstanding **before the SAFE converts** (the founders' 100,000): $8,000,000 pre-money ÷ 100,000 = **$80.00/share** → $3,000,000 ÷ $80 = **37,500 shares**.
 
-      > [!tip] Cross-check the post-money math
-      > Post-money = $8M pre + $3M = **$11M**. Investor B owns $3M ÷ $11M = **27.3%** — which matches the cap table. Whenever a cap table and a valuation are both given, reconcile them this way.
+      > [!tip] Why Investor B lands at 25.4%, not 27.3%
+      > The price is set on the **pre-SAFE** share count (100,000), so Investor B buys at **$80** and gets 37,500 shares. The SAFE's 10,000 shares then convert alongside and dilute everyone, so Investor B's final stake is **25.42%** — a little below the naive $3M ÷ $11M = 27.3%, because the converting SAFE dilutes the new investor too.
     related_terms: ["cap-table", "safe", "pre-money-valuation", "post-money-valuation", "common-stock"]
 ---
 

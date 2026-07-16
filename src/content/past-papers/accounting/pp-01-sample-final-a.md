@@ -176,24 +176,24 @@ questions:
 
       → Investor A receives $1,000,000 ÷ $16.00 = **62,500 preferred shares**.
 
-      **Step 2 — Investor B's price.** Pre-money ÷ shares outstanding *before the new money* (founders + the just-converted SAFE):
+      **Step 2 — Investor B's price.** The round is priced on the shares outstanding **before the SAFE converts** (the founders' 500,000):
 
-      $$\text{Price}_B = \frac{\$16{,}000{,}000}{500{,}000 + 62{,}500} = \frac{\$16{,}000{,}000}{562{,}500} = \$28.44/\text{share}$$
+      $$\text{Price}_B = \frac{\$16{,}000{,}000}{500{,}000} = \$32.00/\text{share}$$
 
-      → Investor B receives $4,000,000 ÷ $28.44 = **140,625 preferred shares**.
+      → Investor B receives $4,000,000 ÷ $32 = **125,000 preferred shares**.
 
       > [!example] NimbusAI — cap table after the round
       > | Shareholder | Shares | Investment | Ownership |
       > |---|---:|---:|---:|
-      > | Founders (common) | 500,000 | $100,000\* | **71.1%** |
-      > | Investor A (SAFE → preferred) | 62,500 | $1,000,000 | **8.9%** |
-      > | Investor B (preferred) | 140,625 | $4,000,000 | **20.0%** |
-      > | **Total** | **703,125** | | **100%** |
+      > | Founders (common) | 500,000 | $100,000\* | **72.7%** |
+      > | Investor A (SAFE → preferred) | 62,500 | $1,000,000 | **9.1%** |
+      > | Investor B (preferred) | 125,000 | $4,000,000 | **18.2%** |
+      > | **Total** | **687,500** | | **100%** |
       >
       > \*Nominal founder cost; not part of the round math.
 
-      > [!tip] Cross-check with post-money
-      > Post-money = $16M pre + $4M = **$20M**. Investor B put in $4M ÷ $20M = **20%**, which matches the cap table exactly. Whenever a valuation and a cap table are both given, reconcile them this way.
+      > [!tip] Why the price uses the pre-SAFE share count
+      > The round is priced on the shares outstanding **before** the SAFE converts (500,000), so Investor B pays **$32/share**. The SAFE's 62,500 shares then convert alongside and dilute everyone, so Investor B's final stake is **18.2%** — below the naive $4M ÷ $20M = 20%, because the converting SAFE dilutes the new investor too.
 
       > [!warning] Exam trap — always compute both terms
       > Students reflexively apply the discount. Here the **cap ($16.00) beats the discount ($25.60)**, so the cap governs. Compute both and take whichever gives the investor **more shares** (the lower price).

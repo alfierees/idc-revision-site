@@ -293,7 +293,10 @@ Operating income is shown as a single cash posting each year; the financing, int
 
 → Investor A receives $500,000 ÷ $50 = **10,000 Preferred A shares**.
 
-**Investor B price:** $8,000,000 pre-money ÷ (100,000 + 10,000 post-SAFE shares) = **$72.73/share** → $3,000,000 ÷ $72.73 = **≈ 41,250 Preferred A shares**.
+**Investor B price:** the round is priced on the shares outstanding **before the SAFE converts** (the founders' 100,000) = $8,000,000 ÷ 100,000 = **$80.00/share** → $3,000,000 ÷ $80 = **37,500 Preferred A shares**.
+
+> [!tip] Why the price uses the pre-SAFE share count
+> The new round is priced on the shares outstanding **before** the SAFE converts (100,000), giving **$80/share**. The SAFE's 10,000 shares then convert alongside and dilute everyone, so Investor B's final stake works out to **25.42%** — just below the $3M ÷ $11M ≈ 27% you might expect, because the converting SAFE dilutes the new investor too.
 
 #### The journal
 
@@ -311,7 +314,7 @@ Operating income is shown as a single cash posting each year; the financing, int
 | | *SAFE converts at the $5M cap → 10,000 Preferred A* | | |
 | Nov 2025 | Cash | 3,000,000 | |
 | | &emsp;Preferred Stock A — APIC | | 3,000,000 |
-| | *Investor B priced round → ≈ 41,250 Preferred A* | | |
+| | *Investor B priced round → 37,500 Preferred A* | | |
 
 > [!tip] A SAFE is a liability, then equity
 > When the cash comes in (1 Feb) the SAFE is a **liability** — you owe future shares but the round hasn't happened. At conversion you **debit the liability away** and **credit equity**; total assets don't move, the obligation simply turns into stock.
@@ -322,10 +325,18 @@ Operating income is shown as a single cash posting each year; the financing, int
 > | Common Stock (par $0.01 × 100,000) | 100,000 | $1,000 |
 > | APIC — Common | — | $99,000 |
 > | Preferred A — SAFE conversion (Investor A) | 10,000 | $500,000 |
-> | Preferred A — Investor B | 41,250 | $3,000,000 |
-> | **Total contributed capital** | **151,250** | **$3,600,000** |
+> | Preferred A — Investor B | 37,500 | $3,000,000 |
+> | **Total contributed capital** | **147,500** | **$3,600,000** |
 >
 > *(Retained earnings/deficit from the year's trading would be added below; this exercise covers only the capital events.)*
+
+> [!example] Resulting ownership (cap table)
+> | Shareholder | Shares | Interest |
+> |---|---:|---:|
+> | Founders — common | 100,000 | 67.80% |
+> | Investor A — Preferred A (via SAFE) | 10,000 | 6.78% |
+> | Investor B — Preferred A | 37,500 | 25.42% |
+> | **Total** | **147,500** | **100%** |
 
 > [!warning] Exam trap — the cap beats the discount here
 > Students instinctively apply the discount. Always compute **both** and take whichever gives the investor the **lower conversion price**. The $5M cap ($50/sh) beats the 30% discount ($56/sh), so the cap governs.
