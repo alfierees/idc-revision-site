@@ -145,43 +145,60 @@ questions:
       - current-ratio
       - quick-ratio
   - id: q2
-    title: "Q2 — Employee stock options: valuation & expense (15 pts)"
+    title: "Q2 — Employee stock options: how they're valued & expensed (15 pts)"
     text: |
-      On **1 January 2025**, **Brightwave Ltd** grants an employee **20,000 stock options**, exercisable at **$15** (the current share price, i.e. at-the-money), vesting straight-line over **4 years**. Assume a risk-free rate of **4%**, volatility of **50%**, no dividends, and an expected term of **4 years**.
+      On **1 January 2025**, **Brightwave Ltd** grants an employee **20,000 stock options**, exercisable at **$15** (the current share price), vesting over **4 years** — a **1-year cliff**, then monthly. A Black-Scholes model values each option at **$6.00** at the grant date.
 
-      Required: value one option under **Black-Scholes**, state the total grant-date fair value, explain what is recorded **at grant**, and compute the **2025 compensation expense** with its journal entry.
+      **(a)** In one or two sentences, say what the **Black-Scholes** model measures, and for each input state whether an **increase** *raises* or *lowers* the option's value: **share-price volatility**, **exercise (strike) price**, **time to expiry**, **dividend yield**.
+      **(b)** What, if anything, is recorded on the **grant date**?
+      **(c)** Compute the **2025 compensation expense** and give the journal entry.
+      **(d)** The employee **resigns on 30 June 2026**. How many options have **vested**, and what happens to **(i)** the expense already recognised and **(ii)** the unvested options?
     solution: |
-      > Governed by ASC 718 / IFRS 2. Theory: [[Session 4 - Incorporation, Corporate Taxes & Employee Compensation]]; same pattern as [[Session 9 - Recap]] Ex. 6 and Assignment 2.
+      > You are **not** asked to run Black-Scholes by hand — the fair value is given. What's tested is knowing **what drives** an option's value and **how the cost is expensed** over the vesting period. Governed by ASC 718 / IFRS 2. Theory: [[Session 4 - Incorporation, Corporate Taxes & Employee Compensation]]; same mechanics as [[Session 9 - Recap]] Ex. 6 and Assignment 2.
 
-      **Black-Scholes inputs:** $S = K = 15$, $r = 0.04$, $\sigma = 0.50$, $q = 0$, $T = 4$.
+      ### (a) What Black-Scholes measures + sensitivities
 
-      $$d_1 = \frac{\ln(S/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}} = \frac{0 + (0.04 + 0.125)(4)}{0.50\sqrt{4}} = \frac{0.66}{1.00} = 0.66$$
+      Black-Scholes estimates the **grant-date fair value** of an option — the value today of the right to buy the share at the strike, given the time left and the share's uncertainty. A call is worth more the greater the chance it finishes **in the money**.
 
-      $$d_2 = d_1 - \sigma\sqrt{T} = 0.66 - 1.00 = -0.34$$
+      | Input | An increase… | Why |
+      |---|---|---|
+      | Share-price **volatility** | ▲ **raises** value | more upside dispersion; downside is capped at zero |
+      | **Exercise (strike)** price | ▼ **lowers** value | you must pay more to exercise |
+      | **Time** to expiry | ▲ **raises** value | more time for the share to climb above strike |
+      | **Dividend** yield | ▼ **lowers** value | dividends go to shareholders, not option-holders, and depress the share |
 
-      From the standard-normal table, $N(0.66) = 0.7454$ and $N(-0.34) = 0.3669$:
+      > [!note] The model, for reference (you would not compute this in the exam)
+      > The formula is $C = S\,N(d_1) - K e^{-rT} N(d_2)$, taking five inputs — share price $S$, strike $K$, time $T$, volatility $\sigma$ and risk-free rate $r$ (plus dividend yield). In an exam the resulting fair value is **given**; your job is to know what it depends on and how to expense it.
 
-      $$C = S\,N(d_1) - K e^{-rT} N(d_2) = 15(0.7454) - 15\,e^{-0.16}(0.3669) \approx 11.18 - 4.69 = \boxed{\$6.49 \text{ per option}}$$
+      > [!tip] One-line memory aid
+      > A call gains value with higher **share price, volatility, time and interest rate**; it loses value with higher **strike and dividends**.
 
-      → Total grant-date fair value = 20,000 × $6.49 = **≈ $129,800**.
+      ### (b) At the grant date
 
-      > [!warning] Nothing is recorded on the grant date
-      > The grant date is only the **measurement date** — it fixes the $6.49 fair value. **No journal entry** is made. The cost is recognised as the employee earns it over the [[Vesting|vesting]] period.
+      **Nothing is recorded.** The grant date is only the **measurement date** — it fixes the $6.00 fair value. No journal entry is made; the cost is recognised as the employee earns it over the [[Vesting|vesting]] period.
 
-      **2025 compensation expense** — straight-line over 4 years; 2025 is a full year from the 1 Jan grant:
+      ### (c) 2025 compensation expense
 
-      $$\frac{\$129{,}800}{4} = \boxed{\$32{,}450 \text{ for 2025}}$$
+      Total grant-date fair value = 20,000 × $6.00 = **$120,000**, expensed **straight-line** over the 4-year vesting period (= $2,500/month):
+
+      $$\frac{\$120{,}000}{4} = \boxed{\$30{,}000 \text{ for 2025}}$$
 
       | Entry (each period over vesting) | Dr | Cr |
       |---|---:|---:|
-      | Stock-Based Compensation Expense | 32,450 | |
-      | &emsp;APIC — Stock Options (equity) | | 32,450 |
+      | Stock-Based Compensation Expense | 30,000 | |
+      | &emsp;APIC — Stock Options (equity) | | 30,000 |
 
-      > [!tip] The credit is equity, not a liability
-      > Because Brightwave will settle by delivering **shares**, the offset goes to **APIC — Stock Options**, not a payable. Equity-settled awards never create a liability.
+      The credit is **equity**, not a liability — an equity-settled award is paid in **shares**, so it never creates a payable.
+
+      ### (d) Resignation on 30 June 2026 (18 months after grant)
+
+      **Vested** = 18/48 × 20,000 = **7,500 options** (the 1-year cliff vested 5,000; months 13–18 added 6 × ~417 ≈ 2,500). **Forfeited (unvested)** = 20,000 − 7,500 = **12,500**.
+
+      - **(i)** The expense already booked is **not reversed**. Cumulative straight-line expense at 18 months = 18 × $2,500 = **$45,000**, which is exactly 7,500 × $6.00 = the fair value of the options that **actually vested** — they match, so no correction is needed.
+      - **(ii)** The **12,500 unvested options are forfeited** and generate **no further expense**.
 
       > [!tip] 🗣️ In plain English
-      > The options are worth about **$6.49 each on the day they're granted** — but the company doesn't book anything yet. It spreads that ~$129,800 cost evenly across the four years the employee has to stick around to earn them, so **2025 takes a quarter of it**.
+      > On grant day the company books nothing; it just spreads the ~$120k cost across the four years the employee must stay. When they leave at 18 months they keep the **7,500 options they've earned**, and the company simply **stops expensing the rest** — no clawback of what's already been recorded.
     related_terms:
       - stock-options
       - black-scholes-model
@@ -279,7 +296,7 @@ questions:
 ---
 
 > [!info] About this mock
-> A second full **3-hour** practice paper in the exam format — **Q1 (40)**, **Q2 & Q3 (15 each)**, **Q4 (30)** — with **different scenarios** from [[Sample Final A]] so the two together cover the syllabus. Q1 adds **deferred revenue** and an **asset disposal**; Q2 values stock options; Q3 walks the five-step revenue model. Designed to be worked **by hand**. Reveal each answer with **Show solution**.
+> A second full **3-hour** practice paper in the exam format — **Q1 (40)**, **Q2 & Q3 (15 each)**, **Q4 (30)** — with **different scenarios** from [[Sample Final A]] so the two together cover the syllabus. Q1 adds **deferred revenue** and an **asset disposal**; Q2 covers how stock options are valued and expensed (no by-hand Black-Scholes — the fair value is given); Q3 walks the five-step revenue model. Designed to be worked **by hand**. Reveal each answer with **Show solution**.
 
 <!--questions-->
 
