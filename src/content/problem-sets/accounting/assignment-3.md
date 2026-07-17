@@ -2,6 +2,8 @@
 title: "Assignment 3"
 subject: accounting
 source_doc: /papers/accounting/assignment-3.pdf
+official_solution: /papers/accounting/assignment-3a-solution.xlsx
+official_solution_note: "Lecturer's official Excel solution (Moodle) — covers Q1 (CoreWeave ratios) only; there is no official answer for the Q2 DCF. Note his \"Growth %\" is revenue Y2÷Y1 (the multiple, e.g. 8.37 for FY2024), so his Rule of 40 runs ~100pp higher than the true YoY change used below."
 tags:
   - accounting
   - problem-set
