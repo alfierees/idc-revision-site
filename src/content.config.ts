@@ -84,6 +84,11 @@ const problemSets = defineCollection({
     title: z.string(),
     subject: z.string(),
     source_doc: z.string().optional(),
+    // The lecturer's official solution file (path under /public, e.g.
+    // "/papers/accounting/assignment-1-solution.xlsx"). Rendered as a download
+    // link beside the original brief so the marked answers are one click away.
+    official_solution: z.string().optional(),
+    official_solution_note: z.string().optional(),
     tags: z.array(z.string()).default([]),
     questions: z.array(question),
     ai_drafted: z.boolean().default(false),

@@ -2,6 +2,8 @@
 title: "Assignment 1"
 subject: accounting
 source_doc: /papers/accounting/assignment-1.pdf
+official_solution: /papers/accounting/assignment-1-solution.xlsx
+official_solution_note: "Lecturer's official Excel solution (Moodle). Note: it leaves the $25,000 insurance premium fully prepaid and books no insurance expense, so its net loss is $(209,750) and total assets $4,432,750. The brief states a one-year policy paid 30 Jun, so 6 months ($12,500) is consumed by year-end — the worked solution below amortises it. Flagged with the lecturer."
 tags:
   - accounting
   - problem-set

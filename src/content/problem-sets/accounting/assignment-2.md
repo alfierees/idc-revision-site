@@ -2,6 +2,8 @@
 title: "Assignment 2"
 subject: accounting
 source_doc: /papers/accounting/assignment-2.pdf
+official_solution: /papers/accounting/assignment-2-solution.xlsx
+official_solution_note: "Lecturer's official Excel solution (Moodle) — includes his historical-volatility working for FVRR. His Black-Scholes inputs are S = K = $23.43 and σ = 71.33% (derived from real price data), giving $13.28/option and $132,800 total."
 tags:
   - accounting
   - problem-set

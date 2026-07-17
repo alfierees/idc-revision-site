@@ -109,14 +109,29 @@ const hasToolkit =
   toolkitLectures.length > 0;
 ---
 <Layout title={`${set.data.title} · ${subject.data.title}`} subject={subjectSlug} active="problem-sets" hasSidebar>
-  <div class="mb-3 flex items-baseline justify-between">
+  <div class="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
     <h1 class="doc-title" style="margin-top:0;">{set.data.title}</h1>
-    {set.data.source_doc && (
-      <a href={set.data.source_doc} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent">
-        Original PDF ↗
-      </a>
-    )}
+    <div class="shrink-0 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+      {set.data.source_doc && (
+        <a href={set.data.source_doc} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent">
+          Original PDF ↗
+        </a>
+      )}
+      {set.data.official_solution && (
+        <a
+          href={set.data.official_solution}
+          download
+          class="official-dl font-ui text-xs uppercase tracking-[0.15em]"
+          title={set.data.official_solution_note}
+        >
+          Official solution ↓
+        </a>
+      )}
+    </div>
   </div>
+  {set.data.official_solution_note && (
+    <p class="mb-4 font-ui text-sm text-ink-muted italic">{set.data.official_solution_note}</p>
+  )}
 
   {set.data.tags.length > 0 && (
     <ul class="mb-6 flex flex-wrap gap-2 list-none p-0">
@@ -229,4 +244,16 @@ const hasToolkit =
     font-size: 0.8rem;
     letter-spacing: 0;
   }
+  /* Lecturer's official solution file — accent-tinted so it reads as the
+     authoritative answer key next to the plainer "Original PDF" link. */
+  .official-dl {
+    color: var(--color-accent);
+    font-weight: 700;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-accent) 9%, transparent);
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .official-dl:hover { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
 </style>
