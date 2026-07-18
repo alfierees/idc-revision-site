@@ -45,35 +45,41 @@ questions:
 
       ### (a) Key journal entries
 
-      | Date | Account | Dr ($) | Cr ($) |
-      |------|---------|------:|------:|
-      | 1 Jan | Cash | 150,000 | |
-      | | &emsp;Common Stock (150,000 × $0.10) | | 15,000 |
-      | | &emsp;APIC — Common | | 135,000 |
-      | 1 Jan | Equipment | 24,000 | |
-      | | Vehicle | 8,000 | |
-      | | &emsp;Cash | | 32,000 |
-      | 1 Jan | Cash | 80,000 | |
-      | | &emsp;Loan Payable | | 80,000 |
-      | 1 Apr | Cash | 60,000 | |
-      | | &emsp;Deferred Revenue | | 60,000 |
-      | | *Paid in advance → a liability until earned* | | |
-      | 1 Oct | Cash | 6,000 | |
-      | | Accumulated Depreciation — Vehicle | 1,500 | |
-      | | Loss on Disposal | 500 | |
-      | | &emsp;Vehicle | | 8,000 |
-      | | *Derecognise the van; NBV 6,500 − proceeds 6,000 = 500 loss* | | |
+      > [!tip] The B/S vs I/S trick — tag every line
+      > Every account is one of two kinds. **B/S** = assets, liabilities, equity (Cash, Equipment, Loans, Deferred Revenue, Common Stock…) — *permanent* accounts that land on the **Balance Sheet**. **I/S** = revenues and expenses (Service Revenue, Depreciation, Interest, Loss on Disposal…) — *temporary* accounts that land on the **Income Statement**.
+      > Tag each line as you post it (the **→** column). Then building the statements is just **sorting**: every I/S line feeds the income statement, every B/S line feeds the balance sheet. And to get **closing cash**, pull every line whose account is *Cash* and net the debits (in) against the credits (out) — done for you in part (c).
+
+      | Date | Account | Dr ($) | Cr ($) | → |
+      |------|---------|------:|------:|:--:|
+      | 1 Jan | Cash | 150,000 | | B/S |
+      | | &emsp;Common Stock (150,000 × $0.10) | | 15,000 | B/S |
+      | | &emsp;APIC — Common | | 135,000 | B/S |
+      | 1 Jan | Equipment | 24,000 | | B/S |
+      | | Vehicle | 8,000 | | B/S |
+      | | &emsp;Cash | | 32,000 | B/S |
+      | 1 Jan | Cash | 80,000 | | B/S |
+      | | &emsp;Loan Payable | | 80,000 | B/S |
+      | 1 Apr | Cash | 60,000 | | B/S |
+      | | &emsp;Deferred Revenue | | 60,000 | B/S |
+      | | *Paid in advance → a liability until earned* | | | |
+      | 1 Oct | Cash | 6,000 | | B/S |
+      | | Accumulated Depreciation — Vehicle | 1,500 | | B/S |
+      | | Loss on Disposal | 500 | | **I/S** |
+      | | &emsp;Vehicle | | 8,000 | B/S |
+      | | *Derecognise the van; NBV 6,500 − proceeds 6,000 = 500 loss* | | | |
+
+      *Notice almost every opening entry is **B/S** — raising money and buying assets just moves things around the balance sheet. The income statement barely appears until the year-end adjustments below (and the recurring rent/payroll) start recording what was actually **used up**.*
 
       **Year-end adjusting entries:**
 
-      | Adjustment | Debit | Credit | Calculation |
+      | Adjustment | Debit (→) | Credit (→) | Calculation |
       |---|---|---|---|
-      | Depreciation — equipment | Depreciation Exp $6,000 | Accum. Dep $6,000 | $24,000 ÷ 4, full year |
-      | Depreciation — van (to disposal) | Depreciation Exp $1,500 | Accum. Dep $1,500 | $8,000 ÷ 4 × 9/12 |
-      | Earn deferred revenue | Deferred Revenue $45,000 | Service Revenue $45,000 | $60,000 × 9/12 (Apr–Dec) |
-      | Recognise delivered services | Accounts Receivable $70,000 | Service Revenue $70,000 | on delivery, Net 30 |
-      | Accrue interest | Interest Exp $4,000 | Interest Payable $4,000 | $80,000 × 5%, full year |
-      | Accrue Dec payroll | Payroll Exp $8,000 | Accrued Payroll $8,000 | paid 5 Jan 2026 |
+      | Depreciation — equipment | Depreciation Exp $6,000 · **I/S** | Accum. Dep $6,000 · **B/S** | $24,000 ÷ 4, full year |
+      | Depreciation — van (to disposal) | Depreciation Exp $1,500 · **I/S** | Accum. Dep $1,500 · **B/S** | $8,000 ÷ 4 × 9/12 |
+      | Earn deferred revenue | Deferred Revenue $45,000 · **B/S** | Service Revenue $45,000 · **I/S** | $60,000 × 9/12 (Apr–Dec) |
+      | Recognise delivered services | Accounts Receivable $70,000 · **B/S** | Service Revenue $70,000 · **I/S** | on delivery, Net 30 |
+      | Accrue interest | Interest Exp $4,000 · **I/S** | Interest Payable $4,000 · **B/S** | $80,000 × 5%, full year |
+      | Accrue Dec payroll | Payroll Exp $8,000 · **I/S** | Accrued Payroll $8,000 · **B/S** | paid 5 Jan 2026 |
 
       > [!tip] The disposal, unpacked
       > The van was depreciated **9 months** (Jan–Sep): $8,000 ÷ 4 × 9/12 = **$1,500**, so its **net book value is $6,500**. Sold for $6,000 → a **$500 loss**. To remove it you credit the asset at full cost ($8,000) and clear its accumulated depreciation ($1,500).
@@ -96,7 +102,22 @@ questions:
 
       ### (c) Balance Sheet at 31 Dec 2025
 
-      **Cash** = 150,000 + 60,000 + 80,000 + 6,000 + 50,000 (in) − 24,000 − 8,000 − 36,000 − 88,000 (out) = **$190,000**. (11 payroll runs paid; interest paid in 2026; the van is gone.)
+      **Cash** — the trick pays off here. Gather every entry whose account is *Cash* (a **B/S** line) and net the money in against the money out:
+
+      > [!example] Closing Cash — every entry that touches Cash
+      > | Entry | In (Dr) | Out (Cr) |
+      > |---|---:|---:|
+      > | Founders' capital | 150,000 | |
+      > | Loan drawn | 80,000 | |
+      > | Deferred revenue (advance) | 60,000 | |
+      > | Services collected | 50,000 | |
+      > | Van sale proceeds | 6,000 | |
+      > | Equipment + vehicle bought | | 32,000 |
+      > | Rent (12 × $3,000) | | 36,000 |
+      > | Payroll (11 months paid) | | 88,000 |
+      > | **Closing cash** | **190,000** | |
+      >
+      > Note what is **absent**: interest ($4,000) and December payroll ($8,000) are **accrued, not paid** in 2025, so they never touch Cash — they wait as liabilities. No tax is paid (loss year), and the van has left the books. That is why closing cash is $190,000 even though the income statement shows a $29,000 loss — cash and profit are different things.
 
       > [!example] BRIGHTWAVE LTD — Balance Sheet, 31 Dec 2025
       > | | Amount |
