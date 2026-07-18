@@ -73,19 +73,46 @@ Each row is one posting. By convention the **credited** account is indented, and
 | Sale proceeds                       |         150 |
 | **Loss on disposal**                | **(1,600)** |
 
-#### How it lands on the balance sheet
+#### The balance sheet at year-end
 
-A non-current asset is always shown at **cost less accumulated depreciation**, never as a single net number, so a reader can see how worn-down it is.
+A balance sheet is a **snapshot at one date**, so it's a single column. By 31 Dec 2025 the computer has been **sold**, so it has left the books entirely — the only thing left is the $150 of cash it fetched:
 
-| Balance sheet extract | 1 Jan 2025 | 30 Jun 2025 | 31 Dec 2025 |
-|---|---:|---:|---:|
-| **Non-current assets** | | | |
-| &emsp;Equipment, at cost | 2,000 | 2,000 | — |
-| &emsp;Less: accumulated depreciation | (0) | (250) | — |
-| &emsp;**Equipment, net book value** | **2,000** | **1,750** | **0** |
-| Cumulative charge to P&L for the year | 0 | 250 | 1,850 |
+> [!warning] Assumption for a complete statement
+> The exercise gives a single asset with no company context, so to show a full **Assets = Liabilities + Equity** statement we assume the $2,000 computer was funded by **$2,000 of owner's capital**.
 
-At 31 Dec 2025 the computer has been **derecognised** (sold), so it leaves the balance sheet entirely — the $150 received sits in Cash and the $1,600 loss has hit the income statement.
+> [!example] Balance Sheet as at 31 December 2025
+> | | $ |
+> |---|---:|
+> | **Assets** | |
+> | &emsp;Cash | 150 |
+> | &emsp;Equipment (sold — derecognised) | 0 |
+> | **Total assets** | **150** |
+> | **Liabilities** | 0 |
+> | **Equity** | |
+> | &emsp;Owner's capital | 2,000 |
+> | &emsp;Retained earnings (accumulated loss) | (1,850) |
+> | **Total equity** | **150** |
+> | **Assets = Liabilities + Equity** | **150 ✓** |
+
+The $1,850 accumulated loss = $250 depreciation + $1,600 disposal loss — both are income-statement items, so they sit **inside equity** (retained earnings), never as their own balance-sheet lines.
+
+#### The earlier dates (while the computer is still owned)
+
+The question also asks for the position at 1 Jan and 30 Jun, *before* the sale. A non-current asset is shown at **cost less accumulated depreciation** (never a single net number), so a reader can see how worn-down it is:
+
+> [!example] While the computer is still owned
+> | | 1 Jan 2025 | 30 Jun 2025 |
+> |---|---:|---:|
+> | Equipment, at cost | 2,000 | 2,000 |
+> | Less: accumulated depreciation | (0) | (250) |
+> | **Equipment, net book value** | **2,000** | **1,750** |
+> | Cash | 0 | 0 |
+> | **Total assets** | **2,000** | **1,750** |
+> | Owner's capital | 2,000 | 2,000 |
+> | Retained earnings | 0 | (250) |
+> | **Total equity** | **2,000** | **1,750** |
+
+At every date **Assets = Equity** (there are no liabilities). Once the computer is sold, both the cost and accumulated-depreciation lines vanish and only the $150 cash remains.
 
 > [!tip] The lesson
 > An early disposal crystallises the **unrecovered cost as a one-off loss**. The $1,850 total hit ($250 depreciation + $1,600 loss) equals cost $2,000 − proceeds $150. Depreciation only ever spreads cost; disposal trues it up to reality.
