@@ -321,4 +321,4 @@ questions:
 
 - [[Accounting]] — subject hub
 - [[Session 9 - Recap]] — 13 worked exam-style exercises this paper draws on
-- [[Sample Final B]] — the companion mock exam
+- [[Sample Final B]] · [[Sample Final C]] · [[Sample Final D]] — the companion mock exams
