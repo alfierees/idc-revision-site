@@ -2,7 +2,7 @@
 title: "Loan Pipeline — Code Walkthrough & Defect Catalogue"
 subject: machine-learning
 type: reference
-description: "Line-by-line reading of loan_pipeline.ipynb — what each cell does, and the fourteen planted defects the exam is built on."
+description: "Line-by-line reading of loan_pipeline.ipynb — what each cell does, and the fifteen planted defects the exam is built on."
 course: "Machine Learning — Economics Track"
 semester: 2
 year: 2
@@ -38,105 +38,250 @@ The team delivered a six-step pipeline reporting ~98% accuracy and recommending 
 
 ---
 
-## Cell-by-cell
+## The notebook, cell by cell — complete code
 
-### Setup
+Every cell below is **verbatim** from `loan_pipeline.ipynb` — nothing trimmed. The exam shows you the whole notebook, including the innocent-looking parts, so revise it the same way: read each cell in full, then check yourself against the dissection underneath it. The defect numbers (**#1–#15**) refer to [the catalogue](#the-defect-catalogue) further down.
+
+### Cell 0 (markdown) — the pitch
+
+> # Loan Default Prediction — Standard ML Pipeline
+> **Prepared by the data team** (working with an AI coding assistant).
+> **For:** the go/no-go decision meeting.
+> **Recommendation:** deploy the neural network (accuracy ~98%).
+> Runs as-is in **Google Colab**: `Runtime → Run all`.
+
+**What to notice.** The recommendation is stated *before* you have seen a single line of evidence, and the headline number (~98%) is planted in your head from the first sentence. The brief's whole framing — "the pipeline runs cleanly and reports an impressive number; neither fact is evidence that it works" — is aimed at this cell.
+
+### Cell 1 — Setup
 
 ```python
+# Setup
+# In Colab, torch / keras / plotly / sklearn / pandas are preinstalled.
+# If running locally, first:  pip install torch keras plotly scikit-learn pandas
+import os
+os.environ["KERAS_BACKEND"] = "torch"
+
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+import keras
+from keras import layers
+
 rng = np.random.default_rng(7)
 keras.utils.set_random_seed(7)
 ```
 
-Seeds are fixed, so the notebook is reproducible. Worth noting only because it means the ~98% is stable, not a fluke — it is *consistently* wrong.
+**What it does.** Imports, and fixes both random seeds.
 
-### Cell 3 — `load_data()`: where every defect is born
+**Problems here: none.** This cell is clean — and that matters for two reasons. First, fixed seeds make the notebook *reproducible*: the ~98% is stable across runs, so it is **consistently wrong**, not a fluke you could re-roll away. Second, look at what is imported from `sklearn.metrics`: **only `accuracy_score`**. The evaluation strategy of the entire pipeline is already visible in the import list — no confusion matrix, no recall, no ROC. That is defect **#10** announcing itself in line 13.
 
-This is the cell that matters. Read it more carefully than the rest of the notebook combined.
+### Cell 2 (markdown) — the data's origin
+
+> ## 1. Load data
+> Monthly snapshots of the bank's loans, exported from the warehouse.
+> *(The warehouse stores approved loans only.)*
+
+**What to notice.** Two of the paper's biggest problems are stated in plain sight, in italics, in a cell most readers skim. "Monthly snapshots" = one row per customer-month, not per application (**#2**, **#8**). "Approved loans only" = the riskiest applicants never enter the data at all (**#13**) — the one defect no code change can fix.
+
+### Cell 3 — `load_data()`: what the data actually is
 
 ```python
-self_emp = rng.random() < 0.25
-income_m = np.exp(rng.normal(9.1, 0.45))                    # monthly income
-income = income_m * 12 if rng.random() < 0.3 else income_m  # ⚠️ mixed units
-score = np.clip(rng.normal(680, 70), 300, 850)
-loan = np.clip(rng.normal(70000, 30000), 8000, 300000)
+def load_data(n_customers=1200):
+    rows = []
+    for cid in range(n_customers):
+        self_emp = rng.random() < 0.25
+        income_m = np.exp(rng.normal(9.1, 0.45))                 # monthly income
+        income = income_m * 12 if rng.random() < 0.3 else income_m  # some systems store it annually
+        score = np.clip(rng.normal(680, 70), 300, 850)
+        loan = np.clip(rng.normal(70000, 30000), 8000, 300000)
+
+        risk = -3.1 - 0.011 * (score - 680) + 1.6 * loan / (income_m * 12) \
+               - 0.5 * (not self_emp) + rng.normal(0, 0.4)
+        default = int(rng.random() < 1 / (1 + np.exp(-risk)))
+
+        days_late = rng.uniform(2, 35) if default else rng.exponential(2.5)
+        collections = int((default and rng.random() < 0.65) or rng.random() < 0.05)
+
+        income = np.nan if rng.random() < (0.30 if self_emp else 0.05) else round(income)
+        score = np.nan if rng.random() < 0.08 else round(score)
+
+        for month in range(1, int(rng.integers(3, 9)) + 1):
+            rows.append({
+                "customer_id": cid,
+                "month": month,
+                "income": income,
+                "self_employed": int(self_emp),
+                "credit_score": score,
+                "loan_amount": round(loan),
+                "avg_days_late": round(max(0, days_late + rng.normal(0, 2)), 1),
+                "collections_flag": collections,
+                "default": default,
+            })
+    return pd.DataFrame(rows)
+
+
+df = load_data()
+df.to_csv("loans.csv", index=False)
+print("Data:", df.shape, "| default rate: {:.1%}".format(df["default"].mean()))
+df.head()
 ```
 
-The `income` line silently produces **two populations**: 30% annual, 70% monthly, in one column. This is what makes the histogram bimodal with peaks a factor of ~12 apart.
+**What it does.** Simulates the warehouse export: 1,200 customers → 6,557 rows of `loans.csv`. In the exam fiction this cell *is* the bank's data, so read it as a description of reality — the traps planted here are properties of the data that the later cells then step on.
+
+**Problems here — walk the lines in order:**
+
+- **Line 6 — mixed units (#7).** `income = income_m * 12 if rng.random() < 0.3 else income_m`: ~30% of records store income **annually**, ~70% **monthly**, under one column name. This is why the histogram in Cell 4 is bimodal with peaks a factor of ~12 apart.
+- **Lines 10–12 — the true risk model.** Risk falls with credit score, rises with loan-to-income, is higher for the self-employed. Note it uses `income_m * 12` — the *correct* annualised income, which the `income` column does not reliably contain. `default` is drawn once per **customer**, from a latent score with **no fixed observation window** (**#14**).
+- **Lines 14–15 — the fatal lines (#1).** `days_late` and `collections` both **branch on `default`**. They are consequences of the outcome, generated *from* the label. No applicant can have them on decision day, and any model given them is being handed the answer. This is the single source of the fake ~98%.
+- **Lines 17–18 — informative missingness (#6).** Income goes missing at **30% for the self-employed vs 5% for salaried**. The gap correlates with a genuine risk driver, so the *pattern* of missingness is itself signal — which Cell 6 will destroy.
+- **Lines 20–31 — the panel structure (#2, #8).** Each customer emits **3–8 near-identical rows** (`rng.integers(3, 9)`), all carrying the same `default`, `income`, `credit_score`, `loan_amount` and `collections_flag`. Only `month` and a jittered `avg_days_late` move within a customer.
+
+**What breaks downstream.** Every later cell inherits these: the clean step imputes with corrupted statistics, the split scatters each customer across both sides, both models feast on the two leaked columns, and the evaluation certifies the result.
+
+**The fix.** You cannot "fix" this cell — it is the world as the warehouse recorded it. The fixes live in what you *do* with it: rebuild one row per application from decision-day columns only (drop `avg_days_late`, `collections_flag`, `month`), trace `income` to its source system and unify the unit, define a fixed default horizon, split by customer — and fund a controlled experiment to observe the rejected population (**#13**).
+
+### Cell 4 — the histogram
 
 ```python
-risk = -3.1 - 0.011 * (score - 680) + 1.6 * loan / (income_m * 12) \
-       - 0.5 * (not self_emp) + rng.normal(0, 0.4)
-default = int(rng.random() < 1 / (1 + np.exp(-risk)))
+px.histogram(df, x="income", nbins=80, title="Income distribution").show()
 ```
 
-The true data-generating process: risk falls with credit score, rises with loan-to-income, and is higher for the self-employed. Note it uses `income_m * 12` — the *correct* annualised income, which the `income` column does not reliably contain.
+**What it does.** The notebook's one and only piece of [[exploratory-data-analysis|EDA]].
+
+**Problems here.** Not the code — the **non-response**. This chart, when you run it, shows two clean peaks about twelve times apart: the mixed-units defect (**#7**) in plain sight. The team plotted it, put it in the deck, and continued as if it were normal. The lesson the exam draws from this cell: plotting your data only helps if you *react* to what the plot shows. This is also why the brief insists you actually run the notebook — the defect is invisible in the code summary and unmissable in the chart.
+
+### Cell 5 (markdown) + Cell 6 — "Clean"
+
+> ## 2. Clean
 
 ```python
-days_late   = rng.uniform(2, 35) if default else rng.exponential(2.5)   # ⚠️⚠️ leak
-collections = int((default and rng.random() < 0.65) or rng.random() < 0.05)  # ⚠️⚠️ leak
-```
+df["income"] = df["income"].fillna(df["income"].mean())
+df["credit_score"] = df["credit_score"].fillna(0)
 
-> [!danger] The fatal lines
-> Both features are computed **from `default`**. They are consequences of the outcome, not predictors of it, and neither exists for an applicant who does not yet have a loan. This is where the 98% comes from.
-
-```python
-income = np.nan if rng.random() < (0.30 if self_emp else 0.05) else round(income)
-score  = np.nan if rng.random() < 0.08 else round(score)
-```
-
-Missingness is **not random**: self-employed borrowers are missing income at 30% vs 5% for salaried. The gap correlates with a genuine risk factor, so the pattern of missingness is itself informative — and the cleaning step destroys it.
-
-```python
-for month in range(1, int(rng.integers(3, 9)) + 1):
-    rows.append({...})
-```
-
-Each customer emits **3–8 near-identical rows**, all carrying the same `default`. 1,200 customers become ~6,600 rows. Only `month` and a jittered `avg_days_late` vary within a customer.
-
-### Cell 6 — "Clean"
-
-```python
-df["income"] = df["income"].fillna(df["income"].mean())   # ⚠️ mean of a bimodal column, pre-split
-df["credit_score"] = df["credit_score"].fillna(0)         # ⚠️ 0 is off-scale (300–850)
-X = df.drop(columns=["default", "customer_id"])           # ⚠️ `month` survives as a feature
+X = df.drop(columns=["default", "customer_id"])
 y = df["default"]
-X = StandardScaler().fit_transform(X)                     # ⚠️ fitted on ALL data, pre-split
+X = StandardScaler().fit_transform(X)
 ```
 
-Four defects in five lines. Note also what `drop` does *not* remove: `month` stays in the feature matrix, and `avg_days_late` / `collections_flag` stay in too.
+**What it does.** Fills the gaps, chooses the feature set, standardises. Five lines, four defects — the densest cell in the notebook.
 
-### Cell 8 — Split
+**Problems here, line by line:**
+
+- **Line 1 (#4, #6, #7).** The fill value is the **mean of the whole table** — computed *before* the split, so test-set information leaks into training. Worse, it is the mean of a **bimodal mixed-unit column**, a number that describes neither population. And overwriting the gaps destroys the informative 30%-vs-5% missingness pattern.
+- **Line 2 (#5).** Missing credit scores become **0** — impossible on a 300–850 scale. Zero is not a low score; it is not a score. After standardisation those zeros land around **z ≈ −3.2**, a manufactured cluster of extreme outliers that any model will happily learn as "mystery segment", encoding the *artefact*, not the risk.
+- **Line 4 (#1, #8).** Look at what `drop` does **not** remove: `avg_days_late` and `collections_flag` — the two post-outcome columns — sail straight into `X`, and so does `month`, a warehouse artefact that is not a property of any applicant.
+- **Line 6 (#3).** `StandardScaler().fit_transform(X)` is fitted on **all** rows, test rows included, before any split exists. A second, quieter leak: the test set's mean and spread shape the training features.
+
+**What breaks downstream.** The models in Cells 10 and 12 train on leaked features scaled with leaked statistics, and the imputation noise is baked in before any honest measurement is possible.
+
+**The fix.** Split **first**. Then, inside a [[scikit-learn-pipeline|Pipeline]] so nothing can be fitted out of order: impute with the **training median** plus a missing-indicator column, drop the post-outcome columns and `month`, and let the scaler learn from training folds only. (Scaling itself is harmless to the forest — trees are scale-invariant — the sin is *when* it is fitted, not *that* it is.)
+
+### Cell 7 (markdown) + Cell 8 — Split
+
+> ## 3. Split
 
 ```python
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+print("train:", len(y_train), "| test:", len(y_test))
 ```
 
-Row-level, so customers land on both sides. No `stratify=y` despite ~14% imbalance. No validation set — two sets out, not three.
+**What it does.** An 80/20 random **row-level** split: ~5,245 training rows, ~1,312 test rows.
 
-### Cells 10 & 12 — The two models
+**Problems here:**
+
+- **Row-level, not customer-level (#2).** With 3–8 near-identical rows per customer, a random row split puts nearly **every customer on both sides**. The model memorises a customer's rows in training and recognises the same customer's remaining rows in test. The reported score measures *recognition*, not prediction.
+- **No `stratify=y`.** With ~14% positives, an unstratified split lets the class balance drift between train and test — sloppy, though dwarfed by the grouping problem.
+- **Two sets, not three (#9).** No validation set exists anywhere in the notebook, so every later choice — epochs, architecture, and ultimately *which model to ship* — can only be made by peeking at the test set.
+
+**The fix.** `GroupShuffleSplit` (or `StratifiedGroupKFold`) with `groups=customer_id`, `stratify` on the label, and a three-way split: train / validation / test, with test touched exactly once at the end.
+
+### Cell 9 (markdown) + Cell 10 — Model 1: Random Forest
+
+> ## 4. Model 1: Random Forest
+> *(model parameters: `n_estimators=100`, default settings are fine)*
 
 ```python
 rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+acc_rf = accuracy_score(y_test, rf.predict(X_test))
+print("Random Forest accuracy: {:.4f}".format(acc_rf))
 ```
-Comment claims *"model parameters: `n_estimators=100`, default settings are fine"*. `n_estimators` is a **hyperparameter**, and nothing justified 100.
+
+**What it does.** Trains 100 trees and reports one number.
+
+**Problems here:**
+
+- **The comment, not the code (#12).** `n_estimators=100` is a **hyperparameter** — chosen by a human, learned by nothing. Calling it a "model parameter" and adding "default settings are fine" tells you that nobody justified any choice: there was no validation set to justify it *on*.
+- **One metric (#10).** `accuracy_score` on a ~14% default rate, where "approve everyone" scores ~86% free. Of the customers who default, how many does the forest catch? The notebook never asks.
+- The model itself is a perfectly reasonable choice for small tabular data — it is being **fed garbage and measured wrong**, which is a different failure than being the wrong model.
+
+**The fix.** Report a [[confusion-matrix]], [[recall]], [[precision]] and [[auc|AUC]] against the 86% baseline; tune `n_estimators` and depth on a validation set *after* the data is fixed — and not before (tuning a broken measurement only optimises the leak).
+
+### Cell 11 (markdown) + Cell 12 — Model 2: Neural Network
+
+> ## 5. Model 2: Neural Network
+> *(model parameters: 3 layers, 30 epochs, no tuning needed)*
 
 ```python
+nn = keras.Sequential([
+    layers.Input(shape=(X.shape[1],)),
+    layers.Dense(256, activation="relu"),
+    layers.Dense(256, activation="relu"),
+    layers.Dense(256, activation="relu"),
+    layers.Dense(1, activation="sigmoid"),
+])
+nn.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
 nn.fit(X_train, y_train, epochs=30, batch_size=64, verbose=0)
+acc_nn = accuracy_score(y_test, (nn.predict(X_test, verbose=0) > 0.5).astype(int))
+print("Neural Network accuracy: {:.4f}".format(acc_nn))
 ```
-Comment claims *"3 layers, 30 epochs, no tuning needed"*. No `validation_data`, no `callbacks`, no early stopping — a fixed 30 epochs with nothing monitoring for overfitting. Three 256-unit layers is also heavy machinery for seven tabular features.
 
-### Cells 14 & 15 — Compare and decide
+**What it does.** Three 256-unit hidden layers ending in a [[sigmoid-function|sigmoid]], trained for a fixed 30 epochs.
+
+**Problems here:**
+
+- **Capacity vs data.** Count the weights: 7×256+256 + 256×256+256 (twice) + 256+1 = **133,889 parameters**, fitted to ~5,245 rows of **7 features**. That is heavy machinery pointed at a small tabular problem — an [[overfitting]] engine with nothing watching it.
+- **Nothing is watching it (#9).** `fit` receives no `validation_data` and no `callbacks`: no early stopping, no learning curve, no way to know whether 30 epochs is too few, too many, or accidentally fine. "No tuning needed" in the comment above is not a finding — with no validation set, no tuning was *possible* (#12).
+- **`> 0.5` (#11).** The sigmoid outputs a probability, which is immediately crushed through a threshold nobody chose. With a missed defaulter costing ~10× a wrong rejection, 0.5 is a library default standing where a business decision should be.
+- Same single-metric evaluation as the forest (**#10**).
+
+**The fix.** For this data, honestly: a smaller network, or no network — gradient-boosted or bagged trees are the default winners at this scale. If a network is kept: validation split, early stopping, and compare models at a **cost-derived threshold** on recall/precision, not accuracy at 0.5.
+
+### Cells 13–15 — Compare and decide
+
+> ## 6. Compare and decide
 
 ```python
-fig.update_yaxes(range=[0.90, 1.00])   # ⚠️ truncated axis exaggerates a tiny gap
+print("Random Forest  accuracy: {:.4f}".format(acc_rf))
+print("Neural Network accuracy: {:.4f}".format(acc_nn))
+
+fig = go.Figure(go.Bar(x=["Random Forest", "Neural Network"], y=[acc_rf, acc_nn]))
+fig.update_yaxes(range=[0.90, 1.00])
+fig.update_layout(title="Model comparison — test accuracy")
+fig.show()
 ```
 
-```
-"Both models are around 98% - far better than a 50/50 coin flip."
-"Decision: deploy the NEURAL NETWORK (deep learning is the more advanced technology)."
+```python
+print("Both models are around 98% - far better than a 50/50 coin flip.")
+print("Decision: deploy the NEURAL NETWORK (deep learning is the more advanced technology).")
 ```
 
-Two rhetorical failures in the closing lines. The baseline is **not** a 50/50 coin flip — it is the ~86% you get by predicting "no default" for everyone. And the recommendation contradicts the team's own printout while citing a reason that is not a criterion.
+**What it does.** Prints two accuracies, draws a bar chart, recommends a model.
+
+**Problems here:**
+
+- **`range=[0.90, 1.00]` (#15).** The y-axis starts at 0.90, so a ~1-point gap fills a tenth of the chart. A bar chart implies a zero baseline; truncating it silently is the classic way to make noise look like a finding. There are also no error bars — with one split and one seed, a 1-point difference is well inside random variation.
+- **The wrong baseline.** "Far better than a 50/50 coin flip" — a coin flip is the baseline for a *balanced* problem. The honest baseline is **~86%** (approve everyone), which would sit just below the truncated axis, embarrassingly close to both bars.
+- **The recommendation contradicts the evidence (#15).** The team's own printout ranks the forest at least as high, and they recommend the network anyway, for a reason — "more advanced technology" — that is not a criterion. A process that overrides its own numbers has told you how much to trust its other numbers.
+
+**The fix.** Full-axis chart (or state the baseline on it), confusion matrices per model, comparison at the cost-derived threshold — and criteria (defaulters caught, cost per error type, explainability to the regulator, running cost, segment stability) agreed **before** the numbers are read, so the decision applies the criteria instead of rationalising a preference.
 
 ---
 
