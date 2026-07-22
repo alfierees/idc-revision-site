@@ -26,6 +26,8 @@ in_scope: true
 > The exam gives you **one notebook**, released in advance, and asks 25 questions about it. Like the econometrics exam, the code is not a surprise — the marks are for knowing it cold. This walks the notebook cell by cell and catalogues every planted defect.
 >
 > 📓 [`loan_pipeline.ipynb`](/papers/machine-learning/loan_pipeline.ipynb) · 📄 [Problem brief + 15 prep questions](/papers/machine-learning/loan-pipeline-brief-and-prep-questions.pdf) · 📄 [The review report](/papers/machine-learning/loan-pipeline-review-report.md) · 📝 [[pp-01-sample-exam-25-questions|Sample exam — 25 questions]]
+>
+> 🗣️ Not fluent in code? Start with the [[loan-pipeline-plain-english|plain-English walkthrough]] — the same story, no programming knowledge assumed.
 
 ## The situation in one paragraph
 
