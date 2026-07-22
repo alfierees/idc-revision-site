@@ -882,3 +882,130 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   border-radius: 999px; padding: 4px 10px;
 }
 .graph-readout .rd b { color: var(--color-accent); font-weight: 600; }
+
+/* ─── Open-answer question: reveal toggle + inline self-grade (OpenAnswer) ─── */
+.oa { margin-top: 1.25rem; }
+.oa-toggle {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-accent);
+  padding: 0.5rem 0.85rem; border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  border: none; cursor: pointer;
+  transition: background 0.15s ease;
+}
+.oa-toggle:hover { background: color-mix(in srgb, var(--color-accent) 14%, transparent); }
+.oa-chev { display: inline-block; transition: transform 0.15s ease; }
+.oa-chev-open { transform: rotate(90deg); }
+.oa-body {
+  margin-top: 1.2rem; padding-top: 1.2rem;
+  border-top: 1px solid var(--color-rule);
+  color: var(--color-ink-soft);
+}
+.oa-grade {
+  margin-top: 1.4rem; padding-top: 1.1rem;
+  border-top: 1px dashed var(--color-rule);
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 0.9rem;
+}
+.oa-grade-q {
+  font-family: var(--font-ui);
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.oa-grade-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.oa-grade-btn {
+  font-family: var(--font-ui);
+  font-size: 0.8rem; font-weight: 600;
+  padding: 0.4rem 0.85rem; border-radius: 999px;
+  border: 1.5px solid var(--color-rule); background: var(--color-card);
+  color: var(--color-ink-muted); cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.oa-grade-btn:hover { border-color: var(--color-rule-strong); color: var(--color-ink); }
+.oa-grade-on.oa-grade-done   { border-color: var(--color-status-done);    background: var(--color-status-done-bg);    color: var(--color-status-done); }
+.oa-grade-on.oa-grade-wrong  { border-color: var(--color-status-wrong);   background: var(--color-status-wrong-bg);   color: var(--color-status-wrong); }
+.oa-grade-on.oa-grade-skipped{ border-color: var(--color-status-skipped); background: var(--color-status-skipped-bg); color: var(--color-status-skipped); }
+
+/* ─── Floating exam progress + score control (ExamScorebar) ─── */
+.scorebar {
+  position: fixed;
+  right: max(1.1rem, env(safe-area-inset-right));
+  bottom: max(1.1rem, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 0.6rem;
+  pointer-events: none;
+}
+.scorebar > * { pointer-events: auto; }
+.scorebar-pill {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  font-family: var(--font-ui);
+  font-size: 0.82rem; font-weight: 700; letter-spacing: 0.01em;
+  color: var(--color-ink);
+  padding: 0.6rem 1rem; border-radius: 999px;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-rule-strong);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+}
+.scorebar-pill:hover { transform: translateY(-1px); }
+.scorebar-complete .scorebar-pill {
+  border-color: var(--color-status-done);
+  background: color-mix(in srgb, var(--color-status-done-bg) 70%, var(--color-card));
+}
+.scorebar-check {
+  display: grid; place-items: center;
+  width: 1.25rem; height: 1.25rem; border-radius: 50%;
+  background: var(--color-status-done); color: var(--color-card);
+  font-size: 0.75rem;
+}
+.scorebar-headline { white-space: nowrap; }
+.scorebar-caret {
+  font-size: 0.85rem; color: var(--color-ink-muted);
+  transition: transform 0.15s ease;
+}
+.scorebar-caret-open { transform: rotate(180deg); }
+.scorebar-panel {
+  width: 15rem; max-width: calc(100vw - 2.2rem);
+  background: var(--color-card);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  padding: 1.1rem 1.2rem 1.2rem;
+}
+.scorebar-panel-title {
+  font-family: var(--font-ui);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin: 0 0 0.75rem;
+}
+.scorebar-stats { margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.scorebar-stats > div {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+}
+.scorebar-stats dt {
+  font-family: var(--font-ui); font-size: 0.8rem; color: var(--color-ink-soft);
+}
+.scorebar-stats dd {
+  margin: 0; font-family: var(--font-ui); font-size: 0.9rem; font-weight: 700; color: var(--color-ink);
+}
+.scorebar-stats .stat-correct dd { color: var(--color-status-done); }
+.scorebar-stats .stat-missed dd  { color: var(--color-status-wrong); }
+.scorebar-stats .stat-skipped dd { color: var(--color-status-skipped); }
+.scorebar-stats .stat-score {
+  margin-top: 0.4rem; padding-top: 0.55rem; border-top: 1px solid var(--color-rule);
+}
+.scorebar-stats .stat-score dt { font-weight: 700; color: var(--color-ink); }
+.scorebar-stats .stat-score dd { font-size: 1.05rem; color: var(--color-status-done); }
+.scorebar-reset {
+  margin-top: 1rem; width: 100%;
+  font-family: var(--font-ui);
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-accent);
+  padding: 0.55rem 0.85rem; border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  border: none; cursor: pointer;
+  transition: background 0.15s ease;
+}
+.scorebar-reset:hover { background: color-mix(in srgb, var(--color-accent) 15%, transparent); }

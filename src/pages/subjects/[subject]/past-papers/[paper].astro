@@ -3,9 +3,9 @@ import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
 import GraphMounter from "../../../../components/GraphMounter.astro";
 import PaperSidebar from "../../../../components/PaperSidebar.astro";
-import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
+import OpenAnswer from "../../../../components/OpenAnswer";
 import McQuestion from "../../../../components/McQuestion";
-import StatusPill from "../../../../components/StatusPill";
+import ExamScorebar from "../../../../components/ExamScorebar";
 import Mermaid from "../../../../components/Mermaid.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
@@ -46,6 +46,9 @@ const outroHtml = outroMd.trim() ? await renderMarkdownString(outroMd, subjectSl
 const renderedQuestions = await Promise.all((paper.data.questions ?? []).map(async (q) => ({
   id: q.id,
   title: q.title,
+  // Gradable = auto-scored (MCQ) or self-graded (has a real solution). Framing
+  // rows with neither are excluded from the scorebar denominator.
+  gradable: Boolean(q.options?.length) || q.solution.trim().length > 0,
   questionHtml: await renderMarkdownString(q.text, subjectSlug, links),
   solutionHtml: await renderMarkdownString(q.solution, subjectSlug, links),
   // Multiple-choice: pre-render each option's text + per-option explanation.
@@ -119,7 +122,6 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
               <li id={q.id} class="qcard rounded-card bg-card p-7 shadow-soft">
                 <div class="flex items-start justify-between gap-4">
                   <span class="qid">{q.title ?? q.id}</span>
-                  <StatusPill client:load subject={subjectSlug} kind="past-paper" refSlug={paperSlug} question={q.id} />
                 </div>
                 <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
                 {q.options ? (
@@ -132,7 +134,14 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
                     workingHtml={q.solutionHtml}
                   />
                 ) : (
-                  <CollapsibleSolution html={q.solutionHtml} />
+                  <OpenAnswer
+                    client:load
+                    subject={subjectSlug}
+                    kind="past-paper"
+                    refSlug={paperSlug}
+                    questionId={q.id}
+                    solutionHtml={q.solutionHtml}
+                  />
                 )}
               </li>
             ))}
@@ -144,6 +153,15 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       )}
     </article>
   </div>
+  {structured && renderedQuestions.some((q) => q.gradable) && (
+    <ExamScorebar
+      client:load
+      subject={subjectSlug}
+      kind="past-paper"
+      refSlug={paperSlug}
+      questionIds={renderedQuestions.filter((q) => q.gradable).map((q) => q.id)}
+    />
+  )}
   <Mermaid />
   <GraphMounter />
   <HoverPreview subject={subjectSlug} />
