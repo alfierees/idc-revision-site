@@ -1,10 +1,10 @@
 ---
 import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
-import CollapsibleSolution from "../../../../components/CollapsibleSolution.astro";
+import OpenAnswer from "../../../../components/OpenAnswer";
+import ExamScorebar from "../../../../components/ExamScorebar";
 import GraphMounter from "../../../../components/GraphMounter.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
-import StatusPill from "../../../../components/StatusPill";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
@@ -202,10 +202,18 @@ const hasToolkit =
           <li id={q.id} class="qcard rounded-card bg-card p-7 shadow-soft">
             <div class="flex items-start justify-between gap-4">
               <span class="qid"><span class="qnum">{q.id}</span></span>
-              <StatusPill client:load subject={subjectSlug} kind="problem-set" refSlug={setSlug} question={q.id} />
             </div>
             <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
-            {q.hasSolution && <CollapsibleSolution html={q.solutionHtml} />}
+            {q.hasSolution && (
+              <OpenAnswer
+                client:load
+                subject={subjectSlug}
+                kind="problem-set"
+                refSlug={setSlug}
+                questionId={q.id}
+                solutionHtml={q.solutionHtml}
+              />
+            )}
           </li>
         ))}
       </ol>
@@ -215,6 +223,15 @@ const hasToolkit =
       )}
     </div>
   </div>
+  {rendered.some((q) => q.hasSolution) && (
+    <ExamScorebar
+      client:load
+      subject={subjectSlug}
+      kind="problem-set"
+      refSlug={setSlug}
+      questionIds={rendered.filter((q) => q.hasSolution).map((q) => q.id)}
+    />
+  )}
   <GraphMounter />
   <HoverPreview subject={subjectSlug} />
 </Layout>

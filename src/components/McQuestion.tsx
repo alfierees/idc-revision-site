@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import type { JSX } from "preact";
-import { readStatus, writeStatus, statusKey } from "../lib/status";
+import { readStatus, writeStatus, statusKey, EXAM_RESET_EVENT } from "../lib/status";
 
 interface Option {
   label: string;
@@ -43,6 +43,18 @@ export default function McQuestion({ subject, refSlug, questionId, options, work
     const saved = localStorage.getItem(pickK);
     if (saved) setPicked(saved);
   }, [pickK]);
+
+  // The exam scorebar's "Reset all" broadcasts this; clear our own reveal state
+  // to match the cleared localStorage.
+  useEffect(() => {
+    const onReset = (e: Event) => {
+      if ((e as CustomEvent).detail?.refSlug !== refSlug) return;
+      setPicked(null);
+      setShowWorking(false);
+    };
+    window.addEventListener(EXAM_RESET_EVENT, onReset);
+    return () => window.removeEventListener(EXAM_RESET_EVENT, onReset);
+  }, [refSlug]);
 
   const revealed = picked !== null;
 
