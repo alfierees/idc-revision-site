@@ -117,5 +117,27 @@ export function Slider(props: {
   );
 }
 
+// Labelled button group for discrete graph modes (counterpart to Slider).
+export function BtnRow(props: {
+  options: { key: string; label: string }[];
+  active: string;
+  onPick: (k: string) => void;
+}): VNode {
+  return (
+    <div class="graph-btns" role="group">
+      {props.options.map((o) => (
+        <button
+          type="button"
+          class={`graph-btn${props.active === o.key ? " graph-btn-on" : ""}`}
+          aria-pressed={props.active === o.key}
+          onClick={() => props.onPick(o.key)}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // Re-export common token colours for components.
 export const C = { INK, INK_SOFT, RULE, ACCENT: "var(--color-accent)" };

@@ -2,6 +2,7 @@
 import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
 import ExamPrepSidebar from "../../../../components/ExamPrepSidebar.astro";
+import GraphMounter from "../../../../components/GraphMounter.astro";
 import Mermaid from "../../../../components/Mermaid.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
@@ -87,6 +88,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     </article>
   </div>
   <Mermaid />
+  <GraphMounter />
   <HoverPreview subject={subjectSlug} />
 </Layout>
 

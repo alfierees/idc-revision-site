@@ -1009,3 +1009,20 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   transition: background 0.15s ease;
 }
 .scorebar-reset:hover { background: color-mix(in srgb, var(--color-accent) 15%, transparent); }
+
+/* Button group for discrete graph modes (BtnRow in graphs/plot.tsx) */
+.graph-btns { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.6rem; }
+.graph-btn {
+  font: 600 0.78rem var(--font-ui);
+  padding: 0.38rem 0.8rem; border-radius: 999px;
+  border: 1.5px solid var(--color-rule);
+  background: var(--color-card); color: var(--color-ink-muted);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.graph-btn:hover { border-color: var(--color-rule-strong); color: var(--color-ink); }
+.graph-btn-on {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 10%, var(--color-card));
+  color: var(--color-accent-ink);
+}
