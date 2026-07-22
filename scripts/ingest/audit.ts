@@ -110,7 +110,7 @@ function slugifyAlias(s: string): string {
 
 // ─── link map (mirrors buildLinkMap but reads FS directly) ───────────────────
 
-type LinkKind = "term" | "recipe" | "problem-set" | "lecture";
+type LinkKind = "term" | "recipe" | "problem-set" | "lecture" | "past-paper" | "exam-prep";
 interface LinkTarget { kind: LinkKind; slug: string }
 type LinkMap = Map<string, LinkTarget>;
 
@@ -141,9 +141,12 @@ async function buildLinkMap(subject: string): Promise<LinkMap> {
     }
   };
 
-  // Build order matches buildLinkMap: sets → lectures → recipes → terms
+  // Build order matches buildLinkMap: sets → lectures → past-papers →
+  // exam-prep → recipes → terms. Earlier collections win on slug collision.
   await addEntries("problem-set", contentDir("problem-sets", subject));
   await addEntries("lecture", contentDir("lectures", subject), { withAliases: true, withTitleAlias: true });
+  await addEntries("past-paper", contentDir("past-papers", subject), { withAliases: true });
+  await addEntries("exam-prep", contentDir("exam-prep", subject), { withAliases: true, withTitleAlias: true });
   await addEntries("recipe", contentDir("recipes", subject), { withTitleAlias: true });
   await addEntries("term", contentDir("terms", subject), { withAliases: true });
 
