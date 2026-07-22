@@ -25,7 +25,7 @@ in_scope: true
 > [!info] Why this document exists
 > The exam gives you **one notebook**, released in advance, and asks 25 questions about it. Like the econometrics exam, the code is not a surprise — the marks are for knowing it cold. This walks the notebook cell by cell and catalogues every planted defect.
 >
-> 📓 [`loan_pipeline.ipynb`](/papers/machine-learning/loan_pipeline.ipynb) · 📄 [Problem brief + 15 prep questions](/papers/machine-learning/loan-pipeline-brief-and-prep-questions.pdf) · 📝 [[pp-01-sample-exam-25-questions|Sample exam — 25 questions]]
+> 📓 [`loan_pipeline.ipynb`](/papers/machine-learning/loan_pipeline.ipynb) · 📄 [Problem brief + 15 prep questions](/papers/machine-learning/loan-pipeline-brief-and-prep-questions.pdf) · 📄 [The review report](/papers/machine-learning/loan-pipeline-review-report.md) · 📝 [[pp-01-sample-exam-25-questions|Sample exam — 25 questions]]
 
 ## The situation in one paragraph
 
@@ -35,6 +35,8 @@ The team delivered a six-step pipeline reporting ~98% accuracy and recommending 
 
 > [!danger] The one sentence to carry into the exam
 > **Everything the notebook reports is measured wrong, and the model does not answer the question that was asked.**
+>
+> The bank asked: *should we approve this **new applicant**, today, using only what we know today?* The pipeline answers: *is this **existing loan**, months into repayment, going bad — given how its repayments have been going?* The second question is easy (the repayment behaviour almost *is* the answer) and useless (a new applicant has no repayment history with the bank). Every defect below feeds this one.
 
 ---
 
@@ -145,6 +147,12 @@ df.head()
 
 **The fix.** You cannot "fix" this cell — it is the world as the warehouse recorded it. The fixes live in what you *do* with it: rebuild one row per application from decision-day columns only (drop `avg_days_late`, `collections_flag`, `month`), trace `income` to its source system and unify the unit, define a fixed default horizon, split by customer — and fund a controlled experiment to observe the rejected population (**#13**).
 
+**See it for yourself** — every column placed at the moment the bank first knows it. Drag "today" back to the application day and watch the model's two favourite columns fall off the knowable side of the line:
+
+```graph
+type: leakage-timeline
+```
+
 ### Cell 4 — the histogram
 
 ```python
@@ -154,6 +162,12 @@ px.histogram(df, x="income", nbins=80, title="Income distribution").show()
 **What it does.** The notebook's one and only piece of [[exploratory-data-analysis|EDA]].
 
 **Problems here.** Not the code — the **non-response**. This chart, when you run it, shows two clean peaks about twelve times apart: the mixed-units defect (**#7**) in plain sight. The team plotted it, put it in the deck, and continued as if it were normal. The lesson the exam draws from this cell: plotting your data only helps if you *react* to what the plot shows. This is also why the brief insists you actually run the notebook — the defect is invisible in the code summary and unmissable in the chart.
+
+**See it** — the histogram the team plotted and then ignored. Colour it by source system and watch where the "average" falls:
+
+```graph
+type: income-mixup
+```
 
 ### Cell 5 (markdown) + Cell 6 — "Clean"
 
@@ -179,7 +193,13 @@ X = StandardScaler().fit_transform(X)
 
 **What breaks downstream.** The models in Cells 10 and 12 train on leaked features scaled with leaked statistics, and the imputation noise is baked in before any honest measurement is possible.
 
-**The fix.** Split **first**. Then, inside a [[scikit-learn-pipeline|Pipeline]] so nothing can be fitted out of order: impute with the **training median** plus a missing-indicator column, drop the post-outcome columns and `month`, and let the scaler learn from training folds only. (Scaling itself is harmless to the forest — trees are scale-invariant — the sin is *when* it is fitted, not *that* it is.)
+**The fix.** Split **first**. Then, inside a [[scikit-learn-pipeline|Pipeline]] so nothing can be fitted out of order: impute with the **training median** plus a missing-indicator column, and let the scaler learn from training folds only. And note the deeper principle behind line 4: choose an **explicit application-day feature list** (income, `self_employed`, `credit_score`, `loan_amount`, plus the missingness flags) rather than "everything except the target" — a drop-list has to remember every bad column; an allow-list only has to know the good ones. (Scaling itself is harmless to the forest — trees are scale-invariant — the sin is *when* it is fitted, not *that* it is; the binary flags never needed scaling at all.)
+
+**See it** — sixty customers' credit scores, and what each fill-in choice does to the five that are missing:
+
+```graph
+type: zero-fill
+```
 
 ### Cell 7 (markdown) + Cell 8 — Split
 
@@ -200,7 +220,13 @@ print("train:", len(y_train), "| test:", len(y_test))
 - **No `stratify=y`.** With ~14% positives, an unstratified split lets the class balance drift between train and test — sloppy, though dwarfed by the grouping problem.
 - **Two sets, not three (#9).** No validation set exists anywhere in the notebook, so every later choice — epochs, architecture, and ultimately *which model to ship* — can only be made by peeking at the test set.
 
-**The fix.** `GroupShuffleSplit` (or `StratifiedGroupKFold`) with `groups=customer_id`, `stratify` on the label, and a three-way split: train / validation / test, with test touched exactly once at the end.
+**The fix.** `GroupShuffleSplit` (or `StratifiedGroupKFold`) with `groups=customer_id`, `stratify` on the label, and a three-way split: train / validation / test, with test touched exactly once at the end. Or collapse to one row per customer *first*, after which a plain split is safe. (The duplication also quietly **over-weights long-observed loans** — an eight-month customer counts nearly three times as much as a three-month one.)
+
+**See it** — twelve customers' monthly rows sliding into Train and Test. Toggle how the split is done and watch who ends up on both sides:
+
+```graph
+type: split-shuffler
+```
 
 ### Cell 9 (markdown) + Cell 10 — Model 1: Random Forest
 
@@ -222,7 +248,13 @@ print("Random Forest accuracy: {:.4f}".format(acc_rf))
 - **One metric (#10).** `accuracy_score` on a ~14% default rate, where "approve everyone" scores ~86% free. Of the customers who default, how many does the forest catch? The notebook never asks.
 - The model itself is a perfectly reasonable choice for small tabular data — it is being **fed garbage and measured wrong**, which is a different failure than being the wrong model.
 
-**The fix.** Report a [[confusion-matrix]], [[recall]], [[precision]] and [[auc|AUC]] against the 86% baseline; tune `n_estimators` and depth on a validation set *after* the data is fixed — and not before (tuning a broken measurement only optimises the leak).
+**The fix.** Report a [[confusion-matrix]], [[recall]], [[precision]] and [[auc|AUC]] against the 86% baseline; then tune *and regularise* on a validation set — `min_samples_leaf`, `max_depth` — *after* the data is fixed, and not before (tuning a broken measurement only optimises the leak).
+
+**See it** — one hundred applicants, three rules. Check what "no model at all" already scores before being impressed by 98%:
+
+```graph
+type: baseline-machine
+```
 
 ### Cell 11 (markdown) + Cell 12 — Model 2: Neural Network
 
@@ -252,7 +284,19 @@ print("Neural Network accuracy: {:.4f}".format(acc_nn))
 - **`> 0.5` (#11).** The sigmoid outputs a probability, which is immediately crushed through a threshold nobody chose. With a missed defaulter costing ~10× a wrong rejection, 0.5 is a library default standing where a business decision should be.
 - Same single-metric evaluation as the forest (**#10**).
 
-**The fix.** For this data, honestly: a smaller network, or no network — gradient-boosted or bagged trees are the default winners at this scale. If a network is kept: validation split, early stopping, and compare models at a **cost-derived threshold** on recall/precision, not accuracy at 0.5.
+**The fix.** For this data, honestly: a smaller network, or no network at all. The review report's candidate is [[logistic-regression|logistic regression]] — on ~6,500 rows and four real features it performs on par with the complex models, and its coefficients read directly as the plain-language rejection reasons the regulator demands. Whatever the model: handle the imbalance explicitly (`class_weight="balanced"` or resampling), keep a validation split with early stopping, and compare at a **cost-derived threshold** on recall/precision, not accuracy at 0.5.
+
+**See it** — what training with nothing watching looks like. Drag the epochs and find the turning point the notebook couldn't see:
+
+```graph
+type: overfit-curves
+```
+
+**And the threshold** — drag the rejection line and watch the money. The cheapest point is nowhere near the 0.5 the notebook used:
+
+```graph
+type: threshold-money
+```
 
 ### Cells 13–15 — Compare and decide
 
@@ -283,6 +327,11 @@ print("Decision: deploy the NEURAL NETWORK (deep learning is the more advanced t
 
 **The fix.** Full-axis chart (or state the baseline on it), confusion matrices per model, comparison at the cost-derived threshold — and criteria (defaulters caught, cost per error type, explainability to the regulator, running cost, segment stability) agreed **before** the numbers are read, so the decision applies the criteria instead of rationalising a preference.
 
+**See it** — the notebook's own chart with a draggable axis. Pull the start of the axis down to zero and watch the drama evaporate:
+
+```graph
+type: axis-truncation
+```
 ---
 
 ## The defect catalogue
@@ -334,8 +383,33 @@ The gap between 86% and 98% is almost entirely leakage. Once the leak is removed
 5. **Then clean** — impute from *training* statistics only (median + missing-indicator), scale inside a `Pipeline` so the fit never sees validation or test.
 6. **Tune on validation** — never on test.
 7. **Evaluate properly** — confusion matrix, recall, precision, [[roc-curve|ROC]]/[[auc|AUC]], against the majority-class baseline.
-8. **Set the threshold from costs**, not from the 0.5 default, and compare models *at that threshold*.
-9. **Choose on the agreed criteria** — defaulters caught, money per error type, explainability, running cost, segment stability.
+8. **Handle the imbalance and set the threshold from costs** — `class_weight="balanced"` (or resampling) at training time, then an operating threshold derived from the 70,000-vs-7,000 cost asymmetry, not the 0.5 default; compare models *at that threshold*.
+9. **Choose on the agreed criteria** — defaulters caught, money per error type, explainability, running cost, segment stability. The review report's candidate on those criteria: [[logistic-regression|logistic regression]], the only model that satisfies the regulator out of the box.
+10. **Deploy carefully, if at all** — shadow mode alongside the human underwriters first; a small **randomised approval slice** of borderline applications to start correcting the approved-only bias; calibration checked and **drift monitored** after go-live.
+
+> [!tip] What the honest rebuild should expect
+> Accuracy near the **~86% baseline**, defaulter-recall in the mid-30s at the corrected threshold, and ROC-AUC roughly in the **0.70s** — much less flattering, and real. That is normal for application-day credit data: a modest signal from income, score, loan size and employment type is all that genuinely exists on submission day. Run the fixes and land at 98% again and you have not built a brilliant model — **you have found another leak.**
+
+## Flawed vs corrected, side by side
+
+The review report's summary table — worth memorising as pairs:
+
+| Design choice | The notebook | The rebuild |
+|---|---|---|
+| Unit of analysis | one row per customer-month (3–8× duplication) | one row per applicant |
+| Features | everything except the target — leaky columns ride along | explicit application-day list + missingness indicators |
+| Income units | mixed monthly and annual, ignored | one documented unit, fixed at the source system |
+| Imputation | whole-table mean; scores filled with 0 | training-set median + missing-indicator columns |
+| Scaling | fitted on all data before the split | fitted on train only, inside a `Pipeline` |
+| Split | random by row | by customer, stratified on the label |
+| Validation | none | validation set / cross-validation for all tuning |
+| Class imbalance | ignored | `class_weight="balanced"`; threshold set from costs |
+| Metrics | accuracy alone, against a "50/50" baseline | confusion matrix, recall and precision on defaults, ROC-AUC, cost-weighted — against 86% |
+| Chart | y-axis 0.90–1.00, no baseline drawn | full axis, baseline line, several metrics |
+| Model choice | neural network, "because more advanced" | [[logistic-regression\|logistic regression]]: comparable performance, regulator-explainable |
+| Reported result | ~98–99% "accuracy" | accuracy near the baseline, ROC-AUC ≈ 0.70s — honest |
+
+**Why the numbers collapse, in one breath:** remove the leaked columns and the score drops sharply (the model loses its answer sheet); split by customer and it drops again (the test set stops being memorised training rows); switch from accuracy to defaulter-recall and what remains stops flattering itself against a 14% base rate. The modest number left over is the *real* predictive content of application-day data — and a genuine 98% would itself be a red flag for leakage.
 
 > [!note] The ordering is the exam
 > Steps 4 and 5 being the wrong way round in the notebook is defect #3 and #4. Step 6 done on test is Q18's wrong answer. Step 8 skipped is Q24. Almost every question maps onto a step in this list being done out of order or skipped.
