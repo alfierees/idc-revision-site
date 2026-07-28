@@ -140,26 +140,40 @@ function restoreEscapedDollars() {
   };
 }
 
-const processor = unified()
-  .use(remarkParse)
-  .use(remarkGfm)
-  .use(remarkMath)
-  .use(remarkCalloutsLocal)
-  .use(wikiLinkPlugin, {
-    pageResolver: (n: string) => {
-      const [page, fragment] = n.split("#", 2);
-      const pageSlug = slugify(page);
-      return [fragment ? `${pageSlug}#${slugify(fragment)}` : pageSlug];
-    },
-    hrefTemplate: (p: string) => `__WIKI__${p}`,
-    aliasDivider: "|",
-  })
-  .use(remarkRehype, { allowDangerousHtml: false })
-  .use(rehypeSlugLocal)
-  .use(restoreEscapedDollars)
-  .use(rehypeKatex)
-  .use(rehypePaint)
-  .use(rehypeStringify);
+const buildProcessor = (subject: string) =>
+  unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkMath)
+    .use(remarkCalloutsLocal)
+    .use(wikiLinkPlugin, {
+      pageResolver: (n: string) => {
+        const [page, fragment] = n.split("#", 2);
+        const pageSlug = slugify(page);
+        return [fragment ? `${pageSlug}#${slugify(fragment)}` : pageSlug];
+      },
+      hrefTemplate: (p: string) => `__WIKI__${p}`,
+      aliasDivider: "|",
+    })
+    .use(remarkRehype, { allowDangerousHtml: false })
+    .use(rehypeSlugLocal)
+    .use(restoreEscapedDollars)
+    .use(rehypeKatex)
+    // rehypePaint needs the subject to label console-output blocks, so the
+    // pipeline is built (and cached) per subject rather than shared globally.
+    .use(rehypePaint, subject)
+    .use(rehypeStringify);
+
+const processors = new Map<string, ReturnType<typeof buildProcessor>>();
+
+function processorFor(subject: string) {
+  let processor = processors.get(subject);
+  if (!processor) {
+    processor = buildProcessor(subject);
+    processors.set(subject, processor);
+  }
+  return processor;
+}
 
 export async function renderMarkdownString(
   md: string,
@@ -167,6 +181,6 @@ export async function renderMarkdownString(
   links: LinkMap | Set<string>,
 ): Promise<string> {
   const pre = promoteDisplayMath(protectLiteralDollars(rewriteObsidianEmbeds(md, subject)));
-  const file = await processor.process(pre);
+  const file = await processorFor(subject).process(pre);
   return rewriteWikiHrefs(String(file), subject, links);
 }

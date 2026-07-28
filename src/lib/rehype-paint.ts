@@ -10,8 +10,9 @@ import { visit, SKIP } from "unist-util-visit";
  *  - wraps KaTeX display blocks in a framed `.eqn` slab
  *  - rebuilds fenced code:
  *      ```r        → dark editor `.codeblock` with a language bar + syntax tint
+ *      ```routput  → `.outblock` (console output) with an explicit label
  *      ``` (plain) → `.asciiblock` for arrow/box diagrams, `.outblock` for
- *                    console output
+ *                    console output, labelled per subject
  *      ```mermaid  → untouched (client-side Mermaid.astro replaces it)
  */
 
@@ -183,34 +184,68 @@ function buildCodeblock(lang: string, code: Element): Element {
   };
 }
 
-function buildPlainBlock(code: Element): Element {
-  const src = hastToString(code);
-  const pre: Element = {
-    type: "element",
-    tagName: "pre",
-    properties: {},
-    children: [{ type: "element", tagName: "code", properties: {}, children: [text(src)] }],
-  };
-  if (DIAGRAM_RE.test(src)) {
-    return {
-      type: "element",
-      tagName: "div",
-      properties: { className: ["asciiblock"] },
-      children: [pre],
-    };
-  }
+const NEUTRAL_OUTPUT_LABEL = "Output";
+
+/**
+ * Bar text for a fence that names itself as console output. Explicit and
+ * subject-independent — content that knows what it prints says so.
+ */
+const OUTPUT_FENCE_LABELS: Record<string, string> = {
+  routput: "R output",
+  output: NEUTRAL_OUTPUT_LABEL,
+};
+
+/**
+ * Bar text for a *language-less* fence, which is ambiguous by construction: it
+ * means R console output in econometrics (the course is taught in R), but
+ * Python REPL output in Machine Learning and printed statements in Accounting.
+ * Only subjects whose plain fences are reliably one language earn a specific
+ * label; everything else — including subjects added later — falls back to the
+ * neutral one. Content can always override with an explicit fence language.
+ */
+const SUBJECT_OUTPUT_LABELS: Record<string, string> = {
+  econometrics: "R output",
+};
+
+const outputLabelFor = (subject: string) =>
+  SUBJECT_OUTPUT_LABELS[subject] ?? NEUTRAL_OUTPUT_LABEL;
+
+const buildPre = (src: string): Element => ({
+  type: "element",
+  tagName: "pre",
+  properties: {},
+  children: [{ type: "element", tagName: "code", properties: {}, children: [text(src)] }],
+});
+
+/** Console-output slab: verbatim `pre` under a small label bar. */
+function buildOutputBlock(code: Element, label: string): Element {
   return {
     type: "element",
     tagName: "div",
     properties: { className: ["outblock"] },
     children: [
-      { type: "element", tagName: "div", properties: { className: ["out-bar"] }, children: [text("R output")] },
-      pre,
+      { type: "element", tagName: "div", properties: { className: ["out-bar"] }, children: [text(label)] },
+      buildPre(hastToString(code)),
     ],
   };
 }
 
-export function rehypePaint() {
+/** Language-less fence: arrow/box art becomes a diagram slab, the rest output. */
+function buildPlainBlock(code: Element, label: string): Element {
+  const src = hastToString(code);
+  if (DIAGRAM_RE.test(src)) {
+    return {
+      type: "element",
+      tagName: "div",
+      properties: { className: ["asciiblock"] },
+      children: [buildPre(src)],
+    };
+  }
+  return buildOutputBlock(code, label);
+}
+
+export function rehypePaint(subject = "") {
+  const plainOutputLabel = outputLabelFor(subject);
   return (tree: Root) => {
     visit(tree, "element", (node: Element, index, parent) => {
       if (!parent || index === undefined) return;
@@ -257,10 +292,13 @@ export function rehypePaint() {
         // Leave mermaid and graph blocks intact — their classes are the mount
         // points for client-side rendering (Mermaid.astro / GraphMounter.astro).
         if (lang === "mermaid" || lang === "graph") return;
-        if (lang) {
+        const declaredOutput = lang ? OUTPUT_FENCE_LABELS[lang] : undefined;
+        if (declaredOutput) {
+          parent.children[index] = buildOutputBlock(code, declaredOutput);
+        } else if (lang) {
           parent.children[index] = buildCodeblock(lang, code);
         } else {
-          parent.children[index] = buildPlainBlock(code);
+          parent.children[index] = buildPlainBlock(code, plainOutputLabel);
         }
         return SKIP;
       }
