@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import { stepDwellMs } from "./playback";
 import type { VNode, ComponentChildren, RefObject } from "preact";
 import katex from "katex";
 
@@ -605,11 +606,17 @@ export const clamp = (value: number, low: number, high: number) => Math.max(low,
 // ---------------------------------------------------------------------------
 // Controls
 // ---------------------------------------------------------------------------
-export function Steps(props: { step: number; count: number; onStep: (step: number) => void }): VNode {
+export function Steps(props: { step: number; count: number; onStep: (step: number) => void; playing: boolean; onPlay: () => void; dwellMs: number }): VNode {
   const isLast = props.step === props.count - 1;
   return (
     <div class="sk-bar">
       <div class="sk-nav">
+        <button type="button" class="sk-btn sk-play" aria-label={props.playing ? "Pause" : isLast ? "Replay the steps" : "Play through the steps"} onClick={props.onPlay}>
+          <svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
+            {props.playing ? <path d="M1 1h2.6v10H1zM6.4 1H9v10H6.4z" /> : <path d="M1 1l8 5-8 5z" />}
+          </svg>
+          {props.playing ? "Pause" : isLast ? "Replay" : "Play"}
+        </button>
         <button type="button" class="sk-btn" disabled={props.step === 0} onClick={() => props.onStep(props.step - 1)}>Back</button>
         <button type="button" class="sk-btn sk-btn-main" onClick={() => props.onStep(isLast ? 0 : props.step + 1)}>
           {isLast ? "Start over" : "Next"}
@@ -618,11 +625,14 @@ export function Steps(props: { step: number; count: number; onStep: (step: numbe
           {Array.from({ length: props.count }, (_, index) => (
             <button
               type="button"
-              class={`sk-dot${index === props.step ? " sk-dot-on" : ""}${index < props.step ? " sk-dot-done" : ""}`}
+              class={`sk-dot${index === props.step ? " sk-dot-on" : ""}${index < props.step ? " sk-dot-done" : ""}${props.playing && index === props.step ? " sk-dot-timer" : ""}`}
               aria-label={`Step ${index + 1}`}
               aria-current={index === props.step ? "step" : undefined}
               onClick={() => props.onStep(index)}
-            />
+            >
+              {/* While playing, the current dot becomes a pill that fills until the next step. */}
+              {props.playing && index === props.step && <span key={`timer-${props.step}`} style={`animation-duration:${props.dwellMs}ms`} />}
+            </button>
           ))}
         </div>
       </div>
@@ -658,6 +668,45 @@ export function Toggle(props: { options: { key: string; label: string }[]; activ
   );
 }
 
+// Play: steps through the build-up on its own, holding each step long enough
+// to read its note (see playback.ts). Starts only on a click, stops at the last
+// step, and pauses the moment the reader does anything else: a click inside the
+// card, dragging a handle, scrolling the drawing out of view, or leaving the tab.
+function usePlayback(sketch: Sketch, note: string, tex?: string) {
+  const [playing, setPlaying] = useState(false);
+  const lastStep = sketch.stepCount - 1;
+  const dwellMs = stepDwellMs(note, tex);
+
+  useEffect(() => {
+    if (!playing) return;
+    if (sketch.step >= lastStep) { setPlaying(false); return; }
+    const timer = setTimeout(() => sketch.setStep(sketch.step + 1), dwellMs);
+    return () => clearTimeout(timer);
+  }, [playing, sketch.step]);
+
+  useEffect(() => { if (sketch.dragging) setPlaying(false); }, [sketch.dragging]);
+
+  useEffect(() => {
+    const plot = sketch.plotRef.current;
+    if (!playing || !plot) return;
+    const observer = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting) setPlaying(false); });
+    observer.observe(plot);
+    const pauseWhenHidden = () => { if (document.hidden) setPlaying(false); };
+    document.addEventListener("visibilitychange", pauseWhenHidden);
+    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", pauseWhenHidden); };
+  }, [playing]);
+
+  const toggle = () => {
+    if (playing) { setPlaying(false); return; }
+    if (sketch.step >= lastStep) sketch.setStep(0);
+    setPlaying(true);
+  };
+  const pauseOnClick = (event: MouseEvent) => {
+    if (playing && !(event.target as Element).closest(".sk-play")) setPlaying(false);
+  };
+  return { playing, dwellMs, toggle, pauseOnClick };
+}
+
 // ---------------------------------------------------------------------------
 // The card: narration, live equation, the drawing, explore controls, steps.
 // ---------------------------------------------------------------------------
@@ -673,10 +722,11 @@ export function SketchGraph(props: {
 }): VNode {
   const { sketch } = props;
   const onLastStep = sketch.step === sketch.stepCount - 1;
+  const playback = usePlayback(sketch, props.note, props.tex);
   return (
-    <div class="sk">
+    <div class="sk" onClickCapture={playback.pauseOnClick}>
       {props.top && <div class="sk-top">{props.top}</div>}
-      <p class="sk-note" key={`${sketch.step}-${props.note}`}>{props.note}</p>
+      <p class="sk-note" key={`${sketch.step}-${props.note}`} aria-live={playback.playing ? "polite" : undefined}>{props.note}</p>
       {props.tex !== undefined && <div class="sk-eq"><Tex tex={props.tex} /></div>}
       <div class="sk-plot" ref={sketch.plotRef}>
         <svg ref={sketch.svgRef} width={sketch.width} height={sketch.height} viewBox={`0 0 ${sketch.width} ${sketch.height}`} role="img" aria-label={props.ariaLabel}>
@@ -695,7 +745,7 @@ export function SketchGraph(props: {
       </div>
       {props.footnote && <p class="sk-footnote">{props.footnote}</p>}
       {props.explore && (onLastStep || sketch.stepCount === 1) && <div class="sk-explore">{props.explore}</div>}
-      {sketch.stepCount > 1 && <Steps step={sketch.step} count={sketch.stepCount} onStep={sketch.setStep} />}
+      {sketch.stepCount > 1 && <Steps step={sketch.step} count={sketch.stepCount} onStep={sketch.setStep} playing={playback.playing} onPlay={playback.toggle} dwellMs={playback.dwellMs} />}
     </div>
   );
 }

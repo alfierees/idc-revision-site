@@ -1123,6 +1123,15 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 .sk-dot-on { background: var(--color-accent); }
 .sk-count { font: 12px var(--font-ui); color: var(--color-ink-muted); font-variant-numeric: tabular-nums; }
 .sk-btn:focus-visible, .sk-dot:focus-visible, .sk-chip:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.sk-play { display: inline-flex; align-items: center; gap: 6px; min-width: 5.6em; justify-content: center; }
+.sk-play svg { fill: currentColor; flex: none; }
+.sk-dot { transition: width 200ms ease; overflow: hidden; }
+.sk-dot-timer { width: 30px; border-radius: 5px; background: var(--color-rule-strong); text-align: left; }
+.sk-dot-timer span {
+  display: block; height: 100%; background: var(--color-accent);
+  transform-origin: left; animation: sk-progress linear both;
+}
+@keyframes sk-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 @media (max-width: 520px) {
   .sk { padding: 14px 12px 12px; border-radius: 10px; }
