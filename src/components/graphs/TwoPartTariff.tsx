@@ -1,145 +1,173 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { makeFrame, Axes, area, rect, seg, label, PALETTE, C } from "./plot";
+import {
+  useSketch, SketchGraph, SketchAxes, InkLine, InkDashed, Hatch, Note, Dot, Toggle,
+  INK, INK_SOFT, MARKER, WASH,
+} from "./sketch";
 
-// Port of the ex5-q3 two-part-tariff widget: two consumers (big/high, small/low),
-// parts (a)–(e), with fee / rent / per-unit margin / deadweight-loss regions and
-// an optional MR overlay. Re-themed to the site's tokens.
+// Ex 5 Q3 two-part tariffs: a big/high consumer (AR₁: p = 20 − 0.5q) and a
+// small/low consumer (AR₂: p = 20 − q), MC = 6. Parts (a)–(e) each build up in
+// four steps (demand → price → fee → profit) with the solution's exact numbers.
+// `part` fixes the graph to one sub-question; omit it for the all-parts toggle.
 
-const QM = 40, PMX = 21, MC = 6;
-const DEM = [
-  { a: 20, b: 0.5, mr: 1, qmx: 40 }, // consumer 1 — big / high type
-  { a: 20, b: 1, mr: 2, qmx: 20 },   // consumer 2 — small / low type
+const QUANTITY_MAX = 40, PRICE_MAX = 21, MARGINAL_COST = 6;
+const DEMANDS = [
+  { intercept: 20, slope: 0.5, mrSlope: 1, name: "Consumer 1 (big type)" },
+  { intercept: 20, slope: 1, mrSlope: 2, name: "Consumer 2 (small type)" },
 ];
-const qOf = (i: number, p: number) => (DEM[i].a - p) / DEM[i].b;
+const quantityAt = (consumer: number, price: number) => (DEMANDS[consumer].intercept - price) / DEMANDS[consumer].slope;
 
-type FeeMode = "whole" | "split" | "annot";
-interface Part {
-  cap: VNode;
-  pr: [number, number];
-  fee: [FeeMode, FeeMode];
-  recover?: boolean;
-  stat: VNode;
-}
+type FeeMode = "whole" | "split" | "menu";
+interface Part { prices: [number, number]; feeModes: [FeeMode, FeeMode]; outlineRecovery?: boolean; notes: string[]; tex: string[]; }
+
+const SETUP_NOTE = "Two consumer types, one firm with MC = 6.";
+const SETUP_TEX = "AR_1: p = 20 - 0.5q_1,\\quad AR_2: p = 20 - q_2,\\quad MC = 6";
+const SHARED_B_PRICE = "One contract for both, so the price rises above MC to 9.5.";
+const SHARED_B_PRICE_TEX = "p = 9.5 \\;\\Rightarrow\\; q_1 = 21,\\; q_2 = 10.5";
+const SHARED_B_FEE = "The fee can't exceed small C2's surplus, so big C1 keeps a rent.";
+const SHARED_B_FEE_TEX = "A = \\tfrac12(10.5)(10.5) = 55.125,\\quad \\text{rent}_1 = 110.25 - 55.125 = 55.125";
 
 const PARTS: Record<string, Part> = {
   a: {
-    cap: <>(a) Separate two-part tariffs — perfect (1st-degree) extraction. Each consumer gets p = MC, fee = their whole surplus.</>,
-    pr: [6, 6], fee: ["whole", "whole"],
-    stat: <><b>Each consumer their own contract.</b> Per-unit price p = MC = 6 (efficient, AR meets MC). Fixed fee = the entire consumer-surplus triangle. A₁ = 196, A₂ = 98, q₁ = 28, q₂ = 14. <b>Profit = 196 + 98 = 294.</b></>,
+    prices: [6, 6], feeModes: ["whole", "whole"],
+    notes: [SETUP_NOTE, "(a) Separate contracts: charge each consumer p = MC = 6.", "The fee takes each consumer's whole surplus.", "Profit = 196 + 98 = 294, with no deadweight loss."],
+    tex: [SETUP_TEX, "p = MC = 6 \\;\\Rightarrow\\; q_1 = 28,\\; q_2 = 14", "A_1 = \\tfrac12(14)(28) = 196,\\quad A_2 = \\tfrac12(14)(14) = 98", "\\pi = 196 + 98 = 294"],
   },
   b: {
-    cap: <>(b) One single contract for both — the fee is capped by the SMALL consumer, so price is raised above MC.</>,
-    pr: [9.5, 9.5], fee: ["split", "whole"],
-    stat: <><b>One (A, p) for both.</b> Fee can't exceed C2's surplus → A = 55.125. Raising p to 9.5 (above MC) claws extra margin from big C1. q₁ = 21, q₂ = 10.5. C1 keeps rent 55.125; C2 squeezed to zero. <b>Profit = 2×55.125 + margin 110.25 = 220.5.</b></>,
+    prices: [9.5, 9.5], feeModes: ["split", "whole"],
+    notes: [SETUP_NOTE, `(b) ${SHARED_B_PRICE}`, SHARED_B_FEE, "Pricing above MC earns a margin on every unit but costs a deadweight loss."],
+    tex: [SETUP_TEX, SHARED_B_PRICE_TEX, SHARED_B_FEE_TEX, "\\pi = 2(55.125) + 3.5(21 + 10.5) = 220.5"],
   },
   c: {
-    cap: <>(c) 100 consumers of each type — the optimal contract does NOT change; only the type ratio matters.</>,
-    pr: [9.5, 9.5], fee: ["split", "whole"],
-    stat: <><b>100 of each type.</b> Same p = 9.5, A = 55.125 as (b) — composition (1:1) is unchanged, so the per-person answer is identical, just scaled. <b>Profit = 100 × 220.5 = 22,050.</b> Serving both (22,050) still beats excluding the small type (100×196 = 19,600).</>,
+    prices: [9.5, 9.5], feeModes: ["split", "whole"],
+    notes: [SETUP_NOTE, `(c) 100 of each type. ${SHARED_B_PRICE}`, SHARED_B_FEE, "The 1:1 mix is unchanged, so the contract is too. Profit just scales by 100."],
+    tex: [SETUP_TEX, SHARED_B_PRICE_TEX, SHARED_B_FEE_TEX, "\\pi = 100 \\times 220.5 = 22{,}050 \\;>\\; 100 \\times 196 = 19{,}600"],
   },
   d: {
-    cap: <>(d) Most the firm would pay to be ALLOWED to discriminate = profit(a) − profit(b).</>,
-    pr: [9.5, 9.5], fee: ["split", "whole"], recover: true,
-    stat: <><b>Value of removing the single-contract restriction.</b> = 294 − 220.5 = <b>73.5</b>. That equals C1's information rent (55.125) + the deadweight loss from pricing above MC (18.375) — the outlined regions. (With 100 of each ⇒ 7,350.)</>,
+    prices: [9.5, 9.5], feeModes: ["split", "whole"], outlineRecovery: true,
+    notes: [SETUP_NOTE, `(d) ${SHARED_B_PRICE}`, SHARED_B_FEE, "The most the firm would pay to discriminate: C1's rent plus the deadweight loss."],
+    tex: [SETUP_TEX, SHARED_B_PRICE_TEX, SHARED_B_FEE_TEX, "294 - 220.5 = 73.5 = \\underbrace{55.125}_{\\text{rent}} + \\underbrace{18.375}_{\\text{DWL}}"],
   },
   e: {
-    cap: <>(e) Hidden types — a menu of two contracts (2nd-degree). High type efficient + rent; low type distorted down, zero surplus.</>,
-    pr: [6, 13], fee: ["annot", "whole"],
-    stat: <><b>Self-selecting menu.</b> High type: q = 28 at p = MC = 6 (no distortion "at the top"), fee 171.5, keeps info rent 24.5. Low type: distorted down to q = 7 at p = 13, fee 24.5, zero surplus. <b>Profit = 245</b> — between (a) 294 and (b) 220.5.</>,
+    prices: [6, 13], feeModes: ["menu", "whole"],
+    notes: [SETUP_NOTE, "(e) Hidden types, so offer a menu: the big type gets p = 6, the small type p = 13.", "The big type pays 171.5 and keeps an information rent of 24.5.", "The small type is distorted down to q = 7. No distortion at the top."],
+    tex: [SETUP_TEX, "p_1 = 6,\\ q_1 = 28;\\quad p_2 = 13,\\ q_2 = 7", "A_1 = 171.5,\\ \\text{rent}_1 = 24.5;\\quad A_2 = \\tfrac12(7)(7) = 24.5", "\\pi = 171.5 + 24.5 + (13 - 6)(7) = 245"],
   },
 };
 
-const fmtP = (p: number) => (p % 1 === 0 ? String(p) : p.toFixed(p > 10 ? 2 : 1));
+const formatPrice = (price: number) => (price % 1 === 0 ? String(price) : String(price));
 
-function panel(idx: number, partId: string, showMR: boolean): VNode {
-  const f = makeFrame({ w: 440, h: 300, qMax: QM, pMax: PMX, padB: 38 });
-  const cfg = PARTS[partId], D = DEM[idx], p = cfg.pr[idx];
-  const qp = qOf(idx, p), qmc = qOf(idx, MC);
-  const feemode = cfg.fee[idx];
-  const els: VNode[] = [];
-
-  els.push(<Axes f={f} xTicks={[0, 10, 20, 30, 40]} yTicks={[0, 6, 10, 15, 20]} xLabel="quantity q" />);
-
-  if (feemode === "whole" || feemode === "annot") {
-    els.push(area(f, [[0, D.a], [0, p], [qp, p]], PALETTE.fee, PALETTE.feeStroke));
-  } else {
-    const qc2 = qOf(1, p);
-    els.push(area(f, [[0, D.a], [0, p], [qc2, p]], PALETTE.fee, PALETTE.feeStroke));
-    els.push(area(f, [[0, D.a], [qc2, p], [qp, p]], PALETTE.rent, PALETTE.rentStroke));
-    els.push(seg(f, 0, D.a, qOf(1, 0), 0, PALETTE.feeStroke, 1.2, "5 3"));
-  }
-  if (p > MC) els.push(rect(f, 0, MC, qp, p, PALETTE.margin, PALETTE.marginStroke));
-  if (p > MC && qmc > qp) els.push(area(f, [[qp, p], [qp, MC], [qmc, MC]], PALETTE.dwl, PALETTE.dwlStroke));
-  if (cfg.recover) {
-    const qc2b = qOf(1, p);
-    const pts = [[0, D.a], [qc2b, p], [qp, p]].map(([q, pp]) => `${f.x(q)},${f.y(pp)}`).join(" ");
-    els.push(<polygon points={pts} style={`fill:none;stroke:${PALETTE.dwlStroke};stroke-width:2;stroke-dasharray:4 3`} />);
-  }
-  if (showMR) {
-    const mrx = D.a / D.mr;
-    els.push(seg(f, 0, D.a, mrx, 0, PALETTE.mr, 1.6, "6 3"));
-    els.push(label(f, mrx * 0.5 + 1.5, D.a - D.mr * (mrx * 0.5) + 0.8, "MR", PALETTE.mr, "start", 11, true));
-  }
-  els.push(seg(f, 0, MC, QM, MC, PALETTE.mc, 1.5, "4 3"));
-  els.push(label(f, QM - 0.5, MC - 1.1, "MC=6", PALETTE.mc, "end", 11));
-  els.push(seg(f, 0, p, QM, p, C.INK_SOFT, 1.6));
-  els.push(label(f, QM - 0.5, p + 1.3, "p=" + fmtP(p), C.INK_SOFT, "end", 11, true));
-  els.push(seg(f, 0, D.a, D.qmx, 0, C.INK, 2.4));
-  const arx = idx === 0 ? 38 : 18.5;
-  els.push(label(f, arx, D.a - D.b * arx + 1.0, "AR" + (idx + 1), C.INK, "end", 12, true));
-  els.push(<line x1={f.x(qp)} y1={f.y(0)} x2={f.x(qp)} y2={f.y(p)} style={`stroke:${PALETTE.mc};stroke-width:1;stroke-dasharray:2 2`} />);
-  els.push(label(f, qp, -1.0, String(Math.round(qp * 100) / 100), PALETTE.marginStroke, "middle", 11, true));
-  if (feemode === "split") {
-    els.push(label(f, 2.5, (D.a + p) / 2 + 1, "fee", PALETTE.feeStroke, "start", 11, true));
-    els.push(label(f, qOf(1, p) * 0.55 + 2, (D.a + p) / 2 - 1.5, "rent", PALETTE.rentStroke, "start", 11, true));
-  } else if (feemode === "annot") {
-    els.push(label(f, 3, (D.a + p) / 2, "fee 171.5 + rent 24.5", PALETTE.feeStroke, "start", 11, true));
-  } else {
-    els.push(label(f, 2.5, (D.a + p) / 2, "fee", PALETTE.feeStroke, "start", 11, true));
-  }
-  return <svg viewBox="0 0 440 300" width="100%" role="img" aria-label={`Two-part tariff, consumer ${idx + 1}, part ${partId}`}>{els}</svg>;
-}
-
-// `part` fixes the graph to one part (a–e) and hides the part toggle — for
-// embedding inside that specific sub-question. Omit it for the standalone,
-// toggle-through-all-parts version (e.g. a lecture or summary).
 export default function TwoPartTariff({ part }: { part?: string }): VNode {
-  const fixed = typeof part === "string" && part in PARTS;
-  const [cur, setCur] = useState(fixed ? (part as string) : "a");
-  const [mr, setMr] = useState(false);
+  const isFixed = typeof part === "string" && part in PARTS;
+  const [activePart, setActivePart] = useState(isFixed ? (part as string) : "a");
+  const [showMarginalRevenue, setShowMarginalRevenue] = useState(false);
+  const config = PARTS[activePart];
+  const sketch = useSketch({
+    stepCount: 4,
+    domains: [{ xMax: QUANTITY_MAX, yMax: PRICE_MAX }, { xMax: QUANTITY_MAX, yMax: PRICE_MAX }],
+    aspect: 0.75,
+    minHeight: 240,
+    maxHeight: 320,
+    padding: { left: 34, bottom: 38, top: 16 },
+    panelTitles: DEMANDS.map((demand) => demand.name),
+    maxWidth: 720,
+  });
+  const { show, drawNow } = sketch;
+
+  const panel = (consumer: number): VNode => {
+    const frame = sketch.frames[consumer];
+    const toX = frame.x, toY = frame.y;
+    const demand = DEMANDS[consumer];
+    const price = config.prices[consumer];
+    const quantity = quantityAt(consumer, price);
+    const efficientQuantity = quantityAt(consumer, MARGINAL_COST);
+    const feeMode = config.feeModes[consumer];
+    const id = `${sketch.uid}-${activePart}-${consumer}`;
+    const parts: VNode[] = [
+      <SketchAxes frame={frame} id={`axes-${consumer}`} xTicks={[0, 10, 20, 30, 40]} yTicks={[6, 10, 15, 20]} xLabel="q" yLabel="p" />,
+    ];
+    const plot: VNode[] = [];
+
+    if (show(2)) {
+      if (feeMode === "split") {
+        const smallQuantity = quantityAt(1, price);
+        plot.push(<Hatch points={[[toX(0), toY(20)], [toX(0), toY(price)], [toX(smallQuantity), toY(price)]]} id={`${id}-fee`} wash={WASH.blue} ink={MARKER.blue} draw={drawNow(2)} />);
+        plot.push(<Hatch points={[[toX(0), toY(20)], [toX(smallQuantity), toY(price)], [toX(quantity), toY(price)]]} id={`${id}-rent`} wash={WASH.amber} ink={MARKER.amber} angle={-1} delay={300} draw={drawNow(2)} />);
+        plot.push(<InkDashed x1={toX(0)} y1={toY(20)} x2={toX(20)} y2={toY(0)} id={`${id}-ar2-ghost`} color={MARKER.blue} width={1.3} dash={6} gap={5} draw={drawNow(2)} />);
+      } else {
+        plot.push(<Hatch points={[[toX(0), toY(20)], [toX(0), toY(price)], [toX(quantity), toY(price)]]} id={`${id}-fee`} wash={WASH.blue} ink={MARKER.blue} draw={drawNow(2)} />);
+      }
+    }
+    if (show(3) && price > MARGINAL_COST) {
+      plot.push(<Hatch points={[[toX(0), toY(price)], [toX(quantity), toY(price)], [toX(quantity), toY(MARGINAL_COST)], [toX(0), toY(MARGINAL_COST)]]} id={`${id}-margin`} wash={WASH.green} ink={MARKER.green} angle={-1} draw={drawNow(3)} />);
+      plot.push(<Hatch points={[[toX(quantity), toY(price)], [toX(quantity), toY(MARGINAL_COST)], [toX(efficientQuantity), toY(MARGINAL_COST)]]} id={`${id}-dwl`} wash={WASH.red} ink={MARKER.red} gap={5} delay={300} draw={drawNow(3)} />);
+    }
+    if (showMarginalRevenue) {
+      plot.push(<InkDashed x1={toX(0)} y1={toY(20)} x2={toX(20 / demand.mrSlope)} y2={toY(0)} id={`${id}-mr`} color={MARKER.purple} width={1.8} />);
+    }
+    plot.push(<InkDashed x1={toX(0)} y1={toY(MARGINAL_COST)} x2={frame.right} y2={toY(MARGINAL_COST)} id={`mc-${consumer}`} color={MARKER.grey} draw={drawNow(0)} />);
+    if (show(1)) {
+      plot.push(<InkLine x1={toX(0)} y1={toY(price)} x2={frame.right} y2={toY(price)} id={`${id}-price`} color={INK_SOFT} width={1.6} draw={drawNow(1)} />);
+      plot.push(<InkDashed x1={toX(quantity)} y1={toY(price)} x2={toX(quantity)} y2={frame.bottom} id={`${id}-q`} color={MARKER.green} width={1.3} dash={4} gap={4} delay={400} draw={drawNow(1)} />);
+    }
+    plot.push(<InkLine x1={toX(0)} y1={toY(20)} x2={toX(20 / demand.slope)} y2={toY(0)} id={`ar-${consumer}`} color={INK} width={2.4} duration={800} draw={drawNow(0)} />);
+    parts.push(<g clip-path={sketch.clip(consumer)}>{plot}</g>);
+
+    const labelQuantity = (20 / demand.slope) * 0.86;
+    parts.push(<Note x={toX(labelQuantity) + 8} y={toY(20 - demand.slope * labelQuantity) + 4} text={`AR${consumer + 1}`} color={INK} size={19} draw={drawNow(0)} />);
+    parts.push(<Note x={frame.right - 2} y={toY(MARGINAL_COST) - 7} text="MC = 6" color={MARKER.grey} anchor="end" size={17} draw={drawNow(0)} />);
+    if (show(1)) {
+      if (price !== MARGINAL_COST) parts.push(<Note x={frame.right - 2} y={toY(price) - 7} text={`p = ${formatPrice(price)}`} color={INK_SOFT} anchor="end" size={18} draw={drawNow(1)} />);
+      parts.push(<Dot x={toX(quantity)} y={toY(price)} color={INK} radius={4} draw={drawNow(1)} />);
+      parts.push(<Note x={toX(quantity)} y={frame.bottom + 31} text={`q = ${Math.round(quantity * 100) / 100}`} color={MARKER.green} anchor="middle" size={17} delay={400} draw={drawNow(1)} />);
+    }
+    if (show(2)) {
+      const feeLabelY = toY((20 + price) / 2) + 5;
+      if (feeMode === "split") {
+        parts.push(<Note x={toX(2)} y={feeLabelY + 4} text="fee" color={MARKER.blue} size={18} draw={drawNow(2)} />);
+        parts.push(<Note x={toX(quantityAt(1, price) * 0.75 + 2)} y={toY(price) - 6} text="rent" color={MARKER.amber} size={18} delay={300} draw={drawNow(2)} />);
+      } else if (feeMode === "menu") {
+        parts.push(<Note x={toX(2.5)} y={feeLabelY} text="fee 171.5 + rent 24.5" color={MARKER.blue} size={17} draw={drawNow(2)} />);
+      } else {
+        parts.push(<Note x={toX(2)} y={feeLabelY} text="fee" color={MARKER.blue} size={18} draw={drawNow(2)} />);
+      }
+    }
+    if (show(3) && price > MARGINAL_COST) {
+      parts.push(<Note x={toX(quantity * 0.45)} y={(toY(price) + toY(MARGINAL_COST)) / 2 + 6} text="margin" color={MARKER.green} anchor="middle" size={17} draw={drawNow(3)} />);
+    }
+    if (show(3) && config.outlineRecovery && consumer === 0) {
+      const smallQuantity = quantityAt(1, price);
+      const corners: [number, number][] = [[toX(0), toY(20)], [toX(smallQuantity), toY(price)], [toX(quantity), toY(price)]];
+      corners.forEach((corner, index) => {
+        const next = corners[(index + 1) % corners.length];
+        parts.push(<InkDashed x1={corner[0]} y1={corner[1]} x2={next[0]} y2={next[1]} id={`${id}-recover-${index}`} color={MARKER.red} width={2} dash={5} gap={4} delay={400} draw={drawNow(3)} />);
+      });
+    }
+    return <g>{parts}</g>;
+  };
 
   return (
-    <div class="graph">
-      <div class="graph-bar">
-        {!fixed && ["a", "b", "c", "d", "e"].map((p) => (
-          <button type="button" class={`graph-btn${cur === p ? " on" : ""}`} onClick={() => setCur(p)}>Part {p}</button>
-        ))}
-        <label class="graph-toggle">
-          <input type="checkbox" checked={mr} onChange={(e) => setMr((e.currentTarget as HTMLInputElement).checked)} /> show MR curves
-        </label>
-      </div>
-      <div class="graph-cap">{PARTS[cur].cap}</div>
-      <div class="graph-grid2">
-        <div>
-          <div class="graph-pt">Consumer 1 — big / high type</div>
-          {panel(0, cur, mr)}
+    <SketchGraph
+      sketch={sketch}
+      note={config.notes[sketch.step]}
+      tex={config.tex[sketch.step]}
+      ariaLabel={`Two-part tariff, part ${activePart}: two consumers with MC = 6. Per-unit prices ${config.prices.join(" and ")}.`}
+      top={
+        <div class="sk-top-row">
+          {!isFixed && (
+            <Toggle
+              label="Part"
+              options={Object.keys(PARTS).map((key) => ({ key, label: `Part ${key}` }))}
+              active={activePart}
+              onPick={(key) => { setActivePart(key); sketch.setStep(0); }}
+            />
+          )}
+          <Toggle label="Overlay" options={[{ key: "mr", label: showMarginalRevenue ? "Hide MR" : "Show MR" }]} active="" onPick={() => setShowMarginalRevenue(!showMarginalRevenue)} />
         </div>
-        <div>
-          <div class="graph-pt">Consumer 2 — small / low type</div>
-          {panel(1, cur, mr)}
-        </div>
-      </div>
-      <div class="graph-legend">
-        <span><i class="gsw" style="background:var(--color-ink)" />AR (demand)</span>
-        <span><i class="gsw" style={`background:${PALETTE.mr}`} />MR</span>
-        <span><i class="gsw" style={`background:${PALETTE.mc}`} />MC=6</span>
-        <span><i class="gsw" style={`background:${PALETTE.fee}`} />fee</span>
-        <span><i class="gsw" style={`background:${PALETTE.rent}`} />rent kept</span>
-        <span><i class="gsw" style={`background:${PALETTE.margin}`} />per-unit margin</span>
-        <span><i class="gsw" style={`background:${PALETTE.dwl}`} />deadweight loss</span>
-      </div>
-      <div class="graph-stat">{PARTS[cur].stat}</div>
-    </div>
+      }
+    >
+      {panel(0)}
+      {panel(1)}
+    </SketchGraph>
   );
 }

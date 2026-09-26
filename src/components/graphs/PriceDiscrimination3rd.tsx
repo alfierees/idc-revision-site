@@ -1,69 +1,124 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { makeFrame, Axes, area, rect, seg, label, Slider, ticks, PALETTE, C } from "./plot";
+import { Slider } from "./plot";
+import {
+  useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Hatch, Note, Dot, Ring, Presets,
+  niceTicks, fmt, clamp, INK, ACCENT, MARKER, WASH,
+} from "./sketch";
 
-// Third-degree price discrimination: two markets P_i = a_i − Q_i, shared MC.
-// Sliders for the two intercepts and MC; the firm sets MR_i = MC in each market,
-// so the higher-intercept (less elastic) market gets the higher price.
+// Third-degree price discrimination: two markets P_i = a_i − Q_i sharing one MC.
+// Steps: demands → MR in each → MR = MC in each → prices off each demand →
+// surplus and profit, then explore (drag MC; sliders for both intercepts).
+// The less elastic market (higher intercept) ends up with the higher price.
 
 interface Props { a1?: number; a2?: number; mc?: number; }
 
-export default function PriceDiscrimination3rd({ a1: a10 = 22, a2: a20 = 12, mc: mc0 = 2 }: Props): VNode {
-  const [a1, setA1] = useState(a10);
-  const [a2, setA2] = useState(a20);
-  const [mc, setMc] = useState(mc0);
+const NOTES = [
+  "Two separate markets, one firm. Market 1 has the higher demand.",
+  "Each market has its own MR, falling twice as fast as its demand.",
+  "One marginal cost for both. Produce where MR = MC in each market.",
+  "Read each price off its own demand. The less elastic market pays more.",
+  "Each market gets a surplus triangle and a profit rectangle.",
+  "Your turn. Drag MC or change the intercepts.",
+];
 
-  const scale = Math.max(a1, a2);
-  const r1 = (n: number) => Math.round(n * 10) / 10;
+export default function PriceDiscrimination3rd({ a1: initialFirst = 22, a2: initialSecond = 12, mc: initialCost = 2 }: Props): VNode {
+  const [target, setTarget] = useState({ first: initialFirst, second: initialSecond, cost: initialCost });
+  const axisMax = Math.max(target.first, target.second, 12);
+  const sketch = useSketch({
+    stepCount: NOTES.length,
+    domains: [{ xMax: axisMax, yMax: axisMax }, { xMax: axisMax, yMax: axisMax }],
+    aspect: 0.8,
+    minHeight: 240,
+    maxHeight: 320,
+    padding: { left: 34, bottom: 38, top: 16 },
+    panelTitles: ["Market 1", "Market 2"],
+    maxWidth: 720,
+  });
+  const shown = useGlide(target, sketch.dragging !== null);
+  const { show, drawNow, step } = sketch;
+  const intercepts = [shown.first, shown.second];
+  const cost = Math.min(shown.cost, Math.min(...intercepts) - 0.5);
+  const quantities = intercepts.map((intercept) => (intercept - cost) / 2);
+  const prices = intercepts.map((intercept, index) => intercept - quantities[index]);
 
-  const panel = (a: number, idx: number): VNode => {
-    const c = Math.min(mc, a - 0.5);
-    const Q = (a - c) / 2;
-    const P = a - Q;
-    const f = makeFrame({ w: 440, h: 300, qMax: scale, pMax: scale, padB: 34 });
-    const els: VNode[] = [];
-    els.push(<Axes f={f} xTicks={ticks(scale)} yTicks={ticks(scale)} xLabel="quantity" />);
-    els.push(area(f, [[0, a], [0, P], [Q, P]], PALETTE.fee, PALETTE.feeStroke));      // CS
-    els.push(rect(f, 0, c, Q, P, PALETTE.margin, PALETTE.marginStroke));              // profit
-    els.push(seg(f, 0, c, scale, c, PALETTE.mc, 1.5, "4 3"));
-    els.push(label(f, scale * 0.98, c + scale * 0.02, "MC", PALETTE.mc, "end", 11));
-    els.push(seg(f, 0, a, a / 2, 0, PALETTE.mr, 1.6, "6 3"));                          // MR
-    els.push(seg(f, 0, a, a, 0, C.INK, 2.4));                                          // demand
-    els.push(<line x1={f.x(Q)} y1={f.y(0)} x2={f.x(Q)} y2={f.y(P)} style={`stroke:${PALETTE.mc};stroke-width:1;stroke-dasharray:2 2`} />);
-    els.push(seg(f, 0, P, Q, P, C.INK_SOFT, 1, "2 2"));
-    els.push(label(f, scale * 0.02, P + scale * 0.03, `p=${r1(P)}`, C.INK_SOFT, "start", 11, true));
-    els.push(label(f, Q, -scale * 0.04, `q=${r1(Q)}`, PALETTE.marginStroke, "middle", 11, true));
-    els.push(label(f, Q * 0.32, (a + P) / 2, "CS", PALETTE.feeStroke, "middle", 11, true));
-    return <svg viewBox="0 0 440 300" width="100%" role="img" aria-label={`Market ${idx}`}>{els}</svg>;
+  const TEX = [
+    `P_1 = ${fmt(intercepts[0])} - Q_1,\\quad P_2 = ${fmt(intercepts[1])} - Q_2`,
+    `MR_1 = ${fmt(intercepts[0])} - 2Q_1,\\quad MR_2 = ${fmt(intercepts[1])} - 2Q_2`,
+    `MR_i = MC = ${fmt(cost)} \\;\\Rightarrow\\; Q_1 = ${fmt(quantities[0])},\\; Q_2 = ${fmt(quantities[1])}`,
+    `p_1 = ${fmt(prices[0])},\\quad p_2 = ${fmt(prices[1])},\\quad \\text{gap} = ${fmt(Math.abs(prices[0] - prices[1]))}`,
+    `\\pi = (${fmt(prices[0])} - ${fmt(cost)})(${fmt(quantities[0])}) + (${fmt(prices[1])} - ${fmt(cost)})(${fmt(quantities[1])}) = ${fmt((prices[0] - cost) * quantities[0] + (prices[1] - cost) * quantities[1])}`,
+    `p_1 = ${fmt(prices[0])},\\quad p_2 = ${fmt(prices[1])}`,
+  ];
+
+  const panel = (market: number): VNode => {
+    const frame = sketch.frames[market];
+    const toX = frame.x, toY = frame.y;
+    const intercept = intercepts[market], quantity = quantities[market], price = prices[market];
+    const id = `${sketch.uid}-m${market}`;
+    const ticks = niceTicks(0, axisMax, 4);
+    const parts: VNode[] = [<SketchAxes frame={frame} id={`axes-${market}`} xTicks={ticks} yTicks={ticks} yLabel="P" />];
+    const plot: VNode[] = [];
+    if (show(4)) {
+      plot.push(<Hatch points={[[toX(0), toY(intercept)], [toX(0), toY(price)], [toX(quantity), toY(price)]]} id={`${id}-cs`} wash={WASH.blue} ink={MARKER.blue} draw={drawNow(4)} />);
+      plot.push(<Hatch points={[[toX(0), toY(price)], [toX(quantity), toY(price)], [toX(quantity), toY(cost)], [toX(0), toY(cost)]]} id={`${id}-profit`} wash={WASH.green} ink={MARKER.green} angle={-1} delay={250} draw={drawNow(4)} />);
+    }
+    if (show(2)) plot.push(<InkDashed x1={toX(0)} y1={toY(cost)} x2={frame.right} y2={toY(cost)} id={`mc-${market}`} color={MARKER.grey} draw={drawNow(2)} />);
+    if (show(1)) plot.push(<InkDashed x1={toX(0)} y1={toY(intercept)} x2={toX(intercept / 2)} y2={toY(0)} id={`mr-${market}`} color={MARKER.purple} width={1.9} draw={drawNow(1)} />);
+    plot.push(<InkLine x1={toX(0)} y1={toY(intercept)} x2={toX(intercept)} y2={toY(0)} id={`demand-${market}`} color={INK} width={2.4} duration={800} draw={drawNow(0)} />);
+    if (show(2)) plot.push(<InkDashed x1={toX(quantity)} y1={toY(cost)} x2={toX(quantity)} y2={frame.bottom} id={`${id}-q`} color={MARKER.green} width={1.3} dash={4} gap={4} delay={300} draw={drawNow(2)} />);
+    if (show(3)) {
+      plot.push(<InkDashed x1={toX(quantity)} y1={toY(cost)} x2={toX(quantity)} y2={toY(price)} id={`${id}-up`} color={INK} width={1.3} dash={4} gap={4} draw={drawNow(3)} />);
+      plot.push(<InkDashed x1={toX(quantity)} y1={toY(price)} x2={frame.left} y2={toY(price)} id={`${id}-left`} color={INK} width={1.3} dash={4} gap={4} delay={220} draw={drawNow(3)} />);
+    }
+    parts.push(<g clip-path={sketch.clip(market)}>{plot}</g>);
+    parts.push(<Note x={toX(intercept * 0.86) + 8} y={toY(intercept * 0.14) + 2} text={`D${market + 1}`} color={INK} size={19} draw={drawNow(0)} />);
+    if (show(1)) parts.push(<Note x={toX(intercept / 2) + 4} y={toY(0) - 10} text="MR" color={MARKER.purple} size={17} draw={drawNow(1)} />);
+    if (show(2)) {
+      parts.push(<Note x={frame.right - 2} y={toY(cost) - 7} text="MC" color={MARKER.grey} anchor="end" size={17} draw={drawNow(2)} />);
+      parts.push(<Ring x={toX(quantity)} y={toY(cost)} radius={9} id={`${id}-ring`} color={ACCENT} draw={drawNow(2)} />);
+      parts.push(<Note x={toX(quantity)} y={frame.bottom + 31} text={`Q = ${fmt(quantity)}`} color={MARKER.green} anchor="middle" size={17} delay={300} draw={drawNow(2)} />);
+    }
+    if (show(3)) {
+      parts.push(<Dot x={toX(quantity)} y={toY(price)} color={INK} radius={4} draw={drawNow(3)} />);
+      parts.push(<Note x={toX(quantity) + 8} y={toY(price) - 8} text={`p = ${fmt(price)}`} color={INK} size={18} delay={350} draw={drawNow(3)} />);
+    }
+    if (show(4)) {
+      parts.push(<Note x={toX(quantity * 0.25)} y={(2 * toY(price) + toY(intercept)) / 3 + 3} text="CS" color={MARKER.blue} anchor="middle" size={17} draw={drawNow(4)} />);
+      if (toY(cost) - toY(price) > 18) parts.push(<Note x={toX(quantity * 0.5)} y={(toY(price) + toY(cost)) / 2 + 6} text="profit" color={MARKER.green} anchor="middle" size={17} delay={250} draw={drawNow(4)} />);
+    }
+    if (step === NOTES.length - 1 && market === 1) {
+      parts.push(sketch.handle({
+        key: "cost", panel: 1, x: frame.dataX(frame.right - 16), y: cost, axis: "y", hint: "above",
+        onDrag: (_dataX, dataY) => setTarget((current) => ({ ...current, cost: clamp(Math.round(dataY * 2) / 2, 0, Math.min(current.first, current.second) - 1) })),
+      }));
+    }
+    return <g>{parts}</g>;
   };
 
-  const c = Math.min(mc, Math.min(a1, a2) - 0.5);
-  const P1 = (a1 + c) / 2, P2 = (a2 + c) / 2;
+  const update = (changes: Partial<typeof target>) => setTarget((current) => ({ ...current, ...changes }));
 
   return (
-    <div class="graph">
-      <div class="graph-sliders">
-        <Slider label="Market 1 intercept" value={a1} min={10} max={30} step={1} onInput={setA1} />
-        <Slider label="Market 2 intercept" value={a2} min={6} max={30} step={1} onInput={setA2} />
-        <Slider label="MC" value={mc} min={0} max={12} step={1} onInput={setMc} />
-      </div>
-      <div class="graph-cap">Each market gets its own MR = MC price. The market with the higher intercept (less elastic) is charged more — drag the intercepts to see the gap.</div>
-      <div class="graph-grid2">
-        <div><div class="graph-pt">Market 1</div>{panel(a1, 1)}</div>
-        <div><div class="graph-pt">Market 2</div>{panel(a2, 2)}</div>
-      </div>
-      <div class="graph-legend">
-        <span><i class="gsw" style="background:var(--color-ink)" />demand</span>
-        <span><i class="gsw" style={`background:${PALETTE.mr}`} />MR</span>
-        <span><i class="gsw" style={`background:${PALETTE.mc}`} />MC</span>
-        <span><i class="gsw" style={`background:${PALETTE.fee}`} />consumer surplus</span>
-        <span><i class="gsw" style={`background:${PALETTE.margin}`} />profit</span>
-      </div>
-      <div class="graph-readout">
-        <span class="rd">p₁ <b>{r1(P1)}</b></span>
-        <span class="rd">p₂ <b>{r1(P2)}</b></span>
-        <span class="rd">price gap <b>{r1(Math.abs(P1 - P2))}</b></span>
-      </div>
-    </div>
+    <SketchGraph
+      sketch={sketch}
+      note={NOTES[step]}
+      tex={TEX[step]}
+      ariaLabel={`Third-degree price discrimination. Market 1 price ${fmt(prices[0])}, market 2 price ${fmt(prices[1])}, MC ${fmt(cost)}.`}
+      explore={<>
+        <div class="graph-sliders">
+          <Slider label="Market 1 intercept" value={target.first} min={10} max={30} step={1} onInput={(value) => update({ first: value, cost: Math.min(target.cost, Math.min(value, target.second) - 1) })} />
+          <Slider label="Market 2 intercept" value={target.second} min={6} max={30} step={1} onInput={(value) => update({ second: value, cost: Math.min(target.cost, Math.min(target.first, value) - 1) })} />
+          <Slider label="MC" value={target.cost} min={0} max={Math.min(target.first, target.second) - 1} step={0.5} onInput={(value) => update({ cost: value })} />
+        </div>
+        <Presets presets={[
+          { label: "Identical markets", apply: () => update({ second: target.first }) },
+          { label: "Costs rise", apply: () => update({ cost: Math.min(8, Math.min(target.first, target.second) - 1) }) },
+          { label: "Reset", apply: () => setTarget({ first: initialFirst, second: initialSecond, cost: initialCost }) },
+        ]} />
+      </>}
+    >
+      {panel(0)}
+      {panel(1)}
+    </SketchGraph>
   );
 }

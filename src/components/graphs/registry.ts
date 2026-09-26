@@ -36,3 +36,6 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "overfit-curves": OverfitCurves,
   "axis-truncation": AxisTruncation,
 };
+
+// Every registered type, for the /dev/graphs gallery.
+export const GRAPH_TYPES = Object.keys(GRAPHS);

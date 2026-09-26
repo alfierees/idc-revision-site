@@ -1064,6 +1064,24 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 @keyframes sk-pulse { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.45); opacity: 0.25; } }
 
 .sk-explore { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.sk-axis-label { font: 12px var(--font-ui); fill: var(--color-ink-muted); }
+.sk-panel-title { font: 600 13px var(--font-ui); fill: var(--color-ink); }
+.sk-footnote { font: italic 12.5px var(--font-body); color: var(--color-ink-muted); margin: 6px 0 0; }
+.sk-top { margin-bottom: 8px; }
+.sk-top-row { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.sk-toggle { display: flex; flex-wrap: wrap; gap: 6px; }
+.sk-toggle-btn {
+  font: 500 12.5px var(--font-ui);
+  color: var(--color-ink-soft);
+  background: var(--color-card);
+  border: 1px solid var(--color-rule-strong);
+  border-radius: 8px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+.sk-toggle-btn:hover { border-color: var(--color-ink-soft); color: var(--color-ink); }
+.sk-toggle-on, .sk-toggle-on:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); border-color: var(--color-accent); color: var(--color-accent); font-weight: 600; }
+.sk-toggle-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 .sk-presets { display: flex; flex-wrap: wrap; gap: 6px; }
 .sk-chip {
   font: 500 12.5px var(--font-ui);
