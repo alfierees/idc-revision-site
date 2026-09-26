@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, useGlide, SketchGraph, SketchAxes, InkCurve, InkDashed, Hatch, Note, Toggle, fmt, INK, ACCENT, MARKER, WASH } from "./sketch";
+import { useSketch, useGlide, SketchGraph, SketchAxes, InkCurve, InkDashed, Hatch, Note, Toggle, fmt, INK, ACCENT, MARKER, WASH, Slider } from "./sketch";
 
 // The income column silently mixes monthly and annual figures. Most source
 // systems wrote monthly pay (lognormal, exp(N(9.1, 0.45²)) shekels, median

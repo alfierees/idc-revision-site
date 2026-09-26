@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, useGlide, SketchGraph, SketchAxes, InkCurve, InkDashed, Note, Dot, Ring, ShiftArrow, Toggle, curvePoints, fmt, INK_SOFT, ACCENT, MARKER } from "./sketch";
+import { useSketch, useGlide, SketchGraph, SketchAxes, InkCurve, InkDashed, Note, Dot, Ring, ShiftArrow, Toggle, curvePoints, fmt, INK_SOFT, ACCENT, MARKER, Slider } from "./sketch";
 
 // The labour market (Lectures 7 and 10, PS 5), using PS 5's model:
 //   production Y = A·K^0.3·N^0.7, so labour demand is MPN: w = 0.7·A·K^0.3·N^−0.3

@@ -1,7 +1,6 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkLine, Note, Dot, Ring, Presets, fmt, clamp, INK, ACCENT, MARKER } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkLine, Note, Dot, Ring, Presets, fmt, clamp, INK, ACCENT, MARKER, Slider } from "./sketch";
 import { normalSampler } from "./stats";
 
 // K-nearest neighbours (ML Lectures 3 and 5), simulated two-class data. A new

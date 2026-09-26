@@ -1,7 +1,6 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkCurve, Note, Dot, Scatter, Presets, curvePoints, fmt, MARKER, INK_SOFT, ACCENT } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkCurve, Note, Dot, Scatter, Presets, curvePoints, fmt, MARKER, INK_SOFT, ACCENT, Slider } from "./sketch";
 import { normalSampler } from "./stats";
 
 // Bias–variance and polynomial degree (ML Lectures 2 and 4), simulated.

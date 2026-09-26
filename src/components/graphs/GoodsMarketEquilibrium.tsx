@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Ring, ShiftArrow,
-  fmt, INK_SOFT, ACCENT, MARKER,
+  fmt, INK_SOFT, ACCENT, MARKER, Slider,
 } from "./sketch";
 
 // Loanable-funds / goods-market equilibrium: saving S(r) = 20 + 4r rises with r,

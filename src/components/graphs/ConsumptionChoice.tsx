@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, Hatch, Note, Dot, Ring, Presets, curvePoints, fmt, INK, INK_SOFT, ACCENT, MARKER, WASH } from "./sketch";
+import { useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, Hatch, Note, Dot, Ring, Presets, curvePoints, fmt, INK, INK_SOFT, ACCENT, MARKER, WASH, Slider } from "./sketch";
 
 // Household choice diagrams (Lectures 2 and 7), with log utility.
 //   type: consumption-choice

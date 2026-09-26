@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkLine, InkDashed, Hatch, Note, Arrow, clamp, fmt, INK, ACCENT, MARKER, WASH } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkLine, InkDashed, Hatch, Note, Arrow, clamp, fmt, INK, ACCENT, MARKER, WASH, Slider } from "./sketch";
 
 // Second-degree price discrimination (Topic 2): a rich type (p = 12 − q) and a
 // poor type (p = 8 − q), zero marginal cost, types hidden. The rich type can

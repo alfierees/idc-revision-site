@@ -668,6 +668,23 @@ export function Toggle(props: { options: { key: string; label: string }[]; activ
   );
 }
 
+// A labelled range input with its current value, for continuous parameters.
+export function Slider(props: {
+  label: string; value: number; min: number; max: number; step: number;
+  onInput: (value: number) => void; suffix?: string;
+}): VNode {
+  return (
+    <label class="graph-slider">
+      <span class="graph-slider-lab">{props.label}</span>
+      <input
+        type="range" min={props.min} max={props.max} step={props.step} value={props.value}
+        onInput={(event) => props.onInput(Number((event.currentTarget as HTMLInputElement).value))}
+      />
+      <span class="graph-slider-val">{props.value}{props.suffix ?? ""}</span>
+    </label>
+  );
+}
+
 // Play: steps through the build-up on its own, holding each step long enough
 // to read its note (see playback.ts). Starts only on a click, stops at the last
 // step, and pauses the moment the reader does anything else: a click inside the

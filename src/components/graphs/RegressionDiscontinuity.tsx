@@ -1,7 +1,6 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, Note, Scatter, Arrow, Presets, curvePoints, fmt, INK_SOFT, ACCENT, MARKER } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, Note, Scatter, Arrow, Presets, curvePoints, fmt, INK_SOFT, ACCENT, MARKER, Slider } from "./sketch";
 import { normalSampler, fitLine } from "./stats";
 
 // Regression discontinuity (Lecture 9), with simulated data.

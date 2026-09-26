@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Toggle, fmt, INK_SOFT, ACCENT, MARKER } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Toggle, fmt, INK_SOFT, ACCENT, MARKER, Slider } from "./sketch";
 
 // Identification with a supply shifter (Lecture 6, the Fulton fish market).
 // Demand is fixed: P = 9 − 0.8Q. Weather shifts supply: P = s + 0.9Q with

@@ -1,7 +1,6 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, Note, Dot, Scatter, Presets, curvePoints, fmt, clamp, INK, ACCENT, MARKER } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, Note, Dot, Scatter, Presets, curvePoints, fmt, clamp, INK, ACCENT, MARKER, Slider } from "./sketch";
 import { normalSampler, fitLine, normalPdf, normalCdf } from "./stats";
 
 // Sample selection (Lecture 5).

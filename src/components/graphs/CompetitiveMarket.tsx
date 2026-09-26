@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkCurve, InkLine, InkDashed, Hatch, Note, Dot, Toggle, Presets,
-  curvePoints, fmt, INK, INK_SOFT, ACCENT, MARKER, WASH,
+  curvePoints, fmt, INK, INK_SOFT, ACCENT, MARKER, WASH, Slider,
 } from "./sketch";
 
 // Ex 9 Q4: perfect competition, firm and market side by side.

@@ -1,7 +1,6 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkCurve, InkLine, Note, Scatter, Presets, fmt, INK_SOFT, MARKER } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkCurve, InkLine, Note, Scatter, Presets, fmt, INK_SOFT, MARKER, Slider } from "./sketch";
 import { normalSampler, fitLine } from "./stats";
 
 // Serial correlation (Lecture 6): residuals that remember the past.

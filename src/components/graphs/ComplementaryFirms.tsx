@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkCurve, InkDashed, Note, Dot, curvePoints, fmt, INK, ACCENT, MARKER } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkCurve, InkDashed, Note, Dot, curvePoints, fmt, INK, ACCENT, MARKER, Slider } from "./sketch";
 
 // N complementary monopolists (Topic 4): each prices one component of a bundle
 // with demand Q = A − P, where P is the sum of all N prices.

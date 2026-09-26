@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, Hatch, Note, Dot, Ring, Presets,
-  curvePoints, fmt, clamp, INK, ACCENT, MARKER, WASH,
+  curvePoints, fmt, clamp, INK, ACCENT, MARKER, WASH, Slider,
 } from "./sketch";
 
 // A price-taking firm with C(q) = F + ½q², so MC = q and AC = F/q + ½q.
