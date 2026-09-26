@@ -222,8 +222,15 @@ describe("rewriteWikiHrefs — past papers & glossary anchors", () => {
 
 describe("renderMarkdownString — Obsidian image embeds", () => {
   it("converts ![[Foo.png]] into an img with stem as alt", async () => {
-    const html = await renderMarkdownString("![[Lec04_iv_dag.png]]", "econometrics", new Map());
-    expect(html).toContain('<img src="/images/econometrics/lec04-iv-dag.png" alt="Lec04_iv_dag"');
+    // a real-data chart: not in the graph swap map, so it stays an image
+    const html = await renderMarkdownString("![[Lec09_drinking_age.png]]", "econometrics", new Map());
+    expect(html).toContain('<img src="/images/econometrics/lec09-drinking-age.png" alt="Lec09_drinking_age"');
+  });
+
+  it("draws a swapped chart as an interactive graph instead of an image", async () => {
+    const html = await renderMarkdownString("![[Lec04_iv_dag.png|600]]", "econometrics", new Map());
+    expect(html).toContain('<pre><code class="language-graph">type: causal-diagram\ndiagram: iv</code></pre>');
+    expect(html).not.toContain("<img");
   });
 
   it("drops a numeric width alias and uses stem as alt", async () => {
