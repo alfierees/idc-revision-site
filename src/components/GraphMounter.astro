@@ -3,28 +3,35 @@
 // into <pre><code class="language-graph">type: ...</code></pre>; this finds each
 // such block, parses its config, and renders the registered preact component
 // into a host div that replaces the <pre>. Mirrors Mermaid.astro.
+//
+// Solutions on problem-set and past-paper pages are injected into the DOM only
+// when "Show solution" is clicked (OpenAnswer), so a one-off scan at load misses
+// them. A MutationObserver mounts any graph blocks that appear later.
 ---
 <script>
-  const blocks = Array.from(document.querySelectorAll<HTMLElement>("code.language-graph"));
-  if (blocks.length > 0) {
-    const [{ render, h }, { GRAPHS }] = await Promise.all([
-      import("preact"),
-      import("./graphs/registry"),
-    ]);
+  const SELECTOR = "code.language-graph";
+  let deps: Promise<[typeof import("preact"), typeof import("./graphs/registry")]> | null = null;
+  const loadDeps = () =>
+    (deps ??= Promise.all([import("preact"), import("./graphs/registry")]));
 
-    const parseConfig = (text: string): Record<string, string | number> => {
-      const cfg: Record<string, string | number> = {};
-      for (const line of text.trim().split("\n")) {
-        const i = line.indexOf(":");
-        if (i < 0) continue;
-        const k = line.slice(0, i).trim();
-        const raw = line.slice(i + 1).trim();
-        cfg[k] = raw !== "" && !Number.isNaN(Number(raw)) ? Number(raw) : raw;
-      }
-      return cfg;
-    };
+  const parseConfig = (text: string): Record<string, string | number> => {
+    const cfg: Record<string, string | number> = {};
+    for (const line of text.trim().split("\n")) {
+      const i = line.indexOf(":");
+      if (i < 0) continue;
+      const k = line.slice(0, i).trim();
+      const raw = line.slice(i + 1).trim();
+      cfg[k] = raw !== "" && !Number.isNaN(Number(raw)) ? Number(raw) : raw;
+    }
+    return cfg;
+  };
 
+  async function mountWithin(root: ParentNode) {
+    const blocks = Array.from(root.querySelectorAll<HTMLElement>(SELECTOR));
+    if (blocks.length === 0) return;
+    const [{ render, h }, { GRAPHS }] = await loadDeps();
     blocks.forEach((code) => {
+      if (!code.isConnected) return;
       const pre = code.closest("pre");
       const cfg = parseConfig(code.textContent ?? "");
       const host = document.createElement("div");
@@ -38,4 +45,13 @@
       render(h(Comp, cfg), host);
     });
   }
+
+  mountWithin(document);
+
+  new MutationObserver((mutations) => {
+    for (const m of mutations)
+      for (const node of m.addedNodes)
+        if (node instanceof Element && (node.matches(SELECTOR) || node.querySelector(SELECTOR)))
+          mountWithin(node.matches(SELECTOR) ? node.parentElement ?? document : node);
+  }).observe(document.body, { childList: true, subtree: true });
 </script>
