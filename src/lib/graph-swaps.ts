@@ -59,6 +59,32 @@ export const GRAPH_SWAPS: Record<string, GraphConfig> = {
   "micro/pp03-q4-pd-fixed-cost.png": { type: "price-discrimination-3rd", a1: 22, a2: 8, mc: 2 },
   "micro/pp03-q5-cournot-merger-cs.png": { type: "merger-surplus" },
   "micro/pp03-open2-structure-ranking.png": { type: "structure-comparison", structures: "monopoly,stackelberg,vertical", A: 120, c: 40 },
+  // ---- econometrics: lectures ----
+  "econometrics/lec02-lpm-unbounded.png": { type: "lpm-problems", mode: "unbounded" },
+  "econometrics/lec02-variance-frown.png": { type: "lpm-problems", mode: "variance" },
+  "econometrics/lec03-scurve.png": { type: "binary-curves", mode: "s-curve" },
+  "econometrics/lec03-diminishing-me.png": { type: "binary-curves", mode: "diminishing" },
+  "econometrics/lec04-iv-dag.png": { type: "causal-diagram", diagram: "iv" },
+  "econometrics/lec04-weak-instrument.png": { type: "weak-instrument" },
+  "econometrics/lec05-selection-bias.png": { type: "sample-selection", mode: "bias" },
+  "econometrics/lec05-inverse-mills.png": { type: "sample-selection", mode: "mills" },
+  "econometrics/lec06-identification.png": { type: "supply-shift-identification" },
+  "econometrics/lec06-serial-correlation.png": { type: "serial-correlation" },
+  "econometrics/lec07-spurious.png": { type: "time-trends", mode: "spurious" },
+  "econometrics/lec07-detrending.png": { type: "time-trends", mode: "detrending" },
+  "econometrics/lec07-event-study.png": { type: "event-study" },
+  "econometrics/lec08-within-between.png": { type: "fixed-effects", mode: "within-between" },
+  "econometrics/lec08-demeaning.png": { type: "fixed-effects", mode: "demeaning" },
+  "econometrics/lec09-sharp-rdd-gap.png": { type: "regression-discontinuity", mode: "sharp" },
+  "econometrics/lec09-bandwidth.png": { type: "regression-discontinuity", mode: "bandwidth" },
+  "econometrics/lec09-fuzzy-two-jumps.png": { type: "regression-discontinuity", mode: "fuzzy" },
+  "econometrics/lec10-card-krueger-did.png": { type: "diff-in-diff", control: "23.331,21.166", treatment: "20.439,21.027", controlName: "Pennsylvania (control)", treatmentName: "New Jersey (treated)", periods: "Before (Feb–Mar 1992),After (Nov–Dec 1992)", yLabel: "employment per restaurant", decimals: 2 },
+  "econometrics/lec10-parallel-trends.png": { type: "parallel-trends" },
+  // ---- econometrics: past papers and problem sets (exact exam figures) ----
+  "econometrics/pp01-probit-vs-lpm.png": { type: "binary-curves", mode: "probit-slopes" },
+  "econometrics/pp01-did-plot.png": { type: "diff-in-diff", control: "0.52,0.47", treatment: "0.41,0.43", controlName: "Control (no exam)", treatmentName: "Treatment (took exam)", periods: "Pre (Mon–Tue),Post (Wed–Fri)", yLabel: "P(chose lottery B)", decimals: 2 },
+  "econometrics/pp03-did-plot.png": { type: "diff-in-diff", control: "0.21,0.325", treatment: "0.26666,0.34583", controlName: "N4 (control village)", treatmentName: "N3 (typhoon warning)", periods: "Pre (rounds 1–5),Post (rounds 6–15)", yLabel: "mean today.always", decimals: 3 },
+  "econometrics/ps04-causal-diagram.png": { type: "causal-diagram", diagram: "seatbelt" },
 };
 
 function graphBlock(config: GraphConfig): Element {
