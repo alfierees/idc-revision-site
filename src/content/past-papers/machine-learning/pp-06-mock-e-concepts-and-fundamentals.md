@@ -26,7 +26,7 @@ questions:
     text: |
       A colleague adds two lines to the notebook and prints the training score alongside the test score:
 
-      ```text
+      ```
       Random Forest  — train 0.9924 | test 0.9871
       Neural Network — train 0.9903 | test 0.9817
       ```
@@ -240,7 +240,7 @@ questions:
 
       **Error one — the wrong baseline.** With a 14% default rate, the rule "approve everyone, predict no default" scores:
 
-      ```text
+      ```
       accuracy = 1 - 0.14 = 0.86
       defaulters caught = 0
       ```
