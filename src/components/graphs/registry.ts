@@ -15,6 +15,56 @@ import BaselineMachine from "./BaselineMachine";
 import ThresholdMoney from "./ThresholdMoney";
 import OverfitCurves from "./OverfitCurves";
 import AxisTruncation from "./AxisTruncation";
+// ML concept explainers
+import GradientDescent from "./GradientDescent";
+import BiasVariance from "./BiasVariance";
+import KnnClassifier from "./KnnClassifier";
+import RocCurve from "./RocCurve";
+import KMeans from "./KMeans";
+import PcaProjection from "./PcaProjection";
+import CrossValidation from "./CrossValidation";
+import AnscombeQuartet from "./AnscombeQuartet";
+// macro sketch explainers
+import LaborMarket from "./LaborMarket";
+import MacroShocks from "./MacroShocks";
+import ConsumptionChoice from "./ConsumptionChoice";
+import ProductionCapital from "./ProductionCapital";
+// econometrics sketch explainers
+import DiffInDiff from "./DiffInDiff";
+import ParallelTrends from "./ParallelTrends";
+import LpmProblems from "./LpmProblems";
+import BinaryCurves from "./BinaryCurves";
+import WeakInstrument from "./WeakInstrument";
+import SampleSelection from "./SampleSelection";
+import SupplyShiftIdentification from "./SupplyShiftIdentification";
+import SerialCorrelation from "./SerialCorrelation";
+import TimeTrends from "./TimeTrends";
+import EventStudy from "./EventStudy";
+import FixedEffects from "./FixedEffects";
+import RegressionDiscontinuity from "./RegressionDiscontinuity";
+import CausalDiagram from "./CausalDiagram";
+// micro sketch explainers
+import ReactionFunctions from "./ReactionFunctions";
+import ProfitBars from "./ProfitBars";
+import UniformPricing from "./UniformPricing";
+import StructureComparison from "./StructureComparison";
+import PayoffMatrix from "./PayoffMatrix";
+import MixedStrategyBR from "./MixedStrategyBR";
+import Bundling from "./Bundling";
+import LemonsThreshold from "./LemonsThreshold";
+import RiskAversion from "./RiskAversion";
+import Signaling from "./Signaling";
+import ElasticityMR from "./ElasticityMR";
+import DoubleMarginalisation from "./DoubleMarginalisation";
+import ComplementaryFirms from "./ComplementaryFirms";
+import MergerSurplus from "./MergerSurplus";
+import CommonsUtility from "./CommonsUtility";
+import CompetitiveMarket from "./CompetitiveMarket";
+import SecondDegreePD from "./SecondDegreePD";
+import GovernmentChannel from "./GovernmentChannel";
+import CoffeeMonopoly from "./CoffeeMonopoly";
+import SeparateTariffs from "./SeparateTariffs";
+import TariffPriceVsA from "./TariffPriceVsA";
 
 // Maps a ```graph fenced block's `type:` to its component. Add new graphs here.
 export const GRAPHS: Record<string, ComponentType<any>> = {
@@ -35,4 +85,57 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "threshold-money": ThresholdMoney,
   "overfit-curves": OverfitCurves,
   "axis-truncation": AxisTruncation,
+  // ML concept explainers
+  "gradient-descent": GradientDescent,
+  "bias-variance": BiasVariance,
+  "knn-classifier": KnnClassifier,
+  "roc-curve": RocCurve,
+  "k-means": KMeans,
+  "pca-projection": PcaProjection,
+  "cross-validation": CrossValidation,
+  "anscombe-quartet": AnscombeQuartet,
+  // macro sketch explainers
+  "labor-market": LaborMarket,
+  "macro-shocks": MacroShocks,
+  "consumption-choice": ConsumptionChoice,
+  "production-capital": ProductionCapital,
+  // econometrics sketch explainers
+  "diff-in-diff": DiffInDiff,
+  "parallel-trends": ParallelTrends,
+  "lpm-problems": LpmProblems,
+  "binary-curves": BinaryCurves,
+  "weak-instrument": WeakInstrument,
+  "sample-selection": SampleSelection,
+  "supply-shift-identification": SupplyShiftIdentification,
+  "serial-correlation": SerialCorrelation,
+  "time-trends": TimeTrends,
+  "event-study": EventStudy,
+  "fixed-effects": FixedEffects,
+  "regression-discontinuity": RegressionDiscontinuity,
+  "causal-diagram": CausalDiagram,
+  // micro sketch explainers
+  "reaction-functions": ReactionFunctions,
+  "profit-bars": ProfitBars,
+  "uniform-pricing": UniformPricing,
+  "structure-comparison": StructureComparison,
+  "payoff-matrix": PayoffMatrix,
+  "mixed-strategy-br": MixedStrategyBR,
+  "bundling": Bundling,
+  "lemons-threshold": LemonsThreshold,
+  "risk-aversion": RiskAversion,
+  "signaling": Signaling,
+  "elasticity-mr": ElasticityMR,
+  "double-marginalisation": DoubleMarginalisation,
+  "complementary-firms": ComplementaryFirms,
+  "merger-surplus": MergerSurplus,
+  "commons-utility": CommonsUtility,
+  "competitive-market": CompetitiveMarket,
+  "second-degree-pd": SecondDegreePD,
+  "government-channel": GovernmentChannel,
+  "coffee-monopoly": CoffeeMonopoly,
+  "separate-tariffs": SeparateTariffs,
+  "tariff-price-vs-a": TariffPriceVsA,
 };
+
+// Every registered type, for the /dev/graphs gallery.
+export const GRAPH_TYPES = Object.keys(GRAPHS);

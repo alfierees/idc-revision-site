@@ -1,67 +1,114 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { makeFrame, Axes, seg, label, Slider, ticks, PALETTE, C } from "./plot";
+import { Slider } from "./plot";
+import {
+  useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Ring, Arrow, Presets,
+  niceTicks, fmt, INK, ACCENT, MARKER,
+} from "./sketch";
 
-// Cournot reaction-function (best-response) diagram in (q1, q2) space.
-// P = a − Q, constant MC = c. BR_i: q_i = (a − c − q_j)/2 → downward-sloping
-// lines (strategic substitutes); they cross at the Cournot–Nash point. Also
-// marks the Stackelberg (firm-1-leader) and cartel/collusive points. Slider: c.
+// Cournot best responses in (q₁, q₂) space with P = a − Q and constant MC = c.
+// BR_i: q_i = (a − c − q_j)/2, so the lines slope down (strategic substitutes).
+// Steps: BR₁ → BR₂ → Cournot–Nash crossing → Stackelberg (leader slides along
+// BR₂) → cartel → explore (sliders; presets).
 
 interface Props { a?: number; c?: number; }
 
-export default function CournotReaction({ a: a0 = 120, c: c0 = 70 }: Props): VNode {
-  const [a, setA] = useState(a0);
-  const [c, setC] = useState(c0);
-  const m = Math.max(a - Math.min(c, a - 1), 1); // a − c (capacity of each axis)
-  const r1 = (n: number) => Math.round(n * 10) / 10;
+const NOTES = [
+  "Firm 1's best response: the more firm 2 makes, the less firm 1 wants to make.",
+  "Firm 2's best response is the mirror image.",
+  "Cournot–Nash: each firm is best-responding to the other, where the lines cross.",
+  "Stackelberg: a leader moves first and picks its favourite point on BR₂.",
+  "A cartel splits the monopoly output. Each firm then wants to cheat.",
+  "Your turn. Change demand or costs and watch every point slide.",
+];
 
-  const nash = m / 3;            // q1 = q2 = (a−c)/3
-  const stackL = m / 2, stackF = m / 4;
-  const cartel = m / 4;          // each firm under joint-profit split
+export default function CournotReaction({ a: initialIntercept = 120, c: initialCost = 70 }: Props): VNode {
+  const [target, setTarget] = useState({ intercept: initialIntercept, cost: initialCost });
+  const shown = useGlide(target, false);
+  const margin = Math.max(shown.intercept - Math.min(shown.cost, shown.intercept - 1), 1); // a − c
+  const axisMax = Math.max(target.intercept - Math.min(target.cost, target.intercept - 1), 1);
+  const sketch = useSketch({
+    stepCount: NOTES.length,
+    domains: [{ xMax: axisMax, yMax: axisMax }],
+    aspect: 0.82,
+    maxHeight: 440,
+    maxWidth: 560,
+    padding: { left: 40, bottom: 40, top: 20 },
+  });
+  const { show, drawNow, step } = sketch;
+  const frame = sketch.frames[0];
+  const toX = frame.x, toY = frame.y;
 
-  const f = makeFrame({ w: 430, h: 360, qMax: m, pMax: m, padB: 34, padL: 40 });
-  const els: VNode[] = [];
-  els.push(<Axes f={f} xTicks={ticks(m)} yTicks={ticks(m)} xLabel="q₁ (firm 1)" yLabel="q₂" />);
-  // BR1: q1 = (m − q2)/2  →  in (x=q1,y=q2): y = m − 2x  (from (0,m) to (m/2,0))
-  els.push(seg(f, 0, m, m / 2, 0, PALETTE.feeStroke, 2));
-  els.push(label(f, m / 2 + m * 0.01, m * 0.06, "BR₁", PALETTE.feeStroke, "start", 11, true));
-  // BR2: q2 = (m − q1)/2  →  y = (m − x)/2  (from (0,m/2) to (m,0))
-  els.push(seg(f, 0, m / 2, m, 0, PALETTE.marginStroke, 2));
-  els.push(label(f, m * 0.92, (m - m * 0.92) / 2 + m * 0.03, "BR₂", PALETTE.marginStroke, "end", 11, true));
-  // points
-  const dot = (x: number, y: number, color: string, name: string, dx = 0.02, dy = 0.03) => {
-    els.push(<circle cx={f.x(x)} cy={f.y(y)} r="4.5" style={`fill:${color}`} />);
-    els.push(label(f, x + m * dx, y + m * dy, name, color, "start", 10.5, true));
-  };
-  dot(nash, nash, C.INK, "Cournot–Nash");
-  dot(stackL, stackF, PALETTE.dwlStroke, "Stackelberg", 0.02, -0.05);
-  dot(cartel, cartel, PALETTE.rentStroke, "cartel", -0.16, -0.05);
+  const nash = margin / 3;
+  const leader = margin / 2, follower = margin / 4;
+  const cartelEach = margin / 4;
+  const cournotPrice = shown.intercept - 2 * nash;
+  const stackelbergPrice = shown.intercept - (leader + follower);
 
-  const cEff = Math.min(c, a - 1);
-  const Pc = a - 2 * nash;     // Cournot price
-  const Ps = a - (stackL + stackF);
+  const TEX = [
+    `BR_1:\\; q_1 = \\frac{${fmt(margin)} - q_2}{2}`,
+    `BR_2:\\; q_2 = \\frac{${fmt(margin)} - q_1}{2}`,
+    `q_1 = q_2 = \\frac{a - c}{3} = ${fmt(nash)},\\quad P = ${fmt(cournotPrice)}`,
+    `q_1 = \\frac{a-c}{2} = ${fmt(leader)},\\quad q_2 = \\frac{a-c}{4} = ${fmt(follower)},\\quad P = ${fmt(stackelbergPrice)}`,
+    `q_1 = q_2 = \\frac{a-c}{4} = ${fmt(cartelEach)},\\quad \\text{but } BR_1(${fmt(cartelEach)}) = ${fmt((margin - cartelEach) / 2)}`,
+    `\\text{Cournot } ${fmt(nash)} \\text{ each},\\quad \\text{Stackelberg } (${fmt(leader)}, ${fmt(follower)})`,
+  ];
+
+  const ticks = niceTicks(0, axisMax, sketch.narrow ? 4 : 5);
+  const drawing: VNode[] = [<SketchAxes frame={frame} id="axes" xTicks={ticks} yTicks={ticks} xLabel="q₁" yLabel="q₂" />];
+  const plot: VNode[] = [];
+  plot.push(<InkLine x1={toX(0)} y1={toY(margin)} x2={toX(margin / 2)} y2={toY(0)} id="br1" color={MARKER.blue} width={2.4} duration={800} draw={drawNow(0)} />);
+  if (show(1)) plot.push(<InkLine x1={toX(0)} y1={toY(margin / 2)} x2={toX(margin)} y2={toY(0)} id="br2" color={MARKER.green} width={2.4} duration={800} draw={drawNow(1)} />);
+  if (show(2)) {
+    plot.push(<InkDashed x1={toX(nash)} y1={toY(nash)} x2={toX(nash)} y2={frame.bottom} id="nash-x" color={INK} width={1.2} dash={4} gap={4} draw={drawNow(2)} />);
+    plot.push(<InkDashed x1={toX(nash)} y1={toY(nash)} x2={frame.left} y2={toY(nash)} id="nash-y" color={INK} width={1.2} dash={4} gap={4} draw={drawNow(2)} />);
+  }
+  if (show(4)) plot.push(<InkDashed x1={toX(0)} y1={toY(margin / 2)} x2={toX(margin / 2)} y2={toY(0)} id="cartel-line" color={MARKER.amber} width={1.4} draw={drawNow(4)} />);
+  drawing.push(<g clip-path={sketch.clip()}>{plot}</g>);
+
+  drawing.push(<Note x={toX(margin * 0.06) + 8} y={toY(margin * 0.88)} text="BR₁" color={MARKER.blue} size={20} draw={drawNow(0)} />);
+  if (show(1)) drawing.push(<Note x={toX(margin * 0.9)} y={toY(margin * 0.05) - 10} text="BR₂" color={MARKER.green} anchor="middle" size={20} draw={drawNow(1)} />);
+  if (show(2)) {
+    drawing.push(<Ring x={toX(nash)} y={toY(nash)} id="ring-nash" color={ACCENT} draw={drawNow(2)} />);
+    drawing.push(<Dot x={toX(nash)} y={toY(nash)} color={INK} draw={drawNow(2)} />);
+    drawing.push(<Note x={toX(nash) + 16} y={toY(nash) - 12} text="Cournot–Nash" color={INK} size={18} delay={300} draw={drawNow(2)} />);
+  }
+  if (show(3)) {
+    drawing.push(<Dot x={toX(leader)} y={toY(follower)} color={MARKER.red} draw={drawNow(3)} />);
+    drawing.push(<Arrow x1={toX(nash) + 6} y1={toY(nash) + 4} x2={toX(leader) - 7} y2={toY(follower) - 3} id="arrow-stackelberg" color={MARKER.red} bend={-10} delay={200} draw={drawNow(3)} />);
+    drawing.push(<Note x={toX(leader) + 10} y={toY(follower) + 22} text="Stackelberg" color={MARKER.red} size={18} delay={500} draw={drawNow(3)} />);
+  }
+  if (show(4)) {
+    drawing.push(<Dot x={toX(cartelEach)} y={toY(cartelEach)} color={MARKER.amber} draw={drawNow(4)} />);
+    drawing.push(<Note x={toX(cartelEach) - 10} y={toY(cartelEach) + 22} text="cartel" color={MARKER.amber} anchor="end" size={18} delay={300} draw={drawNow(4)} />);
+    if (step === 4) {
+      const cheat = (margin - cartelEach) / 2;
+      drawing.push(<Arrow x1={toX(cartelEach) + 6} y1={toY(cartelEach)} x2={toX(cheat) - 6} y2={toY(cartelEach)} id="arrow-cheat" color={MARKER.amber} bend={0} delay={600} draw={drawNow(4)} />);
+      drawing.push(<Note x={toX((cartelEach + cheat) / 2)} y={toY(cartelEach) + 20} text="cheat!" color={MARKER.amber} anchor="middle" size={17} delay={900} draw={drawNow(4)} />);
+    }
+  }
+
+  const update = (changes: Partial<typeof target>) => setTarget((current) => ({ ...current, ...changes }));
 
   return (
-    <div class="graph">
-      <div class="graph-sliders">
-        <Slider label="intercept a" value={a} min={80} max={200} step={10} onInput={setA} />
-        <Slider label="MC c" value={c} min={0} max={Math.max(0, a - 20)} step={5} onInput={setC} />
-      </div>
-      <div class="graph-cap">Cournot best responses in (q₁, q₂) space, P = a − Q, MC = c. The lines cross at the Cournot–Nash equilibrium; the leader pushes out along BR₂ to the Stackelberg point. Drag c.</div>
-      <svg viewBox="0 0 430 360" width="100%" role="img" aria-label="Cournot reaction functions">{els}</svg>
-      <div class="graph-legend">
-        <span><i class="gsw" style={`background:${PALETTE.feeStroke}`} />BR₁ (firm 1)</span>
-        <span><i class="gsw" style={`background:${PALETTE.marginStroke}`} />BR₂ (firm 2)</span>
-        <span><i class="gsw" style="background:var(--color-ink)" />Cournot–Nash</span>
-        <span><i class="gsw" style={`background:${PALETTE.dwlStroke}`} />Stackelberg</span>
-        <span><i class="gsw" style={`background:${PALETTE.rentStroke}`} />cartel</span>
-      </div>
-      <div class="graph-readout">
-        <span class="rd">Cournot q each <b>{r1(nash)}</b></span>
-        <span class="rd">Q, p <b>{r1(2 * nash)}, {r1(Pc)}</b></span>
-        <span class="rd">Stackelberg q₁,q₂ <b>{r1(stackL)}, {r1(stackF)}</b></span>
-        <span class="rd">Stackelberg p <b>{r1(Ps)}</b></span>
-      </div>
-    </div>
+    <SketchGraph
+      sketch={sketch}
+      note={NOTES[step]}
+      tex={TEX[step]}
+      ariaLabel={`Cournot best responses. Nash output ${fmt(nash)} each; Stackelberg leader ${fmt(leader)}, follower ${fmt(follower)}.`}
+      explore={<>
+        <div class="graph-sliders">
+          <Slider label="intercept a" value={target.intercept} min={80} max={200} step={10} onInput={(value) => update({ intercept: value, cost: Math.min(target.cost, value - 20) })} />
+          <Slider label="MC c" value={target.cost} min={0} max={Math.max(0, target.intercept - 20)} step={5} onInput={(value) => update({ cost: value })} />
+        </div>
+        <Presets presets={[
+          { label: "Cheaper to produce", apply: () => update({ cost: Math.max(0, target.cost - 30) }) },
+          { label: "Bigger market", apply: () => update({ intercept: Math.min(200, target.intercept + 40) }) },
+          { label: "Reset", apply: () => setTarget({ intercept: initialIntercept, cost: initialCost }) },
+        ]} />
+      </>}
+    >
+      {drawing}
+    </SketchGraph>
   );
 }

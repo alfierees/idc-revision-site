@@ -199,6 +199,12 @@ clf.fit(X_train_s, y_train)   # use scaled features!
 | Captures non-linear boundaries | Curse of dimensionality — distances lose meaning |
 | No assumptions on data shape | Needs scaling + is memory-hungry |
 
+> [!tip] Try it: step through the graph
+
+```graph
+type: knn-classifier
+```
+
 ---
 
 ## 🌲 Algorithm 4 — Random Forest

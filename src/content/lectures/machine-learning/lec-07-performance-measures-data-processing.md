@@ -73,6 +73,12 @@ $$\text{CV Score} = \frac{1}{k} \sum_{i=1}^{k} \text{Score}_i$$
 
 **Learning Curves** — plotting performance as a function of training-set size helps diagnose whether you are in a high-bias (underfitting) or high-variance (overfitting) regime, and whether collecting more data would help.
 
+> [!tip] Try it: step through the graph
+
+```graph
+type: cross-validation
+```
+
 ---
 
 ## Performance Measures
@@ -263,6 +269,12 @@ The ==PR curve== plots **Precision** (y-axis) against **Recall** (x-axis) across
 > [!note] Practical note
 > AUC helps **reject bad models**; it does not tell you what threshold to deploy. Always validate performance at the *specific* operating point your system will use.
 
+> [!tip] Try it: step through the graph
+
+```graph
+type: roc-curve
+```
+
 ---
 
 ## Data Processing
@@ -426,6 +438,12 @@ $$\text{Feature Extraction (PCA): } [x_1, \ldots, x_N] \rightarrow [x'_1, \ldots
 
 > [!tip] When to use PCA
 > Use PCA when features are correlated (linear redundancy), when you need to visualise high-dimensional data (reduce to 2–3 PCs), or when training is too slow due to high dimensionality. PCA does **not** use labels — it is unsupervised.
+
+> [!tip] Try it: step through the graph
+
+```graph
+type: pca-projection
+```
 
 ---
 

@@ -18,12 +18,8 @@ The fastest path to a monopoly's profit-maximising $(P^*, Q^*)$ when demand is l
 
 The monopolist sets $MR = MC$ (purple meets green), then reads the *price* off the demand curve above that quantity — never off the MR curve. The red triangle is the deadweight loss: trades worth more to buyers than they cost to produce, but which don't happen.
 
-> [!tip] Try it — drag the parameters
-> Move the demand intercept, slope, and MC sliders and watch $Q^*$, $p^*$, and the consumer-surplus / profit / deadweight-loss areas update live.
-
-```graph
-type: monopoly-cs-dwl
-```
+> [!tip] Try it: step through the graph below
+> Press **Next** to build the picture one step at a time, then drag MC or the demand intercept and watch $Q^*$, $p^*$, and the consumer-surplus / profit / deadweight-loss areas update live.
 
 ## Common pitfalls
 

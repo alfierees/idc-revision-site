@@ -8,6 +8,7 @@ import type { Root, Element } from "hast";
 import { toString as hastToString } from "hast-util-to-string";
 import { visit } from "unist-util-visit";
 import rehypeKatex from "rehype-katex";
+import { rehypeGraphSwaps } from "./graph-swaps";
 import rehypeStringify from "rehype-stringify";
 import wikiLinkPlugin from "remark-wiki-link";
 import { rewriteWikiHrefs } from "./wikilink-rewrite";
@@ -159,6 +160,7 @@ const processor = unified()
   .use(restoreEscapedDollars)
   .use(rehypeKatex)
   .use(rehypePaint)
+  .use(rehypeGraphSwaps)
   .use(rehypeStringify);
 
 export async function renderMarkdownString(

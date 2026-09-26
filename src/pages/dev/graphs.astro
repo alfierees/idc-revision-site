@@ -1,0 +1,48 @@
+---
+// Graph gallery: every interactive graph on one page, for review. Lists each
+// registered graph type with its default props, then every image→graph swap
+// (with the page the image appears on), so a whole batch can be checked at once.
+import Layout from "../../components/Layout.astro";
+import GraphMounter from "../../components/GraphMounter.astro";
+import { GRAPH_SWAPS } from "../../lib/graph-swaps";
+import { GRAPH_TYPES } from "../../components/graphs/registry";
+
+const configText = (config: Record<string, string | number>) =>
+  Object.entries(config).map(([key, value]) => `${key}: ${value}`).join("\n");
+
+const swaps = Object.entries(GRAPH_SWAPS).sort(([a], [b]) => a.localeCompare(b));
+---
+<Layout title="Graph gallery · IDC Revision">
+  <main class="gallery">
+    <h1>Graph gallery</h1>
+    <p class="gallery-lede">Every interactive graph on the site, for review. {GRAPH_TYPES.length} graph types, {swaps.length} chart images swapped for graphs.</p>
+
+    <h2>Graph types</h2>
+    {GRAPH_TYPES.map((type) => (
+      <section class="gallery-item" id={`type-${type}`}>
+        <h3><code>{type}</code></h3>
+        <pre><code class="language-graph">{`type: ${type}`}</code></pre>
+      </section>
+    ))}
+
+    <h2>Image swaps</h2>
+    {swaps.map(([image, config]) => (
+      <section class="gallery-item" id={`swap-${image.replace(/[^a-z0-9]+/gi, "-")}`}>
+        <h3><code>{image}</code> → <code>{String(config.type)}</code></h3>
+        <img class="gallery-original" src={`/images/${image}`} alt={`Original static chart ${image}`} loading="lazy" />
+        <pre><code class="language-graph">{configText(config)}</code></pre>
+      </section>
+    ))}
+  </main>
+  <GraphMounter />
+</Layout>
+
+<style>
+  .gallery { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+  .gallery h1 { font-family: var(--font-display); font-size: 2.2rem; margin: 0 0 0.5rem; }
+  .gallery-lede { color: var(--color-ink-soft); margin: 0 0 2rem; }
+  .gallery h2 { font-family: var(--font-display); font-size: 1.5rem; margin: 3rem 0 1rem; }
+  .gallery-item { margin: 0 0 2.5rem; }
+  .gallery-item h3 { font: 600 14px var(--font-ui); margin: 0 0 0.5rem; color: var(--color-ink-soft); }
+  .gallery-original { max-width: 320px; opacity: 0.8; border: 1px solid var(--color-rule); border-radius: 6px; margin-bottom: 0.75rem; }
+</style>

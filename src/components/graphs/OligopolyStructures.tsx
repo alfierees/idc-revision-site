@@ -1,50 +1,96 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { makeFrame, Axes, seg, label, Slider, ticks, PALETTE, C } from "./plot";
+import { Slider } from "./plot";
+import {
+  useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Presets,
+  niceTicks, fmt, clamp, INK, MARKER,
+} from "./sketch";
 
-// Market structures on one demand curve P = A − Q with marginal cost c.
-// Slider for c; markers for Monopoly / Cournot (2-firm) / Stackelberg / Vertical
-// separation, with a live Q/P readout. (A fixed at 120 to match the Micro 3 paper.)
+// Four market structures on one demand curve P = 120 − Q with MC = c (Micro 3
+// sample exam). Each step adds a structure's (Q, P) point, from least to most
+// output: vertical separation → monopoly → Cournot → Stackelberg. Explore: drag MC.
 
-const A = 120;
+const DEMAND_INTERCEPT = 120;
 
-export default function OligopolyStructures({ c: c0 = 40 }: { c?: number }): VNode {
-  const [c, setC] = useState(c0);
-  const a = A - c;
-  const r1 = (n: number) => Math.round(n * 10) / 10;
+const STRUCTURES = [
+  { key: "Vertical", share: 1 / 4, color: MARKER.red, tex: "Q_V = \\tfrac{a-c}{4}", note: "Vertical separation: two markups stacked, so the least output." },
+  { key: "Monopoly", share: 1 / 2, color: MARKER.blue, tex: "Q_M = \\tfrac{a-c}{2}", note: "An integrated monopoly: one markup." },
+  { key: "Cournot", share: 2 / 3, color: MARKER.green, tex: "Q_C = \\tfrac{2(a-c)}{3}", note: "Two Cournot firms: competition pushes output up." },
+  { key: "Stackelberg", share: 3 / 4, color: MARKER.purple, tex: "Q_S = \\tfrac{3(a-c)}{4}", note: "Stackelberg: the leader over-produces, so the most output of all." },
+];
 
-  const structures = [
-    { key: "Stackelberg", Q: (3 * a) / 4, color: PALETTE.mr },
-    { key: "Cournot", Q: (2 * a) / 3, color: PALETTE.marginStroke },
-    { key: "Monopoly", Q: a / 2, color: PALETTE.feeStroke },
-    { key: "Vertical", Q: a / 4, color: PALETTE.dwlStroke },
-  ].map((s) => ({ ...s, P: A - s.Q }));
+const NOTES = [
+  "One market demand curve P = 120 − Q, and marginal cost c.",
+  ...STRUCTURES.map((structure) => structure.note),
+  "Your turn. Drag MC and every structure's point slides along demand.",
+];
 
-  const f = makeFrame({ w: 520, h: 340, qMax: A, pMax: A, padB: 34 });
-  const els: VNode[] = [];
-  els.push(<Axes f={f} xTicks={ticks(A)} yTicks={ticks(A)} xLabel="total quantity Q" />);
-  els.push(seg(f, 0, c, A, c, PALETTE.mc, 1.5, "4 3"));
-  els.push(label(f, A * 0.98, c + 4, `MC = c = ${c}`, PALETTE.mc, "end", 11));
-  els.push(seg(f, 0, A, A, 0, C.INK, 2.4)); // demand
-  els.push(label(f, A * 0.86, A - A * 0.86 + 4, "demand", C.INK, "end", 12, true));
-  for (const s of structures) {
-    els.push(<line x1={f.x(s.Q)} y1={f.y(0)} x2={f.x(s.Q)} y2={f.y(s.P)} style={`stroke:${s.color};stroke-width:1.4;stroke-dasharray:3 2`} />);
-    els.push(<circle cx={f.x(s.Q)} cy={f.y(s.P)} r="4" style={`fill:${s.color}`} />);
-    els.push(label(f, s.Q, s.P + 5, s.key, s.color, "middle", 10.5, true));
+export default function OligopolyStructures({ c: initialCost = 40 }: { c?: number }): VNode {
+  const [target, setTarget] = useState({ cost: initialCost });
+  const sketch = useSketch({
+    stepCount: NOTES.length,
+    domains: [{ xMax: DEMAND_INTERCEPT, yMax: DEMAND_INTERCEPT }],
+    padding: { left: 40, bottom: 40, top: 20 },
+  });
+  const shown = useGlide(target, sketch.dragging !== null);
+  const { show, drawNow, step, narrow } = sketch;
+  const frame = sketch.frames[0];
+  const toX = frame.x, toY = frame.y;
+  const cost = shown.cost;
+  const margin = DEMAND_INTERCEPT - cost;
+  const points = STRUCTURES.map((structure) => {
+    const quantity = margin * structure.share;
+    return { ...structure, quantity, price: DEMAND_INTERCEPT - quantity };
+  });
+
+  const TEX = [
+    `P = 120 - Q,\\quad MC = c = ${fmt(cost)}`,
+    ...points.map((point) => `${point.tex} = ${fmt(point.quantity)},\\quad P = ${fmt(point.price)}`),
+    points.map((point) => `Q_{${point.key[0]}} = ${fmt(point.quantity)}`).join(",\\; "),
+  ];
+
+  const ticks = niceTicks(0, DEMAND_INTERCEPT, narrow ? 3 : 6);
+  const drawing: VNode[] = [<SketchAxes frame={frame} id="axes" xTicks={ticks} yTicks={ticks} xLabel="Q" yLabel="P" />];
+  const plot: VNode[] = [
+    <InkDashed x1={toX(0)} y1={toY(cost)} x2={frame.right} y2={toY(cost)} id="mc" color={MARKER.grey} draw={drawNow(0)} />,
+    <InkLine x1={toX(0)} y1={toY(DEMAND_INTERCEPT)} x2={toX(DEMAND_INTERCEPT)} y2={toY(0)} id="demand" color={INK} width={2.5} duration={800} draw={drawNow(0)} />,
+  ];
+  points.forEach((point, index) => {
+    if (!show(index + 1)) return;
+    plot.push(<InkDashed x1={toX(point.quantity)} y1={toY(point.price)} x2={toX(point.quantity)} y2={frame.bottom} id={`guide-${point.key}`} color={point.color} width={1.3} dash={4} gap={4} draw={drawNow(index + 1)} />);
+  });
+  drawing.push(<g clip-path={sketch.clip()}>{plot}</g>);
+  drawing.push(<Note x={toX(104) + 6} y={toY(16) + 2} text="D" color={INK} size={21} draw={drawNow(0)} />);
+  drawing.push(<Note x={frame.right - 36} y={toY(cost) - 8} text={`MC = ${fmt(cost)}`} color={MARKER.grey} anchor="end" size={18} draw={drawNow(0)} />);
+  points.forEach((point, index) => {
+    if (!show(index + 1)) return;
+    drawing.push(<Dot x={toX(point.quantity)} y={toY(point.price)} color={point.color} draw={drawNow(index + 1)} />);
+    drawing.push(<Note x={toX(point.quantity) + 8} y={toY(point.price) - 10} text={point.key} color={point.color} size={18} delay={250} draw={drawNow(index + 1)} />);
+  });
+  if (step === NOTES.length - 1) {
+    drawing.push(sketch.handle({
+      key: "cost", x: frame.dataX(frame.right - 18), y: cost, axis: "y", hint: "above",
+      onDrag: (_dataX, dataY) => setTarget({ cost: clamp(Math.round(dataY / 5) * 5, 0, 110) }),
+    }));
   }
 
   return (
-    <div class="graph">
-      <div class="graph-sliders">
-        <Slider label="marginal cost c" value={c} min={0} max={110} step={5} onInput={setC} />
-      </div>
-      <div class="graph-cap">One demand curve P = 120 − Q, four market structures. Each dot is that structure's (Q, P). Stackelberg produces most (lowest price); vertical separation least (double marginalisation). Drag c.</div>
-      <svg viewBox="0 0 520 340" width="100%" role="img" aria-label="Market structures comparison">{els}</svg>
-      <div class="graph-readout">
-        {structures.map((s) => (
-          <span class="rd">{s.key} <b>Q={r1(s.Q)}, p={r1(s.P)}</b></span>
-        ))}
-      </div>
-    </div>
+    <SketchGraph
+      sketch={sketch}
+      note={NOTES[step]}
+      tex={TEX[step]}
+      ariaLabel={`Market structures on demand P = 120 minus Q with MC ${fmt(cost)}: ${points.map((point) => `${point.key} Q ${fmt(point.quantity)}`).join(", ")}.`}
+      explore={<>
+        <div class="graph-sliders">
+          <Slider label="marginal cost c" value={target.cost} min={0} max={110} step={5} onInput={(value) => setTarget({ cost: value })} />
+        </div>
+        <Presets presets={[
+          { label: "Exam value (c = 40)", apply: () => setTarget({ cost: 40 }) },
+          { label: "Free to produce", apply: () => setTarget({ cost: 0 }) },
+        ]} />
+      </>}
+    >
+      {drawing}
+    </SketchGraph>
   );
 }

@@ -1,130 +1,68 @@
-import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { makeFrame, Axes, BtnRow, PALETTE, C } from "./plot";
+import { useSketch, SketchGraph, SketchAxes, Hatch, Note, Arrow, seededRandom, INK_SOFT, MARKER, WASH } from "./sketch";
 
 // Filling missing credit scores with 0 manufactures impossible customers.
 // Real scores live between 300 and 850 (≈ N(680, 70) clipped). The notebook
-// fills its gaps with 0 — not a low score, an impossible one — and after
+// fills its gaps with 0: not a low score, an impossible one. After
 // standardisation those zeros sit at z ≈ −3.2, a far-out cluster the model
-// happily learns as a "mystery segment". The fix: a plausible value from the
-// training rows plus a flag remembering the score was missing.
+// learns as a "mystery segment". The fix: a plausible value from the training
+// rows plus a flag remembering the score was missing.
 
-function mulberry32(a: number) {
-  return function () {
-    a |= 0; a = (a + 0x6D2B79F5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+// 60 customers, fixed so every render is identical (same seed as before).
+const random = seededRandom(7);
+const MISSING = [3, 17, 29, 41, 55];
+const CUSTOMERS = Array.from({ length: 60 }, () => {
+  const first = random(), second = random();
+  const gaussian = Math.sqrt(-2 * Math.log(first || 1e-9)) * Math.cos(2 * Math.PI * second);
+  return { score: Math.min(850, Math.max(300, 680 + 70 * gaussian)), height: 0.3 + 0.48 * random() };
+});
+const MOVERS = MISSING.map((index, order) => ({ index, order, zeroScore: 4 + random() * 26, medianScore: 682 + (random() - 0.5) * 30 }));
 
-const F = makeFrame({ w: 500, h: 300, qMax: 850, pMax: 1, padB: 34 });
+const NOTES = [
+  "60 customers' credit scores. Real scores live between 300 and 850.",
+  "Five customers have no score recorded.",
+  "The notebook fills the gaps with 0: not a low score, an impossible one. After scaling they sit at z ≈ −3.2, a made-up segment.",
+  "The fix: fill with a plausible value (the training median) and keep a 'was missing' flag as its own column.",
+];
 
-// 60 customers, fixed at module scope so every render is identical.
-const rnd = mulberry32(7);
-const MISSING_IDX = [3, 17, 29, 41, 55];
-const MISSING = new Set(MISSING_IDX);
-const CUSTOMERS: { score: number; yFrac: number }[] = [];
-for (let i = 0; i < 60; i++) {
-  const u1 = rnd(), u2 = rnd();
-  const g = Math.sqrt(-2 * Math.log(u1 || 1e-9)) * Math.cos(2 * Math.PI * u2); // Box–Muller
-  const score = Math.min(850, Math.max(300, 680 + 70 * g));
-  CUSTOMERS.push({ score, yFrac: 0.3 + 0.48 * rnd() });
-}
-
-// The five movers: pixel positions for each of the three modes.
-const MOVERS = MISSING_IDX.map((idx, k) => ({
-  idx,
-  bandY: F.y(CUSTOMERS[idx].yFrac),
-  shelfX: F.R - 8 - (4 - k) * 16,           // parked at the right edge
-  shelfY: F.B - 11,                          // just above the axis
-  zeroX: F.x(4 + rnd() * 26),                // x = 0 with small jitter
-  medX: F.x(682 + (rnd() - 0.5) * 30),       // median with small jitter
-}));
-
-interface Props { mode?: string }
-
-export default function ZeroFill({ mode: mode0 = "raw" }: Props): VNode {
-  const [mode, setMode] = useState(mode0);
-
-  const els: VNode[] = [];
-  // Legal range 300–850, lightly shaded; 0–300 stays blank.
-  els.push(<rect x={F.x(300)} y={F.T} width={F.x(850) - F.x(300)} height={F.B - F.T} style={`fill:${PALETTE.margin};opacity:.3`} />);
-  els.push(<text x={F.x(575)} y={F.y(0.93)} text-anchor="middle" style={`font:600 11px var(--font-ui);fill:${PALETTE.marginStroke}`}>possible scores</text>);
-  els.push(<text x={F.x(150)} y={F.y(0.93)} text-anchor="middle" style={`font:italic 11px var(--font-ui);fill:${C.INK_SOFT}`}>impossible</text>);
-  els.push(<Axes f={F} xTicks={[0, 300, 500, 700, 850]} yTicks={[]} xLabel="credit score" />);
-
-  // 55 customers with a recorded score.
-  CUSTOMERS.forEach((c, i) => {
-    if (MISSING.has(i)) return;
-    els.push(<circle cx={F.x(c.score)} cy={F.y(c.yFrac)} r={4.5} style={`fill:${C.INK_SOFT};fill-opacity:.55`} />);
+export default function ZeroFill(): VNode {
+  const sketch = useSketch({ stepCount: NOTES.length, domains: [{ xMax: 850, yMax: 1 }], aspect: 0.6, maxWidth: 680, padding: { left: 18, bottom: 44, top: 22 } });
+  const { show, drawNow, step } = sketch;
+  const frame = sketch.frames[0];
+  const mode = step <= 1 ? "raw" : step === 2 ? "zero" : "median";
+  const drawing: VNode[] = [
+    <Hatch points={[[frame.x(300), frame.top], [frame.x(850), frame.top], [frame.x(850), frame.bottom], [frame.x(300), frame.bottom]]} id={`${sketch.uid}-possible`} wash={WASH.green} ink={MARKER.green} gap={16} />,
+    <SketchAxes frame={frame} id="axes" xTicks={[0, 300, 500, 700, 850]} yTicks={[]} xLabel="credit score" />,
+    <Note x={frame.x(575)} y={frame.top + 14} text="possible scores" color={MARKER.green} anchor="middle" size={18} />,
+    <Note x={frame.x(150)} y={frame.top + 14} text="impossible" color={INK_SOFT} anchor="middle" size={18} />,
+  ];
+  CUSTOMERS.forEach((customer, index) => {
+    if (MISSING.includes(index)) return;
+    drawing.push(<circle cx={frame.x(customer.score)} cy={frame.y(customer.height)} r={4.5} style={`fill:${INK_SOFT};opacity:0.55`} />);
   });
-
-  // The five missing customers glide between shelf, zero, and median.
-  const moverStyle =
-    mode === "raw" ? `fill:none;stroke:${C.INK};stroke-width:1.6`
-    : mode === "zero" ? `fill:${PALETTE.dwlStroke}`
-    : `fill:${PALETTE.marginStroke}`;
-  MOVERS.forEach((m) => {
-    const x = mode === "raw" ? m.shelfX : mode === "zero" ? m.zeroX : m.medX;
-    const y = mode === "raw" ? m.shelfY : m.bandY;
-    els.push(
-      <g style={`transform:translate(${x}px,${y}px);transition:transform .5s ease`}>
-        <circle cx={0} cy={0} r={5.5} style={moverStyle} />
-        {mode === "median" && (
-          <g>
-            <line x1={0} y1={-7} x2={0} y2={-15} style={`stroke:${PALETTE.marginStroke};stroke-width:1.5`} />
-            <polygon points="0,-15 7,-12 0,-9" style={`fill:${PALETTE.marginStroke}`} />
-          </g>
-        )}
+  MOVERS.forEach(({ index, order, zeroScore, medianScore }) => {
+    const shelfX = frame.right - 12 - (4 - order) * 16, shelfY = frame.bottom - 12;
+    const x = mode === "raw" ? shelfX : mode === "zero" ? frame.x(zeroScore) : frame.x(medianScore);
+    const y = mode === "raw" ? shelfY : frame.y(CUSTOMERS[index].height);
+    const fill = mode === "raw" ? "var(--color-card)" : mode === "zero" ? MARKER.red : MARKER.green;
+    const visible = show(1);
+    drawing.push(
+      <g style={`transform:translate(${x}px,${y}px);transition:transform .7s ease;opacity:${visible ? 1 : 0}`}>
+        <circle r={5.5} style={`fill:${fill};stroke:${mode === "raw" ? INK_SOFT : fill};stroke-width:1.6;${mode === "raw" ? "stroke-dasharray:2 2" : ""}`} />
+        {mode === "median" && <text x={7} y={-6} style={`font:700 14px var(--font-hand);fill:${MARKER.green}`}>flag</text>}
       </g>,
     );
   });
-
-  // Mode-specific annotations.
-  if (mode === "raw") {
-    els.push(<text x={F.R - 40} y={F.B - 28} text-anchor="middle" style={`font:600 10.5px var(--font-ui);fill:${C.INK}`}>missing (?)</text>);
-  } else if (mode === "zero") {
-    els.push(<text x={F.x(6)} y={F.y(0.14)} text-anchor="start" style={`font:600 10.5px var(--font-ui);fill:${PALETTE.dwlStroke}`}>z ≈ −3.2 after scaling — an invented segment</text>);
-  } else {
-    els.push(<text x={F.x(500)} y={F.y(0.14)} text-anchor="middle" style={`font:600 10.5px var(--font-ui);fill:${PALETTE.marginStroke}`}>plausible value, and 'was missing' kept as its own column</text>);
+  if (step === 1) drawing.push(<Note x={frame.right - 50} y={frame.bottom - 30} text="missing (?)" color={INK_SOFT} anchor="middle" size={18} draw={drawNow(1)} />);
+  if (step === 2) {
+    drawing.push(<Note x={frame.x(12)} y={frame.y(0.12)} text="z ≈ −3.2 after scaling: an invented segment" color={MARKER.red} size={18} draw={drawNow(2)} />);
+    drawing.push(<Arrow x1={frame.x(250)} y1={frame.y(0.9)} x2={frame.x(40)} y2={frame.y(0.72)} id="to-zero" color={MARKER.red} bend={-20} draw={drawNow(2)} />);
   }
-
+  if (step === 3) drawing.push(<Note x={frame.x(500)} y={frame.y(0.12)} text="plausible value + 'was missing' kept as its own column" color={MARKER.green} anchor="middle" size={18} draw={drawNow(3)} />);
+  const tex = mode === "raw" ? "5 / 60 \\text{ customers have no score}" : mode === "zero" ? "\\text{score} = 0 \\;\\to\\; z \\approx -3.2 \\text{ after scaling}" : "\\text{score} \\leftarrow \\text{median}_{\\text{train}},\\quad \\text{was\\_missing} = 1";
   return (
-    <div class="graph">
-      <div class="graph-sliders">
-        <BtnRow
-          options={[
-            { key: "raw", label: "as recorded" },
-            { key: "zero", label: "fill with 0 (the notebook)" },
-            { key: "median", label: "median + missing flag (the fix)" },
-          ]}
-          active={mode}
-          onPick={setMode}
-        />
-      </div>
-      <div class="graph-cap">
-        Credit scores live between 300 and 850. The notebook fills the gaps with 0 — not a low score, an impossible one.
-        After scaling, those zeros form a far-out cluster the model happily learns as a 'mystery segment'. The fix: a
-        plausible value from the training rows, plus a flag remembering it was missing.
-      </div>
-      <svg viewBox="0 0 500 300" width="100%" role="img" aria-label="Credit scores with missing values filled three different ways">{els}</svg>
-      <div class="graph-legend">
-        <span><i class="gsw" style={`background:${C.INK_SOFT};opacity:.55`} />recorded score</span>
-        <span><i class="gsw" style={`background:transparent;border:1.5px solid ${C.INK}`} />missing</span>
-        <span><i class="gsw" style={`background:${PALETTE.dwlStroke}`} />filled with 0</span>
-        <span><i class="gsw" style={`background:${PALETTE.marginStroke}`} />filled with median</span>
-      </div>
-      <div class="graph-readout">
-        {mode === "raw" && <span class="rd">customers with no score <b>5 / 60</b></span>}
-        {mode === "zero" && <span class="rd">impossible customers created <b>5</b></span>}
-        {mode === "median" && (
-          <>
-            <span class="rd">impossible customers created <b>0</b></span>
-            <span class="rd">information kept <b>yes</b></span>
-          </>
-        )}
-      </div>
-    </div>
+    <SketchGraph sketch={sketch} note={NOTES[step]} tex={tex} ariaLabel="Credit scores: filling missing values with zero creates impossible customers; the fix uses the median and a missing flag.">
+      {drawing}
+    </SketchGraph>
   );
 }

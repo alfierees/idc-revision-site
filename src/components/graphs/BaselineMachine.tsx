@@ -1,105 +1,73 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { BtnRow, PALETTE, C } from "./plot";
+import { useSketch, SketchGraph, Note, Toggle, INK, MARKER, WASH } from "./sketch";
 
 // One hundred loan applicants (14 will default) scored by three rules:
 // "approve everyone" (no model, 86% accuracy, catches nobody), the notebook's
 // leaky 98% model (it read columns from the future), and an honest model that
 // scores LOWER than doing nothing on accuracy yet is the only useful one.
-// The point: accuracy is the wrong yardstick when the baseline is 86% for free.
+// Accuracy is the wrong yardstick when the baseline is 86% for free.
 
-// Fixed defaulter positions so the grid is deterministic.
-const DEFAULTERS = [3, 9, 17, 22, 31, 38, 44, 52, 57, 63, 68, 76, 84, 91];
-const DEF_SET = new Set(DEFAULTERS);
-// Leaky model: catches 13 of 14 (misses one), wrongly flags one repayer.
-const LEAKY_MISSED = 57;
-const LEAKY_FLAGGED = new Set([40]);
-// Honest model: catches 5 of 14, wrongly rejects 13 repayers.
+const DEFAULTERS = new Set([3, 9, 17, 22, 31, 38, 44, 52, 57, 63, 68, 76, 84, 91]);
+const LEAKY_MISSED = 57, LEAKY_FLAGGED = new Set([40]);
 const HONEST_CAUGHT = new Set([9, 31, 52, 68, 84]);
 const HONEST_REJECTED = new Set([1, 7, 14, 26, 35, 41, 48, 55, 61, 70, 79, 88, 95]);
 
-type Status = "ok" | "missed" | "caught" | "rejected";
+type Rule = "none" | "leaky" | "honest";
+type Status = "repays" | "missed" | "caught" | "rejected";
 
-function statusOf(i: number, mode: string): Status {
-  if (DEF_SET.has(i)) {
-    if (mode === "none") return "missed";
-    if (mode === "leaky") return i === LEAKY_MISSED ? "missed" : "caught";
-    return HONEST_CAUGHT.has(i) ? "caught" : "missed";
+function statusOf(applicant: number, rule: Rule): Status {
+  if (DEFAULTERS.has(applicant)) {
+    if (rule === "none") return "missed";
+    if (rule === "leaky") return applicant === LEAKY_MISSED ? "missed" : "caught";
+    return HONEST_CAUGHT.has(applicant) ? "caught" : "missed";
   }
-  if (mode === "leaky" && LEAKY_FLAGGED.has(i)) return "rejected";
-  if (mode === "honest" && HONEST_REJECTED.has(i)) return "rejected";
-  return "ok";
+  if (rule === "leaky" && LEAKY_FLAGGED.has(applicant)) return "rejected";
+  if (rule === "honest" && HONEST_REJECTED.has(applicant)) return "rejected";
+  return "repays";
 }
 
-const READOUT: Record<string, { acc: string; caught: string; rej: number; state: string }> = {
-  none: { acc: "86", caught: "0 / 14", rej: 0, state: "the do-nothing baseline every model must beat" },
-  leaky: { acc: "98", caught: "13 / 14", rej: 1, state: "not real — the model read the future" },
-  honest: { acc: "78", caught: "5 / 14 (36%)", rej: 13, state: "worse accuracy than doing nothing — yet the only option that catches anyone" },
+const SUMMARY: Record<Rule, { accuracy: number; caught: string; rejected: number }> = {
+  none: { accuracy: 86, caught: "0 / 14", rejected: 0 },
+  leaky: { accuracy: 98, caught: "13 / 14", rejected: 1 },
+  honest: { accuracy: 78, caught: "5 / 14", rejected: 13 },
 };
 
-interface Props { mode?: "none" | "leaky" | "honest"; }
+const NOTES = [
+  "One hundred applicants. Fourteen of them will default.",
+  "Approve everyone, no model at all: 86% accuracy. It catches nobody.",
+  "The notebook's model: 98%. But it read columns from the future (Cell 3), so the score isn't real.",
+  "An honest model on fixed data: 78%, lower than doing nothing, yet the only one that catches anyone. Accuracy is the wrong yardstick here.",
+];
 
-export default function BaselineMachine({ mode: mode0 = "none" }: Props): VNode {
-  const [mode, setMode] = useState<string>(mode0);
-
-  // 10×10 grid of applicants.
-  const X0 = 133, Y0 = 45, GAP = 26, R = 9;
-  const els: VNode[] = [];
-  for (let i = 0; i < 100; i++) {
-    const cx = X0 + (i % 10) * GAP;
-    const cy = Y0 + Math.floor(i / 10) * GAP;
-    const s = statusOf(i, mode);
-    let fill = PALETTE.margin, stroke = PALETTE.marginStroke, sw = 1;
-    if (s === "missed") { fill = PALETTE.dwl; stroke = PALETTE.dwlStroke; }
-    else if (s === "caught") { fill = PALETTE.dwl; stroke = C.INK; sw = 3; }
-    else if (s === "rejected") { fill = PALETTE.rent; stroke = PALETTE.rentStroke; }
-    els.push(
-      <circle
-        cx={cx} cy={cy} r={R}
-        style={`fill:${fill};stroke:${stroke};stroke-width:${sw};transition:fill .4s ease, stroke .4s ease, stroke-width .4s ease`}
-      />
-    );
+export default function BaselineMachine(): VNode {
+  const [exploreRule, setExploreRule] = useState<Rule>("honest");
+  const sketch = useSketch({ stepCount: NOTES.length + 1, domains: [{ xMax: 1, yMax: 1 }], aspect: 0.62, minHeight: 280, maxHeight: 400, maxWidth: 620, padding: { left: 0, right: 0, top: 0, bottom: 0 } });
+  const { step } = sketch;
+  const rule: Rule | null = step === 0 ? null : step === 1 ? "none" : step === 2 ? "leaky" : step === 3 ? "honest" : exploreRule;
+  const size = Math.min(sketch.width - 20, sketch.height - 22);
+  const gap = size / 10, radius = gap * 0.36;
+  const originX = (sketch.width - gap * 10) / 2 + gap / 2, originY = 14 + gap / 2;
+  const styles: Record<Status, string> = {
+    repays: `fill:${WASH.green};stroke:${MARKER.green};stroke-width:1.2`,
+    missed: `fill:${WASH.red};stroke:${MARKER.red};stroke-width:1.2`,
+    caught: `fill:${MARKER.red};stroke:${INK};stroke-width:2.6`,
+    rejected: `fill:${WASH.amber};stroke:${MARKER.amber};stroke-width:1.6`,
+  };
+  const drawing: VNode[] = [];
+  for (let applicant = 0; applicant < 100; applicant++) {
+    const status: Status = rule === null ? (DEFAULTERS.has(applicant) ? "missed" : "repays") : statusOf(applicant, rule);
+    drawing.push(<circle cx={originX + (applicant % 10) * gap} cy={originY + Math.floor(applicant / 10) * gap} r={radius} style={`${styles[status]};transition:fill .4s ease, stroke .4s ease, stroke-width .4s ease`} />);
   }
-  // Slanted warning badge across the grid corner: the 98% is built on leakage.
-  if (mode === "leaky") {
-    els.push(
-      <g style="transform:translate(322px,78px) rotate(-12deg)">
-        <rect x={-102} y={-21} width={204} height={42} rx={4} style={`fill:var(--color-bg);fill-opacity:.88;stroke:${PALETTE.dwlStroke};stroke-width:1.5`} />
-        <text x={0} y={-3} text-anchor="middle" style={`font:600 11px var(--font-ui);fill:${PALETTE.dwlStroke}`}>score built on leaked columns</text>
-        <text x={0} y={12} text-anchor="middle" style={`font:600 11px var(--font-ui);fill:${PALETTE.dwlStroke}`}>— see Cell 3</text>
-      </g>
-    );
-  }
-
-  const rd = READOUT[mode];
-
+  if (rule === "leaky") drawing.push(<Note x={sketch.width / 2} y={originY + gap * 4.7} text="built on leaked columns" color={MARKER.red} anchor="middle" size={26} />);
+  const summary = rule ? SUMMARY[rule] : null;
+  const tex = summary ? `\\text{accuracy } ${summary.accuracy}\\%,\\quad \\text{defaulters caught } ${summary.caught},\\quad \\text{wrongly rejected } ${summary.rejected}` : "14 \\text{ of } 100 \\text{ will default}";
   return (
-    <div class="graph">
-      <div class="graph-sliders">
-        <BtnRow
-          options={[
-            { key: "none", label: "Approve everyone (no model)" },
-            { key: "leaky", label: "The notebook's model" },
-            { key: "honest", label: "An honest model (fixed data)" },
-          ]}
-          active={mode}
-          onPick={setMode}
-        />
-      </div>
-      <div class="graph-cap">One hundred applicants, fourteen of whom will default. 'Approve everyone' — no model, no data, no effort — already scores 86%, catching nobody. The notebook's 98% beats that only by reading columns from the future. The honest model scores LOWER than doing nothing on accuracy, and is still the only one worth having — which is why accuracy is the wrong yardstick here.</div>
-      <svg viewBox="0 0 500 340" width="100%" role="img" aria-label="One hundred applicants scored by three different rules">{els}</svg>
-      <div class="graph-legend">
-        <span><i class="gsw" style={`background:${PALETTE.margin}`} />repays</span>
-        <span><i class="gsw" style={`background:${PALETTE.dwl}`} />defaulter missed</span>
-        <span><i class="gsw" style={`background:${PALETTE.dwlStroke}`} />defaulter caught</span>
-        <span><i class="gsw" style={`background:${PALETTE.rent}`} />wrongly rejected</span>
-      </div>
-      <div class="graph-readout">
-        <span class="rd">accuracy <b>{rd.acc}%</b></span>
-        <span class="rd">defaulters caught <b>{rd.caught}</b></span>
-        <span class="rd">wrongly rejected <b>{rd.rej}</b></span>
-        <span class="rd">{rd.state}</span>
-      </div>
-    </div>
+    <SketchGraph sketch={sketch} note={step < NOTES.length ? NOTES[step] : "Your turn. Switch between the three rules."} tex={tex}
+      ariaLabel={summary ? `Accuracy ${summary.accuracy} percent, defaulters caught ${summary.caught}, wrongly rejected ${summary.rejected}.` : "One hundred applicants, 14 defaulters."}
+      footnote="Green: repays · pale red: defaulter missed · solid red: defaulter caught · amber: good customer wrongly rejected"
+      explore={<Toggle label="Rule" options={[{ key: "none", label: "Approve everyone" }, { key: "leaky", label: "The notebook's model" }, { key: "honest", label: "An honest model" }]} active={exploreRule} onPick={(key) => setExploreRule(key as Rule)} />}>
+      {drawing}
+    </SketchGraph>
   );
 }

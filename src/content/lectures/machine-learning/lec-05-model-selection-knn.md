@@ -202,6 +202,12 @@ The core of KNN is the **distance** (also called a similarity measure) used in S
 > [!warning] Scale sensitivity
 > Distance-based methods are sensitive to feature scale. If one feature ranges over $[0, 1000]$ and another over $[0, 1]$, the large-scale feature will dominate the distance calculation. **Always normalise or standardise features before applying KNN.**
 
+> [!tip] Try it: step through the graph
+
+```graph
+type: knn-classifier
+```
+
 ---
 
 ## Evaluation

@@ -1,123 +1,126 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { makeFrame, Axes, seg, label, Slider, ticks, PALETTE, C } from "./plot";
+import { Slider } from "./plot";
+import {
+  useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Ring, ShiftArrow,
+  fmt, INK_SOFT, ACCENT, MARKER,
+} from "./sketch";
 
-// Loanable-funds / goods-market equilibrium: saving S(r) = S0 + a·r (upward in r)
-// meets investment I(r) = I0 − b·r (downward in r); their crossing sets the real
-// interest rate r*. One curve shifts (config-driven) so this single component
-// serves every goods-market question:
+// Loanable-funds / goods-market equilibrium: saving S(r) = 20 + 4r rises with r,
+// investment I(r) = 60 − 4r falls with it, so r* = 5. One curve shifts
+// (config-driven), so one component serves every goods-market question:
 //   type: goods-market
-//   shift: investment | savings     (which curve moves)
-//   direction: right | left          (which way)
-//   label: "optimism about future productivity"   (caption for the shock)
-// A slider scales the shock live; the pre-shift curve is drawn dashed, the new
-// curve solid, both equilibria marked. r is on the vertical axis (textbook style).
+//   shift: investment | savings
+//   direction: right | left
+//   label: "optimism about future productivity"
+// Steps: S → I → equilibrium → the shock shifts a curve → new equilibrium,
+// then explore (slider for the size of the shock).
 
-interface Props {
-  shift?: string;      // "investment" | "savings"
-  direction?: string;  // "right" | "left"
-  label?: string;      // human caption for the shock
-  shock?: number;      // initial shock magnitude
-}
+interface Props { shift?: string; direction?: string; label?: string; shock?: number; }
 
-const S0 = 20, A = 4;   // saving:     S(r) = 20 + 4r
-const I0 = 60, B = 4;   // investment: I(r) = 60 − 4r  (baseline r* = 5, q* = 40)
-const qMax = 90, rMax = 10, SHOCK_MAX = 28;
+const SAVING_INTERCEPT = 20, SAVING_SLOPE = 4;
+const INVESTMENT_INTERCEPT = 60, INVESTMENT_SLOPE = 4;
+const FUNDS_MAX = 90, RATE_MAX = 10, SHOCK_MAX = 28;
 
-export default function GoodsMarketEquilibrium({
-  shift = "investment",
-  direction = "right",
-  label: caption,
-  shock: shock0 = 16,
-}: Props): VNode {
-  const [shock, setShock] = useState(shock0);
-  const r1 = (n: number) => Math.round(n * 10) / 10;
-
+export default function GoodsMarketEquilibrium({ shift = "investment", direction = "right", label: shockLabel, shock: initialShock = 16 }: Props): VNode {
+  const [target, setTarget] = useState({ shock: initialShock });
+  const shown = useGlide(target, false);
   const movesInvestment = shift !== "savings";
-  const dir = direction === "left" ? -1 : 1;
-  const signed = dir * shock;                       // + = rightward (more demanded/supplied)
+  const sign = direction === "left" ? -1 : 1;
+  const shockName = shockLabel ?? (movesInvestment ? "an investment shock" : "a saving shock");
+  const curveName = movesInvestment ? "investment" : "saving";
 
-  // effective intercepts after the shift
-  const Ieff = I0 + (movesInvestment ? signed : 0);
-  const Seff = S0 + (movesInvestment ? 0 : signed);
+  const NOTES = [
+    "Saving rises with the interest rate: a higher r rewards waiting.",
+    "Investment falls with the interest rate: borrowing costs more.",
+    "The real interest rate settles where saving equals investment.",
+    `The shock: ${shockName}. The ${curveName} curve shifts ${direction}.`,
+    "The new equilibrium: compare r* and I = S with before.",
+    "Your turn. Change the size of the shock.",
+  ];
 
-  const eq = (i: number, s: number) => {
-    const r = (i - s) / (A + B);
-    return { r, q: s + A * r };
+  const sketch = useSketch({
+    stepCount: NOTES.length,
+    domains: [{ xMax: FUNDS_MAX, yMax: RATE_MAX }],
+    padding: { left: 40, bottom: 44, top: 20 },
+  });
+  const { show, drawNow, step } = sketch;
+  const frame = sketch.frames[0];
+  const toX = frame.x, toY = frame.y;
+
+  const shiftAmount = sign * (show(3) ? shown.shock : 0);
+  const investmentIntercept = INVESTMENT_INTERCEPT + (movesInvestment ? shiftAmount : 0);
+  const savingIntercept = SAVING_INTERCEPT + (movesInvestment ? 0 : shiftAmount);
+  const equilibrium = (investment: number, saving: number) => {
+    const rate = (investment - saving) / (SAVING_SLOPE + INVESTMENT_SLOPE);
+    return { rate, funds: saving + SAVING_SLOPE * rate };
   };
-  const e0 = eq(I0, S0);        // original equilibrium
-  const e1 = eq(Ieff, Seff);    // post-shift equilibrium
+  const before = equilibrium(INVESTMENT_INTERCEPT, SAVING_INTERCEPT);
+  const after = equilibrium(investmentIntercept, savingIntercept);
+  const savingAt = (intercept: number, rate: number) => intercept + SAVING_SLOPE * rate;
+  const investmentAt = (intercept: number, rate: number) => intercept - INVESTMENT_SLOPE * rate;
+  const arrowFor = (now: number, was: number) => (now > was + 0.05 ? "\\uparrow" : now < was - 0.05 ? "\\downarrow" : "");
 
-  // curve endpoints across the full r-axis, in (q, r) space
-  const sLine = (s: number): [number, number, number, number] => [s + A * 0, 0, s + A * rMax, rMax];
-  const iLine = (i: number): [number, number, number, number] => [i - B * 0, 0, i - B * rMax, rMax];
+  const TEX = [
+    `S(r) = ${SAVING_INTERCEPT} + ${SAVING_SLOPE}r`,
+    `I(r) = ${INVESTMENT_INTERCEPT} - ${INVESTMENT_SLOPE}r`,
+    `${SAVING_INTERCEPT} + ${SAVING_SLOPE}r = ${INVESTMENT_INTERCEPT} - ${INVESTMENT_SLOPE}r \\;\\Rightarrow\\; r^* = ${fmt(before.rate)},\\; I = S = ${fmt(before.funds)}`,
+    movesInvestment ? `I'(r) = ${fmt(investmentIntercept)} - ${INVESTMENT_SLOPE}r` : `S'(r) = ${fmt(savingIntercept)} + ${SAVING_SLOPE}r`,
+    `r^* = ${fmt(after.rate)}\\,${arrowFor(after.rate, before.rate)},\\quad I = S = ${fmt(after.funds)}\\,${arrowFor(after.funds, before.funds)}`,
+    `r^* = ${fmt(after.rate)},\\quad I = S = ${fmt(after.funds)}\\quad (\\text{was } ${fmt(before.rate)},\\ ${fmt(before.funds)})`,
+  ];
 
-  const fr = makeFrame({ w: 470, h: 340, qMax, pMax: rMax, padB: 34 });
-  const els: VNode[] = [];
-  els.push(<Axes f={fr} xTicks={ticks(qMax)} yTicks={ticks(rMax)} xLabel="S, I  (loanable funds)" yLabel="r" />);
+  const drawing: VNode[] = [<SketchAxes frame={frame} id="axes" xTicks={[0, 20, 40, 60, 80]} yTicks={[2, 4, 6, 8, 10]} xLabel="S, I  (loanable funds)" yLabel="r" />];
+  const plot: VNode[] = [];
+  const savingLine = (intercept: number, id: string, dashed: boolean, draw: boolean) => dashed
+    ? <InkDashed x1={toX(savingAt(intercept, 0))} y1={toY(0)} x2={toX(savingAt(intercept, RATE_MAX))} y2={toY(RATE_MAX)} id={id} color={MARKER.green} width={1.5} draw={draw} />
+    : <InkLine x1={toX(savingAt(intercept, 0))} y1={toY(0)} x2={toX(savingAt(intercept, RATE_MAX))} y2={toY(RATE_MAX)} id={id} color={MARKER.green} width={2.4} duration={800} draw={draw} />;
+  const investmentLine = (intercept: number, id: string, dashed: boolean, draw: boolean) => dashed
+    ? <InkDashed x1={toX(investmentAt(intercept, 0))} y1={toY(0)} x2={toX(investmentAt(intercept, RATE_MAX))} y2={toY(RATE_MAX)} id={id} color={MARKER.blue} width={1.5} draw={draw} />
+    : <InkLine x1={toX(investmentAt(intercept, 0))} y1={toY(0)} x2={toX(investmentAt(intercept, RATE_MAX))} y2={toY(RATE_MAX)} id={id} color={MARKER.blue} width={2.4} duration={800} draw={draw} />;
 
-  const S_C = PALETTE.marginStroke;   // saving — green
-  const I_C = PALETTE.feeStroke;      // investment — blue
-  const shifted = shock > 0.01;
-
-  // --- fixed curve (solid) + shifting curve (dashed original, solid new) ---
-  if (movesInvestment) {
-    els.push(seg(fr, ...sLine(S0), S_C, 2));
-    els.push(label(fr, S0 + A * rMax, rMax - 0.15, "S", S_C, "start", 12, true));
-    if (shifted) els.push(seg(fr, ...iLine(I0), I_C, 1.5, "5 4"));   // original I
-    els.push(seg(fr, ...iLine(Ieff), I_C, 2));                        // new I
-    els.push(label(fr, Ieff - B * 0.4, 0.5, shifted ? "I'" : "I", I_C, "start", 12, true));
-  } else {
-    els.push(seg(fr, ...iLine(I0), I_C, 2));
-    els.push(label(fr, I0 - B * 0.4, 0.5, "I", I_C, "start", 12, true));
-    if (shifted) els.push(seg(fr, ...sLine(S0), S_C, 1.5, "5 4"));    // original S
-    els.push(seg(fr, ...sLine(Seff), S_C, 2));                         // new S
-    els.push(label(fr, Seff + A * rMax, rMax - 0.15, shifted ? "S'" : "S", S_C, "start", 12, true));
+  const shifted = show(3);
+  if (shifted && !movesInvestment) plot.push(savingLine(SAVING_INTERCEPT, "s-old", true, false));
+  plot.push(savingLine(savingIntercept, "s", false, drawNow(0)));
+  if (show(1)) {
+    if (shifted && movesInvestment) plot.push(investmentLine(INVESTMENT_INTERCEPT, "i-old", true, false));
+    plot.push(investmentLine(investmentIntercept, "i", false, drawNow(1)));
   }
+  const guides = (point: { rate: number; funds: number }, id: string, color: string, draw: boolean) => [
+    <InkDashed x1={toX(point.funds)} y1={toY(point.rate)} x2={frame.left} y2={toY(point.rate)} id={`${id}-r`} color={color} width={1.2} dash={4} gap={4} draw={draw} />,
+    <InkDashed x1={toX(point.funds)} y1={toY(point.rate)} x2={toX(point.funds)} y2={frame.bottom} id={`${id}-q`} color={color} width={1.2} dash={4} gap={4} draw={draw} />,
+  ];
+  if (show(2)) plot.push(...guides(before, "eq0", show(4) ? "var(--color-rule-strong)" : ACCENT, drawNow(2)));
+  if (show(4)) plot.push(...guides(after, "eq1", ACCENT, drawNow(4)));
+  drawing.push(<g clip-path={sketch.clip()}>{plot}</g>);
 
-  // --- shift-direction arrow ---
-  if (shifted) {
-    const ay = rMax * 0.32;
-    const from = movesInvestment ? I0 - B * ay : S0 + A * ay;
-    const to = movesInvestment ? Ieff - B * ay : Seff + A * ay;
-    els.push(seg(fr, from, ay, to, ay, C.ACCENT, 1.5));
-    const head = to + (to > from ? -2.5 : 2.5);
-    els.push(<polyline points={`${fr.x(head)},${fr.y(ay) - 3.5} ${fr.x(to)},${fr.y(ay)} ${fr.x(head)},${fr.y(ay) + 3.5}`} style={`fill:none;stroke:${C.ACCENT};stroke-width:1.5`} />);
+  drawing.push(<Note x={toX(savingAt(savingIntercept, RATE_MAX * 0.92)) + 8} y={toY(RATE_MAX * 0.92) + 4} text={shifted && !movesInvestment ? "S′" : "S"} color={MARKER.green} size={20} draw={drawNow(0)} />);
+  if (show(1)) drawing.push(<Note x={toX(investmentAt(investmentIntercept, 0.6)) + 8} y={toY(0.6)} text={shifted && movesInvestment ? "I′" : "I"} color={MARKER.blue} size={20} draw={drawNow(1)} />);
+  if (show(2)) drawing.push(<Dot x={toX(before.funds)} y={toY(before.rate)} color={ACCENT} hollow={show(4)} draw={drawNow(2)} />);
+  if (show(2) && !show(4)) drawing.push(<Note x={toX(before.funds) + 12} y={toY(before.rate) - 10} text={`r* = ${fmt(before.rate)}`} color={ACCENT} size={18} delay={300} draw={drawNow(2)} />);
+  if (shifted && Math.abs(shown.shock) > 0.5) {
+    const arrowRate = RATE_MAX * 0.3;
+    const fromFunds = movesInvestment ? investmentAt(INVESTMENT_INTERCEPT, arrowRate) : savingAt(SAVING_INTERCEPT, arrowRate);
+    const toFunds = movesInvestment ? investmentAt(investmentIntercept, arrowRate) : savingAt(savingIntercept, arrowRate);
+    drawing.push(<ShiftArrow x1={toX(fromFunds)} y1={toY(arrowRate)} x2={toX(toFunds)} y2={toY(arrowRate)} id="shift-arrow" color={INK_SOFT} draw={drawNow(3)} />);
   }
-
-  // --- equilibrium guides + points ---
-  const guide = (e: { r: number; q: number }, faded: boolean) => {
-    const col = faded ? C.RULE : C.ACCENT;
-    els.push(<line x1={fr.x(0)} y1={fr.y(e.r)} x2={fr.x(e.q)} y2={fr.y(e.r)} style={`stroke:${col};stroke-width:1;stroke-dasharray:2 2`} />);
-    els.push(<line x1={fr.x(e.q)} y1={fr.y(0)} x2={fr.x(e.q)} y2={fr.y(e.r)} style={`stroke:${col};stroke-width:1;stroke-dasharray:2 2`} />);
-  };
-  if (shifted) guide(e0, true);
-  guide(e1, false);
-  if (shifted) els.push(<circle cx={fr.x(e0.q)} cy={fr.y(e0.r)} r="4" style={`fill:none;stroke:${C.ACCENT};stroke-width:1.5`} />);
-  els.push(<circle cx={fr.x(e1.q)} cy={fr.y(e1.r)} r="4.5" style={`fill:${C.ACCENT}`} />);
-
-  const arrow = (now: number, was: number) => (now > was + 0.05 ? "↑" : now < was - 0.05 ? "↓" : "—");
-  const shockName = caption ?? (movesInvestment ? "investment shock" : "saving shock");
+  if (show(4)) {
+    drawing.push(<Ring x={toX(after.funds)} y={toY(after.rate)} id="ring-new" color={ACCENT} draw={drawNow(4)} />);
+    drawing.push(<Dot x={toX(after.funds)} y={toY(after.rate)} color={ACCENT} draw={drawNow(4)} />);
+    drawing.push(<Note x={toX(after.funds) + 14} y={toY(after.rate) - 12} text={`r* = ${fmt(after.rate)}`} color={ACCENT} size={18} delay={300} draw={drawNow(4)} />);
+  }
 
   return (
-    <div class="graph">
-      <div class="graph-sliders">
-        <Slider label={shockName} value={shock} min={0} max={SHOCK_MAX} step={1} onInput={setShock} />
-      </div>
-      <div class="graph-cap">
-        Saving <b>S(r)</b> rises with the interest rate; investment <b>I(r)</b> falls with it; where they cross sets <b>r*</b>. Drag the shock to slide the <b>{movesInvestment ? "investment" : "saving"}</b> curve to the <b>{direction}</b> — the dashed line is its original position — and watch the equilibrium move.
-      </div>
-      <svg viewBox="0 0 470 340" width="100%" role="img" aria-label="Goods-market (loanable-funds) equilibrium">{els}</svg>
-      <div class="graph-legend">
-        <span><i class="gsw" style={`background:${S_C}`} />saving S</span>
-        <span><i class="gsw" style={`background:${I_C}`} />investment I</span>
-        <span><i class="gsw" style={`background:${C.ACCENT}`} />equilibrium</span>
-      </div>
-      <div class="graph-readout">
-        <span class="rd">r* <b>{r1(e1.r)}</b> {shifted && <span>{arrow(e1.r, e0.r)}</span>}</span>
-        <span class="rd">I = S <b>{r1(e1.q)}</b> {shifted && <span>{arrow(e1.q, e0.q)}</span>}</span>
-        {shifted && <span class="rd">was r* {r1(e0.r)}, I=S {r1(e0.q)}</span>}
-      </div>
-    </div>
+    <SketchGraph
+      sketch={sketch}
+      note={NOTES[step]}
+      tex={TEX[step]}
+      ariaLabel={`Goods market: saving and investment. After ${shockName}, r* ${fmt(after.rate)} and I = S ${fmt(after.funds)}, from ${fmt(before.rate)} and ${fmt(before.funds)}.`}
+      explore={<div class="graph-sliders">
+        <Slider label="size of the shock" value={target.shock} min={0} max={SHOCK_MAX} step={1} onInput={(value) => setTarget({ shock: value })} />
+      </div>}
+    >
+      {drawing}
+    </SketchGraph>
   );
 }
