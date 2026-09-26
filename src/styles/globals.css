@@ -8,6 +8,7 @@
   --font-body:    "Source Serif 4 Variable", ui-serif, Georgia, serif;
   --font-ui:      "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono:    "JetBrains Mono Variable", ui-monospace, monospace;
+  --font-hand:    "Caveat", "Segoe Print", "Bradley Hand", cursive;
 
   /* Colours — editorial / academic palette */
   --color-paper:        #faf7f2;
@@ -1025,4 +1026,91 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 10%, var(--color-card));
   color: var(--color-accent-ink);
+}
+
+/* ---- Sketch & explain graphs (src/components/graphs/sketch.tsx) ----
+   Whiteboard ink + step-by-step build-up. Animations run only after a click
+   (Next / preset); reduced motion switches them all off. */
+.sk {
+  max-width: 720px;
+  background: var(--color-card);
+  border: 1px solid var(--color-rule);
+  border-radius: 12px;
+  padding: 18px 20px 14px;
+}
+.sk-note {
+  font: 700 23px/1.2 var(--font-hand);
+  color: var(--color-ink);
+  margin: 0;
+  min-height: 2.4em;
+  text-wrap: balance;
+  animation: sk-fade 380ms ease-out both;
+}
+.sk-eq { min-height: 2em; color: var(--color-ink-soft); overflow-x: auto; overflow-y: hidden; padding: 2px 0 4px; }
+.sk-eq .katex { font-size: 1.12em; }
+.sk-plot { margin-top: 4px; }
+.sk-plot svg { display: block; overflow: visible; }
+.sk-tick { font: 11.5px var(--font-ui); fill: var(--color-ink-muted); font-variant-numeric: tabular-nums; }
+
+.sk-draw path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: sk-draw var(--dur, 600ms) ease-out var(--d, 0ms) forwards; }
+.sk-fade { opacity: 0; animation: sk-fade 420ms ease-out var(--d, 0ms) forwards; }
+@keyframes sk-draw { to { stroke-dashoffset: 0; } }
+@keyframes sk-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.sk-handle { cursor: ns-resize; touch-action: none; }
+.sk-handle .sk-hit { fill: transparent; }
+.sk-handle .sk-ring { fill: none; stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: sk-pulse 1.8s ease-in-out infinite; }
+.sk-handle-on .sk-ring { animation: none; opacity: 0.35; }
+@keyframes sk-pulse { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.45); opacity: 0.25; } }
+
+.sk-explore { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.sk-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.sk-chip {
+  font: 500 12.5px var(--font-ui);
+  color: var(--color-ink-soft);
+  background: var(--color-paper);
+  border: 1px dashed var(--color-rule-strong);
+  border-radius: 999px;
+  padding: 4px 11px;
+  cursor: pointer;
+}
+.sk-chip:hover { color: var(--color-accent); border-color: var(--color-accent); }
+
+.sk-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px;
+  border-top: 1px solid var(--color-rule);
+  margin-top: 12px; padding-top: 12px;
+}
+.sk-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sk-btn {
+  font: 600 13px var(--font-ui);
+  color: var(--color-ink-soft);
+  background: var(--color-card);
+  border: 1px solid var(--color-rule-strong);
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+.sk-btn:hover:not(:disabled) { border-color: var(--color-ink-soft); color: var(--color-ink); }
+.sk-btn:disabled { opacity: 0.4; cursor: default; }
+.sk-btn-main { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-card); }
+.sk-btn-main:hover:not(:disabled) { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-card); }
+.sk-dots { display: flex; gap: 6px; margin-left: 4px; }
+.sk-dot {
+  width: 10px; height: 10px; border-radius: 50%; padding: 0; cursor: pointer;
+  background: var(--color-rule); border: none;
+}
+.sk-dot-done { background: var(--color-rule-strong); }
+.sk-dot-on { background: var(--color-accent); }
+.sk-count { font: 12px var(--font-ui); color: var(--color-ink-muted); font-variant-numeric: tabular-nums; }
+.sk-btn:focus-visible, .sk-dot:focus-visible, .sk-chip:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+@media (max-width: 520px) {
+  .sk { padding: 14px 12px 12px; border-radius: 10px; }
+  .sk-note { font-size: 21px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-note, .sk-fade { animation: none; opacity: 1; }
+  .sk-draw path { animation: none; stroke-dashoffset: 0; }
+  .sk-handle .sk-ring { animation: none; }
 }
