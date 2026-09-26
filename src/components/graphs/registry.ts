@@ -15,6 +15,15 @@ import BaselineMachine from "./BaselineMachine";
 import ThresholdMoney from "./ThresholdMoney";
 import OverfitCurves from "./OverfitCurves";
 import AxisTruncation from "./AxisTruncation";
+// ML concept explainers
+import GradientDescent from "./GradientDescent";
+import BiasVariance from "./BiasVariance";
+import KnnClassifier from "./KnnClassifier";
+import RocCurve from "./RocCurve";
+import KMeans from "./KMeans";
+import PcaProjection from "./PcaProjection";
+import CrossValidation from "./CrossValidation";
+import AnscombeQuartet from "./AnscombeQuartet";
 // macro sketch explainers
 import LaborMarket from "./LaborMarket";
 import MacroShocks from "./MacroShocks";
@@ -76,6 +85,15 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "threshold-money": ThresholdMoney,
   "overfit-curves": OverfitCurves,
   "axis-truncation": AxisTruncation,
+  // ML concept explainers
+  "gradient-descent": GradientDescent,
+  "bias-variance": BiasVariance,
+  "knn-classifier": KnnClassifier,
+  "roc-curve": RocCurve,
+  "k-means": KMeans,
+  "pca-projection": PcaProjection,
+  "cross-validation": CrossValidation,
+  "anscombe-quartet": AnscombeQuartet,
   // macro sketch explainers
   "labor-market": LaborMarket,
   "macro-shocks": MacroShocks,

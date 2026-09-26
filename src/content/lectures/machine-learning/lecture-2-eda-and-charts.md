@@ -231,6 +231,12 @@ Four datasets with **identical** mean, variance, correlation, and regression lin
 > [!success] The lesson
 > Summary statistics alone are **never** enough. Always visualise.
 
+> [!tip] Try it: step through the graph
+
+```graph
+type: anscombe-quartet
+```
+
 ---
 
 ## ⚠️ Misleading Charts — the Bad-Chart Gallery

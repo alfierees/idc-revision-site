@@ -123,6 +123,12 @@ print(df["cluster"].value_counts())
 | Scales to millions of rows | Sensitive to outliers (means get pulled) |
 | Deterministic given random seed | Local optima — run multiple times |
 
+> [!tip] Try it: step through the graph
+
+```graph
+type: k-means
+```
+
 ---
 
 ## 📊 How Many Clusters? — Elbow & Silhouette
@@ -330,6 +336,12 @@ Large absolute loadings → that feature strongly defines the component. Sign te
 > - **PC1** had high loadings on `purchase_frequency`, `loyalty_points`, `avg_order_value` → summarises "overall customer value / engagement"
 > - **PC2** had high loadings on `discount_usage_rate` and `-avg_order_value` → contrasts discount-seekers against full-price buyers
 > - PC1 + PC2 + PC3 explained ~82% of total variance
+
+> [!tip] Try it: step through the graph
+
+```graph
+type: pca-projection
+```
 
 ---
 

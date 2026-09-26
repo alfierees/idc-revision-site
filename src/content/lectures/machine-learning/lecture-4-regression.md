@@ -266,6 +266,12 @@ Test Error  ─────────────────╮              
                Model Complexity →
 ```
 
+> [!tip] Try it: step through the graph
+
+```graph
+type: bias-variance
+```
+
 ---
 
 ## 🔒 Keeping the Model Honest — Regularisation
@@ -367,6 +373,12 @@ scores = cross_val_score(pipe, X, y, cv=5, scoring="neg_root_mean_squared_error"
 | 5 | Fast, slightly higher variance in estimate |
 | 10 | Standard default — good balance |
 | $n$ (Leave-One-Out) | Very low bias, very slow, high variance |
+
+> [!tip] Try it: step through the graph
+
+```graph
+type: cross-validation
+```
 
 ---
 

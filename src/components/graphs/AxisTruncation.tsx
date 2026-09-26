@@ -1,108 +1,54 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { makeFrame, Axes, Slider, PALETTE, C } from "./plot";
+import { useSketch, useGlide, SketchGraph, InkBar, InkLine, InkDashed, Note, INK_SOFT, MARKER, WASH } from "./sketch";
 
-// The notebook's own final bar chart, rebuilt with the axis you can drag back
-// to honest. Random Forest ≈ 0.99 vs Neural Network ≈ 0.98 test accuracy on a
-// y-axis that starts at 0.90 — so a one-point gap fills a tenth of the picture
+// The notebook's own final bar chart, rebuilt with an axis you can drag back to
+// honest. Random Forest ≈ 0.99 vs Neural Network ≈ 0.98 test accuracy on a
+// y-axis that starts at 0.90, so a one-point gap fills a tenth of the picture
 // and the 86% do-nothing baseline ("approve everyone") falls off the chart.
 
-const BARS = [
-  { name: "Random Forest", value: 0.99 },
-  { name: "Neural Network", value: 0.98 },
+const BARS = [{ name: "Random Forest", value: 0.99 }, { name: "Neural Network", value: 0.98 }];
+const BASELINE = 0.86;
+
+const NOTES = [
+  "The notebook's final chart: its y-axis starts at 90%. A one-point gap looks huge.",
+  "Start the axis at zero: the two models are practically identical.",
+  "Add the missing bar: approving everyone already scores 86%. Both models sit just above doing nothing.",
+  "Your turn. Drag where the axis starts.",
 ];
-const BASELINE = 0.86; // accuracy of approving everyone
 
-interface Props { start?: number; }
-
-export default function AxisTruncation({ start: s0 = 0.90 }: Props): VNode {
-  const [start, setStart] = useState(s0);
-
-  const fr = makeFrame({ w: 500, h: 320, qMax: 1, pMax: 1, padB: 34 });
-  // The y-scale maps [start, 1.0] onto the plot height.
-  const Y = (v: number) => fr.B - ((v - start) / (1 - start)) * (fr.B - fr.T);
-
-  const barW = 90;
-  const centre = (fr.L + fr.R) / 2;
-  const centres = [centre - 80, centre + 80];
-
-  const els: VNode[] = [];
-  els.push(<Axes f={fr} xTicks={[]} yTicks={[]} yLabel="test accuracy" />);
-
-  // Manual y-tick labels: 5 evenly spaced values between start and 1.0,
-  // shown as percentages (Axes would print raw plot units, so draw our own).
-  for (let i = 0; i <= 4; i++) {
-    const v = start + ((1 - start) * i) / 4;
-    els.push(
-      <text x={fr.L - 6} y={Y(v) + 3} text-anchor="end" style="font:11px var(--font-ui);fill:var(--color-ink-soft)">
-        {Math.round(v * 100)}%
-      </text>
-    );
-    els.push(<line x1={fr.L - 3} y1={Y(v)} x2={fr.L} y2={Y(v)} style="stroke:var(--color-ink-soft);stroke-width:1" />);
+export default function AxisTruncation(): VNode {
+  const [exploreStart, setExploreStart] = useState(0.9);
+  const sketch = useSketch({ stepCount: NOTES.length, domains: [{ xMax: 3, yMax: 1 }], aspect: 0.62, maxWidth: 620, padding: { left: 52, bottom: 40, top: 22 } });
+  const { show, step } = sketch;
+  const { start } = useGlide({ start: step === 0 ? 0.9 : step === 3 ? exploreStart : 0 }, false);
+  const frame = sketch.frames[0];
+  const toY = (value: number) => frame.bottom - ((value - start) / (1 - start)) * (frame.bottom - frame.top);
+  const scaledFrame = { ...frame, y: toY };
+  const drawing: VNode[] = [
+    <InkLine x1={frame.left} y1={frame.bottom} x2={frame.right} y2={frame.bottom} id="x-axis" color={INK_SOFT} width={1.6} />,
+    <InkLine x1={frame.left} y1={frame.bottom} x2={frame.left} y2={frame.top - 6} id="y-axis" color={INK_SOFT} width={1.6} />,
+    <text x={frame.left - 30} y={frame.top - 10} class="sk-axis-label">test accuracy</text>,
+  ];
+  for (let tick = 0; tick <= 4; tick++) {
+    const value = start + ((1 - start) * tick) / 4;
+    drawing.push(<text x={frame.left - 7} y={toY(value) + 4} text-anchor="end" class="sk-tick">{Math.round(value * 100)}%</text>);
   }
-
-  // Bars with value labels on top and names underneath.
-  BARS.forEach((b, i) => {
-    const cx = centres[i];
-    const top = Y(b.value);
-    els.push(
-      <rect
-        x={cx - barW / 2} y={top} width={barW} height={fr.B - top}
-        style={`fill:${PALETTE.feeStroke};fill-opacity:0.65;stroke:${PALETTE.feeStroke};stroke-width:1.5`}
-      />
-    );
-    els.push(
-      <text x={cx} y={top - 6} text-anchor="middle" style={`font:600 12px var(--font-ui);fill:${C.INK}`}>
-        {Math.round(b.value * 100)}%
-      </text>
-    );
-    els.push(
-      <text x={cx} y={fr.B + 15} text-anchor="middle" style={`font:11px var(--font-ui);fill:${C.INK_SOFT}`}>
-        {b.name}
-      </text>
-    );
+  const bars = show(2) ? [...BARS, { name: "Approve everyone", value: BASELINE }] : BARS;
+  bars.forEach((bar, index) => {
+    const isBaseline = bar.value === BASELINE;
+    const visibleValue = Math.max(bar.value, start);
+    drawing.push(<InkBar frame={scaledFrame} fromX={index * 1 + 0.18} toX={index * 1 + 0.82} value={visibleValue} baseline={start} id={`${sketch.uid}-bar-${index}`} color={isBaseline ? MARKER.grey : MARKER.blue} wash={isBaseline ? WASH.grey : WASH.blue} />);
+    drawing.push(<Note x={frame.x(index + 0.5)} y={toY(visibleValue) - 8} text={bar.value >= start ? `${Math.round(bar.value * 100)}%` : "off the chart"} color={isBaseline ? MARKER.grey : INK_SOFT} anchor="middle" size={19} />);
+    drawing.push(<text x={frame.x(index + 0.5)} y={frame.bottom + 16} text-anchor="middle" class="sk-tick">{bar.name}</text>);
   });
-
-  // The do-nothing baseline — only on the chart once the axis drops below it.
-  if (start < BASELINE) {
-    els.push(<line x1={fr.L} y1={Y(BASELINE)} x2={fr.R} y2={Y(BASELINE)} style={`stroke:${C.ACCENT};stroke-width:1.5;stroke-dasharray:5 3`} />);
-    els.push(
-      <text x={fr.R - 4} y={Y(BASELINE) - 6} text-anchor="end" style={`font:600 10.5px var(--font-ui);fill:${C.ACCENT}`}>
-        approve everyone: 86%
-      </text>
-    );
-  }
-
-  const exaggeration = Math.round((1 - 0) / (1 - start));
-
+  if (show(2) && BASELINE >= start) drawing.push(<InkDashed x1={frame.left} y1={toY(BASELINE)} x2={frame.right} y2={toY(BASELINE)} id="baseline" color={MARKER.grey} width={1.3} dash={5} gap={4} />);
+  const tex = `\\text{axis starts at } ${Math.round(start * 100)}\\%:\\; \\text{the 1-point gap fills } ${Math.round((0.01 / (1 - start)) * 100)}\\% \\text{ of the height}`;
   return (
-    <div class="graph">
-      <div class="graph-sliders">
-        <Slider
-          label="y-axis starts at"
-          value={start}
-          min={0}
-          max={0.90}
-          step={0.05}
-          onInput={(v) => setStart(Math.round(v * 100) / 100)}
-        />
-      </div>
-      <div class="graph-cap">
-        The notebook's final chart, rebuilt. Its y-axis starts at 0.90, so a one-point difference
-        fills a tenth of the picture — and the 86% a do-nothing rule scores doesn't fit on the
-        chart at all. Drag the axis down to zero: the drama disappears, and both bars end up
-        barely clearing the line that requires no model whatsoever.
-      </div>
-      <svg viewBox="0 0 500 320" width="100%" role="img" aria-label="Model comparison bar chart with adjustable y-axis start">{els}</svg>
-      <div class="graph-legend">
-        <span><i class="gsw" style={`background:${PALETTE.feeStroke}`} />model test accuracy</span>
-        <span><i class="gsw" style={`background:${C.ACCENT}`} />approve-everyone baseline</span>
-      </div>
-      <div class="graph-readout">
-        <span class="rd">real gap between the models <b>1 point</b></span>
-        <span class="rd">visual exaggeration <b>{exaggeration}×</b></span>
-        <span class="rd">baseline visible <b>{start < BASELINE ? "yes" : "hidden below the chart"}</b></span>
-      </div>
-    </div>
+    <SketchGraph sketch={sketch} note={NOTES[step]} tex={tex} ariaLabel={`Accuracy bar chart with the axis starting at ${Math.round(start * 100)} percent.`}
+      explore={<div class="graph-sliders"><label class="graph-slider"><span class="graph-slider-lab">axis starts at</span><input type="range" min={0} max={0.95} step={0.05} value={exploreStart} onInput={(event) => setExploreStart(Number((event.currentTarget as HTMLInputElement).value))} /><span class="graph-slider-val">{Math.round(exploreStart * 100)}%</span></label></div>}>
+      {drawing}
+      <Note x={frame.right - 4} y={frame.top + 10} text={start > 0.5 ? "truncated axis" : "honest axis"} color={start > 0.5 ? MARKER.red : MARKER.green} anchor="end" size={18} />
+    </SketchGraph>
   );
 }

@@ -168,6 +168,12 @@ The learning rate controls the step size of gradient descent.
 
 Hyper-parameters are typically tuned on a **validation set**.
 
+> [!tip] Try it: step through the graph
+
+```graph
+type: gradient-descent
+```
+
 ---
 
 ## Analytical Solution — The Normal Equation
@@ -327,6 +333,12 @@ Ridge still has a closed-form solution:
 $$\boldsymbol{\theta}^* = (\mathbf{X}^\top\mathbf{X} + \lambda \mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}$$
 
 Adding $\lambda \mathbf{I}$ also **fixes invertibility issues** when $\mathbf{X}^\top\mathbf{X}$ is singular.
+
+> [!tip] Try it: step through the graph
+
+```graph
+type: bias-variance
+```
 
 ---
 
