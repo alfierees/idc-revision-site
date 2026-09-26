@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkBar, Note, Presets,
-  niceTicks, niceCeil, fmt, INK_SOFT, MARKER, WASH,
+  niceTicks, niceCeil, fmt, INK_SOFT, MARKER, WASH, Slider,
 } from "./sketch";
 
 // Market structures on linear demand P = A − Q with marginal cost c, compared on

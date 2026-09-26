@@ -140,9 +140,9 @@ If demand has **constant unit elasticity** ($E = 1$ everywhere, e.g. $P = k/Q$),
 > | A | $12,000 | $1,000 |
 > | B | $10,000 | $4,000 |
 >
-> Selling separately: best price for GWTW is $10k (both theatres buy) → $20k; best for GGG is $1k → $2k. Total **$22k**.
+> Selling separately: best price for GWTW is $10k (both theatres buy) → $20k; best for GGG is $4k (only B buys) → $4k, which beats $1k to both ($2k). Total **$24k**.
 >
-> Bundle price = $13k (A's total RP) or $14k (B's total RP). At $13k, both buy → **$26k**. Bundling wins by $4k.
+> Bundle price = $13k (A's total RP) or $14k (B's total RP). At $13k, both buy → **$26k**. Bundling wins by $2k.
 
 > [!success] Bundling rule
 > Bundling is profitable when the two goods' **reservation prices are negatively correlated** across consumers. The bundle smooths out heterogeneity and extracts more surplus.

@@ -1,7 +1,6 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Scatter, Presets, fmt, INK_SOFT, ACCENT, MARKER, WASH } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Scatter, Presets, fmt, INK_SOFT, ACCENT, MARKER, WASH, Slider } from "./sketch";
 import { normalSampler, fitLine } from "./stats";
 
 // Weak instruments (Lecture 4), by simulation. Each sample: Z ~ N(0,1), an

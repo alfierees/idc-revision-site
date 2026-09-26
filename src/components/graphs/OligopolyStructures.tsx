@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Presets,
-  niceTicks, fmt, clamp, INK, MARKER,
+  niceTicks, fmt, clamp, INK, MARKER, Slider,
 } from "./sketch";
 
 // Four market structures on one demand curve P = 120 − Q with MC = c (Micro 3

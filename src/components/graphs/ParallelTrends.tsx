@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, SketchGraph, SketchAxes, InkCurve, InkDashed, Note, Dot, Presets, fmt, INK_SOFT, ACCENT, MARKER } from "./sketch";
+import { useSketch, SketchGraph, SketchAxes, InkCurve, InkDashed, Note, Dot, Presets, fmt, INK_SOFT, ACCENT, MARKER, Slider } from "./sketch";
 
 // The parallel-trends assumption. Two groups observed for three periods before
 // a policy (t = −2, −1, 0) and one after (t = 1); the true effect is fixed at 1.5.

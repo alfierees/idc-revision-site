@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Hatch, Note, Dot, Ring, Presets,
-  niceTicks, fmt, clamp, INK, ACCENT, MARKER, WASH,
+  niceTicks, fmt, clamp, INK, ACCENT, MARKER, WASH, Slider,
 } from "./sketch";
 
 // Third-degree price discrimination: two separable markets P_i = a_i − b_i·Q_i.

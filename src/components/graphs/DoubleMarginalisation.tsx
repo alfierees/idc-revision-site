@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Presets, niceTicks, niceCeil, fmt, INK, MARKER } from "./sketch";
+import { useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Presets, niceTicks, niceCeil, fmt, INK, MARKER, Slider } from "./sketch";
 
 // Double marginalisation: final demand P = A − Q, upstream cost k. A vertical
 // chain (producer sets wholesale w, retailer marks up again) versus one

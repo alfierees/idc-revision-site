@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Hatch, Note, Arrow, Ring, Dot, Presets,
-  niceTicks, fmt, coef, clamp, INK, ACCENT, MARKER, WASH,
+  niceTicks, fmt, coef, clamp, INK, ACCENT, MARKER, WASH, Slider,
 } from "./sketch";
 
 // Linear-demand monopoly, P = a − bQ with constant MC, built up step by step:

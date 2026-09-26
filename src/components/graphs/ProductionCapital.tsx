@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
-import { useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, InkBar, Note, Dot, Ring, curvePoints, fmt, clamp, INK_SOFT, ACCENT, MARKER, WASH } from "./sketch";
+import { useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkCurve, InkDashed, InkBar, Note, Dot, Ring, curvePoints, fmt, clamp, INK_SOFT, ACCENT, MARKER, WASH, Slider } from "./sketch";
 
 // Production and capital (Lectures 4, 5, 9 / PS 5).
 //   type: production-capital

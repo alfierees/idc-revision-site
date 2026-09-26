@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Ring, Arrow, Presets,
-  niceTicks, fmt, INK, ACCENT, MARKER,
+  niceTicks, fmt, INK, ACCENT, MARKER, Slider,
 } from "./sketch";
 
 // Cournot best responses in (q₁, q₂) space with P = a − Q and constant MC = c.

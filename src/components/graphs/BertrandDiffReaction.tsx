@@ -1,9 +1,8 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
-import { Slider } from "./plot";
 import {
   useSketch, useGlide, SketchGraph, SketchAxes, InkLine, InkDashed, Note, Dot, Ring, Presets,
-  niceTicks, fmt, INK, ACCENT, MARKER,
+  niceTicks, fmt, INK, ACCENT, MARKER, Slider,
 } from "./sketch";
 
 // Differentiated Bertrand in (p₁, p₂) space. Demand q_i = α − βp_i + γp_j with
