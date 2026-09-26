@@ -13,8 +13,6 @@ import {
 
 interface Props { a?: number; b?: number; mc?: number; }
 
-const QUANTITY_MAX = 120, PRICE_MAX = 120;
-
 const NOTES = [
   "Start with demand: the price buyers will pay at each quantity.",
   "Marginal revenue falls twice as fast as demand.",
@@ -25,8 +23,18 @@ const NOTES = [
   "Your turn. Drag MC or the top of demand, or try a preset.",
 ];
 
+// Axes and slider ranges scale with the starting demand, so the same graph
+// serves the lecture's P = 10 − Q example and the recipe's P = 100 − Q.
+const roundUpNice = (value: number) => {
+  const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
+  return Math.ceil(value / (magnitude / 2)) * (magnitude / 2);
+};
+
 export default function MonopolyCsDwl({ a: initialIntercept = 100, b: initialSlope = 1, mc: initialCost = 20 }: Props): VNode {
   const [target, setTarget] = useState({ intercept: initialIntercept, slope: initialSlope, cost: initialCost });
+  const PRICE_MAX = roundUpNice(initialIntercept * 1.2);
+  const QUANTITY_MAX = roundUpNice((initialIntercept / initialSlope) * 1.2);
+  const unit = initialIntercept / 20; // slider / drag step
   const sketch = useSketch({
     stepCount: NOTES.length,
     domains: [{ xMax: QUANTITY_MAX, yMax: PRICE_MAX }],
@@ -39,7 +47,7 @@ export default function MonopolyCsDwl({ a: initialIntercept = 100, b: initialSlo
   const toX = frame.x, toY = frame.y;
 
   const intercept = shown.intercept, slope = shown.slope;
-  const cost = Math.min(shown.cost, intercept - 5);
+  const cost = Math.min(shown.cost, intercept - unit);
   const monopolyQuantity = (intercept - cost) / (2 * slope);
   const monopolyPrice = intercept - slope * monopolyQuantity;
   const competitiveQuantity = (intercept - cost) / slope;
@@ -59,8 +67,9 @@ export default function MonopolyCsDwl({ a: initialIntercept = 100, b: initialSlo
     `Q^* = ${fmt(monopolyQuantity)},\\quad p^* = ${fmt(monopolyPrice)},\\quad \\color{${MARKER.red}}{\\text{DWL}} = ${fmt(deadweightLoss)}`,
   ];
 
-  const ticks = niceTicks(0, QUANTITY_MAX, narrow ? 3 : 6);
-  const drawing: VNode[] = [<SketchAxes frame={frame} id="axes" xTicks={ticks} yTicks={ticks} xLabel="Q" yLabel="P" />];
+  const quantityTicks = niceTicks(0, QUANTITY_MAX, narrow ? 3 : 6);
+  const priceTicks = niceTicks(0, PRICE_MAX, narrow ? 3 : 6);
+  const drawing: VNode[] = [<SketchAxes frame={frame} id="axes" xTicks={quantityTicks} yTicks={priceTicks} xLabel="Q" yLabel="P" />];
 
   const plot: VNode[] = [];
   if (show(5)) {
@@ -79,7 +88,8 @@ export default function MonopolyCsDwl({ a: initialIntercept = 100, b: initialSlo
   drawing.push(<g clip-path={sketch.clip()}>{plot}</g>);
 
   drawing.push(<Note x={toX(demandEnd) - 4} y={toY(intercept - slope * demandEnd) - 10} text="D" color={INK} anchor="end" size={21} draw={drawNow(0)} />);
-  if (show(1)) drawing.push(<Note x={toX(intercept / (2 * slope)) + 6} y={toY(0) - 12} text="MR" color={MARKER.purple} size={20} draw={drawNow(1)} />);
+  const marginalRevenueLabelQuantity = (intercept / (2 * slope)) * 0.3;
+  if (show(1)) drawing.push(<Note x={toX(marginalRevenueLabelQuantity) - 8} y={toY(intercept - 2 * slope * marginalRevenueLabelQuantity) + 4} text="MR" color={MARKER.purple} anchor="end" size={20} draw={drawNow(1)} />);
   if (show(2)) drawing.push(<Note x={step === 6 ? frame.right - 36 : frame.right - 2} y={toY(cost) - 8} text={`MC = ${fmt(cost)}`} color={MARKER.grey} anchor="end" size={18} draw={drawNow(2)} />);
   if (show(3)) {
     drawing.push(<Ring x={toX(monopolyQuantity)} y={toY(cost)} id="ring-mr-mc" color={ACCENT} draw={drawNow(3)} />);
@@ -103,13 +113,13 @@ export default function MonopolyCsDwl({ a: initialIntercept = 100, b: initialSlo
   if (step === 6) {
     drawing.push(sketch.handle({
       key: "cost", x: frame.dataX(frame.right - 18), y: cost, axis: "y", hint: narrow ? "left" : "below",
-      onDrag: (_dataX, dataY) => setTarget((current) => ({ ...current, cost: clamp(Math.round(dataY), 0, current.intercept - 10) })),
+      onDrag: (_dataX, dataY) => setTarget((current) => ({ ...current, cost: clamp(Math.round(dataY / unit * 2) * unit / 2, 0, current.intercept - 2 * unit) })),
     }));
     drawing.push(sketch.handle({
       key: "intercept", x: 0, y: intercept, axis: "y", hint: "right",
       onDrag: (_dataX, dataY) => setTarget((current) => {
-        const nextIntercept = clamp(Math.round(dataY), 40, PRICE_MAX);
-        return { ...current, intercept: nextIntercept, cost: Math.min(current.cost, nextIntercept - 10) };
+        const nextIntercept = clamp(Math.round(dataY / unit) * unit, 8 * unit, PRICE_MAX);
+        return { ...current, intercept: nextIntercept, cost: Math.min(current.cost, nextIntercept - 2 * unit) };
       }),
     }));
   }
@@ -124,13 +134,13 @@ export default function MonopolyCsDwl({ a: initialIntercept = 100, b: initialSlo
       ariaLabel={`Monopoly diagram. Demand P = ${fmt(intercept)} minus ${fmt(slope, 2)}Q, MC = ${fmt(cost)}. Q* = ${fmt(monopolyQuantity)}, p* = ${fmt(monopolyPrice)}, deadweight loss ${fmt(deadweightLoss)}.`}
       explore={<>
         <div class="graph-sliders">
-          <Slider label="intercept a" value={target.intercept} min={40} max={120} step={5} onInput={(value) => update({ intercept: value, cost: Math.min(target.cost, value - 10) })} />
-          <Slider label="slope b" value={target.slope} min={0.5} max={2} step={0.25} onInput={(value) => update({ slope: value })} />
-          <Slider label="MC" value={target.cost} min={0} max={target.intercept - 10} step={5} onInput={(value) => update({ cost: value })} />
+          <Slider label="intercept a" value={target.intercept} min={8 * unit} max={PRICE_MAX} step={unit} onInput={(value) => update({ intercept: value, cost: Math.min(target.cost, value - 2 * unit) })} />
+          <Slider label="slope b" value={target.slope} min={initialSlope * 0.5} max={initialSlope * 2} step={initialSlope * 0.25} onInput={(value) => update({ slope: value })} />
+          <Slider label="MC" value={target.cost} min={0} max={target.intercept - 2 * unit} step={unit} onInput={(value) => update({ cost: value })} />
         </div>
         <Presets presets={[
-          { label: "Costs rise (MC 50)", apply: () => update({ cost: 50 }) },
-          { label: "Steeper demand", apply: () => update({ slope: 2 }) },
+          { label: "Costs rise", apply: () => update({ cost: initialIntercept / 2 }) },
+          { label: "Steeper demand", apply: () => update({ slope: initialSlope * 2 }) },
           { label: "Free to produce", apply: () => update({ cost: 0 }) },
           { label: "Reset", apply: () => setTarget({ intercept: initialIntercept, slope: initialSlope, cost: initialCost }) },
         ]} />

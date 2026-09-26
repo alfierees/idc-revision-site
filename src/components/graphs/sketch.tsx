@@ -84,6 +84,7 @@ export interface Frame {
   dataY: (pixelY: number) => number;
   left: number; right: number; top: number; bottom: number;
   xMin: number; xMax: number; yMin: number; yMax: number;
+  boxLeft: number; boxTop: number;
 }
 
 function buildFrame(box: { left: number; top: number; width: number; height: number }, domain: Domain, padding: Padding): Frame {
@@ -93,6 +94,7 @@ function buildFrame(box: { left: number; top: number; width: number; height: num
   const xSpan = domain.xMax - xMin || 1, ySpan = domain.yMax - yMin || 1;
   return {
     left, right, top, bottom, xMin, xMax: domain.xMax, yMin, yMax: domain.yMax,
+    boxLeft: box.left, boxTop: box.top,
     x: (dataX) => left + ((dataX - xMin) / xSpan) * (right - left),
     y: (dataY) => bottom - ((dataY - yMin) / ySpan) * (bottom - top),
     dataX: (pixelX) => xMin + ((pixelX - left) / (right - left)) * xSpan,
@@ -111,6 +113,14 @@ export function niceTicks(min: number, max: number, maxCount = 6): number[] {
   const ticks: number[] = [];
   for (let value = first; value <= max + step * 1e-6; value += step) ticks.push(Math.round(value / step) * step);
   return ticks.map((value) => Number(value.toPrecision(12)));
+}
+
+// Smallest round number (on the 1-2-5 tick ladder) at or above `value`.
+export function niceCeil(value: number, tickCount = 5): number {
+  if (value <= 0) return 1;
+  const ticks = niceTicks(0, value, tickCount);
+  const step = ticks.length > 1 ? ticks[1] - ticks[0] : value;
+  return Math.ceil(value / step - 1e-9) * step;
 }
 
 // ---------------------------------------------------------------------------
@@ -345,11 +355,13 @@ export function SketchAxes(props: {
   frame: Frame; id: string;
   xTicks?: number[]; yTicks?: number[];
   xLabel?: string; yLabel?: string;
-  formatTick?: (value: number) => string;
+  formatTick?: (value: number) => string;   // y-axis ticks
+  formatXTick?: (value: number) => string;  // x-axis ticks
   hideZero?: boolean;
 }): VNode {
   const { frame } = props;
   const format = props.formatTick ?? ((value: number) => String(value));
+  const formatX = props.formatXTick ?? ((value: number) => String(value));
   const parts: VNode[] = [];
   const axisY = frame.yMin < 0 && frame.yMax > 0 ? frame.y(0) : frame.bottom;
   const axisX = frame.xMin < 0 && frame.xMax > 0 ? frame.x(0) : frame.left;
@@ -357,7 +369,7 @@ export function SketchAxes(props: {
   parts.push(<InkLine x1={axisX} y1={frame.bottom} x2={axisX} y2={frame.top - 6} id={`${props.id}-y`} color={INK_SOFT} width={1.6} />);
   for (const value of props.xTicks ?? []) {
     if (props.hideZero && value === 0) continue;
-    parts.push(<text x={frame.x(value)} y={frame.bottom + 16} text-anchor="middle" class="sk-tick">{format(value)}</text>);
+    parts.push(<text x={frame.x(value)} y={frame.bottom + 16} text-anchor="middle" class="sk-tick">{formatX(value)}</text>);
   }
   for (const value of props.yTicks ?? []) {
     if ((props.hideZero ?? true) && value === 0 && (props.xTicks ?? []).includes(0)) continue;
@@ -676,7 +688,7 @@ export function SketchGraph(props: {
             ))}
           </defs>
           {sketch.panelTitles?.map((title, index) => (
-            <text x={sketch.frames[index].left - 30} y={sketch.frames[index].top - 30} class="sk-panel-title">{title}</text>
+            <text x={sketch.frames[index].boxLeft + 4} y={sketch.frames[index].boxTop + 15} class="sk-panel-title">{title}</text>
           ))}
           {props.children}
         </svg>

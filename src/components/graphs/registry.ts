@@ -15,6 +15,28 @@ import BaselineMachine from "./BaselineMachine";
 import ThresholdMoney from "./ThresholdMoney";
 import OverfitCurves from "./OverfitCurves";
 import AxisTruncation from "./AxisTruncation";
+// micro sketch explainers
+import ReactionFunctions from "./ReactionFunctions";
+import ProfitBars from "./ProfitBars";
+import UniformPricing from "./UniformPricing";
+import StructureComparison from "./StructureComparison";
+import PayoffMatrix from "./PayoffMatrix";
+import MixedStrategyBR from "./MixedStrategyBR";
+import Bundling from "./Bundling";
+import LemonsThreshold from "./LemonsThreshold";
+import RiskAversion from "./RiskAversion";
+import Signaling from "./Signaling";
+import ElasticityMR from "./ElasticityMR";
+import DoubleMarginalisation from "./DoubleMarginalisation";
+import ComplementaryFirms from "./ComplementaryFirms";
+import MergerSurplus from "./MergerSurplus";
+import CommonsUtility from "./CommonsUtility";
+import CompetitiveMarket from "./CompetitiveMarket";
+import SecondDegreePD from "./SecondDegreePD";
+import GovernmentChannel from "./GovernmentChannel";
+import CoffeeMonopoly from "./CoffeeMonopoly";
+import SeparateTariffs from "./SeparateTariffs";
+import TariffPriceVsA from "./TariffPriceVsA";
 
 // Maps a ```graph fenced block's `type:` to its component. Add new graphs here.
 export const GRAPHS: Record<string, ComponentType<any>> = {
@@ -35,6 +57,28 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "threshold-money": ThresholdMoney,
   "overfit-curves": OverfitCurves,
   "axis-truncation": AxisTruncation,
+  // micro sketch explainers
+  "reaction-functions": ReactionFunctions,
+  "profit-bars": ProfitBars,
+  "uniform-pricing": UniformPricing,
+  "structure-comparison": StructureComparison,
+  "payoff-matrix": PayoffMatrix,
+  "mixed-strategy-br": MixedStrategyBR,
+  "bundling": Bundling,
+  "lemons-threshold": LemonsThreshold,
+  "risk-aversion": RiskAversion,
+  "signaling": Signaling,
+  "elasticity-mr": ElasticityMR,
+  "double-marginalisation": DoubleMarginalisation,
+  "complementary-firms": ComplementaryFirms,
+  "merger-surplus": MergerSurplus,
+  "commons-utility": CommonsUtility,
+  "competitive-market": CompetitiveMarket,
+  "second-degree-pd": SecondDegreePD,
+  "government-channel": GovernmentChannel,
+  "coffee-monopoly": CoffeeMonopoly,
+  "separate-tariffs": SeparateTariffs,
+  "tariff-price-vs-a": TariffPriceVsA,
 };
 
 // Every registered type, for the /dev/graphs gallery.
