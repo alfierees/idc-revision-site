@@ -85,6 +85,23 @@ export const GRAPH_SWAPS: Record<string, GraphConfig> = {
   "econometrics/pp01-did-plot.png": { type: "diff-in-diff", control: "0.52,0.47", treatment: "0.41,0.43", controlName: "Control (no exam)", treatmentName: "Treatment (took exam)", periods: "Pre (Mon–Tue),Post (Wed–Fri)", yLabel: "P(chose lottery B)", decimals: 2 },
   "econometrics/pp03-did-plot.png": { type: "diff-in-diff", control: "0.21,0.325", treatment: "0.26666,0.34583", controlName: "N4 (control village)", treatmentName: "N3 (typhoon warning)", periods: "Pre (rounds 1–5),Post (rounds 6–15)", yLabel: "mean today.always", decimals: 3 },
   "econometrics/ps04-causal-diagram.png": { type: "causal-diagram", diagram: "seatbelt" },
+  // ---- macro: lectures (theory diagrams; real-data charts stay as images) ----
+  "macro-economics/l2-budget-tangency.png": { type: "consumption-choice", figure: "two-period" },
+  "macro-economics/l2-borrowing-constraint.png": { type: "consumption-choice", figure: "borrowing" },
+  "macro-economics/l2-lifecycle-profile.png": { type: "consumption-choice", figure: "lifecycle" },
+  "macro-economics/l4-production-diminishing.png": { type: "production-capital", figure: "production" },
+  "macro-economics/l5-mpk-usercost.png": { type: "production-capital", figure: "user-cost" },
+  "macro-economics/l6-si-shocks.png": { type: "macro-shocks", figure: "si-shocks" },
+  "macro-economics/l7-budget-leisure.png": { type: "consumption-choice", figure: "leisure" },
+  "macro-economics/l7-labor-equilibrium.png": { type: "labor-market", scenario: "equilibrium" },
+  "macro-economics/l7-labor-shocks.png": { type: "labor-market", scenario: "lecture-shocks" },
+  "macro-economics/l10-labor-goods-equilibrium.png": { type: "macro-shocks", figure: "fiscal" },
+  // ---- macro: PS 5 (exact model numbers) ----
+  "macro-economics/q1-3-productivity-shift.png": { type: "labor-market", scenario: "productivity" },
+  "macro-economics/q1-4-capital-shift.png": { type: "labor-market", scenario: "capital" },
+  "macro-economics/q2-foreign-aid.png": { type: "labor-market", scenario: "aid" },
+  "macro-economics/q3-permanent-tfp.png": { type: "labor-market", scenario: "permanent-tfp" },
+  "macro-economics/q5-task-assignment.png": { type: "production-capital", figure: "tasks" },
 };
 
 function graphBlock(config: GraphConfig): Element {

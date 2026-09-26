@@ -15,6 +15,11 @@ import BaselineMachine from "./BaselineMachine";
 import ThresholdMoney from "./ThresholdMoney";
 import OverfitCurves from "./OverfitCurves";
 import AxisTruncation from "./AxisTruncation";
+// macro sketch explainers
+import LaborMarket from "./LaborMarket";
+import MacroShocks from "./MacroShocks";
+import ConsumptionChoice from "./ConsumptionChoice";
+import ProductionCapital from "./ProductionCapital";
 // econometrics sketch explainers
 import DiffInDiff from "./DiffInDiff";
 import ParallelTrends from "./ParallelTrends";
@@ -71,6 +76,11 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "threshold-money": ThresholdMoney,
   "overfit-curves": OverfitCurves,
   "axis-truncation": AxisTruncation,
+  // macro sketch explainers
+  "labor-market": LaborMarket,
+  "macro-shocks": MacroShocks,
+  "consumption-choice": ConsumptionChoice,
+  "production-capital": ProductionCapital,
   // econometrics sketch explainers
   "diff-in-diff": DiffInDiff,
   "parallel-trends": ParallelTrends,
