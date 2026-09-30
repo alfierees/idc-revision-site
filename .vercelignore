@@ -1,0 +1,5 @@
+dist/
+.rag-cache/
+.playwright-cli/
+.agents/
+.env*

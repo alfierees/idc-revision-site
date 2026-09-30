@@ -11,6 +11,7 @@ import rehypeKatex from 'rehype-katex';
 import wikiLinkPlugin from 'remark-wiki-link';
 
 import preact from '@astrojs/preact';
+import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,6 +20,7 @@ export default defineConfig({
   },
 
   integrations: [mdx(), preact()],
+  adapter: vercel(),
 
   markdown: {
     remarkPlugins: [

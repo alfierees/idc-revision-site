@@ -2,6 +2,7 @@
 import "../styles/globals.css";
 import { getCollection } from "astro:content";
 import Analytics from '@vercel/analytics/astro';
+import TutorPanel from './TutorPanel';
 
 interface Props {
   title?: string;
@@ -135,6 +136,7 @@ const section = active ?? "dictionary";
     <main class="mx-auto max-w-6xl px-6 py-10">
       <slot />
     </main>
+    <TutorPanel client:load subject={subject} />
 
     <script>
       // ---- reading progress bar ----
@@ -158,7 +160,7 @@ const section = active ?? "dictionary";
           burger.setAttribute("aria-expanded", String(open));
           burger.setAttribute("aria-label", open ? "Close section menu" : "Open section menu");
         };
-        burger.addEventListener("click", () => setNavOpen(mobileNav.hidden));
+        burger.addEventListener("click", () => setNavOpen(Boolean(mobileNav.hidden)));
         document.addEventListener("mousedown", (e) => {
           const t = e.target as Node;
           if (!mobileNav.contains(t) && !burger.contains(t)) setNavOpen(false);
@@ -177,7 +179,7 @@ const section = active ?? "dictionary";
           pop.hidden = !open;
           trigger.setAttribute("aria-expanded", String(open));
         };
-        trigger.addEventListener("click", () => setOpen(pop.hidden));
+        trigger.addEventListener("click", () => setOpen(Boolean(pop.hidden)));
         document.addEventListener("mousedown", (e) => {
           if (!menu.contains(e.target as Node)) setOpen(false);
         });

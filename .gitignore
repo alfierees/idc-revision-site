@@ -33,3 +33,10 @@ scripts/ingest/.backup-pre-vault-solutions/
 .worktrees/
 .vercel/
 src/generated/
+.env.local
+.env.*.local
+.rag-cache/
+.env*
+.agents/
+.playwright-cli/
+skills-lock.json
