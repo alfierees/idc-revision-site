@@ -72,7 +72,9 @@ export function collectSiteDocuments(root: string): RagDocument[] {
           const q = item as Record<string, unknown>;
           const qid = asText(q.id);
           if (!qid) continue;
-          const text = questionText(q);
+          const officialNote = qid === "setup" ? asText(data.official_solution_note) : "";
+          const text = [officialNote ? `Official lecturer solution note: ${officialNote}` : "", questionText(q)]
+            .filter(Boolean).join("\n\n");
           if (!text.trim()) continue;
           result.push({ id: `${id}#${qid}`, title: `${title} · ${asText(q.title) || `Question ${qid}`}`,
             subject, kind: `${collection}-question`, text, url: `${url}#${qid}`,
