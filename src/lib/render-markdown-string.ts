@@ -50,22 +50,6 @@ function rewriteObsidianEmbeds(md: string, subject: string): string {
 }
 
 /**
- * Pre-pass: normalise a `$$…$$` display block that STARTS a line so its
- * delimiters sit on their own lines. Handles both single-line `$$…$$`
- * (Obsidian's style — remark-math would otherwise read it as inline math in a
- * paragraph) and a `$$<content>` block whose body begins on the opening line
- * and closes on a later line (micromark treats that trailing text as a
- * code-fence-style *info string* and then fails to find a close, swallowing the
- * rest of the block).
- *
- * The `^\$\$` anchor (column 0, no indent) is deliberate. Display math inside a
- * callout begins with `> `, and math indented under a list item begins with
- * spaces — both are left untouched so remark-callouts + remark-math handle them
- * (rewriting across a `> ` prefix, or promoting an indented block, corrupts
- * them). `$$` never appears in fenced code in the content, so this never
- * touches code.
- */
-/**
  * Pre-pass: drop Obsidian block IDs (` ^some-id` at the end of a line). Obsidian
  * uses them as targets for `[[Note#^id]]`; the site has no use for them. Left in,
  * they show as stray "^id" text, and after a `$$…$$` line they stop
@@ -149,6 +133,22 @@ function wrapSpanningHighlights(children: MdNode[]): MdNode[] {
   return out;
 }
 
+/**
+ * Pre-pass: normalise a `$$…$$` display block that STARTS a line so its
+ * delimiters sit on their own lines. Handles both single-line `$$…$$`
+ * (Obsidian's style — remark-math would otherwise read it as inline math in a
+ * paragraph) and a `$$<content>` block whose body begins on the opening line
+ * and closes on a later line (micromark treats that trailing text as a
+ * code-fence-style *info string* and then fails to find a close, swallowing the
+ * rest of the block).
+ *
+ * The `^\$\$` anchor (column 0, no indent) is deliberate. Display math inside a
+ * callout begins with `> `, and math indented under a list item begins with
+ * spaces — both are left untouched so remark-callouts + remark-math handle them
+ * (rewriting across a `> ` prefix, or promoting an indented block, corrupts
+ * them). `$$` never appears in fenced code in the content, so this never
+ * touches code.
+ */
 function promoteDisplayMath(md: string): string {
   return md.replace(
     /^\$\$([^$][\s\S]*?)\$\$[ \t]*$/gm,
