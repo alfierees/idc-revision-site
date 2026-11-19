@@ -75,6 +75,20 @@ export const subjects: Record<string, SubjectConfig> = {
     assignmentsDir: "Problem Sets",
     problemSetSlugPrefix: "ps",
   },
+  // Year 2 Semester 1 (first course of the whole-degree expansion). The six
+  // lecture decks are cumulative, so the vault has one note per new slide range.
+  // PS sources sit in "Problem sets"; worked solutions are vault notes.
+  "micro-ii": {
+    slug: "micro-ii",
+    title: "Micro-Economics II",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 1/Micro-Economics II",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 1/Micro econ",
+    lecturesDir: "Lecture notes",
+    vaultSolutionsDir: "Problem Sets",
+    requireSolutionKeyword: false,
+    assignmentsDir: "Problem sets",
+    problemSetSlugPrefix: "ps",
+  },
   // Qualitative subject: hand-ported (readings → lectures, concepts+acronyms →
   // glossary, cram sheet → exam-prep). No problem sets. `lecturesDir: "Readings"`
   // maps the reading notes to the lectures collection. Visual lecture decks and
