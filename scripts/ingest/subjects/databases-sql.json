@@ -1,0 +1,17 @@
+{
+  "slug": "databases-sql",
+  "title": "Databases & SQL",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 1/Databases & SQL",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 1/SQL",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Assignments",
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "databases-sql",
+    "reading",
+    "sql-basics"
+  ],
+  "notes": "Year 2 Semester 1. No lecture slides locally (Moodle-only), so no lecture notes yet. The source has four assignment folders at its root ('Assigmnet 1' (sic), 'Assignment 2'..'Assignment 4') that also hold student submissions named by ID number. assignmentsDir deliberately points at a folder that does not exist, so cli.ts never copies a submission into public/papers; the official assignment PDFs are copied to public/papers/databases-sql/ps-N.pdf by hand and the site PS pages are drafted from the vault Problem Sets notes."
+}
