@@ -33,3 +33,4 @@ scripts/ingest/.backup-pre-vault-solutions/
 .worktrees/
 .vercel/
 src/generated/
+.verify-shots/

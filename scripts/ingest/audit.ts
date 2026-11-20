@@ -189,6 +189,8 @@ const ALWAYS_MUTED = new Set([
   "machine-learning",
   "macroeconomics",
   "micro-economics-ii",  // Micro II's own subject tag in the vault
+  "macro-economics-ii",  // Macro II's own subject tag in the vault
+  "short-run",           // Macro II time-horizon metadata pill, not a concept (SR/LR are covered by SRAS/LRAS terms)
   "assignment-solution",
   "problem-set",         // generic metadata pill used in econometrics
   "recap",               // accounting Session 9 metadata, not a concept

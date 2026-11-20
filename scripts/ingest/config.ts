@@ -89,6 +89,16 @@ export const subjects: Record<string, SubjectConfig> = {
     assignmentsDir: "Problem sets",
     problemSetSlugPrefix: "ps",
   },
+  // Year 2 Semester 1. No problem sets: the source "Problem sets" folder only
+  // holds misfiled Micro II sheets, so assignmentsDir is left at the default
+  // ("Assignments"), which doesn't exist here and keeps them out of the scan.
+  "macro-ii": {
+    slug: "macro-ii",
+    title: "Macro-Economics II",
+    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 1/Macro-Economics II",
+    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 1/Macro-econ",
+    lecturesDir: "Lecture notes",
+  },
   // Qualitative subject: hand-ported (readings → lectures, concepts+acronyms →
   // glossary, cram sheet → exam-prep). No problem sets. `lecturesDir: "Readings"`
   // maps the reading notes to the lectures collection. Visual lecture decks and
