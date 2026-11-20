@@ -16,6 +16,7 @@ const page = (body: string) => `<!doctype html><html><head><meta name="viewport"
 const FIXTURES: Record<string, string> = {
   "clean/index.html": page('<main><p>Fine <span class="katex">$$x$$</span></p><pre><code>```graph</code></pre><a href="/clean/">self</a><a href="/missing/">gone</a><a href="https://example.com/">out</a></main>'),
   "overflow/index.html": page('<main><div class="wide-table" style="width:2000px">wide</div><div style="overflow-x:auto"><div style="width:3000px">scrolls fine</div></div></main>'),
+  "clipped-math/index.html": page('<div class="katex-display" style="width:200px;overflow-x:auto"><span class="katex"><span class="katex-html" style="display:inline-block;width:600px">Pre-money + Investment = Post-money</span></span></div><div class="katex-display" style="width:200px;overflow-x:auto"><span class="katex"><span class="katex-html" style="display:inline-block;width:150px">fits</span></span></div>'),
   "raw-text/index.html": page("<p>$$ x^2 $$</p><p>```graph type: lemons</p>"),
   "graph/index.html": page('<pre><code class="language-graph">type: lemons-threshold</code></pre><div class="graph-embed">[unknown graph type: nope]</div>'),
   "mermaid/index.html": page('<pre><code class="language-mermaid">erDiagram\n  A ||--o{ B : has</code></pre><div class="mermaid">graph TD; broken</div><div class="mermaid" id="mermaid-2"><svg aria-roledescription="error"><g class="error-icon"></g></svg></div>'),
@@ -62,6 +63,18 @@ describe("sweepPage", () => {
     expect(result.issues.map((issue) => issue.kind)).toEqual(["horizontal-overflow"]);
     expect(result.issues[0].detail).toContain("wide-table");
     expect(result.issues[0].detail).not.toContain("scrolls fine");
+  });
+
+  // Display formulas that still scroll sideways are counted, not failed.
+  it("counts display math wider than its box without raising an issue", async () => {
+    const result = await sweepPage(contexts.mobile, server.url, "/clipped-math/", "mobile", FAST);
+    expect(result.issues).toEqual([]);
+    expect(result.clippedMath).toEqual(["Pre-money + Investment = Post-money"]);
+  });
+
+  it("reports no clipped math on a page without formulas", async () => {
+    const result = await sweepPage(contexts.mobile, server.url, "/clean/", "mobile", FAST);
+    expect(result.clippedMath).toEqual([]);
   });
 
   it("flags raw display maths and raw graph fences showing as text", async () => {

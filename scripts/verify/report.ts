@@ -28,6 +28,8 @@ export interface SweptPage {
   issues: SweepIssue[];
   links: string[];
   stats?: { solutionsRevealed: number; graphsMounted: number; images: number; mathBlocks: number };
+  // Text of each display formula still wider than its box (scrolls sideways).
+  clippedMath?: string[];
 }
 
 export interface ReportInput {
@@ -52,7 +54,15 @@ export interface VerifyReport {
     build: { ok: boolean; skipped: boolean; exitCode: number; outputTail: string };
     audit: { ok: boolean; exitCode: number; totalIssues: number | null; output: string };
     static: { ok: boolean; pagesScanned: number; findings: { path: string; kind: StaticFindingKind; excerpt: string }[] };
-    sweep: { ok: boolean; pagesSwept: number; loadsChecked: number; coverage: NonNullable<SweptPage["stats"]>; failures: { path: string; viewport: Viewport; kind: SweepIssueKind; detail: string }[] };
+    sweep: {
+      ok: boolean;
+      pagesSwept: number;
+      loadsChecked: number;
+      coverage: NonNullable<SweptPage["stats"]>;
+      failures: { path: string; viewport: Viewport; kind: SweepIssueKind; detail: string }[];
+      // Informational: never affects `ok`. Display formulas that still scroll sideways.
+      clippedMath: { total: number; byViewport: Record<Viewport, number>; pages: { path: string; viewport: Viewport; count: number; examples: string[] }[] };
+    };
     links: { ok: boolean; linksChecked: number; broken: { from: string; href: string }[] };
   };
 }
@@ -77,6 +87,12 @@ export function buildReport(input: ReportInput): VerifyReport {
   staticFindings.forEach((finding) => bump(finding.kind));
   sweepFailures.forEach((failure) => bump(failure.kind));
   input.brokenLinks.forEach(() => bump("broken-link"));
+
+  const clippedPages = input.sweptPages
+    .filter((page) => (page.clippedMath?.length ?? 0) > 0)
+    .map((page) => ({ path: page.path, viewport: page.viewport, count: page.clippedMath!.length, examples: page.clippedMath!.slice(0, 3) }));
+  const clippedByViewport = { mobile: 0, desktop: 0 };
+  clippedPages.forEach((page) => { clippedByViewport[page.viewport] += page.count; });
 
   const checks: VerifyReport["checks"] = {
     build: {
@@ -106,6 +122,7 @@ export function buildReport(input: ReportInput): VerifyReport {
           mathBlocks: total.mathBlocks + page.stats!.mathBlocks,
         }), { solutionsRevealed: 0, graphsMounted: 0, images: 0, mathBlocks: 0 }),
       failures: sweepFailures,
+      clippedMath: { total: clippedByViewport.mobile + clippedByViewport.desktop, byViewport: clippedByViewport, pages: clippedPages },
     },
     links: { ok: input.brokenLinks.length === 0, linksChecked: input.linksChecked, broken: input.brokenLinks },
   };
@@ -128,6 +145,13 @@ function exampleLines(lines: string[]): string[] {
 
 const verdict = (ok: boolean) => (ok ? "✅" : "❌");
 
+// Informational row: counts never fail the run, they're a watch-list.
+function clippedSummary(clipped: VerifyReport["checks"]["sweep"]["clippedMath"]): string {
+  if (clipped.total === 0) return "none (non-failing check)";
+  const pageCount = (viewport: Viewport) => clipped.pages.filter((page) => page.viewport === viewport).length;
+  return `${clipped.byViewport.mobile} blocks on ${pageCount("mobile")} pages at 390px, ${clipped.byViewport.desktop} on ${pageCount("desktop")} at 1280px (non-failing: they scroll sideways)`;
+}
+
 export function renderSummary(report: VerifyReport): string {
   const { build, audit, static: staticCheck, sweep, links } = report.checks;
   const seconds = Math.round(report.durationMs / 1000);
@@ -142,6 +166,7 @@ export function renderSummary(report: VerifyReport): string {
     `| ${verdict(audit.ok)} Audit | exit ${audit.exitCode}, ${audit.totalIssues ?? "?"} issues |`,
     `| ${verdict(staticCheck.ok)} Static HTML scan | ${staticCheck.findings.length} findings in ${staticCheck.pagesScanned} pages |`,
     `| ${verdict(sweep.ok)} Browser sweep | ${sweep.failures.length} failures across ${sweep.pagesSwept} pages × 2 widths |`,
+    `| ℹ️ Clipped display math | ${clippedSummary(sweep.clippedMath)} |`,
     `| ${verdict(links.ok)} Internal links | ${links.broken.length} broken of ${links.linksChecked} checked |`,
   ];
 
@@ -168,6 +193,11 @@ export function renderSummary(report: VerifyReport): string {
   if (!sweep.ok) {
     lines.push("", "## Browser sweep", "", ...exampleLines(
       sweep.failures.map((failure) => `- \`${failure.kind}\` ${failure.path} (${failure.viewport}): ${failure.detail}`),
+    ));
+  }
+  if (sweep.clippedMath.total > 0) {
+    lines.push("", "## Clipped display math (non-failing)", "", ...exampleLines(
+      sweep.clippedMath.pages.map((page) => `- ${page.path} (${page.viewport}): ${page.count} — ${page.examples.map((text) => `\`${text}\``).join(", ")}`),
     ));
   }
   if (!links.ok) {
