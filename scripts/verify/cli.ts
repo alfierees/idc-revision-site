@@ -59,7 +59,8 @@ async function main() {
   const startedAt = Date.now();
   const options = parseArguments(process.argv.slice(2));
   const { slug } = options;
-  const distRoot = join(REPO_ROOT, "dist");
+  // The Vercel adapter writes the prerendered site to dist/client/.
+  const distRoot = join(REPO_ROOT, "dist", "client");
 
   if (!existsSync(join(REPO_ROOT, "src/content/subjects", `${slug}.md`))) {
     console.error(`Unknown subject "${slug}": no src/content/subjects/${slug}.md`);

@@ -11,14 +11,24 @@ import rehypeKatex from 'rehype-katex';
 import wikiLinkPlugin from 'remark-wiki-link';
 
 import preact from '@astrojs/preact';
+import vercel from '@astrojs/vercel';
+import clerk from '@clerk/astro';
 
 // https://astro.build/config
 export default defineConfig({
+  // Pages stay prerendered; only routes that set `prerender = false` (src/pages/api/) run as functions.
+  output: 'static',
+  adapter: vercel(),
+
   vite: {
     plugins: [tailwindcss()]
   },
 
-  integrations: [mdx(), preact()],
+  integrations: [
+    mdx(),
+    preact(),
+    clerk({ signInFallbackRedirectUrl: '/', signUpFallbackRedirectUrl: '/' }),
+  ],
 
   markdown: {
     remarkPlugins: [
