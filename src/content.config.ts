@@ -6,6 +6,11 @@ const subjects = defineCollection({
   schema: z.object({
     title: z.string(),
     slug: z.string(),
+    // Where the course sits in the degree — drives home-page grouping.
+    year: z.union([z.literal(1), z.literal(2)]),
+    semester: z.union([z.literal(1), z.literal(2)]),
+    /** One student-facing line for the home-page card. */
+    tagline: z.string().optional(),
     exam_date: z.string().optional(),
     must_revise: z.array(z.string()).default([]),
     placeholder: z.boolean().default(false),

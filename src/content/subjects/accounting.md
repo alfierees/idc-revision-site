@@ -1,6 +1,9 @@
 ---
 title: Accounting
 slug: accounting
+year: 2
+semester: 2
+tagline: "Financial statements, raising capital, corporate tax and revenue recognition."
 placeholder: false
 ---
 

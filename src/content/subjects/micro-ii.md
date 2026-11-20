@@ -1,6 +1,9 @@
 ---
 title: Micro-Economics II
 slug: micro-ii
+year: 2
+semester: 1
+tagline: "The theory of the firm, welfare, general equilibrium and externalities."
 placeholder: false
 ---
 

@@ -1,6 +1,9 @@
 ---
 title: Macro-Economics
 slug: macro-economics
+year: 2
+semester: 2
+tagline: "National accounts, growth, the goods and labour markets, and fiscal policy."
 placeholder: false
 ---
 

@@ -1,6 +1,9 @@
 ---
 title: Digital Marketing
 slug: digital-marketing
+year: 2
+semester: 2
+tagline: "Marketing models, digital channels and the acronyms the exam tests."
 exam_date: "2026-07-10"
 must_revise:
   - "Acronyms — the exam explicitly tests them (Dictionary)"

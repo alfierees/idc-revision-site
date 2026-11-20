@@ -1,6 +1,9 @@
 ---
 title: Machine Learning
 slug: machine-learning
+year: 2
+semester: 2
+tagline: "Supervised and unsupervised learning, model selection and evaluation."
 placeholder: false
 ---
 

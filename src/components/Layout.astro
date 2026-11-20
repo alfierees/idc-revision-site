@@ -2,6 +2,7 @@
 import "../styles/globals.css";
 import { getCollection } from "astro:content";
 import Analytics from '@vercel/analytics/astro';
+import { groupBySemester } from "../lib/semesters";
 
 interface Props {
   title?: string;
@@ -13,12 +14,15 @@ interface Props {
 }
 const { title = "IDC Revision", subject, active, hasSidebar = false } = Astro.props;
 
-const subjects = await getCollection("subjects");
-subjects.sort((a, b) => {
-  if (a.data.placeholder !== b.data.placeholder) return a.data.placeholder ? 1 : -1;
-  return a.data.title.localeCompare(b.data.title);
-});
-const current = subject ? subjects.find((s) => s.data.slug === subject) : undefined;
+const subjects = (await getCollection("subjects")).map((s) => s.data);
+const current = subject ? subjects.find((s) => s.slug === subject) : undefined;
+// Header switcher: live courses only, under their semester, current semester first.
+const switcherGroups = groupBySemester(subjects)
+  .filter((g) => g.live.length > 0)
+  .sort((a, b) => {
+    const isCurrent = (g: typeof a) => g.live.some((s) => s.slug === subject);
+    return Number(isCurrent(b)) - Number(isCurrent(a));
+  });
 
 const tabs = [
   { id: "lectures",     label: "Lectures" },
@@ -38,6 +42,7 @@ const section = active ?? "dictionary";
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     <Analytics />
+    <slot name="head" />
   </head>
   <body class="min-h-screen">
     <div class="read-progress" id="read-progress" aria-hidden="true"></div>
@@ -54,30 +59,28 @@ const section = active ?? "dictionary";
                 aria-expanded="false"
                 aria-haspopup="menu"
               >
-                {current.data.title}
+                <span class="subject-name" style={`view-transition-name: subj-${current.slug};`}>{current.title}</span>
                 <span class="chev" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
                 </span>
               </button>
               <div class="subject-pop" hidden role="menu">
-                <p class="subject-pop-label">Switch subject</p>
-                {subjects.map((s) =>
-                  s.data.placeholder ? (
-                    <span class="subject-opt disabled" role="menuitem" aria-disabled="true">
-                      {s.data.title}
-                      <span class="so-await">Awaiting</span>
-                    </span>
-                  ) : (
-                    <a
-                      href={`/subjects/${s.data.slug}/${section}`}
-                      class={`subject-opt ${s.data.slug === subject ? "current" : ""}`}
-                      role="menuitem"
-                    >
-                      {s.data.title}
-                      {s.data.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
-                    </a>
-                  ),
-                )}
+                <p class="subject-pop-label">Switch course</p>
+                {switcherGroups.map((g) => (
+                  <div class="subject-group" role="group" aria-label={g.semester.label}>
+                    <p class="subject-group-label">{g.semester.label}</p>
+                    {g.live.map((s) => (
+                      <a
+                        href={`/subjects/${s.slug}/${section}`}
+                        class={`subject-opt ${s.slug === subject ? "current" : ""}`}
+                        role="menuitem"
+                      >
+                        {s.title}
+                        {s.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
+                      </a>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -114,7 +117,6 @@ const section = active ?? "dictionary";
               <svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
             </button>
           )}
-          {!current && <span class="header-meta">Year 2 · Sem 2</span>}
         </div>
       </div>
       {current && (

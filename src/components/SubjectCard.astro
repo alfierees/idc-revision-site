@@ -3,29 +3,32 @@ interface Props {
   title: string;
   slug: string;
   placeholder: boolean;
+  /** "Year 2 · Semester 1" */
+  eyebrow: string;
+  tagline?: string;
+  /** "3 lectures · 8 past papers" — empty string hides the line. */
+  counts?: string;
+  href?: string;
   index: number;
 }
-const { title, slug, placeholder, index } = Astro.props;
+const { title, slug, placeholder, eyebrow, tagline, counts, href, index } = Astro.props;
 const delay = `${index * 60}ms`;
 ---
 {placeholder ? (
-  <div
-    class="subject-card placeholder"
-    style={`animation: rise-in 280ms ease-out both; animation-delay: ${delay};`}
-  >
-    <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-faint">Year 2 · Sem 2</p>
+  <div class="subject-card placeholder" style={`animation-delay: ${delay};`}>
+    <p class="eyebrow">{eyebrow}</p>
     <h2>{title}</h2>
-    <p class="await">Awaiting ingestion.</p>
+    <p class="await">Coming soon</p>
   </div>
 ) : (
-  <a
-    href={`/subjects/${slug}/dictionary`}
-    class="subject-card"
-    style={`animation: rise-in 280ms ease-out both; animation-delay: ${delay};`}
-  >
-    <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-faint">Year 2 · Sem 2</p>
-    <h2>{title}</h2>
-    <p class="open">Open <span class="arr" aria-hidden="true">→</span></p>
+  <a href={href} class="subject-card" style={`animation-delay: ${delay};`}>
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 style={`view-transition-name: subj-${slug};`}>{title}</h2>
+    {tagline && <p class="tagline">{tagline}</p>}
+    <div class="foot">
+      {counts && <p class="counts">{counts}</p>}
+      <p class="open">Open <span class="arr" aria-hidden="true">→</span></p>
+    </div>
   </a>
 )}
 
@@ -34,25 +37,55 @@ const delay = `${index * 60}ms`;
     position: relative;
     display: flex;
     flex-direction: column;
-    min-height: 12.5rem;
+    min-height: 13rem;
     text-decoration: none;
     border-radius: var(--radius-card);
     background: var(--color-card);
     box-shadow: var(--shadow-soft);
-    padding: 2rem 2rem 1.7rem;
+    padding: 1.9rem 2rem 1.6rem;
     overflow: hidden;
+    animation: rise-in 280ms ease-out both;
     transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.28s ease;
   }
+  /* The stagger is a first-load welcome only; semester switches don't replay it. */
+  :global(html.settled) .subject-card { animation: none; }
+  .eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-ink-faint);
+  }
   .subject-card h2 {
-    margin-top: 0.85rem;
+    margin-top: 0.8rem;
     font-family: var(--font-display);
-    font-size: 1.85rem;
+    font-size: 1.75rem;
+    line-height: 1.15;
     font-variation-settings: "opsz" 48, "wght" 500;
     color: var(--color-ink);
+    width: fit-content;
   }
-  .subject-card .open {
+  .tagline {
+    margin-top: 0.6rem;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: var(--color-ink-soft);
+  }
+  .foot {
     margin-top: auto;
     padding-top: 1.3rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .counts {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    color: var(--color-ink-muted);
+  }
+  .open {
+    margin-left: auto;
     font-family: var(--font-ui);
     font-size: 0.82rem;
     font-weight: 600;
@@ -61,8 +94,9 @@ const delay = `${index * 60}ms`;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    white-space: nowrap;
   }
-  .subject-card .open .arr { transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1); }
+  .open .arr { transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1); }
   a.subject-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lift);
@@ -82,17 +116,19 @@ const delay = `${index * 60}ms`;
   a.subject-card:hover::after { transform: scaleX(1); }
 
   .subject-card.placeholder {
+    min-height: 9rem;
     background: color-mix(in srgb, var(--color-paper-deep) 55%, var(--color-paper));
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-rule) 70%, transparent);
     cursor: default;
   }
   .subject-card.placeholder h2 {
+    font-size: 1.4rem;
     color: var(--color-ink-muted);
     font-variation-settings: "opsz" 48, "wght" 420;
   }
   .subject-card.placeholder .await {
     margin-top: auto;
-    padding-top: 1.3rem;
+    padding-top: 1rem;
     font-style: italic;
     color: var(--color-ink-faint);
     font-size: 0.95rem;
