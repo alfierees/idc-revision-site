@@ -1,6 +1,9 @@
 ---
 title: Macro-Economics II
 slug: macro-ii
+year: 2
+semester: 1
+tagline: "Growth and business cycles: IS-LM, Mundell-Fleming, AS-AD and the Phillips curve."
 placeholder: false
 ---
 

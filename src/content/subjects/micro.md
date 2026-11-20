@@ -1,6 +1,9 @@
 ---
 title: Micro-Economics
 slug: micro
+year: 2
+semester: 2
+tagline: "Asymmetric information, monopoly and oligopoly, and game theory."
 placeholder: false
 ---
 

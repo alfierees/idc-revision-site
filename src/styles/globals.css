@@ -580,6 +580,8 @@
 .subject-trigger .chev svg { width: 100%; height: 100%; stroke: currentColor; }
 .subject-trigger[aria-expanded="true"] .chev { transform: rotate(-90deg); color: var(--color-accent); }
 .subject-pop {
+  max-height: min(70vh, 34rem);
+  overflow-y: auto;
   position: absolute;
   top: calc(100% + 0.6rem);
   left: -0.4rem;
@@ -619,16 +621,20 @@
 }
 a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, transparent); color: var(--color-accent-ink); }
 .subject-opt.current { color: var(--color-accent-ink); }
-.subject-opt.disabled { color: var(--color-ink-faint); cursor: default; }
-.subject-opt .so-tick { color: var(--color-accent); font-size: 0.6rem; }
-.subject-opt .so-await {
-  font-family: var(--font-ui);
-  font-size: 0.62rem;
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: 0.04em;
-  color: var(--color-ink-faint);
+.subject-group + .subject-group {
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-rule) 70%, transparent);
 }
+.subject-group-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
+  padding: 0.45rem 0.6rem 0.2rem;
+}
+.subject-opt .so-tick { color: var(--color-accent); font-size: 0.6rem; }
 
 /* section tabs — active is a terracotta pill */
 .header-tabs {
@@ -1071,4 +1077,33 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   .sk-note, .sk-fade { animation: none; opacity: 1; }
   .sk-draw path { animation: none; stroke-dashoffset: 0; }
   .sk-handle .sk-ring { animation: none; }
+}
+
+/* ===================== page transitions =====================
+   Browser-native cross-document view transitions: every link is still a full
+   page load (graphs, KaTeX, Mermaid re-run as normal). Browsers without
+   support (Firefox today) just load the page. See the 2026-11-20 decision. */
+@view-transition { navigation: auto; }
+
+.site-header { view-transition-name: site-header; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+  animation-timing-function: ease;
+}
+/* The header stays put rather than fading. */
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+/* A course card's title glides into the header breadcrumb. */
+::view-transition-group(*) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
 }
