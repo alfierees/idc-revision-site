@@ -1185,8 +1185,8 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 .shelf-row { display: flex; flex-wrap: wrap; gap: 1rem 0.5rem; }
 @media (max-width: 640px) {
   /* Three medals to a row on a 390px phone. */
-  .medal:not(.medal-sm) { width: 5.4rem; }
-  .shelf-row { gap: 1rem 0.25rem; }
+  .medal:not(.medal-sm) { width: 5.1rem; }
+  .shelf-row, .course-shelf-row { gap: 1rem 0.25rem; }
   .rank-card, .calendar-card, .shelf { padding: 1.1rem 1.1rem; }
   .rank-name { font-size: 1.7rem; }
 }
