@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import CourseShelf from "../../../../components/progress/CourseShelf";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -39,6 +40,7 @@ const groups = [
 ].filter((g) => g.items.length > 0);
 ---
 <Layout title={`Lectures · ${subject.data.title}`} subject={subjectSlug} active="lectures">
+  <CourseShelf client:idle subject={subjectSlug} />
   {groups.length === 0 ? (
     <p class="mt-6 font-ui text-ink-muted">No lectures ingested for this subject yet.</p>
   ) : (
