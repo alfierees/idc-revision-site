@@ -4,6 +4,7 @@ import HoverPreview from "../../../../components/HoverPreview.astro";
 import OpenAnswer from "../../../../components/OpenAnswer";
 import ExamScorebar from "../../../../components/ExamScorebar";
 import GraphMounter from "../../../../components/GraphMounter.astro";
+import Mermaid from "../../../../components/Mermaid.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
@@ -232,6 +233,7 @@ const hasToolkit =
       questionIds={rendered.filter((q) => q.hasSolution).map((q) => q.id)}
     />
   )}
+  <Mermaid />
   <GraphMounter />
   <HoverPreview subject={subjectSlug} />
 </Layout>

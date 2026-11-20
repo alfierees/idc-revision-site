@@ -10,7 +10,7 @@ import { startStaticServer, type StaticServer } from "../../scripts/verify/stati
 import { createContexts, sweepPage, runPool } from "../../scripts/verify/sweep";
 import type { Viewport } from "../../scripts/verify/report";
 
-const FAST = { hydrationTimeoutMs: 500, imageTimeoutMs: 1000, graphTimeoutMs: 300 };
+const FAST = { hydrationTimeoutMs: 500, imageTimeoutMs: 1000, graphTimeoutMs: 300, mermaidTimeoutMs: 300 };
 const page = (body: string) => `<!doctype html><html><head><meta name="viewport" content="width=device-width"></head><body>${body}</body></html>`;
 
 const FIXTURES: Record<string, string> = {
@@ -18,6 +18,8 @@ const FIXTURES: Record<string, string> = {
   "overflow/index.html": page('<main><div class="wide-table" style="width:2000px">wide</div><div style="overflow-x:auto"><div style="width:3000px">scrolls fine</div></div></main>'),
   "raw-text/index.html": page("<p>$$ x^2 $$</p><p>```graph type: lemons</p>"),
   "graph/index.html": page('<pre><code class="language-graph">type: lemons-threshold</code></pre><div class="graph-embed">[unknown graph type: nope]</div>'),
+  "mermaid/index.html": page('<pre><code class="language-mermaid">erDiagram\n  A ||--o{ B : has</code></pre><div class="mermaid">graph TD; broken</div><div class="mermaid" id="mermaid-2"><svg aria-roledescription="error"><g class="error-icon"></g></svg></div>'),
+  "mermaid-ok/index.html": page('<div class="mermaid"><svg width="10" height="10"></svg></div>'),
   "image/index.html": page('<img src="/nope.png" alt="missing">'),
   "console/index.html": page("<script>console.error('boom')</script><script>fetch('/_vercel/insights/x')</script>"),
   "throws/index.html": page("<script>setTimeout(() => { throw new Error('kaput') }, 0)</script>"),
@@ -68,6 +70,18 @@ describe("sweepPage", () => {
 
   it("flags graph blocks that never mounted and unknown graph types", async () => {
     expect(await kindsFor("/graph/")).toEqual(["graph-not-mounted", "graph-not-mounted"]);
+  });
+
+  // Databases & SQL: ERDs in problem-set solutions showed as raw erDiagram code.
+  it("flags mermaid blocks left as code and hosts mermaid failed to draw", async () => {
+    const result = await sweepPage(contexts.mobile, server.url, "/mermaid/", "mobile", FAST);
+    expect(result.issues.map((issue) => issue.kind)).toEqual(["mermaid-not-rendered", "mermaid-not-rendered", "mermaid-not-rendered"]);
+    expect(result.issues[0].detail).toContain("erDiagram");
+    expect(result.issues[2].detail).toBe("syntax error in diagram mermaid-2");
+  });
+
+  it("passes a drawn mermaid diagram", async () => {
+    expect(await kindsFor("/mermaid-ok/")).toEqual([]);
   });
 
   it("flags broken images", async () => {
