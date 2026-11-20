@@ -8,6 +8,7 @@ import McQuestion from "../../../../components/McQuestion";
 import ExamScorebar from "../../../../components/ExamScorebar";
 import Mermaid from "../../../../components/Mermaid.astro";
 import { getCollection, getEntry } from "astro:content";
+import { entrySlug } from "../../../../lib/entry-slug";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
@@ -15,7 +16,7 @@ import { decodeHtmlEntities } from "../../../../lib/html-entities";
 export async function getStaticPaths() {
   const papers = await getCollection("past-papers", (p) => p.data.in_scope);
   return papers.map((p) => {
-    const slug = p.id.split("/").pop()!;
+    const slug = entrySlug(p.id);
     return { params: { subject: p.data.subject, paper: slug } };
   });
 }

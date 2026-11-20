@@ -6,13 +6,14 @@ import ExamScorebar from "../../../../components/ExamScorebar";
 import GraphMounter from "../../../../components/GraphMounter.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
 import { getCollection, getEntry } from "astro:content";
+import { entrySlug } from "../../../../lib/entry-slug";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
 
 export async function getStaticPaths() {
   const sets = await getCollection("problem-sets");
   return sets.map((p) => {
-    const slug = p.id.split("/").pop()!;
+    const slug = entrySlug(p.id);
     return { params: { subject: p.data.subject, set: slug } };
   });
 }

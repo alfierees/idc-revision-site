@@ -5,6 +5,7 @@ import GraphMounter from "../../../../components/GraphMounter.astro";
 import LectureSidebar from "../../../../components/LectureSidebar.astro";
 import Mermaid from "../../../../components/Mermaid.astro";
 import { getCollection, getEntry } from "astro:content";
+import { entrySlug } from "../../../../lib/entry-slug";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
@@ -12,7 +13,7 @@ import { decodeHtmlEntities } from "../../../../lib/html-entities";
 export async function getStaticPaths() {
   const lectures = await getCollection("lectures", (l) => l.data.in_scope);
   return lectures.map((l) => {
-    const slug = l.id.split("/").pop()!;
+    const slug = entrySlug(l.id);
     return { params: { subject: l.data.subject, lecture: slug } };
   });
 }
