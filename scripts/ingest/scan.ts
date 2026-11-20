@@ -150,8 +150,9 @@ function extractExerciseNumberFromSlug(slug: string): number | null {
 // Returns the assignment numbers explicitly tied to ex/hw/ps/assignment tokens in a filename.
 // e.g. "EX1_Micro3_Answers.docx" → [1] (the "3" in "Micro3" is ignored).
 // "AppliedMetrics2026-HW1.pdf" → [1]. "PS_02-Fertility & Education.md" → [2].
+// "Assign_01-Simple Regression.md" → [1] (Intro to Econometrics vault notes).
 function exerciseNumbersInFilename(filename: string): number[] {
-  return [...filename.matchAll(/(?:problem[-_ ]?set|exercise|ex|hw|ps|assignment)[-_ ]?(\d+)/gi)].map(m => parseInt(m[1], 10));
+  return [...filename.matchAll(/(?:problem[-_ ]?set|exercise|ex|hw|ps|assignment|assign)[-_ ]?(\d+)/gi)].map(m => parseInt(m[1], 10));
 }
 
 async function listVaultSolutions(vaultPath: string, dirName: string, requireKeyword: boolean): Promise<string[]> {

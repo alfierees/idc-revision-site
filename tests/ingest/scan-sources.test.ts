@@ -91,3 +91,16 @@ describe("scan — reserved term slugs", () => {
     expect(terms).toEqual([]);
   });
 });
+
+describe("scan — pairing vault solution notes", () => {
+  // Intro to Econometrics names its vault notes Assign_NN-…, not Assignment_NN.
+  it("pairs an Assign_NN vault note with assignment N", async () => {
+    await touch("docs/Assignment 1/IntroMetrics-HW1-2026.pdf");
+    await touch("vault/Assignments/Assign_01-Simple Regression.md", "# notes");
+    await touch("vault/Assignments/Assign_02-Multiple Regression.md", "# notes");
+    cfg.assignmentFiles = ["Assignment 1/IntroMetrics-HW1-2026.pdf"];
+    cfg.requireSolutionKeyword = false;
+    const [set] = await problemSets();
+    expect(set.vaultSolutionPath).toBe(join(tmp, "vault/Assignments/Assign_01-Simple Regression.md"));
+  });
+});
