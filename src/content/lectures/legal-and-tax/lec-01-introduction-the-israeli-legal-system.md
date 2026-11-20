@@ -196,6 +196,9 @@ The Rule of Law operates in two senses:
 | **Formal** (the state) | Enforcement; equality before the law | The law is actually applied, and applied to everyone alike |
 | **Substantive** | Publication; clarity; non-retroactivity | The law must be *knowable in advance* — published, clear, and not applied backwards in time |
 
+> [!note] These labels follow the lecturer's slide
+> Session 1, slide 38 puts publication, clarity and non-retroactivity under **substantive** and enforcement and equality under **formal**. Many textbooks use the opposite labels (formal = how a law is made and published; substantive = rights, equality and justice), and so do [[PP_03-MCQ Practice, 8 Topics (Practice Set)]] Q9 and the [[Read_01-Exam Cheat Sheet|cheat sheet]]. In this course's exam, expect the slide's labels.
+
 **Operating principles of the Rule of Law:** basic law vs. regular law; specific law vs. general law; the principle of (non-)retroactive application; and the principle that **government acts only according to law**.
 
 > [!warning] Why non-retroactivity matters to founders

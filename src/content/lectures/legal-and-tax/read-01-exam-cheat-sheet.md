@@ -66,7 +66,7 @@ in_scope: true
 | *Pacta sunt servanda* | "agreements must be kept"; foundation of contract law |
 
 > [!warning] Formal vs substantive rule of law: the sheet and Lec 1 disagree
-> The sheet puts **publication, clarity and non-retroactivity under "formal"** and equality and rights under "substantive". [[Lec_01-Introduction & the Israeli Legal System|Lec 1]] assigns them the other way round (formal = enforcement and equality before the law; substantive = publication, clarity, non-retroactivity). Both agree on the list of ingredients; they differ only on the labels. If an exam asks for the label, use the Lec 1 wording.
+> The sheet puts **publication, clarity and non-retroactivity under "formal"** and equality and rights under "substantive". [[Lec_01-Introduction & the Israeli Legal System|Lec 1]] assigns them the other way round (formal = enforcement and equality before the law; substantive = publication, clarity, non-retroactivity). Both agree on the list of ingredients; they differ only on the labels. Lec 1 matches the lecturer's own slide (Session 1, slide 38), so it's the sheet that has them swapped. If an exam asks for the label, use the Lec 1 wording.
 
 **Sources of law**
 
