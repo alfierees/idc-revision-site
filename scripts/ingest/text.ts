@@ -1,7 +1,7 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join, basename } from "node:path";
 
-export { slugify } from "../../src/lib/slugify";
+export { slugify, termSlug } from "../../src/lib/slugify";
 
 const IMG_EXT = "png|jpe?g|gif|svg|webp|heic|heif|avif|bmp";
 const OBSIDIAN_IMG = new RegExp(`!\\[\\[([^\\]|]+\\.(?:${IMG_EXT}))(?:\\|[^\\]]*)?\\]\\]`, "gi");

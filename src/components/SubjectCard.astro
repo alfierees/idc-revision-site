@@ -15,13 +15,13 @@ const { title, slug, placeholder, eyebrow, tagline, counts, href, index } = Astr
 const delay = `${index * 60}ms`;
 ---
 {placeholder ? (
-  <div class="subject-card placeholder" style={`animation-delay: ${delay};`}>
+  <div class="subject-card placeholder" data-course={slug} style={`animation-delay: ${delay};`}>
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h2>{title}</h2>
     <p class="await">Coming soon</p>
   </div>
 ) : (
-  <a href={href} class="subject-card" style={`animation-delay: ${delay};`}>
+  <a href={href} class="subject-card" data-course={slug} style={`animation-delay: ${delay};`}>
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h2 style={`view-transition-name: subj-${slug};`}>{title}</h2>
     {tagline && <p class="tagline">{tagline}</p>}

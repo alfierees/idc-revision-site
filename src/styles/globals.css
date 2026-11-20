@@ -53,6 +53,8 @@
        heading scroll offsets */
     --toc-top: 4.9rem;
   }
+  /* course pages add a second header row */
+  :root:has(.course-row) { --toc-top: 8rem; }
   html {
     font-family: var(--font-body);
     font-size: 17.5px;
@@ -542,15 +544,6 @@
   display: block;
   flex: none;
 }
-.crumb { display: flex; align-items: center; gap: 0.7rem; min-width: 0; flex: none; }
-.crumb .sep { color: var(--color-ink-faint); font-size: 1.1rem; }
-/* narrow screens: logo-only brand so the header never overflows the viewport */
-@media (max-width: 640px) {
-  .brand-name { display: none; }
-  .crumb { flex: 0 1 auto; }
-  .subject-trigger { min-width: 0; }
-}
-
 /* subject switcher dropdown */
 .subject-menu { position: relative; }
 .subject-trigger {
@@ -666,50 +659,96 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 
 .bar-right { display: flex; align-items: center; gap: 1rem; flex: none; margin-left: auto; }
 
-/* mobile burger: replaces the scrolling tab row on narrow screens
-   (double class beats the later .panel-toggle display rule) */
-.panel-toggle.nav-burger { display: none; }
-.nav-burger .ic-burger,
-.nav-burger .ic-close { width: 18px; height: 18px; stroke: currentColor; }
-.nav-burger .ic-close { display: none; }
-.nav-burger[aria-expanded="true"] .ic-burger { display: none; }
-.nav-burger[aria-expanded="true"] .ic-close { display: block; }
-.nav-burger[aria-expanded="true"] {
-  background: color-mix(in srgb, var(--color-accent) 11%, transparent);
-  color: var(--color-accent);
-}
-.mobile-nav {
-  display: none;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.6rem 1.1rem 0.9rem;
-  border-top: 1px solid color-mix(in srgb, var(--color-rule) 60%, transparent);
-}
-.mobile-nav a {
-  display: flex;
+/* ---- main navigation: top bar on desktop, fixed bottom tab bar on phones ---- */
+.main-nav a {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
+  gap: 0.45rem;
   text-decoration: none;
+  white-space: nowrap;
   font-family: var(--font-ui);
-  font-size: 0.98rem;
+  font-size: 0.88rem;
   font-weight: 500;
   color: var(--color-ink-muted);
-  padding: 0.65rem 0.7rem;
+  padding: 0.4rem 0.75rem;
   border-radius: 9px;
   transition: color 0.15s ease, background 0.15s ease;
 }
-.mobile-nav a:hover { color: var(--color-ink); }
-.mobile-nav a.active {
+.main-nav a:hover { color: var(--color-ink); }
+.main-nav a.active {
   background: color-mix(in srgb, var(--color-accent) 11%, transparent);
   color: var(--color-accent-ink);
   font-weight: 600;
 }
-.mobile-nav .mn-tick { color: var(--color-accent); font-size: 0.55rem; }
-@media (max-width: 720px) {
-  .header-tabs { display: none; }
-  .panel-toggle.nav-burger { display: inline-grid; }
-  .mobile-nav:not([hidden]) { display: flex; }
+.main-nav a:focus-visible,
+.header-tabs a:focus-visible,
+.subject-trigger:focus-visible,
+.course-chip:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.nav-icon { width: 18px; height: 18px; flex: none; }
+.top-nav { display: flex; gap: 0.25rem; margin-left: 0.6rem; }
+.bottom-nav { display: none; }
+
+/* second row on course pages: switcher, coverage chip, section tabs */
+.course-row { border-top: 1px solid color-mix(in srgb, var(--color-rule) 60%, transparent); }
+.course-row-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.35rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 1.6rem);
+}
+.course-head { display: flex; align-items: center; gap: 0.6rem; flex: none; min-width: 0; }
+.course-chip {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-accent-ink);
+  background: var(--color-accent-soft);
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+@media (max-width: 640px) {
+  .top-nav { display: none; }
+  .bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 45;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--color-paper);
+    border-top: 1px solid var(--color-rule);
+  }
+  .bottom-nav a {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.15rem;
+    min-height: 3.5rem;
+    padding: 0.4rem 0.25rem;
+    border-radius: 0;
+    font-size: 0.68rem;
+    background: none;
+  }
+  .bottom-nav a.active { background: none; }
+  .nav-icon { width: 22px; height: 22px; }
+  .bottom-nav .nav-icon { width: 22px; height: 22px; }
+  .site-main { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+  .course-row-inner { flex-wrap: wrap; padding: 0.15rem 1rem 0; gap: 0; }
+  .course-head { flex: 1 1 100%; }
+  .subject-trigger { min-width: 0; min-height: 44px; }
+  .header-tabs { flex: 1 1 100%; gap: 0.25rem; }
+  .header-tabs a { display: inline-flex; align-items: center; min-height: 44px; }
+  .site-header .bar { padding: 0.6rem 1rem; }
+  .panel-toggle { width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .main-nav a, .header-tabs a { transition: none; }
 }
 .header-meta {
   font-family: var(--font-ui);
@@ -891,6 +930,10 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   pointer-events: none;
 }
 .scorebar > * { pointer-events: auto; }
+/* Phones: sit above the bottom tab bar. Must come after the base rule (same specificity). */
+@media (max-width: 640px) {
+  .scorebar { bottom: calc(4.6rem + env(safe-area-inset-bottom)); }
+}
 .scorebar-pill {
   display: inline-flex; align-items: center; gap: 0.55rem;
   font-family: var(--font-ui);
@@ -1107,3 +1150,54 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   ::view-transition-old(*),
   ::view-transition-new(*) { animation: none !important; }
 }
+
+/* ---- progress: medals, toast, mark-as-read (dashboard screens arrive with accounts) ---- */
+.medal { margin: 0; display: flex; flex-direction: column; align-items: center; text-align: center; width: 6.25rem; }
+.medal-sm { width: auto; flex-direction: row; gap: 0; }
+.medal-sm .medal-name, .medal-sm .medal-note { display: none; }
+.medal-seal { width: 56px; height: 56px; }
+.medal-sm .medal-seal { width: 40px; height: 40px; }
+.medal-name { margin-top: 0.4rem; font-family: var(--font-ui); font-size: 0.74rem; font-weight: 700; line-height: 1.25; color: var(--color-ink); }
+.medal-note { margin-top: 0.1rem; font-family: var(--font-ui); font-size: 0.68rem; line-height: 1.3; color: var(--color-ink-muted); }
+.medal-earned { color: var(--color-ink); }
+.medal-earned .medal-ring-outer { stroke: var(--color-accent); }
+.medal-earned .medal-ring-inner { stroke: var(--color-accent); opacity: 0.6; }
+.medal-earned .medal-pip { fill: var(--color-accent); }
+.medal-locked { color: var(--color-ink-faint); }
+.medal-locked .medal-seal { opacity: 0.55; }
+.medal-locked .medal-ring-outer, .medal-locked .medal-ring-inner { stroke: var(--color-rule-strong); }
+.medal-locked .medal-pip { fill: var(--color-rule-strong); }
+.medal-locked .medal-name { color: var(--color-ink-muted); font-weight: 600; }
+
+.toaster { position: fixed; left: 0; right: 0; bottom: 1.25rem; z-index: 60; display: flex; justify-content: center; pointer-events: none; padding: 0 1rem; }
+.toast {
+  pointer-events: auto; display: flex; align-items: center; gap: 0.75rem;
+  max-width: 100%; padding: 0.6rem 1rem 0.6rem 0.7rem;
+  background: var(--color-card); border-radius: var(--radius-card);
+  box-shadow: inset 0 0 0 1px var(--color-rule), var(--shadow-lift);
+  animation: toast-in 240ms ease-out both;
+}
+.toast-text { min-width: 0; }
+.toast-line { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-ink-soft); }
+.toast-line strong { color: var(--color-ink); }
+.toast-link { font-family: var(--font-ui); font-size: 0.75rem; font-weight: 600; color: var(--color-accent-ink); text-decoration: none; }
+.toast-link:hover { text-decoration: underline; }
+.toast-close { align-self: flex-start; margin-left: 0.25rem; padding: 0 0.25rem; font: 600 1rem/1 var(--font-ui); color: var(--color-ink-muted); background: none; border: 0; cursor: pointer; }
+.toast-close:hover { color: var(--color-ink); }
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+.mark-read-btn {
+  font-family: var(--font-ui); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.02em;
+  padding: 0.55rem 1.3rem; border-radius: 999px; cursor: pointer;
+  color: var(--color-accent-ink); background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--color-accent);
+  transition: background-color 0.15s ease;
+}
+.mark-read-btn:hover { background: var(--color-accent-soft); }
+.mark-read-on { color: var(--color-ink-soft); box-shadow: inset 0 0 0 1px var(--color-rule-strong); }
+.mark-read-on:hover { background: var(--color-paper-deep); }
+.mark-read-on .mark-read-undo { font-weight: 500; color: var(--color-ink-muted); text-decoration: underline; text-underline-offset: 2px; }
+.mark-read { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: var(--color-ink-soft); }
+.mark-read-undo { font: inherit; font-weight: 500; color: var(--color-ink-muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.mark-read-undo:hover { color: var(--color-ink); }

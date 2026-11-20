@@ -1,0 +1,85 @@
+---
+import type { SemesterGroup, SemesterSubject } from "../lib/semesters";
+interface Props {
+  groups: SemesterGroup<SemesterSubject>[];
+}
+const { groups } = Astro.props;
+
+const courses = (n: number) => `${n} course${n === 1 ? "" : "s"}`;
+const tileNote = (live: number, coming: number) =>
+  live > 0 ? courses(live) : coming > 0 ? `${courses(coming)} coming soon` : "Coming soon";
+---
+<div class="tiles">
+  {groups.map((g) => (
+    <a href={`#${g.semester.id}`} class={`tile ${g.live.length === 0 ? "quiet" : ""}`} data-pick={g.semester.id}>
+      <span class="tile-year">Year {g.semester.year}</span>
+      <span class="tile-sem">Semester {g.semester.semester}</span>
+      <span class="tile-note">
+        {tileNote(g.live.length, g.coming.length)}
+        {g.live.length > 0 && <span class="tile-arr" aria-hidden="true">→</span>}
+      </span>
+    </a>
+  ))}
+</div>
+
+<style>
+  .tiles {
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    max-width: 46rem;
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem 1.75rem 1.4rem;
+    border-radius: var(--radius-card);
+    background: var(--color-card);
+    box-shadow: var(--shadow-soft);
+    text-decoration: none;
+    transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.28s ease;
+  }
+  .tile:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+  .tile-arr { font-size: 1rem; transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1); }
+  @media (hover: hover) {
+    .tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+    .tile:hover .tile-arr { transform: translateX(5px); }
+    .tile.quiet:hover { transform: translateY(-2px); }
+  }
+  .tile-year {
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    line-height: 1.1;
+    font-variation-settings: "opsz" 72, "wght" 500;
+    color: var(--color-ink);
+  }
+  .tile-sem { margin-top: 0.15rem; font-size: 1.05rem; color: var(--color-ink-soft); }
+  .tile-note {
+    margin-top: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-accent);
+  }
+  .tile.quiet {
+    background: color-mix(in srgb, var(--color-paper-deep) 55%, var(--color-paper));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-rule) 70%, transparent);
+  }
+  .tile.quiet .tile-year { color: var(--color-ink-muted); }
+  .tile.quiet .tile-note { font-family: var(--font-body); font-style: italic; font-weight: 400; font-size: 0.95rem; color: var(--color-ink-faint); }
+  @media (max-width: 640px) {
+    .tiles { gap: 0.75rem; }
+    .tile { padding: 1.1rem 1.1rem 1rem; min-height: 44px; }
+    .tile-year { font-size: 1.6rem; }
+    .tile-sem { font-size: 0.98rem; }
+    .tile-note { margin-top: 0.8rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile, .tile-arr { transition: none; }
+  }
+</style>

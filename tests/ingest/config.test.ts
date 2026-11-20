@@ -22,6 +22,18 @@ describe("loadSubjects", () => {
     expect(() => loadSubjects(dir)).toThrow(/broken\.json.*title/);
   });
 
+  it("rejects assignmentFiles that isn't a list of paths", () => {
+    const dir = mkdtempSync(join(tmpdir(), "subjects-"));
+    writeFileSync(join(dir, "loose.json"), JSON.stringify({ ...validConfig, assignmentFiles: "HW1.pdf" }));
+    expect(() => loadSubjects(dir)).toThrow(/loose\.json.*assignmentFiles/);
+  });
+
+  it("accepts a list of assignmentFiles", () => {
+    const dir = mkdtempSync(join(tmpdir(), "subjects-"));
+    writeFileSync(join(dir, "listed.json"), JSON.stringify({ ...validConfig, assignmentFiles: ["A 1/HW1.pdf"] }));
+    expect(loadSubjects(dir).listed.assignmentFiles).toEqual(["A 1/HW1.pdf"]);
+  });
+
   it("rejects invalid JSON with the file name in the error", () => {
     const dir = mkdtempSync(join(tmpdir(), "subjects-"));
     writeFileSync(join(dir, "typo.json"), "{ slug: ");

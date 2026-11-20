@@ -28,6 +28,26 @@ describe("Obsidian block IDs (^anchor)", () => {
     const html = await render("```python\ny = x ^mask\n```");
     expect(html).toContain("y = x ^mask");
   });
+
+  // Obsidian puts a block's ID on its own line after a table, list or callout.
+  // Legal & Tax (2026-11-20) leaked 28 of these as literal "^id" paragraphs.
+  it("drops a block ID on its own line after a table", async () => {
+    const html = await render(`| A | B |\n|---|---|\n| 1 | 2 |\n^tax-rates\n\nAfter.`);
+    expect(html).toContain("<table>");
+    expect(html).not.toContain("^tax-rates");
+    expect(html).toContain("After.");
+  });
+
+  it("drops an indented standalone block ID", async () => {
+    const html = await render(`- first point\n- second point\n\n  ^key-points`);
+    expect(html).toContain("second point");
+    expect(html).not.toContain("^key-points");
+  });
+
+  it("keeps a standalone caret line with no letters", async () => {
+    const html = await render(`Line one\n^2`);
+    expect(html).toContain("^2");
+  });
 });
 
 describe("Obsidian highlights (==text==)", () => {

@@ -71,3 +71,10 @@ describe("parseGlossary", () => {
     expect(g.entries.length).toBe(3);
   });
 });
+
+describe("parseGlossary — reserved term slugs", () => {
+  it("gives an entry titled Index the index-term slug, so the dictionary links to its page", () => {
+    const g = parseGlossary(`## Storage\n\n### Index\nA sorted lookup structure on a column.\n`);
+    expect(g.topics[0].entries[0]).toMatchObject({ term: "Index", slug: "index-term" });
+  });
+});

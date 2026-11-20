@@ -23,7 +23,7 @@ Ingestion is driven by the user-level **`/ingest <subject-slug>`** slash command
 
 - `npx tsx scripts/ingest/cli.ts <subject-slug>` — deterministic scan/copy pass (lectures, assets, glossary, term stubs, queue of pending AI drafts).
 - `npx tsx scripts/ingest/audit.ts <subject-slug>` — post-ingest audit (muted tags, broken wiki-links, missing images). Exit 1 = issues.
-- Per-course config is **one file per course**: `scripts/ingest/subjects/<key>.json` (vault/source paths, folder names, the course's own `mutedTags`), auto-discovered by `scripts/ingest/config.ts`. Graph swaps likewise: `src/data/graph-swaps/<subject>.ts`. Never re-centralise these: parallel `ingest/<course>` branches would conflict.
+- Per-course config is **one file per course**: `scripts/ingest/subjects/<key>.json` (vault/source paths, folder names, the course's own `mutedTags`), auto-discovered by `scripts/ingest/config.ts`. When assignment PDFs aren't all in one `assignmentsDir` folder, list them in `assignmentFiles` (relative to `sourceDocPath`); only those files are queued and copied to `public/papers`, so student submissions or solutions in the same folders stay out. Graph swaps likewise: `src/data/graph-swaps/<subject>.ts`. Never re-centralise these: parallel `ingest/<course>` branches would conflict.
 - Whole-course overnight runs use the user-level **`/ingest-course <slug>`** (`~/.claude/commands/ingest-course.md`), which calls `/ingest` for the site stage.
 
 ## Architecture facts (non-obvious)

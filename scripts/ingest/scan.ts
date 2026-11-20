@@ -1,11 +1,11 @@
 import { readFile, readdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join, basename, extname } from "node:path";
+import { join, basename, extname, resolve, relative, isAbsolute } from "node:path";
 import type { SubjectConfig } from "./config.js";
 import type { ScanResult, PendingItem, ImageOp, DocOp } from "./types.js";
 import { parseRegistry } from "./registry.js";
 import { detectRecipes } from "./recipes.js";
-import { slugify, extractImageRefs, resolveAttachment } from "./text.js";
+import { slugify, termSlug, extractImageRefs, resolveAttachment } from "./text.js";
 
 // dest is the absolute path to site/src/content
 export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise<ScanResult> {
@@ -26,7 +26,7 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
     const reg = parseRegistry(await readFile(registryPath, "utf8"));
     for (const entry of reg) {
       if (entry.isResolved) continue; // resolved entries are notes, not standalone terms
-      const slug = slugify(entry.title);
+      const slug = termSlug(entry.title);
       const destFile = join(destContentRoot, "terms", cfg.slug, `${slug}.md`);
       if (existsSync(destFile)) continue;
       if (existingTermSlugs.has(slug)) continue;
@@ -105,7 +105,9 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
   }
 
   if (existsSync(cfg.sourceDocPath)) {
-    const docFiles = await collectDocs(cfg.sourceDocPath, assignmentsDirName);
+    const docFiles = cfg.assignmentFiles
+      ? listAssignmentFiles(cfg.sourceDocPath, cfg.assignmentFiles)
+      : await collectDocs(cfg.sourceDocPath, assignmentsDirName);
     const vaultSolutions = await listVaultSolutions(cfg.vaultPath, vaultSolutionsDirName, requireSolutionKeyword);
     const docxSolutions = await listDocxSolutions(cfg.sourceDocPath);
     for (const docPath of docFiles) {
@@ -148,8 +150,9 @@ function extractExerciseNumberFromSlug(slug: string): number | null {
 // Returns the assignment numbers explicitly tied to ex/hw/ps/assignment tokens in a filename.
 // e.g. "EX1_Micro3_Answers.docx" → [1] (the "3" in "Micro3" is ignored).
 // "AppliedMetrics2026-HW1.pdf" → [1]. "PS_02-Fertility & Education.md" → [2].
+// "Assign_01-Simple Regression.md" → [1] (Intro to Econometrics vault notes).
 function exerciseNumbersInFilename(filename: string): number[] {
-  return [...filename.matchAll(/(?:problem[-_ ]?set|exercise|ex|hw|ps|assignment)[-_ ]?(\d+)/gi)].map(m => parseInt(m[1], 10));
+  return [...filename.matchAll(/(?:problem[-_ ]?set|exercise|ex|hw|ps|assignment|assign)[-_ ]?(\d+)/gi)].map(m => parseInt(m[1], 10));
 }
 
 async function listVaultSolutions(vaultPath: string, dirName: string, requireKeyword: boolean): Promise<string[]> {
@@ -271,6 +274,22 @@ function containsContiguous(haystack: string[], needle: string[]): boolean {
     return true;
   }
   return false;
+}
+
+// The config's explicit assignmentFiles, resolved under sourceDocPath. A missing
+// file or a path outside the source folder is a config error, so fail loudly.
+function listAssignmentFiles(sourceDocPath: string, assignmentFiles: string[]): string[] {
+  return assignmentFiles.map((file) => {
+    const full = resolve(sourceDocPath, file);
+    const fromRoot = relative(sourceDocPath, full);
+    if (fromRoot.startsWith("..") || isAbsolute(fromRoot)) {
+      throw new Error(`assignmentFiles: "${file}" is outside sourceDocPath`);
+    }
+    if (!existsSync(full)) {
+      throw new Error(`assignmentFiles: "${file}" not found under ${sourceDocPath}`);
+    }
+    return full;
+  });
 }
 
 // Recursively find .pdf and .docx files but only inside the configured assignments folder
