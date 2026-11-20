@@ -75,3 +75,22 @@ describe("progress store", () => {
   });
 });
 
+
+describe("last seen", () => {
+  it("keeps one entry per subject (the newest), newest first", () => {
+    const store = createProgressStore(memoryStorage());
+    store.recordLastSeen("micro", "/subjects/micro/lectures/a", "Lecture A", 1000);
+    store.recordLastSeen("macro", "/subjects/macro/problem-sets/ps-1", "PS 1", 2000);
+    store.recordLastSeen("micro", "/subjects/micro/problem-sets/ps-4", "PS 4", 3000);
+    expect(store.lastSeen()).toEqual([
+      { subject: "micro", path: "/subjects/micro/problem-sets/ps-4", title: "PS 4", at: 3000 },
+      { subject: "macro", path: "/subjects/macro/problem-sets/ps-1", title: "PS 1", at: 2000 },
+    ]);
+  });
+
+  it("gives an empty list for corrupt JSON", () => {
+    const storage = memoryStorage();
+    storage.setItem("idc-revision:last-seen", "{not json");
+    expect(createProgressStore(storage).lastSeen()).toEqual([]);
+  });
+});

@@ -1,270 +1,325 @@
 ---
 import Layout from "../components/Layout.astro";
 import SubjectCard from "../components/SubjectCard.astro";
-import { getCollection } from "astro:content";
-import { groupBySemester, countsLine, SEMESTERS, SEMESTER_STORAGE_KEY } from "../lib/semesters";
+import SemesterTiles from "../components/SemesterTiles.astro";
+import { loadCourseCards } from "../lib/course-cards";
+import { SEMESTERS, SEMESTER_STORAGE_KEY } from "../lib/semesters";
+import { ONBOARDED_KEY } from "../lib/onboarding";
 
-const subjects = (await getCollection("subjects")).map((s) => s.data);
-const lectures = await getCollection("lectures");
-const problemSets = await getCollection("problem-sets");
-const pastPapers = await getCollection("past-papers");
-
-const countFor = (entries: { data: { subject: string } }[], slug: string) =>
-  entries.filter((e) => e.data.subject === slug).length;
-
-const groups = groupBySemester(subjects);
+const { subjects, groups, cardFor } = await loadCourseCards();
 const semesterIds = SEMESTERS.map((s) => s.id);
-
-const cardFor = (subject: (typeof subjects)[number], index: number) => {
-  const lectureCount = countFor(lectures, subject.slug);
-  return {
-    title: subject.title,
-    slug: subject.slug,
-    placeholder: subject.placeholder,
-    tagline: subject.tagline,
-    counts: countsLine({
-      lectures: lectureCount,
-      problemSets: countFor(problemSets, subject.slug),
-      pastPapers: countFor(pastPapers, subject.slug),
-    }),
-    // Lectures are the friendliest first page; fall back if a course has none yet.
-    href: `/subjects/${subject.slug}/${lectureCount > 0 ? "lectures" : "dictionary"}`,
-    index,
-  };
-};
-
-const courses = (n: number) => `${n} course${n === 1 ? "" : "s"}`;
-const tileNote = (live: number, coming: number) =>
-  live > 0 ? courses(live) : coming > 0 ? `${courses(coming)} coming soon` : "Coming soon";
+const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
 ---
 <Layout title="IDC Revision">
-  <script slot="head" is:inline define:vars={{ semesterIds, storageKey: SEMESTER_STORAGE_KEY }}>
-    // Runs before first paint: pick the semester from the link (#y1s1) or the
-    // last choice on this device, so the right courses show without a flash.
+  <script slot="head" is:inline define:vars={{ semesterIds, storageKey: SEMESTER_STORAGE_KEY, onboardedKey: ONBOARDED_KEY }}>
+    // Runs before first paint. Mirrors shouldOnboard() in src/lib/onboarding.ts:
+    // a plain visit with no semester, not yet onboarded and no #y?s? link shows
+    // the welcome; everything else goes straight to the hub.
     (function () {
       var root = document.documentElement;
       root.classList.add("js");
       var fromHash = location.hash.slice(1);
       var chosen = null;
+      var onboarded = false;
       try { chosen = localStorage.getItem(storageKey); } catch (e) {}
+      try { onboarded = localStorage.getItem(onboardedKey) === "1"; } catch (e) {}
       if (semesterIds.indexOf(fromHash) >= 0) {
         chosen = fromHash;
         try { localStorage.setItem(storageKey, chosen); } catch (e) {}
       }
-      if (semesterIds.indexOf(chosen) >= 0) root.setAttribute("data-semester", chosen);
+      var hasSemester = semesterIds.indexOf(chosen) >= 0;
+      if (hasSemester) root.setAttribute("data-semester", chosen);
+      if (!hasSemester && !onboarded) root.setAttribute("data-onboarding", "welcome");
     })();
   </script>
 
-  <section class="reading home-hero">
-    <p class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">Entrepreneurship, Economics &amp; Data Science</p>
-    <h1 class="mt-3 font-display text-[2.15rem] leading-[1.12] sm:text-4xl" style="font-variation-settings: 'opsz' 96, 'wght' 500;">
-      Everything we learnt, in one place.
-    </h1>
-    <p class="mt-4 text-base text-ink-soft">
-      Notes, past papers and worked problem sets for every course, Years 1 and 2.
-    </p>
-  </section>
-
-  <section class="sem-picker" aria-labelledby="sem-picker-title">
-    <h2 id="sem-picker-title" class="picker-title">Which semester are you in?</h2>
-    <div class="tiles">
-      {groups.map((g) => (
-        <a href={`#${g.semester.id}`} class={`tile ${g.live.length === 0 ? "quiet" : ""}`} data-pick={g.semester.id}>
-          <span class="tile-year">Year {g.semester.year}</span>
-          <span class="tile-sem">Semester {g.semester.semester}</span>
-          <span class="tile-note">
-            {tileNote(g.live.length, g.coming.length)}
-            {g.live.length > 0 && <span class="tile-arr" aria-hidden="true">→</span>}
-          </span>
-        </a>
-      ))}
+  <!-- ===== first-visit onboarding ===== -->
+  <section class="onboarding" aria-label="Welcome">
+    <div class="step" data-step="welcome">
+      <p class="eyebrow">Entrepreneurship, Economics &amp; Data Science</p>
+      <h1 class="welcome-title" tabindex="-1">Everything we learnt, in one place.</h1>
+      <ul class="welcome-lines">
+        <li>Lecture notes for every course, rewritten to revise from.</li>
+        <li>Past papers and problem sets with worked answers.</li>
+        <li>Tick questions as you go, so you can see what's left.</li>
+      </ul>
+      <div class="welcome-actions">
+        <button type="button" class="btn-primary" data-action="start">Get started</button>
+        <button type="button" class="btn-text" data-action="skip">Skip</button>
+      </div>
+    </div>
+    <div class="step" data-step="semester">
+      <h2 class="step-title" tabindex="-1">Which semester are you in?</h2>
+      <SemesterTiles groups={groups} />
+      <div class="welcome-actions">
+        <button type="button" class="btn-text" data-action="skip">Skip</button>
+      </div>
     </div>
   </section>
 
-  <nav class="sem-switch" aria-label="Semester">
-    {groups.map((g) => (
-      <a href={`#${g.semester.id}`} class="pill" data-pick={g.semester.id} aria-label={g.semester.label}>
-        <span class="pill-long" aria-hidden="true">Year {g.semester.year} · Sem {g.semester.semester}</span>
-        <span class="pill-short" aria-hidden="true">{g.semester.short}</span>
-      </a>
-    ))}
-  </nav>
-
-  {groups.map((g) => (
-    <section class="sem-panel" data-sem={g.semester.id} aria-labelledby={`sem-title-${g.semester.id}`}>
-      <h2 class="panel-title" id={`sem-title-${g.semester.id}`}>{g.semester.label}</h2>
-      {g.live.length + g.coming.length === 0 ? (
-        <p class="panel-empty">Courses for this semester are on their way.</p>
-      ) : (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...g.live, ...g.coming].map((s, i) => (
-            <SubjectCard {...cardFor(s, i)} />
-          ))}
-        </div>
-      )}
+  <!-- ===== hub ===== -->
+  <div class="hub">
+    <section class="reading home-hero">
+      <p class="eyebrow">Entrepreneurship, Economics &amp; Data Science</p>
+      <h1 class="hub-title">Everything we learnt, in one place.</h1>
     </section>
-  ))}
+
+    <section class="continue" id="continue" aria-labelledby="continue-title" hidden>
+      <h2 class="section-label" id="continue-title">Continue where you left off</h2>
+      <ul class="continue-list" id="continue-list"></ul>
+    </section>
+    <script type="application/json" id="course-titles" set:html={JSON.stringify(courseTitles)} />
+
+    <section class="your-semester" aria-labelledby="your-semester-title">
+      <div class="pick-view">
+        <h2 class="section-label" id="your-semester-title">Pick your semester</h2>
+        <SemesterTiles groups={groups} />
+      </div>
+      {groups.map((g) => (
+        <div class="sem-panel" data-sem={g.semester.id}>
+          <div class="panel-head">
+            <h2 class="section-label">{g.semester.label}</h2>
+            <button type="button" class="btn-text change" data-action="change">Change</button>
+          </div>
+          {g.live.length + g.coming.length === 0 ? (
+            <p class="panel-empty">Courses for this semester are on their way.</p>
+          ) : (
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...g.live, ...g.coming].map((s, i) => (
+                <SubjectCard {...cardFor(s, i)} />
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </section>
+
+    <p class="all-courses"><a href="/courses">All courses <span aria-hidden="true">→</span></a></p>
+  </div>
 </Layout>
 
 <style>
-  .home-hero { margin-bottom: 2.75rem; }
-
-  /* ---- which view shows: picker (first visit) vs switcher + one panel ----
-     Without JS (no .js on <html>) everything stays visible, stacked. */
-  :global(html.js:not([data-semester])) .sem-switch,
-  :global(html.js:not([data-semester])) .sem-panel { display: none; }
-  :global(html.js[data-semester]) .sem-picker { display: none; }
-  :global(html.js[data-semester]) .sem-panel { display: none; }
-  :global(html[data-semester="y1s1"]) .sem-panel[data-sem="y1s1"],
-  :global(html[data-semester="y1s2"]) .sem-panel[data-sem="y1s2"],
-  :global(html[data-semester="y2s1"]) .sem-panel[data-sem="y2s1"],
-  :global(html[data-semester="y2s2"]) .sem-panel[data-sem="y2s2"] { display: block; }
-  :global(html[data-semester="y1s1"]) .pill[data-pick="y1s1"],
-  :global(html[data-semester="y1s2"]) .pill[data-pick="y1s2"],
-  :global(html[data-semester="y2s1"]) .pill[data-pick="y2s1"],
-  :global(html[data-semester="y2s2"]) .pill[data-pick="y2s2"] {
-    background: var(--color-accent);
-    color: var(--color-card);
-    box-shadow: none;
-  }
-
-  /* ---- first-visit picker ---- */
-  .picker-title {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-variation-settings: "opsz" 36, "wght" 480;
-    color: var(--color-ink);
-  }
-  .tiles {
-    margin-top: 1.25rem;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem;
-    max-width: 46rem;
-  }
-  .tile {
-    display: flex;
-    flex-direction: column;
-    padding: 1.6rem 1.75rem 1.4rem;
-    border-radius: var(--radius-card);
-    background: var(--color-card);
-    box-shadow: var(--shadow-soft);
-    text-decoration: none;
-    transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.28s ease;
-  }
-  .tile-arr { font-size: 1rem; transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1); }
-  @media (hover: hover) {
-    .tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
-    .tile:hover .tile-arr { transform: translateX(5px); }
-    .tile.quiet:hover { transform: translateY(-2px); }
-  }
-  .tile-year {
-    font-family: var(--font-display);
-    font-size: 2.1rem;
-    line-height: 1.1;
-    font-variation-settings: "opsz" 72, "wght" 500;
-    color: var(--color-ink);
-  }
-  .tile-sem {
-    margin-top: 0.15rem;
-    font-size: 1.05rem;
-    color: var(--color-ink-soft);
-  }
-  .tile-note {
-    margin-top: 1.1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-family: var(--font-ui);
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--color-accent);
-  }
-  .tile.quiet {
-    background: color-mix(in srgb, var(--color-paper-deep) 55%, var(--color-paper));
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-rule) 70%, transparent);
-  }
-  .tile.quiet .tile-year { color: var(--color-ink-muted); }
-  .tile.quiet .tile-note { font-family: var(--font-body); font-style: italic; font-weight: 400; font-size: 0.95rem; color: var(--color-ink-faint); }
-
-  /* ---- switcher row ---- */
-  .sem-switch {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.75rem;
-  }
-  .pill {
-    font-family: var(--font-ui);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    color: var(--color-ink-soft);
-    background: var(--color-card);
-    box-shadow: inset 0 0 0 1px var(--color-rule);
-    text-decoration: none;
-    transition: background-color 0.15s ease, color 0.15s ease;
-  }
-  .pill:hover { color: var(--color-ink); background: var(--color-paper-deep); }
-  .pill-short { display: none; }
-
-  /* ---- panels ---- */
-  .sem-panel + .sem-panel { margin-top: 3rem; }
-  :global(html.js) .sem-panel + .sem-panel { margin-top: 0; }
-  .panel-title {
-    margin-bottom: 1.1rem;
+  .eyebrow {
     font-family: var(--font-ui);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.18em;
     color: var(--color-ink-muted);
   }
+  .hub-title, .welcome-title {
+    margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 2.15rem;
+    line-height: 1.12;
+    font-variation-settings: "opsz" 96, "wght" 500;
+  }
+  .welcome-title { font-size: 2.6rem; }
+  .welcome-title:focus, .step-title:focus { outline: none; }
+  .home-hero { margin-bottom: 2.25rem; }
+
+  .section-label {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--color-ink-muted);
+  }
+
+  /* ---- which view shows ----
+     Without JS (no .js on <html>) the hub shows with the semester tiles. */
+  .onboarding { display: none; }
+  :global(html[data-onboarding]) .onboarding { display: block; }
+  :global(html[data-onboarding]) .hub { display: none; }
+  .step { display: none; max-width: 34rem; }
+  :global(html[data-onboarding="welcome"]) .step[data-step="welcome"],
+  :global(html[data-onboarding="semester"]) .step[data-step="semester"] { display: block; }
+  .step[data-step="semester"] { max-width: 46rem; }
+
+  .sem-panel { display: none; }
+  :global(html[data-semester="y1s1"]) .sem-panel[data-sem="y1s1"],
+  :global(html[data-semester="y1s2"]) .sem-panel[data-sem="y1s2"],
+  :global(html[data-semester="y2s1"]) .sem-panel[data-sem="y2s1"],
+  :global(html[data-semester="y2s2"]) .sem-panel[data-sem="y2s2"] { display: block; }
+  :global(html[data-semester]) .pick-view { display: none; }
+
+  /* ---- welcome ---- */
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-variation-settings: "opsz" 36, "wght" 480;
+    color: var(--color-ink);
+  }
+  .welcome-lines {
+    margin-top: 1.5rem;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.7rem;
+    font-size: 1.1rem;
+    color: var(--color-ink-soft);
+  }
+  .welcome-lines li { padding-left: 1.1rem; position: relative; }
+  .welcome-lines li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0.7em;
+    width: 0.4rem; height: 0.4rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+  .welcome-actions { margin-top: 2rem; display: flex; align-items: center; gap: 1.25rem; }
+  .btn-primary {
+    min-height: 44px;
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-card);
+    background: var(--color-accent);
+  }
+  .btn-text {
+    min-height: 44px;
+    padding: 0.5rem 0.4rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+  }
+  .btn-text:hover { color: var(--color-accent-ink); }
+  .btn-primary:focus-visible, .btn-text:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+  /* ---- continue ---- */
+  .continue { margin-bottom: 2.25rem; max-width: 36rem; }
+  .continue[hidden] { display: none; }
+  .continue-list { margin: 0.9rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.6rem; }
+  .continue-list :global(a) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 44px;
+    padding: 0.6rem 1.1rem;
+    border-radius: 12px;
+    background: var(--color-card);
+    box-shadow: var(--shadow-soft);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--color-ink);
+  }
+  .continue-list :global(a:hover) { color: var(--color-accent-ink); }
+  .continue-list :global(a:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  .continue-list :global(.arr) { color: var(--color-accent); font-family: var(--font-ui); }
+
+  /* ---- your semester ---- */
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
   .panel-empty { font-style: italic; color: var(--color-ink-faint); }
+  .all-courses { margin-top: 2.5rem; font-family: var(--font-ui); font-size: 0.95rem; font-weight: 600; }
+  .all-courses a { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; color: var(--color-accent); text-decoration: none; }
+  .all-courses a:hover { color: var(--color-accent-ink); }
+  .all-courses a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
   @media (max-width: 640px) {
-    .pill-long { display: none; }
-    .pill-short { display: inline; }
-    .sem-switch { gap: 0.4rem; }
-    .pill { padding: 0.5rem 0.85rem; }
-    .home-hero { margin-bottom: 2rem; }
-    .picker-title { font-size: 1.3rem; }
-    .tiles { gap: 0.75rem; }
-    .tile { padding: 1.1rem 1.1rem 1rem; }
-    .tile-year { font-size: 1.6rem; }
-    .tile-sem { font-size: 0.98rem; }
-    .tile-note { margin-top: 0.8rem; }
+    .welcome-title { font-size: 2.1rem; }
+    .welcome-lines { font-size: 1.02rem; }
+    .step-title { font-size: 1.5rem; }
+    .home-hero { margin-bottom: 1.75rem; }
+    .hub-title { font-size: 1.9rem; }
   }
+
+  /* Step swap crossfade (only runs inside startViewTransition, i.e. after a tap). */
+  :global(::view-transition-old(root)),
+  :global(::view-transition-new(root)) { animation-duration: 0.18s; }
 </style>
 
 <script>
   import { isSemesterId, SEMESTER_STORAGE_KEY } from "../lib/semesters";
+  import { ONBOARDED_KEY } from "../lib/onboarding";
+  import { progressStore } from "../lib/progress/store";
 
   const root = document.documentElement;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  const show = (id: string) => {
-    root.setAttribute("data-semester", id);
-    document.querySelectorAll<HTMLAnchorElement>(".pill[data-pick]").forEach((pill) => {
-      if (pill.dataset.pick === id) pill.setAttribute("aria-current", "true");
-      else pill.removeAttribute("aria-current");
+  const store = (action: () => void) => {
+    try { action(); } catch {}
+  };
+  const swap = (change: () => void) => {
+    root.classList.add("settled");
+    if ("startViewTransition" in document && !reducedMotion.matches) {
+      document.startViewTransition(change);
+    } else {
+      change();
+    }
+  };
+  const setOnboarding = (step: "welcome" | "semester" | null, focusSelector?: string) => {
+    swap(() => {
+      if (step) root.setAttribute("data-onboarding", step);
+      else root.removeAttribute("data-onboarding");
+      if (focusSelector) document.querySelector<HTMLElement>(focusSelector)?.focus({ preventScroll: true });
+    });
+  };
+  const finish = (semesterId?: string) => {
+    store(() => localStorage.setItem(ONBOARDED_KEY, "1"));
+    if (semesterId) store(() => localStorage.setItem(SEMESTER_STORAGE_KEY, semesterId));
+    swap(() => {
+      if (semesterId) root.setAttribute("data-semester", semesterId);
+      root.removeAttribute("data-onboarding");
+      window.scrollTo(0, 0);
     });
   };
 
-  const current = root.getAttribute("data-semester");
-  if (current) show(current);
-
+  // Semester tiles (onboarding step and the hub's "Pick your semester").
+  document.querySelectorAll<HTMLAnchorElement>(".tile[data-pick]").forEach((tile) => {
+    tile.addEventListener("click", (event) => {
+      event.preventDefault();
+      const id = tile.dataset.pick;
+      if (id && isSemesterId(id)) finish(id);
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-action]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const action = button.dataset.action;
+      if (action === "start") setOnboarding("semester", '.step[data-step="semester"] .step-title');
+      else if (action === "skip") finish();
+      else if (action === "change") setOnboarding("semester", '.step[data-step="semester"] .step-title');
+    });
+  });
   window.addEventListener("hashchange", () => {
     const id = location.hash.slice(1);
-    if (!isSemesterId(id)) return;
-    try { localStorage.setItem(SEMESTER_STORAGE_KEY, id); } catch {}
-    root.classList.add("settled");
-    if ("startViewTransition" in document && !reducedMotion.matches) {
-      document.startViewTransition(() => show(id));
-    } else {
-      show(id);
-    }
+    if (isSemesterId(id)) finish(id);
   });
+
+  // Continue where you left off: up to 3 most recent course pages on this device.
+  try {
+    const titles: Record<string, string> = JSON.parse(document.getElementById("course-titles")?.textContent ?? "{}");
+    const entries = progressStore()
+      .lastSeen()
+      .filter((entry) => entry.path.startsWith("/subjects/") && entry.subject in titles)
+      .slice(0, 3);
+    const list = document.getElementById("continue-list");
+    const section = document.getElementById("continue");
+    if (list && section && entries.length > 0) {
+      for (const entry of entries) {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = entry.path;
+        const label = document.createElement("span");
+        label.textContent = `${titles[entry.subject]} · ${entry.title}`;
+        const arrow = document.createElement("span");
+        arrow.className = "arr";
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "→";
+        link.append(label, arrow);
+        item.append(link);
+        list.append(item);
+      }
+      section.hidden = false;
+    }
+  } catch {}
 </script>
