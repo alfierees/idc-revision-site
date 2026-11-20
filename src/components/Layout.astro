@@ -42,6 +42,20 @@ const section = active ?? "dictionary";
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     <Analytics />
+    <script is:inline>
+      // Cross-page view transitions (see globals.css) are skipped when the tab
+      // is hidden or the user navigates mid-transition. That's fine, but Chrome
+      // reports the skip as an uncaught promise error unless it's handled.
+      ["pageswap", "pagereveal"].forEach(function (type) {
+        addEventListener(type, function (event) {
+          var transition = event.viewTransition;
+          if (!transition) return;
+          transition.ready.catch(function () {});
+          transition.finished.catch(function () {});
+          transition.updateCallbackDone.catch(function () {});
+        });
+      });
+    </script>
     <slot name="head" />
   </head>
   <body class="min-h-screen">

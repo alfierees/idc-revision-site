@@ -3,8 +3,8 @@ interface Props {
   title: string;
   slug: string;
   placeholder: boolean;
-  /** "Year 2 · Semester 1" */
-  eyebrow: string;
+  /** Optional small label above the title (omitted when a heading already names the semester). */
+  eyebrow?: string;
   tagline?: string;
   /** "3 lectures · 8 past papers" — empty string hides the line. */
   counts?: string;
@@ -16,18 +16,18 @@ const delay = `${index * 60}ms`;
 ---
 {placeholder ? (
   <div class="subject-card placeholder" style={`animation-delay: ${delay};`}>
-    <p class="eyebrow">{eyebrow}</p>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h2>{title}</h2>
     <p class="await">Coming soon</p>
   </div>
 ) : (
   <a href={href} class="subject-card" style={`animation-delay: ${delay};`}>
-    <p class="eyebrow">{eyebrow}</p>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h2 style={`view-transition-name: subj-${slug};`}>{title}</h2>
     {tagline && <p class="tagline">{tagline}</p>}
     <div class="foot">
       {counts && <p class="counts">{counts}</p>}
-      <p class="open">Open <span class="arr" aria-hidden="true">→</span></p>
+      <span class="open" aria-hidden="true"><span class="arr">→</span></span>
     </div>
   </a>
 )}
@@ -37,7 +37,7 @@ const delay = `${index * 60}ms`;
     position: relative;
     display: flex;
     flex-direction: column;
-    min-height: 13rem;
+    min-height: 12rem;
     text-decoration: none;
     border-radius: var(--radius-card);
     background: var(--color-card);
@@ -50,6 +50,7 @@ const delay = `${index * 60}ms`;
   /* The stagger is a first-load welcome only; semester switches don't replay it. */
   :global(html.settled) .subject-card { animation: none; }
   .eyebrow {
+    margin-bottom: 0.8rem;
     font-family: var(--font-ui);
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -57,7 +58,7 @@ const delay = `${index * 60}ms`;
     color: var(--color-ink-faint);
   }
   .subject-card h2 {
-    margin-top: 0.8rem;
+    margin-top: 0;
     font-family: var(--font-display);
     font-size: 1.75rem;
     line-height: 1.15;
@@ -86,22 +87,23 @@ const delay = `${index * 60}ms`;
   }
   .open {
     margin-left: auto;
+    flex: none;
     font-family: var(--font-ui);
-    font-size: 0.82rem;
+    font-size: 1rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
     color: var(--color-accent);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    white-space: nowrap;
   }
+  .open .arr { display: inline-block; }
   .open .arr { transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1); }
-  a.subject-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lift);
+  /* Hover lift only where there's a real pointer — taps on phones would stick. */
+  @media (hover: hover) {
+    a.subject-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lift);
+    }
+    a.subject-card:hover .open .arr { transform: translateX(5px); }
+    a.subject-card:hover::after { transform: scaleX(1); }
   }
-  a.subject-card:hover .open .arr { transform: translateX(5px); }
   .subject-card::after {
     content: "";
     position: absolute;
@@ -113,7 +115,6 @@ const delay = `${index * 60}ms`;
     transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
     opacity: 0.85;
   }
-  a.subject-card:hover::after { transform: scaleX(1); }
 
   .subject-card.placeholder {
     min-height: 9rem;
@@ -134,4 +135,9 @@ const delay = `${index * 60}ms`;
     font-size: 0.95rem;
   }
   .subject-card.placeholder::after { display: none; }
+
+  @media (max-width: 640px) {
+    .subject-card { padding: 1.4rem 1.4rem 1.2rem; min-height: 0; }
+    .subject-card h2 { font-size: 1.55rem; }
+  }
 </style>

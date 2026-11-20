@@ -15,13 +15,12 @@ const countFor = (entries: { data: { subject: string } }[], slug: string) =>
 const groups = groupBySemester(subjects);
 const semesterIds = SEMESTERS.map((s) => s.id);
 
-const cardFor = (subject: (typeof subjects)[number], index: number, eyebrow: string) => {
+const cardFor = (subject: (typeof subjects)[number], index: number) => {
   const lectureCount = countFor(lectures, subject.slug);
   return {
     title: subject.title,
     slug: subject.slug,
     placeholder: subject.placeholder,
-    eyebrow,
     tagline: subject.tagline,
     counts: countsLine({
       lectures: lectureCount,
@@ -34,8 +33,9 @@ const cardFor = (subject: (typeof subjects)[number], index: number, eyebrow: str
   };
 };
 
-const tileNote = (live: number) =>
-  live === 0 ? "Coming soon" : `${live} course${live === 1 ? "" : "s"}`;
+const courses = (n: number) => `${n} course${n === 1 ? "" : "s"}`;
+const tileNote = (live: number, coming: number) =>
+  live > 0 ? courses(live) : coming > 0 ? `${courses(coming)} coming soon` : "Coming soon";
 ---
 <Layout title="IDC Revision">
   <script slot="head" is:inline define:vars={{ semesterIds, storageKey: SEMESTER_STORAGE_KEY }}>
@@ -57,7 +57,7 @@ const tileNote = (live: number) =>
 
   <section class="reading home-hero">
     <p class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">Entrepreneurship, Economics &amp; Data Science</p>
-    <h1 class="mt-3 font-display text-4xl" style="font-variation-settings: 'opsz' 96, 'wght' 500;">
+    <h1 class="mt-3 font-display text-[2.15rem] leading-[1.12] sm:text-4xl" style="font-variation-settings: 'opsz' 96, 'wght' 500;">
       Everything we learnt, in one place.
     </h1>
     <p class="mt-4 text-base text-ink-soft">
@@ -72,7 +72,10 @@ const tileNote = (live: number) =>
         <a href={`#${g.semester.id}`} class={`tile ${g.live.length === 0 ? "quiet" : ""}`} data-pick={g.semester.id}>
           <span class="tile-year">Year {g.semester.year}</span>
           <span class="tile-sem">Semester {g.semester.semester}</span>
-          <span class="tile-note">{tileNote(g.live.length)}</span>
+          <span class="tile-note">
+            {tileNote(g.live.length, g.coming.length)}
+            {g.live.length > 0 && <span class="tile-arr" aria-hidden="true">→</span>}
+          </span>
         </a>
       ))}
     </div>
@@ -80,9 +83,9 @@ const tileNote = (live: number) =>
 
   <nav class="sem-switch" aria-label="Semester">
     {groups.map((g) => (
-      <a href={`#${g.semester.id}`} class="pill" data-pick={g.semester.id}>
+      <a href={`#${g.semester.id}`} class="pill" data-pick={g.semester.id} aria-label={g.semester.label}>
+        <span class="pill-long" aria-hidden="true">Year {g.semester.year} · Sem {g.semester.semester}</span>
         <span class="pill-short" aria-hidden="true">{g.semester.short}</span>
-        <span class="sr-only">{g.semester.label}</span>
       </a>
     ))}
   </nav>
@@ -95,7 +98,7 @@ const tileNote = (live: number) =>
       ) : (
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...g.live, ...g.coming].map((s, i) => (
-            <SubjectCard {...cardFor(s, i, g.semester.label)} />
+            <SubjectCard {...cardFor(s, i)} />
           ))}
         </div>
       )}
@@ -149,7 +152,12 @@ const tileNote = (live: number) =>
     text-decoration: none;
     transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.28s ease;
   }
-  .tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+  .tile-arr { font-size: 1rem; transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1); }
+  @media (hover: hover) {
+    .tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+    .tile:hover .tile-arr { transform: translateX(5px); }
+    .tile.quiet:hover { transform: translateY(-2px); }
+  }
   .tile-year {
     font-family: var(--font-display);
     font-size: 2.1rem;
@@ -164,6 +172,9 @@ const tileNote = (live: number) =>
   }
   .tile-note {
     margin-top: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     font-family: var(--font-ui);
     font-size: 0.8rem;
     font-weight: 600;
@@ -198,6 +209,7 @@ const tileNote = (live: number) =>
     transition: background-color 0.15s ease, color 0.15s ease;
   }
   .pill:hover { color: var(--color-ink); background: var(--color-paper-deep); }
+  .pill-short { display: none; }
 
   /* ---- panels ---- */
   .sem-panel + .sem-panel { margin-top: 3rem; }
@@ -213,9 +225,17 @@ const tileNote = (live: number) =>
   .panel-empty { font-style: italic; color: var(--color-ink-faint); }
 
   @media (max-width: 640px) {
-    .tiles { grid-template-columns: 1fr; gap: 1rem; }
-    .tile { padding: 1.3rem 1.4rem 1.2rem; }
-    .tile-year { font-size: 1.8rem; }
+    .pill-long { display: none; }
+    .pill-short { display: inline; }
+    .sem-switch { gap: 0.4rem; }
+    .pill { padding: 0.5rem 0.85rem; }
+    .home-hero { margin-bottom: 2rem; }
+    .picker-title { font-size: 1.3rem; }
+    .tiles { gap: 0.75rem; }
+    .tile { padding: 1.1rem 1.1rem 1rem; }
+    .tile-year { font-size: 1.6rem; }
+    .tile-sem { font-size: 0.98rem; }
+    .tile-note { margin-top: 0.8rem; }
   }
 </style>
 
