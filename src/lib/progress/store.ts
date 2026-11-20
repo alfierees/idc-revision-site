@@ -13,6 +13,8 @@ export interface KeyValueStore {
 const PREFIX = "idc-revision:";
 const ACTIVITY_KEY = `${PREFIX}activity`;
 const LEDGER_KEY = `${PREFIX}badges`;
+/** mark key → ms timestamp of its last change (clears included), for B2's newest-wins sync. */
+const STAMPS_KEY = `${PREFIX}stamps`;
 const lectureKey = (subject: string, lecture: string) => `${PREFIX}${subject}:lecture:${lecture}`;
 
 /** Fired after a lecture is marked read or unread. detail: { subject, lecture, read } */
@@ -33,25 +35,36 @@ function readJson<T>(storage: KeyValueStore, key: string, isValid: (v: unknown) 
 const isDayList = (v: unknown): v is string[] => Array.isArray(v) && v.every((d) => typeof d === "string");
 const isLedger = (v: unknown): v is Record<string, string> =>
   typeof v === "object" && v !== null && !Array.isArray(v) && Object.values(v).every((d) => typeof d === "string");
+const isStampIndex = (v: unknown): v is Record<string, number> =>
+  typeof v === "object" && v !== null && !Array.isArray(v) && Object.values(v).every((t) => typeof t === "number");
 
-export function createProgressStore(storage: KeyValueStore) {
+export function createProgressStore(storage: KeyValueStore, now: () => number = Date.now) {
   const readStatusRaw = (key: string): StatusValue => {
     const value = storage.getItem(key);
     return value === "done" || value === "wrong" || value === "skipped" ? value : "untried";
   };
   const lectureRead = (subject: string, lecture: string) => storage.getItem(lectureKey(subject, lecture)) === "read";
+  const stamp = (key: string) => {
+    const stamps = readJson(storage, STAMPS_KEY, isStampIndex, {});
+    stamps[key] = now();
+    storage.setItem(STAMPS_KEY, JSON.stringify(stamps));
+  };
 
   return {
     readStatusRaw,
     writeStatusRaw(key: string, value: StatusValue) {
       if (value === "untried") storage.removeItem(key);
       else storage.setItem(key, value);
+      stamp(key);
     },
     lectureRead,
     setLectureRead(subject: string, lecture: string, read: boolean) {
       if (read) storage.setItem(lectureKey(subject, lecture), "read");
       else storage.removeItem(lectureKey(subject, lecture));
+      stamp(lectureKey(subject, lecture));
     },
+    /** When each mark last changed. Legacy marks made before stamps existed are absent (treated as 0 by sync). */
+    stamps: () => readJson(storage, STAMPS_KEY, isStampIndex, {}),
     activityDays: () => readJson(storage, ACTIVITY_KEY, isDayList, []),
     recordActivity(day: string) {
       const days = new Set(readJson(storage, ACTIVITY_KEY, isDayList, []));

@@ -85,7 +85,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       <div class="mt-8 lecture-prose prose-card" set:html={html} />
     </article>
     <div class="mt-10 flex justify-center">
-      <MarkAsRead client:visible subject={subjectSlug} lecture={lectureSlug} />
+      <MarkAsRead client:idle subject={subjectSlug} lecture={lectureSlug} />
     </div>
     </div>
   </div>

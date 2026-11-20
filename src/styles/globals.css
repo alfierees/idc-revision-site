@@ -1108,7 +1108,7 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   ::view-transition-new(*) { animation: none !important; }
 }
 
-/* ---- progress: medals, toast, mark-as-read, shelves ---- */
+/* ---- progress: medals, toast, mark-as-read (dashboard screens arrive with accounts) ---- */
 .medal { margin: 0; display: flex; flex-direction: column; align-items: center; text-align: center; width: 6.25rem; }
 .medal-sm { width: auto; flex-direction: row; gap: 0; }
 .medal-sm .medal-name, .medal-sm .medal-note { display: none; }
@@ -1158,40 +1158,3 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 .mark-read { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: var(--color-ink-soft); }
 .mark-read-undo { font: inherit; font-weight: 500; color: var(--color-ink-muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .mark-read-undo:hover { color: var(--color-ink); }
-
-.progress { display: grid; gap: 1.5rem; margin-top: 3.5rem; }
-.progress-eyebrow { margin: 0 0 0.6rem; font-family: var(--font-ui); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--color-ink-muted); }
-.progress-eyebrow strong { color: var(--color-ink); letter-spacing: 0.04em; }
-.rank-card, .calendar-card, .shelf { background: var(--color-card); border-radius: var(--radius-card); box-shadow: var(--shadow-soft); padding: 1.4rem 1.6rem; }
-.rank-name { margin: 0; font-family: var(--font-display); font-size: 2rem; line-height: 1.15; font-variation-settings: "opsz" 72, "wght" 500; color: var(--color-ink); }
-.rank-count { margin: 0.3rem 0 0; font-family: var(--font-ui); font-size: 0.9rem; font-weight: 600; color: var(--color-ink-soft); }
-.rank-next { margin: 0.2rem 0 0; font-family: var(--font-ui); font-size: 0.82rem; color: var(--color-ink-muted); }
-.rank-next strong { color: var(--color-ink-soft); }
-.calendar-note { text-transform: none; letter-spacing: 0; font-size: 0.78rem; }
-.calendar { display: flex; gap: 3px; }
-.calendar-week { display: flex; flex-direction: column; gap: 3px; }
-.calendar-day { display: block; width: 12px; height: 12px; border-radius: 3px; background: var(--color-paper-deep); }
-.calendar-on { background: color-mix(in srgb, var(--color-accent) 70%, transparent); }
-.calendar-today { box-shadow: 0 0 0 1px var(--color-ink); }
-.calendar-future { background: transparent; }
-.shelf-family + .shelf-family { margin-top: 1.1rem; }
-/* Desktop: rank and calendar share a row, the shelf runs full width beneath. */
-@media (min-width: 768px) {
-  .progress { grid-template-columns: minmax(0, 1fr) auto; }
-  .shelf { grid-column: 1 / -1; }
-  .calendar-day { width: 14px; height: 14px; }
-}
-.shelf-family-label { margin: 0 0 0.5rem; font-family: var(--font-ui); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); }
-.shelf-row { display: flex; flex-wrap: wrap; gap: 1rem 0.5rem; }
-@media (max-width: 640px) {
-  /* Three medals to a row on a 390px phone. */
-  .medal:not(.medal-sm) { width: 5.1rem; }
-  .shelf-row, .course-shelf-row { gap: 1rem 0.25rem; }
-  .rank-card, .calendar-card, .shelf { padding: 1.1rem 1.1rem; }
-  .rank-name { font-size: 1.7rem; }
-}
-
-.course-shelf { margin-bottom: 1.5rem; padding: 1rem 1.2rem; border-radius: 12px; background: var(--color-paper-deep); }
-.course-shelf-line { margin: 0; font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-ink-soft); }
-.course-shelf-line strong { color: var(--color-ink); }
-.course-shelf-row { display: flex; flex-wrap: wrap; gap: 0.9rem 0.5rem; margin-top: 0.9rem; }

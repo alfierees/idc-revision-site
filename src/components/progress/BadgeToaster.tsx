@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { BADGES } from "../../lib/progress/badges";
 import { syncBadges } from "../../lib/progress/client";
 import { BADGE_EVENT, LECTURE_EVENT } from "../../lib/progress/store";
+import { PROGRESS_UI_ENABLED } from "../../lib/progress/flags";
 import { STATUS_EVENT } from "../../lib/status";
 import BadgeMedal from "./BadgeMedal";
 
@@ -9,7 +10,8 @@ const SHOW_MS = 6000;
 const DEBOUNCE_MS = 300;
 
 // Sitewide: silently backfills the badge ledger on load, then announces badges
-// earned by a live mark with a quiet toast.
+// earned by a live mark with a quiet toast. Until accounts ship
+// (PROGRESS_UI_ENABLED), badges are still recorded but never announced.
 export default function BadgeToaster() {
   const [ids, setIds] = useState<string[]>([]);
   const hideTimer = useRef<number>();
@@ -26,7 +28,7 @@ export default function BadgeToaster() {
     };
     const onBadges = (event: Event) => {
       const fresh = (event as CustomEvent<{ ids: string[] }>).detail?.ids ?? [];
-      if (fresh.length === 0) return;
+      if (fresh.length === 0 || !PROGRESS_UI_ENABLED) return;
       setIds(fresh);
       window.clearTimeout(hideTimer.current);
       hideTimer.current = window.setTimeout(() => setIds([]), SHOW_MS);

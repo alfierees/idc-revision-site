@@ -53,4 +53,25 @@ describe("progress store", () => {
     expect(snap.status("micro", "problem-set", "ps-1", "1")).toBe("done");
     expect(snap.status("micro", "problem-set", "ps-1", "2")).toBe("untried");
   });
+
+  it("stamps every status write and lecture change, including clears", () => {
+    let clock = 1000;
+    const store = createProgressStore(memoryStorage(), () => clock);
+    store.writeStatusRaw("idc-revision:micro:problem-set:ps-1:1", "done");
+    clock = 2000;
+    store.setLectureRead("micro", "l1", true);
+    clock = 3000;
+    store.writeStatusRaw("idc-revision:micro:problem-set:ps-1:1", "untried");
+    expect(store.stamps()).toEqual({
+      "idc-revision:micro:problem-set:ps-1:1": 3000,
+      "idc-revision:micro:lecture:l1": 2000,
+    });
+  });
+
+  it("treats a corrupt stamp index as empty", () => {
+    const storage = memoryStorage();
+    storage.setItem("idc-revision:stamps", "[1,2]");
+    expect(createProgressStore(storage).stamps()).toEqual({});
+  });
 });
+
