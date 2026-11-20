@@ -1,7 +1,8 @@
 // Changes waiting to reach the server. Persisted on the device, so nothing is lost offline or on reload.
 import { markToKey, PREFIX } from "./marks";
 import type { KeyValueStore } from "./store";
-import { MAX_BATCH, type SyncItem } from "./sync-types";
+import { MAX_BATCH } from "./sync-constants";
+import type { SyncItem } from "./sync-types";
 
 const QUEUE_KEY = `${PREFIX}sync-queue`;
 const DEBOUNCE_MS = 3000;

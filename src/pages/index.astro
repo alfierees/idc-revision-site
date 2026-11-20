@@ -242,6 +242,7 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
   import { isSemesterId, SEMESTER_STORAGE_KEY } from "../lib/semesters";
   import { ONBOARDED_KEY } from "../lib/onboarding";
   import { progressStore } from "../lib/progress/store";
+  import { SYNC_PULLED_EVENT } from "../lib/progress/sync-constants";
 
   const root = document.documentElement;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -295,8 +296,9 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
     if (isSemesterId(id)) finish(id);
   });
 
-  // Continue where you left off: up to 3 most recent course pages on this device.
-  try {
+  // Continue where you left off: up to 3 most recent course pages (this device, plus the
+  // account's other devices once synced, so it redraws when synced progress arrives).
+  const renderContinue = () => { try {
     const titles: Record<string, string> = JSON.parse(document.getElementById("course-titles")?.textContent ?? "{}");
     const entries = progressStore()
       .lastSeen()
@@ -304,6 +306,8 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
       .slice(0, 3);
     const list = document.getElementById("continue-list");
     const section = document.getElementById("continue");
+    if (list) list.replaceChildren();
+    if (section) section.hidden = true;
     if (list && section && entries.length > 0) {
       for (const entry of entries) {
         const item = document.createElement("li");
@@ -321,5 +325,7 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
       }
       section.hidden = false;
     }
-  } catch {}
+  } catch {} };
+  renderContinue();
+  window.addEventListener(SYNC_PULLED_EVENT, renderContinue);
 </script>

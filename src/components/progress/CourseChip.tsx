@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import { SYNC_PULLED_EVENT } from "../../lib/progress/sync-constants";
 import { evaluate, loadTotals } from "../../lib/progress/client";
 import { LECTURE_EVENT } from "../../lib/progress/store";
 
@@ -25,10 +26,12 @@ export default function CourseChip({ subject }: Props) {
     refresh();
     window.addEventListener(LECTURE_EVENT, refresh);
     window.addEventListener("storage", refresh);
+    window.addEventListener(SYNC_PULLED_EVENT, refresh);
     return () => {
       cancelled = true;
       window.removeEventListener(LECTURE_EVENT, refresh);
       window.removeEventListener("storage", refresh);
+      window.removeEventListener(SYNC_PULLED_EVENT, refresh);
     };
   }, [subject]);
 

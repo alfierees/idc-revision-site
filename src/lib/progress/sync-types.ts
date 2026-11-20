@@ -1,7 +1,9 @@
 // What a device sends to /api/progress and gets back. Validated on the server; never trust the client.
 import { z } from "astro/zod";
 
-export const MAX_BATCH = 500;
+import { MAX_BATCH } from "./sync-constants";
+
+export { MAX_BATCH };
 
 const slug = z.string().min(1).max(200).regex(/^[a-z0-9][a-z0-9._-]*$/i);
 const isoDay = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);

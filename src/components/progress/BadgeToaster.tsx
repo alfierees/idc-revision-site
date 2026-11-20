@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import { SYNC_PULLED_EVENT } from "../../lib/progress/sync-constants";
 import { BADGES } from "../../lib/progress/badges";
 import { syncBadges } from "../../lib/progress/client";
 import { BADGE_EVENT, LECTURE_EVENT } from "../../lib/progress/store";
@@ -36,7 +37,11 @@ export default function BadgeToaster() {
     window.addEventListener(STATUS_EVENT, onMark);
     window.addEventListener(LECTURE_EVENT, onMark);
     window.addEventListener(BADGE_EVENT, onBadges);
+    // Synced progress can complete badges: record them silently, like the on-load backfill.
+    const onPulled = () => void syncBadges(false).catch(() => {});
+    window.addEventListener(SYNC_PULLED_EVENT, onPulled);
     return () => {
+      window.removeEventListener(SYNC_PULLED_EVENT, onPulled);
       window.clearTimeout(debounce);
       window.clearTimeout(hideTimer.current);
       window.removeEventListener(STATUS_EVENT, onMark);
