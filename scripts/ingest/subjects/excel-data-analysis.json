@@ -1,0 +1,18 @@
+{
+  "slug": "excel-data-analysis",
+  "title": "Excel for Data Analysis",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 1/Excel for Data Analysis",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 1/Excel and data analysis",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Homeworks",
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "excel-for-data-analysis",
+    "excel-data-analysis",
+    "excel",
+    "lecture"
+  ],
+  "notes": "Year 1 Semester 1. Every source file is a spreadsheet (.xlsx/.xlsm/.xlsb): class workbooks in 'Class files', homework data files in 'Homeworks', a final assignment at the root. No slide decks or PDFs. cli.ts only queues .pdf/.docx assignments, so site PS pages are drafted from the vault Problem Sets notes."
+}
