@@ -21,3 +21,10 @@ export function weekStart(day: string): string {
   const weekday = parseDay(day).getDay(); // 0 = Sunday
   return addDays(day, -((weekday + 6) % 7));
 }
+
+/** "2026-11-20" → "Earned 20 Nov". Anything that isn't a day string passes through unchanged. */
+export function earnedLabel(day: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return day;
+  const date = parseDay(day);
+  return `Earned ${date.getDate()} ${date.toLocaleString("en-GB", { month: "short" })}`;
+}

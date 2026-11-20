@@ -113,6 +113,9 @@ const delay = `${index * 60}ms`;
     color: var(--color-ink-muted);
   }
   .counts {
+    /* Take the row's free space so the arrow stays beside the counts, not on its own line. */
+    flex: 1 1 0;
+    min-width: 0;
     font-family: var(--font-ui);
     font-size: 0.78rem;
     color: var(--color-ink-muted);

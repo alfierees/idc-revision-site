@@ -1,4 +1,5 @@
 import type { BadgeDef, BadgeFamily } from "../../lib/progress/badges";
+import { earnedLabel } from "../../lib/progress/days";
 
 export const FAMILY_GLYPH: Record<BadgeFamily, string> = {
   lectures: "M4 6c3-1 5-1 8 1 3-2 5-2 8-1v12c-3-1-5-1-8 1-3-2-5-2-8-1z M12 7v12",
@@ -19,7 +20,7 @@ interface Props {
 
 export default function BadgeMedal({ badge, earnedOn, progress, size = "md" }: Props) {
   const earned = earnedOn !== undefined;
-  const label = earned ? `${badge.name}, earned ${earnedOn}` : `${badge.name}, locked: ${badge.rule}`;
+  const label = earned ? `${badge.name}, ${earnedLabel(earnedOn).toLowerCase()}` : `${badge.name}, locked: ${badge.rule}`;
   const pips = Math.max(0, Math.min(badge.step, 6));
   const pipAngles = Array.from({ length: pips }, (_, i) => {
     const spread = Math.min(70, 16 * (pips - 1));
@@ -41,7 +42,7 @@ export default function BadgeMedal({ badge, earnedOn, progress, size = "md" }: P
       </svg>
       <figcaption class="medal-name">{badge.name}</figcaption>
       {!earned && <span class="medal-note">{progress ? `${progress.have} of ${progress.need}` : badge.rule}</span>}
-      {earned && size === "md" && <span class="medal-note">{earnedOn}</span>}
+      {earned && size === "md" && <span class="medal-note">{earnedLabel(earnedOn)}</span>}
     </figure>
   );
 }

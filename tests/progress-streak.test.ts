@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addDays, weekStart, localDay } from "../src/lib/progress/days";
+import { addDays, weekStart, localDay, earnedLabel } from "../src/lib/progress/days";
 import { gentleStreak, hasFullWeek, calendarWeeks } from "../src/lib/progress/streak";
 
 describe("days", () => {
@@ -56,5 +56,14 @@ describe("calendarWeeks", () => {
     expect(weeks[11][0]).toBe("2026-11-16");
     expect(weeks[11][6]).toBe("2026-11-22");
     expect(weeks[0][0]).toBe("2026-08-31");
+  });
+});
+
+describe("earnedLabel", () => {
+  it("formats a ledger date", () => {
+    expect(earnedLabel("2026-11-20")).toBe("Earned 20 Nov");
+  });
+  it("passes other text through", () => {
+    expect(earnedLabel("in this course")).toBe("in this course");
   });
 });

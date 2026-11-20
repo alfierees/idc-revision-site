@@ -1170,9 +1170,18 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 .calendar-today { box-shadow: 0 0 0 1px var(--color-ink); }
 .calendar-future { background: transparent; }
 .shelf-family + .shelf-family { margin-top: 1.1rem; }
+/* Desktop: rank and calendar share a row, the shelf runs full width beneath. */
+@media (min-width: 768px) {
+  .progress { grid-template-columns: minmax(0, 1fr) auto; }
+  .shelf { grid-column: 1 / -1; }
+  .calendar-day { width: 14px; height: 14px; }
+}
 .shelf-family-label { margin: 0 0 0.5rem; font-family: var(--font-ui); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); }
 .shelf-row { display: flex; flex-wrap: wrap; gap: 1rem 0.5rem; }
 @media (max-width: 640px) {
+  /* Three medals to a row on a 390px phone. */
+  .medal:not(.medal-sm) { width: 5.4rem; }
+  .shelf-row { gap: 1rem 0.25rem; }
   .rank-card, .calendar-card, .shelf { padding: 1.1rem 1.1rem; }
   .rank-name { font-size: 1.7rem; }
 }
