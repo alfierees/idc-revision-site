@@ -1,5 +1,18 @@
 import { describe, it, expect } from "vitest";
-import { slugify, extractImageRefs } from "../../scripts/ingest/text";
+import { slugify, extractImageRefs, stripCode } from "../../scripts/ingest/text";
+
+describe("stripCode", () => {
+  it("drops fenced blocks, including ones indented inside YAML block scalars", () => {
+    const yamlSolution = "    solution: |\n      See [[Lecture 4 - Regression]].\n      ```python\n      model.fit(X_train[['age']], y_train)\n      ```\n";
+    const stripped = stripCode(yamlSolution);
+    expect(stripped).toContain("[[Lecture 4 - Regression]]");
+    expect(stripped).not.toContain("[['age']]");
+  });
+
+  it("drops inline code spans but keeps the wiki-links around them", () => {
+    expect(stripCode("Check with `model.predict([[7]])`, see [[KNN]].")).toBe("Check with , see [[KNN]].");
+  });
+});
 
 describe("slugify", () => {
   it("lowercases and replaces non-alphanumerics with dashes", () => {

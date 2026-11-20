@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 // One file per course: scripts/ingest/subjects/<key>.json, auto-discovered.
 // The key (filename) is what you pass to cli.ts/audit.ts; `slug` is the site
-// subject it writes into (usually the same; data-science -> machine-learning).
+// subject it writes into (usually the same).
 // Per-course files keep parallel ingest/<course> branches from conflicting.
 
 export interface SubjectConfig {
@@ -82,8 +82,7 @@ export function getSubjectConfig(key: string): SubjectConfig {
 export const SHARED_MUTED_TAGS = ["assignment-solution", "problem-set"];
 
 // Muted tags for one site subject: the shared ones plus the mutedTags of every
-// course config that writes into it (so machine-learning also mutes
-// data-science's course tag).
+// course config that writes into it.
 export function mutedTagsFor(siteSlug: string): Set<string> {
   const muted = new Set(SHARED_MUTED_TAGS);
   for (const [key, config] of Object.entries(subjects)) {
