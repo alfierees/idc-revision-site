@@ -1141,3 +1141,15 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 .toast-link:hover { text-decoration: underline; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+.mark-read-btn {
+  font-family: var(--font-ui); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.02em;
+  padding: 0.55rem 1.3rem; border-radius: 999px; cursor: pointer;
+  color: var(--color-accent-ink); background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--color-accent);
+  transition: background-color 0.15s ease;
+}
+.mark-read-btn:hover { background: var(--color-accent-soft); }
+.mark-read { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: var(--color-ink-soft); }
+.mark-read-undo { font: inherit; font-weight: 500; color: var(--color-ink-muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.mark-read-undo:hover { color: var(--color-ink); }

@@ -40,7 +40,7 @@ export default function BadgeToaster() {
     };
   }, []);
 
-  const badges = ids.map((id) => BADGES.find((b) => b.id === id)).filter((b) => b !== undefined);
+  const badges = ids.map((id) => BADGES.find((b) => b.id === id)).filter((b): b is (typeof BADGES)[number] => b !== undefined);
   const dismiss = () => {
     window.clearTimeout(hideTimer.current);
     setIds([]);
