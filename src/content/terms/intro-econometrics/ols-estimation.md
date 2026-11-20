@@ -13,4 +13,4 @@ Ordinary least squares picks the coefficients that minimise the sum of squared [
 
 Questions ask you to derive it from the first-order conditions: the fitted line passes through the sample means, and the residuals sum to zero and are orthogonal to every regressor.
 
-See [[Lec_13-Exam Review|Lecture 13]].
+See [[Lec_02-Statistics Review & OLS Estimation|Lecture 2]] and [[Lec_13-Exam Review|Lecture 13]].

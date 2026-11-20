@@ -13,4 +13,4 @@ The change in $y$ from a one-unit change in $x$, $dy/dx$. It is constant in a le
 
 Questions ask you to evaluate it at a given $x$ or $y$ in a [[Quadratic Model]], or to find the group-specific effect when an [[Interaction Term]] is present, since the slope then differs by group.
 
-See [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignment 2.
+See [[Lec_03-Nonlinear Models with OLS|Lecture 3]] and [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignment 2.

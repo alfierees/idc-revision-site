@@ -326,7 +326,8 @@ $$F = \frac{(\text{RSS}_R - \text{RSS}_{UR})/q}{\text{RSS}_{UR}/(N-M)} = \frac{(
 
 ## 📎 Related Notes
 
-- Previous: [[Lec_08-Goodness of Fit & Multicollinearity]] — perfect vs partial multicollinearity (the engine behind the dummy-variable trap), the joint F-test
+- Previous: [[Lec_09-Model Misspecification & Quadratics]] — omitted and irrelevant variables and quadratics, the misspecification ideas that dummies extend
+- Earlier: [[Lec_08-Goodness of Fit & Multicollinearity]] — perfect vs partial multicollinearity (the engine behind the dummy-variable trap), the joint F-test
 - Next: [[Lec_11-Interaction Terms]] — letting the *slope* (effect size) differ across groups, relaxing the constant-gap assumption of additive dummies
 - Then: [[Lec_12-Heteroskedasticity]]
 - Foundational: [[OLS Estimation]], [[F-test]], [[Perfect Multicollinearity]], [[Model Misspecification]]

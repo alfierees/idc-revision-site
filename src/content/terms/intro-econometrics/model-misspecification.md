@@ -13,4 +13,4 @@ Choosing the wrong specification: the wrong functional form, or the wrong set of
 
 Spot an irrelevant variable by a failed [[t-test]] and drop it (after checking it is not just collinear); fix an omission, the more dangerous error, by adding the variable back. When unsure, keep a borderline variable, since bias is worse than extra variance.
 
-See [[Lec_10-Dummy Variables|Lecture 10]] and [[Lec_13-Exam Review|Lecture 13]].
+See [[Lec_09-Model Misspecification & Quadratics|Lecture 9]] and [[Lec_10-Dummy Variables|Lecture 10]] and [[Lec_13-Exam Review|Lecture 13]].

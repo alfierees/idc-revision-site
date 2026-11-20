@@ -13,4 +13,4 @@ The probability, if the null were true, of a t-statistic at least as extreme as 
 
 Read it from the R output for a significance test ($H_0:\beta_k=0$ against $\neq 0$); small $p$ means reject. In Assignment 4 a squared term with $p=0.104$ is not significant at 5%.
 
-See [[Lec_13-Exam Review|Lecture 13]].
+See [[Lec_06-Hypothesis Tests & p-values|Lecture 6]] and [[Lec_13-Exam Review|Lecture 13]].

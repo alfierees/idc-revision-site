@@ -14,3 +14,5 @@ Plugging values of the regressors into the fitted equation to get $\hat y$.
 In Assignment 1, $\widehat{hours} = 184.4 - 0.859\,schooly$ predicts 174.1 hours at 12 years of schooling, and the birthweight model predicts 3162.1 g at 20 cigarettes a day; the gap to the actual value is the [[Residuals]] term.
 
 Worked in Assignment 1.
+
+Taught in [[Lec_03-Nonlinear Models with OLS|Lecture 3]].

@@ -13,4 +13,4 @@ The percentage change in $y$ for a 1% change in $x$, $\frac{\Delta y}{\Delta x}\
 
 Use it when interpreting log models or comparing responsiveness across groups; in the lecture, interactions with $\ln abv$ gave different elasticities for wine, spirits and beer.
 
-See [[Lec_13-Exam Review|Lecture 13]] and [[Lec_11-Interaction Terms|Lecture 11]].
+See [[Lec_03-Nonlinear Models with OLS|Lecture 3]] and [[Lec_13-Exam Review|Lecture 13]] and [[Lec_11-Interaction Terms|Lecture 11]].

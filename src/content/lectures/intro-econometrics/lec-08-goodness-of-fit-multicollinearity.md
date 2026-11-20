@@ -359,8 +359,8 @@ $-4.415 < -1.697$ ⟹ **reject** $H_0$: the MPC is significantly **less than 0.9
 
 ## 📎 Related Notes
 
-- Previous: [[Lec_07-Interaction Terms]] — building richer specifications before measuring their fit
-- Next: [[Lec_10-Dummy Variables]] and [[Lec_12-Heteroskedasticity]]
+- Previous: [[Lec_07-Multiple Hypothesis Tests]] — joint hypotheses and the F-test that this lecture re-expresses through $R^2$
+- Next: [[Lec_09-Model Misspecification & Quadratics]], then [[Lec_10-Dummy Variables]] and [[Lec_12-Heteroskedasticity]]
 - Foundational: [[F-test]], [[OLS Estimation]], [[Variance of the OLS Estimator]], [[Gauss-Markov Theorem]]
 - Concepts: [[R-squared]], [[Adjusted R-squared]], [[Multicollinearity]], [[Total Sum of Squares]]
 - Hub: [[Intro Econometrics]]

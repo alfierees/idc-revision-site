@@ -13,4 +13,4 @@ Tests one coefficient with $t=(\hat\beta - b)/se(\hat\beta)\sim t_{N-M}$, where 
 
 Use $df = N-M$ (including the intercept in $M$), use $\alpha/2$ for two-sided tests, and read the printed table rather than R. R prints the test against zero, so for a non-zero null rebuild the statistic by hand, as in Assignment 3.
 
-See [[Lec_13-Exam Review|Lecture 13]].
+See [[Lec_06-Hypothesis Tests & p-values|Lecture 6]] and [[Lec_13-Exam Review|Lecture 13]].

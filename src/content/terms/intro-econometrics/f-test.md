@@ -13,4 +13,4 @@ A joint test of several restrictions at once, $F = \frac{(RSS_R - RSS_{UR})/q}{R
 
 Use it for joint significance (for example all the dummies of one categorical variable), the overall model test, and the [[Chow Test]]. With one restriction $F_{1,N-M} = t^2$; in the exam read the printed table at numerator df $q$ and denominator df $N-M$.
 
-See [[Lec_08-Goodness of Fit & Multicollinearity|Lecture 8]] and [[Lec_13-Exam Review|Lecture 13]].
+See [[Lec_07-Multiple Hypothesis Tests|Lecture 7]] and [[Lec_08-Goodness of Fit & Multicollinearity|Lecture 8]] and [[Lec_13-Exam Review|Lecture 13]].

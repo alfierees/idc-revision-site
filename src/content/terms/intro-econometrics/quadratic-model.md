@@ -13,4 +13,4 @@ A regression with $x$ and $x^2$, so the effect of $x$ rises then falls (negative
 
 Use it when you expect the relationship to change direction, and test relevance by the significance of the squared term; keep the linear term in the model. In Assignment 4 the visits squared term had $p=0.104$ so it was not significant, and in Assignment 5 experience peaks at about 15.4 years.
 
-See [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignments 4 and 5.
+See [[Lec_09-Model Misspecification & Quadratics|Lecture 9]] and [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignments 4 and 5.

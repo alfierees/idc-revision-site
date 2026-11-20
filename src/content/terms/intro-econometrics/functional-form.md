@@ -13,4 +13,4 @@ The shape chosen for the relationship (level, log or quadratic), which sets how 
 
 Questions ask you to pick a form and then read the slope correctly, as in the money-supply log-log model of Assignment 2. A wrong form is a kind of misspecification.
 
-See [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignment 2.
+See [[Lec_03-Nonlinear Models with OLS|Lecture 3]] and [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignment 2.

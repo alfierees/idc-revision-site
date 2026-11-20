@@ -13,4 +13,4 @@ The framework of a null and an alternative hypothesis, a test statistic and a si
 
 Use the four steps: state $H_0$ and $H_1$, compute the statistic under $H_0$, find the critical value from the table, decide. Assignment 3 includes a non-zero null that must be rebuilt by hand rather than read from the R output.
 
-See [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignment 3.
+See [[Lec_06-Hypothesis Tests & p-values|Lecture 6]] and [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignment 3.

@@ -13,4 +13,4 @@ Bias in $\hat\beta_1$ when a relevant variable $x_2$ correlated with the include
 
 Use the sign table (true effect times covariance) to say whether the estimate is biased up or down. Worked cases are the computer-price [[Hedonic Pricing]] example and the birthweight regression in Assignment 4, where the cigarette coefficient moved from $-10.98$ with controls to $-12.906$ without.
 
-See [[Lec_13-Exam Review|Lecture 13]] and [[Lec_11-Interaction Terms|Lecture 11]].
+See [[Lec_09-Model Misspecification & Quadratics|Lecture 9]] and [[Lec_13-Exam Review|Lecture 13]] and [[Lec_11-Interaction Terms|Lecture 11]].

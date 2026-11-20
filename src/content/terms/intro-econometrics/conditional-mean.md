@@ -14,3 +14,5 @@ $E(y\mid x)$, the average of $y$ given $x$, which regression estimates.
 Ask who is in an average. In Assignment 1 the whole-sample mean of cigarettes is 1.06 because about 91.5% of mothers smoke zero, while the conditional mean among smokers is 12.55 a day.
 
 Worked in Assignment 1.
+
+Taught in [[Lec_02-Statistics Review & OLS Estimation|Lecture 2]].

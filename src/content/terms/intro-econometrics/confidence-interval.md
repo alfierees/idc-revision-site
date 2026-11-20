@@ -13,4 +13,4 @@ The range $\hat\beta \pm t_{\alpha/2}(df)\cdot se(\hat\beta)$ that covers the tr
 
 It is the dual of the two-sided [[t-test]]: reject $H_0:\beta_1=b$ exactly when $b$ lies outside the $1-\alpha$ interval, a common exam shortcut. Built in Assignment 3.
 
-See [[Lec_13-Exam Review|Lecture 13]].
+See [[Lec_05-Confidence Intervals & Change of Units|Lecture 5]] and [[Lec_13-Exam Review|Lecture 13]].

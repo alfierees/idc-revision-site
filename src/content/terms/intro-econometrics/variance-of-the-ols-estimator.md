@@ -13,4 +13,4 @@ The sampling variance of $\hat\beta$. In the simple model it is $\sigma_u^2/\sum
 
 Read it to see what makes an estimate imprecise: a large error variance, little spread in $x_j$, or strong [[Multicollinearity]] ($R_j^2\to 1$). The factor $1/(1-R_j^2)$ is the Variance Inflation Factor.
 
-See [[Lec_08-Goodness of Fit & Multicollinearity|Lecture 8]].
+See [[Lec_04-OLS Estimator Properties|Lecture 4]] and [[Lec_08-Goodness of Fit & Multicollinearity|Lecture 8]].

@@ -13,4 +13,4 @@ A model with no intercept ($\beta_0=0$), giving $\tilde\beta_1 = \sum x_i y_i/\s
 
 Questions ask when dropping the intercept is legitimate (test whether it is zero first, as in Assignment 3). Neither $R^2$ nor adjusted $R^2$ can compare a no-intercept model with one that has an intercept.
 
-See [[Lec_13-Exam Review|Lecture 13]].
+See [[Lec_06-Hypothesis Tests & p-values|Lecture 6]] and [[Lec_13-Exam Review|Lecture 13]].

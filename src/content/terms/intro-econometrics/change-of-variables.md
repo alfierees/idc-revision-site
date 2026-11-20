@@ -13,4 +13,4 @@ How the intercept and slope change when a variable is rescaled or shifted. Multi
 
 To derive a new coefficient, rearrange the rescaled equation into $y=a+bx$ form and match terms. Standard errors scale with their coefficients, so t-statistics are unaffected; Assignment 3 rescales lot size to square metres.
 
-See [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignment 3.
+See [[Lec_05-Confidence Intervals & Change of Units|Lecture 5]] and [[Lec_13-Exam Review|Lecture 13]]. Worked in Assignment 3.

@@ -14,3 +14,5 @@ A regression slope shows association; a causal reading needs the other factors h
 Assignment 1 asks "is this causal?" twice and the answer is no both times: mothers who smoke or people who study differ in other ways that also affect the outcome, an [[Omitted Variable Bias]] problem.
 
 Worked in Assignment 1.
+
+Taught in [[Lec_01-Introduction & Causal Inference|Lecture 1]].
