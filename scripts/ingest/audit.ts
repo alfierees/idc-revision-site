@@ -170,7 +170,7 @@ function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
   if (candidate) return candidate;
   // Problem-set vault-name fallback: [[PS_04-…]] → "ps-04-…" → "ps-4",
   // [[Assignment 3 - CoreWeave …]] → "assignment-3-…" → "assignment-3".
-  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|ex|hw)-0*(\d+)(?:-.*)?$/);
+  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|assign|ex|hw)-0*(\d+)(?:-.*)?$/);
   if (psMatch) {
     const n = psMatch[1];
     for (const pref of ["ps", "assignment", "ex", "hw", "problem-set"]) {

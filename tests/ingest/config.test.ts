@@ -31,10 +31,13 @@ describe("loadSubjects", () => {
 
 describe("real subject configs", () => {
   it("keeps every existing subject", () => {
-    expect(Object.keys(subjects).sort()).toEqual([
+    // A minimum set, not an exact list: each new course adds its own config
+    // file, and parallel ingest/<course> branches must not conflict here.
+    expect(Object.keys(subjects)).toEqual(expect.arrayContaining([
       "accounting", "data-science", "digital-marketing", "econometrics",
-      "machine-learning", "macro-economics", "macro-ii", "micro", "micro-ii",
-    ]);
+      "intro-econometrics", "machine-learning", "macro-economics", "macro-ii",
+      "micro", "micro-ii",
+    ]));
   });
 
   it("keeps data-science writing into the machine-learning site subject", () => {
