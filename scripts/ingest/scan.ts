@@ -5,7 +5,7 @@ import type { SubjectConfig } from "./config.js";
 import type { ScanResult, PendingItem, ImageOp, DocOp } from "./types.js";
 import { parseRegistry } from "./registry.js";
 import { detectRecipes } from "./recipes.js";
-import { slugify, extractImageRefs, resolveAttachment } from "./text.js";
+import { slugify, termSlug, extractImageRefs, resolveAttachment } from "./text.js";
 
 // dest is the absolute path to site/src/content
 export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise<ScanResult> {
@@ -26,7 +26,7 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
     const reg = parseRegistry(await readFile(registryPath, "utf8"));
     for (const entry of reg) {
       if (entry.isResolved) continue; // resolved entries are notes, not standalone terms
-      const slug = slugify(entry.title);
+      const slug = termSlug(entry.title);
       const destFile = join(destContentRoot, "terms", cfg.slug, `${slug}.md`);
       if (existsSync(destFile)) continue;
       if (existingTermSlugs.has(slug)) continue;

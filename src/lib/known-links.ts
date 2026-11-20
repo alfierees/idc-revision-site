@@ -142,7 +142,9 @@ export async function buildLinkMap(subject: string): Promise<LinkMap> {
   for (const t of terms) {
     const slug = slugOf(t.id);
     map.set(slug, { kind: "term", slug });
-    const aliases = (t.data as { aliases?: string[] }).aliases ?? [];
+    // Title alias: a term whose file slug isn't its title's slug (termSlug
+    // renames "Index" to index-term) still resolves [[Index]].
+    const aliases = [t.data.title, ...((t.data as { aliases?: string[] }).aliases ?? [])];
     for (const a of aliases) {
       const aslug = slugifyAlias(a);
       if (aslug && !map.has(aslug)) {
