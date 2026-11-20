@@ -1,0 +1,121 @@
+---
+import Layout from "../components/Layout.astro";
+import { loadCourseCards } from "../lib/course-cards";
+import { SEMESTERS, SEMESTER_STORAGE_KEY } from "../lib/semesters";
+
+const { groups, cardFor } = await loadCourseCards();
+const semesterIds = SEMESTERS.map((s) => s.id);
+---
+<Layout title="Courses · IDC Revision">
+  <script slot="head" is:inline define:vars={{ semesterIds, storageKey: SEMESTER_STORAGE_KEY }}>
+    // Puts the semester you picked first (CSS reorders on html[data-semester]).
+    (function () {
+      var chosen = null;
+      try { chosen = localStorage.getItem(storageKey); } catch (e) {}
+      if (semesterIds.indexOf(chosen) >= 0) document.documentElement.setAttribute("data-semester", chosen);
+    })();
+  </script>
+
+  <section class="reading">
+    <h1 class="page-title">Courses</h1>
+    <div class="semesters">
+      {groups.map((g, groupIndex) => (
+        <section class="sem-block" data-sem={g.semester.id} style={`--i: ${groupIndex};`} aria-labelledby={`sem-${g.semester.id}`}>
+          <h2 class="sem-label" id={`sem-${g.semester.id}`}>{g.semester.label}</h2>
+          {g.live.length + g.coming.length === 0 ? (
+            <p class="empty">Courses for this semester are on their way.</p>
+          ) : (
+            <ul class="course-list">
+              {[...g.live, ...g.coming].map((s, i) => {
+                const card = cardFor(s, i);
+                return (
+                  <li>
+                    {s.placeholder ? (
+                      <div class="course-row-item soon" data-course={s.slug}>
+                        <span class="c-title">{s.title}</span>
+                        <span class="c-soon">Coming soon</span>
+                      </div>
+                    ) : (
+                      <a class="course-row-item" href={card.href} data-course={s.slug}>
+                        <span class="c-main">
+                          <span class="c-title">{s.title}</span>
+                          {s.tagline && <span class="c-tag">{s.tagline}</span>}
+                        </span>
+                        {card.counts && <span class="c-counts">{card.counts}</span>}
+                        <span class="c-arr" aria-hidden="true">→</span>
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 2.15rem;
+    line-height: 1.12;
+    font-variation-settings: "opsz" 96, "wght" 500;
+  }
+  .semesters { margin-top: 2rem; display: flex; flex-direction: column; gap: 2.5rem; }
+  .sem-block { order: var(--i); }
+  :global(html[data-semester="y1s1"]) .sem-block[data-sem="y1s1"],
+  :global(html[data-semester="y1s2"]) .sem-block[data-sem="y1s2"],
+  :global(html[data-semester="y2s1"]) .sem-block[data-sem="y2s1"],
+  :global(html[data-semester="y2s2"]) .sem-block[data-sem="y2s2"] { order: -1; }
+
+  .sem-label {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--color-ink-muted);
+  }
+  .empty { margin-top: 0.8rem; font-style: italic; color: var(--color-ink-faint); }
+  .course-list { margin: 0.8rem 0 0; padding: 0; list-style: none; border-top: 1px solid var(--color-rule); }
+  .course-list li { border-bottom: 1px solid var(--color-rule); }
+  .course-row-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-height: 44px;
+    padding: 0.85rem 0.25rem;
+    text-decoration: none;
+    color: var(--color-ink);
+  }
+  a.course-row-item:hover { background: color-mix(in srgb, var(--color-accent) 5%, transparent); }
+  a.course-row-item:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+  .c-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .c-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.25;
+    font-variation-settings: "opsz" 36, "wght" 500;
+  }
+  .c-tag {
+    font-size: 0.92rem;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .c-counts { flex: none; font-family: var(--font-ui); font-size: 0.78rem; color: var(--color-ink-muted); }
+  .c-arr { flex: none; color: var(--color-accent); font-family: var(--font-ui); }
+  .soon { justify-content: space-between; }
+  .soon .c-title { color: var(--color-ink-muted); font-variation-settings: "opsz" 36, "wght" 420; }
+  .c-soon { font-style: italic; color: var(--color-ink-faint); font-size: 0.95rem; }
+
+  @media (max-width: 640px) {
+    .page-title { font-size: 1.9rem; }
+    .course-row-item { flex-wrap: wrap; gap: 0.2rem 1rem; }
+    .c-main { flex: 1 1 calc(100% - 2rem); }
+    .c-counts { order: 3; flex: 1 1 auto; }
+    .c-arr { order: 2; }
+  }
+</style>
