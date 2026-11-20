@@ -4,6 +4,10 @@ import { getCollection } from "astro:content";
 import Analytics from '@vercel/analytics/astro';
 import { groupBySemester } from "../lib/semesters";
 import BadgeToaster from "./progress/BadgeToaster";
+import CourseChip from "./progress/CourseChip";
+import NavIcon from "./NavIcon.astro";
+import { PROGRESS_UI_ENABLED } from "../lib/progress/flags";
+import { activeSection, visibleSections } from "../lib/nav";
 
 interface Props {
   title?: string;
@@ -12,8 +16,12 @@ interface Props {
   active?: "lectures" | "dictionary" | "recipes" | "problem-sets" | "past-papers" | "exam-prep";
   /** Show the sidebar collapse toggle (pages with a #content-grid rail). */
   hasSidebar?: boolean;
+  /** Item pages (lecture, problem set, past paper): the title recorded for "Continue where you left off". */
+  continueTitle?: string;
 }
-const { title = "IDC Revision", subject, active, hasSidebar = false } = Astro.props;
+const { title = "IDC Revision", subject, active, hasSidebar = false, continueTitle } = Astro.props;
+const navSections = visibleSections(PROGRESS_UI_ENABLED);
+const currentSection = activeSection(Astro.url.pathname);
 
 const subjects = (await getCollection("subjects")).map((s) => s.data);
 const current = subject ? subjects.find((s) => s.slug === subject) : undefined;
@@ -63,97 +71,98 @@ const section = active ?? "dictionary";
     <div class="read-progress" id="read-progress" aria-hidden="true"></div>
     <header class="site-header">
       <div class="bar">
-        <div class="crumb">
-          <a href="/" class="brand"><img class="brand-mark" src="/images/brand/idc-mark.webp" alt="" width="29" height="24" /> <span class="brand-name">IDC Revision</span></a>
-          {current && <span class="sep" aria-hidden="true">/</span>}
-          {current && (
-            <div class="subject-menu" id="subject-menu">
-              <button
-                type="button"
-                class="subject-trigger"
-                aria-expanded="false"
-                aria-haspopup="menu"
-              >
-                <span class="subject-name" style={`view-transition-name: subj-${current.slug};`}>{current.title}</span>
-                <span class="chev" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-                </span>
-              </button>
-              <div class="subject-pop" hidden role="menu">
-                <p class="subject-pop-label">Switch course</p>
-                {switcherGroups.map((g) => (
-                  <div class="subject-group" role="group" aria-label={g.semester.label}>
-                    <p class="subject-group-label">{g.semester.label}</p>
-                    {g.live.map((s) => (
-                      <a
-                        href={`/subjects/${s.slug}/${section}`}
-                        class={`subject-opt ${s.slug === subject ? "current" : ""}`}
-                        role="menuitem"
-                      >
-                        {s.title}
-                        {s.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
-                      </a>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        {current && (
-          <nav class="header-tabs" aria-label="Subject sections">
-            {tabs.map((t) => (
-              <a
-                href={`/subjects/${subject}/${t.id}`}
-                class={active === t.id ? "active" : ""}
-                aria-current={active === t.id ? "page" : undefined}
-              >
-                {t.label}
-              </a>
-            ))}
-          </nav>
-        )}
+        <a href="/" class="brand"><img class="brand-mark" src="/images/brand/idc-mark.webp" alt="" width="29" height="24" /> <span class="brand-name">IDC Revision</span></a>
+        <nav class="main-nav top-nav" aria-label="Main">
+          {navSections.map((n) => (
+            <a href={n.href} class={currentSection === n.id ? "active" : ""} aria-current={currentSection === n.id ? "page" : undefined}>
+              <NavIcon id={n.id} /><span>{n.label}</span>
+            </a>
+          ))}
+        </nav>
         <div class="bar-right">
           {hasSidebar && (
             <button id="sidebar-toggle" type="button" class="panel-toggle" aria-pressed="false" title="Toggle sidebar">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
             </button>
           )}
-          {current && (
-            <button
-              id="nav-burger"
-              type="button"
-              class="panel-toggle nav-burger"
-              aria-expanded="false"
-              aria-controls="mobile-nav"
-              aria-label="Open section menu"
-            >
-              <svg class="ic-burger" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-              <svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-            </button>
-          )}
         </div>
       </div>
       {current && (
-        <nav class="mobile-nav" id="mobile-nav" hidden aria-label="Subject sections">
-          {tabs.map((t) => (
-            <a
-              href={`/subjects/${subject}/${t.id}`}
-              class={active === t.id ? "active" : ""}
-              aria-current={active === t.id ? "page" : undefined}
-            >
-              {t.label}
-              {active === t.id && <span class="mn-tick" aria-hidden="true">●</span>}
-            </a>
-          ))}
-        </nav>
+        <div class="course-row">
+          <div class="course-row-inner">
+            <div class="course-head">
+              <div class="subject-menu" id="subject-menu">
+                <button
+                  type="button"
+                  class="subject-trigger"
+                  aria-expanded="false"
+                  aria-haspopup="menu"
+                >
+                  <span class="subject-name" style={`view-transition-name: subj-${current.slug};`}>{current.title}</span>
+                  <span class="chev" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                  </span>
+                </button>
+                <div class="subject-pop" hidden role="menu">
+                  <p class="subject-pop-label">Switch course</p>
+                  {switcherGroups.map((g) => (
+                    <div class="subject-group" role="group" aria-label={g.semester.label}>
+                      <p class="subject-group-label">{g.semester.label}</p>
+                      {g.live.map((s) => (
+                        <a
+                          href={`/subjects/${s.slug}/${section}`}
+                          class={`subject-opt ${s.slug === subject ? "current" : ""}`}
+                          role="menuitem"
+                        >
+                          {s.title}
+                          {s.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
+                        </a>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {PROGRESS_UI_ENABLED && subject && <CourseChip client:idle subject={subject} />}
+            </div>
+            <nav class="header-tabs" aria-label="Subject sections">
+              {tabs.map((t) => (
+                <a
+                  href={`/subjects/${subject}/${t.id}`}
+                  class={active === t.id ? "active" : ""}
+                  aria-current={active === t.id ? "page" : undefined}
+                >
+                  {t.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
       )}
     </header>
-    <main class="mx-auto max-w-6xl px-6 py-10">
+    <main class="site-main mx-auto max-w-6xl px-6 py-10">
       <slot />
     </main>
 
+    <nav class="main-nav bottom-nav" aria-label="Main">
+      {navSections.map((n) => (
+        <a href={n.href} class={currentSection === n.id ? "active" : ""} aria-current={currentSection === n.id ? "page" : undefined}>
+          <NavIcon id={n.id} /><span>{n.label}</span>
+        </a>
+      ))}
+    </nav>
+    {continueTitle && subject && <div id="last-seen-data" hidden data-subject={subject} data-title={continueTitle}></div>}
+
     <script>
+      import { progressStore } from "../lib/progress/store";
+
+      // ---- last seen (for "Continue where you left off" on Home) ----
+      const lastSeenData = document.getElementById("last-seen-data");
+      if (lastSeenData?.dataset.subject && lastSeenData.dataset.title) {
+        try {
+          progressStore().recordLastSeen(lastSeenData.dataset.subject, location.pathname, lastSeenData.dataset.title);
+        } catch {}
+      }
+
       // ---- reading progress bar ----
       const prog = document.getElementById("read-progress");
       if (prog) {
@@ -164,25 +173,6 @@ const section = active ?? "dictionary";
         };
         onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
-      }
-
-      // ---- mobile section burger ----
-      const burger = document.getElementById("nav-burger");
-      const mobileNav = document.getElementById("mobile-nav");
-      if (burger && mobileNav) {
-        const setNavOpen = (open: boolean) => {
-          mobileNav.hidden = !open;
-          burger.setAttribute("aria-expanded", String(open));
-          burger.setAttribute("aria-label", open ? "Close section menu" : "Open section menu");
-        };
-        burger.addEventListener("click", () => setNavOpen(mobileNav.hidden));
-        document.addEventListener("mousedown", (e) => {
-          const t = e.target as Node;
-          if (!mobileNav.contains(t) && !burger.contains(t)) setNavOpen(false);
-        });
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") setNavOpen(false);
-        });
       }
 
       // ---- subject dropdown ----

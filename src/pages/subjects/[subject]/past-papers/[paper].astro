@@ -84,7 +84,7 @@ if (structured) {
 const meta = [paper.data.exam, paper.data.instructor, paper.data.status].filter(Boolean);
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`${paper.data.title} · ${subject.data.title}`} subject={subjectSlug} active="past-papers" hasSidebar>
+<Layout title={`${paper.data.title} · ${subject.data.title}`} subject={subjectSlug} active="past-papers" hasSidebar continueTitle={paper.data.title}>
   <div id="content-grid" class="content-grid">
     <PaperSidebar subject={subjectSlug} papers={allPapers} currentSlug={paperSlug} currentSections={sections} />
     <article class="paper-body">
