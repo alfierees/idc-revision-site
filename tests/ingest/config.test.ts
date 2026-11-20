@@ -30,14 +30,18 @@ describe("loadSubjects", () => {
 });
 
 describe("real subject configs", () => {
+  // A superset check, not an exact list: every new course adds a config file,
+  // and an exact list would fail (and conflict) on every parallel course branch.
   it("keeps every existing subject", () => {
-    // A minimum set, not an exact list: each new course adds its own config
-    // file, and parallel ingest/<course> branches must not conflict here.
     expect(Object.keys(subjects)).toEqual(expect.arrayContaining([
       "accounting", "data-science", "digital-marketing", "econometrics",
       "intro-econometrics", "machine-learning", "macro-economics", "macro-ii",
       "micro", "micro-ii",
     ]));
+  });
+
+  it("keys every config by a slug-safe file name", () => {
+    for (const key of Object.keys(subjects)) expect(key).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
   });
 
   it("keeps data-science writing into the machine-learning site subject", () => {
