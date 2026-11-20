@@ -739,7 +739,6 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   .nav-icon { width: 22px; height: 22px; }
   .bottom-nav .nav-icon { width: 22px; height: 22px; }
   .site-main { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
-  .scorebar { bottom: calc(4.4rem + env(safe-area-inset-bottom)); }
   .course-row-inner { flex-wrap: wrap; padding: 0.15rem 1rem 0; gap: 0; }
   .course-head { flex: 1 1 100%; }
   .subject-trigger { min-width: 0; min-height: 44px; }
@@ -931,6 +930,10 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   pointer-events: none;
 }
 .scorebar > * { pointer-events: auto; }
+/* Phones: sit above the bottom tab bar. Must come after the base rule (same specificity). */
+@media (max-width: 640px) {
+  .scorebar { bottom: calc(4.6rem + env(safe-area-inset-bottom)); }
+}
 .scorebar-pill {
   display: inline-flex; align-items: center; gap: 0.55rem;
   font-family: var(--font-ui);

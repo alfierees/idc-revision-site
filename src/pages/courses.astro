@@ -16,7 +16,7 @@ const semesterIds = SEMESTERS.map((s) => s.id);
     })();
   </script>
 
-  <section class="reading">
+  <section class="courses-page">
     <h1 class="page-title">Courses</h1>
     <div class="semesters">
       {groups.map((g, groupIndex) => (
@@ -64,6 +64,10 @@ const semesterIds = SEMESTERS.map((s) => s.id);
     font-variation-settings: "opsz" 96, "wght" 500;
   }
   .semesters { margin-top: 2rem; display: flex; flex-direction: column; gap: 2.5rem; }
+  /* Wide screens: two semesters side by side, so all four fit in about one screen. */
+  @media (min-width: 1024px) {
+    .semesters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 3rem; align-items: start; }
+  }
   .sem-block { order: var(--i); }
   :global(html[data-semester="y1s1"]) .sem-block[data-sem="y1s1"],
   :global(html[data-semester="y1s2"]) .sem-block[data-sem="y1s2"],
@@ -109,7 +113,7 @@ const semesterIds = SEMESTERS.map((s) => s.id);
   .c-arr { flex: none; color: var(--color-accent); font-family: var(--font-ui); }
   .soon { justify-content: space-between; }
   .soon .c-title { color: var(--color-ink-muted); font-variation-settings: "opsz" 36, "wght" 420; }
-  .c-soon { font-style: italic; color: var(--color-ink-faint); font-size: 0.95rem; }
+  .c-soon { flex: none; white-space: nowrap; font-style: italic; color: var(--color-ink-faint); font-size: 0.95rem; }
 
   @media (max-width: 640px) {
     .page-title { font-size: 1.9rem; }
