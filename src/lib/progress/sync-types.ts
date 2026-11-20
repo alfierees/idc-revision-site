@@ -28,6 +28,22 @@ export type SyncItem = z.infer<typeof SyncItem>;
 
 export const SyncBatch = z.object({ items: z.array(SyncItem).max(MAX_BATCH) });
 
+/**
+ * Reads a POST body leniently: one invalid item is dropped (and counted) instead of failing the
+ * whole batch, so a single odd key on a device can't make it retry forever. Null when the body
+ * itself isn't a batch.
+ */
+export function parseBatch(body: unknown): { items: SyncItem[]; rejected: number } | null {
+  const envelope = z.object({ items: z.array(z.unknown()).max(MAX_BATCH) }).safeParse(body);
+  if (!envelope.success) return null;
+  const items: SyncItem[] = [];
+  for (const raw of envelope.data.items) {
+    const item = SyncItem.safeParse(raw);
+    if (item.success) items.push(item.data);
+  }
+  return { items, rejected: envelope.data.items.length - items.length };
+}
+
 /** What GET /api/progress returns. */
 export interface ServerProgress {
   marks: z.infer<typeof Mark>[];

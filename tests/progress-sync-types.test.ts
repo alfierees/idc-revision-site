@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MAX_BATCH, SyncBatch } from "../src/lib/progress/sync-types";
+import { MAX_BATCH, SyncBatch, parseBatch } from "../src/lib/progress/sync-types";
 
 const ok = (item: unknown) => SyncBatch.safeParse({ items: [item] }).success;
 const time = "2026-11-21T10:00:00.000Z";
@@ -24,5 +24,17 @@ describe("sync batch schema", () => {
     const day = { type: "day", day: "2026-11-21" };
     expect(SyncBatch.safeParse({ items: Array(MAX_BATCH).fill(day) }).success).toBe(true);
     expect(SyncBatch.safeParse({ items: Array(MAX_BATCH + 1).fill(day) }).success).toBe(false);
+  });
+});
+
+describe("parseBatch", () => {
+  it("keeps the valid items and counts the rest instead of failing the batch", () => {
+    const result = parseBatch({ items: [{ type: "day", day: "2026-11-21" }, { type: "day", day: "nope" }, { type: "x" }] });
+    expect(result).toEqual({ items: [{ type: "day", day: "2026-11-21" }], rejected: 2 });
+  });
+  it("rejects a body that isn't a batch, or one over the limit", () => {
+    expect(parseBatch(null)).toBeNull();
+    expect(parseBatch({ items: "x" })).toBeNull();
+    expect(parseBatch({ items: Array(MAX_BATCH + 1).fill({ type: "day", day: "2026-11-21" }) })).toBeNull();
   });
 });
