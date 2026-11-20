@@ -1,15 +1,13 @@
 ---
-import { getConceptPreviews } from "../lib/concept-previews";
-
 interface Props { subject: string; }
 const { subject } = Astro.props;
 
-const data = await getConceptPreviews(subject);
-const json = JSON.stringify(data);
+// The preview data lives in one file per subject (concept-previews.json.ts),
+// so pages carry only its URL, not ~50 KB of inlined JSON each.
 const prefix = `/subjects/${subject}/dictionary/`;
+const previewsUrl = `/subjects/${subject}/concept-previews.json`;
 ---
-<script type="application/json" id="concept-previews" set:html={json} data-prefix={prefix}></script>
-<div id="concept-preview-card" role="tooltip" hidden></div>
+<div id="concept-preview-card" role="tooltip" hidden data-prefix={prefix} data-src={previewsUrl}></div>
 
 <style is:global>
   #concept-preview-card {
@@ -34,12 +32,27 @@ const prefix = `/subjects/${subject}/dictionary/`;
 </style>
 
 <script>
-  const el = document.getElementById("concept-previews");
+  import type { ConceptPreview } from "../lib/concept-previews";
+
   const card = document.getElementById("concept-preview-card");
-  if (el && card) {
-    const data = JSON.parse(el.textContent || "{}");
-    const prefix = (el as HTMLElement).dataset.prefix || "";
+  if (card) {
+    const prefix = card.dataset.prefix || "";
+    const previewsUrl = card.dataset.src || "";
+    let data: Record<string, ConceptPreview> | null = null;
+    let dataLoading: Promise<void> | null = null;
+    // The link a preview is wanted for; a fetch that lands after the pointer
+    // has left must not pop a card up.
+    let wantedAnchor: HTMLAnchorElement | null = null;
     let hideTimer: number | undefined;
+
+    // Fetch once per page (the browser cache serves other pages of the same
+    // subject). A failed fetch just means no preview, never an error; the
+    // next hover tries again.
+    const loadData = (): Promise<void> =>
+      (dataLoading ??= fetch(previewsUrl)
+        .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+        .then((loaded) => { data = loaded && typeof loaded === "object" ? loaded : {}; })
+        .catch(() => { dataLoading = null; }));
 
     const esc = (s: string) =>
       s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -52,10 +65,9 @@ const prefix = `/subjects/${subject}/dictionary/`;
       } catch { return null; }
     };
 
-    const show = (a: HTMLAnchorElement) => {
-      const slug = slugFromHref(a.getAttribute("href") || "");
-      if (!slug || !data[slug]) return;
-      const d = data[slug];
+    const render = (a: HTMLAnchorElement, slug: string) => {
+      const d = data?.[slug];
+      if (!d) return;
       // d.defHtml is trusted build-time-rendered KaTeX/markdown HTML from the
       // user's own vault; title and lecture are plain text and are escaped.
       card.innerHTML =
@@ -66,7 +78,18 @@ const prefix = `/subjects/${subject}/dictionary/`;
       card.style.left = `${window.scrollX + Math.min(r.left, window.innerWidth - 384)}px`;
       card.hidden = false;
     };
-    const hide = () => { hideTimer = window.setTimeout(() => { card.hidden = true; }, 120); };
+
+    const show = (a: HTMLAnchorElement) => {
+      const slug = slugFromHref(a.getAttribute("href") || "");
+      if (!slug) return;
+      wantedAnchor = a;
+      // Once loaded, show synchronously as before: iOS Safari only turns a
+      // tap into a preview when the card appears inside the mouseover handler.
+      if (data) { render(a, slug); return; }
+      loadData().then(() => { if (wantedAnchor === a) render(a, slug); });
+    };
+    const hideNow = () => { wantedAnchor = null; card.hidden = true; };
+    const hide = () => { hideTimer = window.setTimeout(hideNow, 120); };
     const cancelHide = () => { if (hideTimer) window.clearTimeout(hideTimer); };
 
     document.body.addEventListener("mouseover", (e) => {
@@ -79,10 +102,20 @@ const prefix = `/subjects/${subject}/dictionary/`;
     });
     card.addEventListener("mouseenter", cancelHide);
     card.addEventListener("mouseleave", hide);
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") card.hidden = true; });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideNow(); });
     document.body.addEventListener("focusin", (e) => {
       const a = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
       if (a && slugFromHref(a.getAttribute("href") || "")) { cancelHide(); show(a); }
     });
+
+    // Warm the data once the page is idle, only on pages that link to the
+    // dictionary, so the first hover or tap usually finds it ready.
+    const linksToDictionary = Array.from(document.querySelectorAll("a[href]"))
+      .some((a) => slugFromHref(a.getAttribute("href") || ""));
+    if (linksToDictionary) {
+      const whenIdle: (callback: () => void) => unknown =
+        window.requestIdleCallback ?? ((callback) => window.setTimeout(callback, 1500));
+      whenIdle(() => { loadData(); });
+    }
   }
 </script>
