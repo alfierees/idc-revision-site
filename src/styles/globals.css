@@ -1107,3 +1107,54 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   ::view-transition-old(*),
   ::view-transition-new(*) { animation: none !important; }
 }
+
+/* ---- progress: medals, toast, mark-as-read (dashboard screens arrive with accounts) ---- */
+.medal { margin: 0; display: flex; flex-direction: column; align-items: center; text-align: center; width: 6.25rem; }
+.medal-sm { width: auto; flex-direction: row; gap: 0; }
+.medal-sm .medal-name, .medal-sm .medal-note { display: none; }
+.medal-seal { width: 56px; height: 56px; }
+.medal-sm .medal-seal { width: 40px; height: 40px; }
+.medal-name { margin-top: 0.4rem; font-family: var(--font-ui); font-size: 0.74rem; font-weight: 700; line-height: 1.25; color: var(--color-ink); }
+.medal-note { margin-top: 0.1rem; font-family: var(--font-ui); font-size: 0.68rem; line-height: 1.3; color: var(--color-ink-muted); }
+.medal-earned { color: var(--color-ink); }
+.medal-earned .medal-ring-outer { stroke: var(--color-accent); }
+.medal-earned .medal-ring-inner { stroke: var(--color-accent); opacity: 0.6; }
+.medal-earned .medal-pip { fill: var(--color-accent); }
+.medal-locked { color: var(--color-ink-faint); }
+.medal-locked .medal-seal { opacity: 0.55; }
+.medal-locked .medal-ring-outer, .medal-locked .medal-ring-inner { stroke: var(--color-rule-strong); }
+.medal-locked .medal-pip { fill: var(--color-rule-strong); }
+.medal-locked .medal-name { color: var(--color-ink-muted); font-weight: 600; }
+
+.toaster { position: fixed; left: 0; right: 0; bottom: 1.25rem; z-index: 60; display: flex; justify-content: center; pointer-events: none; padding: 0 1rem; }
+.toast {
+  pointer-events: auto; display: flex; align-items: center; gap: 0.75rem;
+  max-width: 100%; padding: 0.6rem 1rem 0.6rem 0.7rem;
+  background: var(--color-card); border-radius: var(--radius-card);
+  box-shadow: inset 0 0 0 1px var(--color-rule), var(--shadow-lift);
+  animation: toast-in 240ms ease-out both;
+}
+.toast-text { min-width: 0; }
+.toast-line { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-ink-soft); }
+.toast-line strong { color: var(--color-ink); }
+.toast-link { font-family: var(--font-ui); font-size: 0.75rem; font-weight: 600; color: var(--color-accent-ink); text-decoration: none; }
+.toast-link:hover { text-decoration: underline; }
+.toast-close { align-self: flex-start; margin-left: 0.25rem; padding: 0 0.25rem; font: 600 1rem/1 var(--font-ui); color: var(--color-ink-muted); background: none; border: 0; cursor: pointer; }
+.toast-close:hover { color: var(--color-ink); }
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+.mark-read-btn {
+  font-family: var(--font-ui); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.02em;
+  padding: 0.55rem 1.3rem; border-radius: 999px; cursor: pointer;
+  color: var(--color-accent-ink); background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--color-accent);
+  transition: background-color 0.15s ease;
+}
+.mark-read-btn:hover { background: var(--color-accent-soft); }
+.mark-read-on { color: var(--color-ink-soft); box-shadow: inset 0 0 0 1px var(--color-rule-strong); }
+.mark-read-on:hover { background: var(--color-paper-deep); }
+.mark-read-on .mark-read-undo { font-weight: 500; color: var(--color-ink-muted); text-decoration: underline; text-underline-offset: 2px; }
+.mark-read { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: var(--color-ink-soft); }
+.mark-read-undo { font: inherit; font-weight: 500; color: var(--color-ink-muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.mark-read-undo:hover { color: var(--color-ink); }

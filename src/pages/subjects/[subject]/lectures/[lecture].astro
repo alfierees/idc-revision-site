@@ -4,7 +4,9 @@ import HoverPreview from "../../../../components/HoverPreview.astro";
 import GraphMounter from "../../../../components/GraphMounter.astro";
 import LectureSidebar from "../../../../components/LectureSidebar.astro";
 import Mermaid from "../../../../components/Mermaid.astro";
+import MarkAsRead from "../../../../components/progress/MarkAsRead";
 import { getCollection, getEntry } from "astro:content";
+import { entrySlug } from "../../../../lib/entry-slug";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
@@ -12,7 +14,7 @@ import { decodeHtmlEntities } from "../../../../lib/html-entities";
 export async function getStaticPaths() {
   const lectures = await getCollection("lectures", (l) => l.data.in_scope);
   return lectures.map((l) => {
-    const slug = l.id.split("/").pop()!;
+    const slug = entrySlug(l.id);
     return { params: { subject: l.data.subject, lecture: slug } };
   });
 }
@@ -58,6 +60,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       currentSlug={lectureSlug}
       currentSections={sections}
     />
+    <div class="min-w-0">
     <article class="lecture-body">
       {(lecture.data.week !== undefined || lecture.data.instructor) && (
         <p class="doc-meta">
@@ -81,6 +84,10 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       )}
       <div class="mt-8 lecture-prose prose-card" set:html={html} />
     </article>
+    <div class="mt-10 flex justify-center">
+      <MarkAsRead client:idle subject={subjectSlug} lecture={lectureSlug} />
+    </div>
+    </div>
   </div>
   <Mermaid />
   <GraphMounter />
