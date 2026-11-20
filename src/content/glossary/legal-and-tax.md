@@ -104,6 +104,12 @@ Remarks in a judgment not needed for the decision; persuasive but not binding. T
 
 ## Legal entrepreneurship: agreements, funding & compliance
 
+### Legal Entrepreneurship
+The course frame: a venture's legal universe rests on three pillars, business structure, contracts and regulation. Also called: Three Legal Pillars. Taught in [[Lec_02-Legal Entrepreneurship — Fundamental Concepts|Lec 02]].
+
+### Five Core Legal Risks
+No founders' agreement, improper corporate structure, no NDAs, neglecting privacy, improper open-source use. Also called: Legal Risk. Taught in [[Lec_02-Legal Entrepreneurship — Fundamental Concepts|Lec 02]].
+
 ### Corporate Structure
 How a venture's legal entities, ownership and control are organised. Taught in [[Lec_02-Legal Entrepreneurship — Fundamental Concepts|Lec 02]].
 
@@ -279,6 +285,9 @@ Majority of a cooperative's general meeting could not impose the cooperative's d
 
 ### Israeli Companies Law
 Companies Law 1999, the statute governing Israeli companies. Taught in [[Lec_03-Company Law & Corporate Structures|Lec 03]].
+
+### Securities
+Instruments a company issues to fund itself: shares (ownership), bonds (debt) and options (a right to buy). Taught in [[Lec_03-Company Law & Corporate Structures|Lec 03]].
 
 ## Contract law
 
@@ -676,6 +685,9 @@ National body enforcing GDPR. Taught in [[Lec_07-Digital Regulation|Lec 07]].
 ### EDPB
 European Data Protection Board coordinating national authorities. Taught in [[Lec_07-Digital Regulation|Lec 07]].
 
+### Privacy
+Why data-protection law shifted the burden from individuals to the companies holding their data, leading to Privacy by Design. Taught in [[Lec_07-Digital Regulation|Lec 07]].
+
 ## Cap tables, valuation & dilution
 
 ### Cap Table
@@ -701,17 +713,3 @@ Pre-money valuation divided by pre-round fully diluted shares. Taught in [[Lec_0
 
 ### Option Pool
 Block of shares reserved for employee options, often created pre-money as an investment condition. Taught in [[Lec_08-Capitalization Table Basics|Lec 08]].
-
-## Topic stubs (added at site ingest)
-
-### Legal Entrepreneurship
-The course frame: a venture's legal universe rests on three pillars, business structure, contracts and regulation. Also called: Three Legal Pillars. Taught in [[Lec_02-Legal Entrepreneurship — Fundamental Concepts|Lec 02]].
-
-### Securities
-Instruments a company issues to fund itself: shares (ownership), bonds (debt) and options (a right to buy). Taught in [[Lec_03-Company Law & Corporate Structures|Lec 03]].
-
-### Privacy
-Why data-protection law shifted the burden from individuals to the companies holding their data, leading to Privacy by Design. Taught in [[Lec_07-Digital Regulation|Lec 07]].
-
-### Five Core Legal Risks
-No founders' agreement, improper corporate structure, no NDAs, neglecting privacy, improper open-source use. Also called: Legal Risk. Taught in [[Lec_02-Legal Entrepreneurship — Fundamental Concepts|Lec 02]].
