@@ -13,7 +13,8 @@
     "astro": "astro",
     "test": "vitest run",
     "verify": "tsx scripts/verify/cli.ts",
-    "ids:record": "tsx scripts/progress-ids/record.ts"
+    "ids:record": "tsx scripts/progress-ids/record.ts",
+    "db:migrate": "tsx --env-file=.env.local scripts/db/migrate.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.2",
