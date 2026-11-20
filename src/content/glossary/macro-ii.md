@@ -151,10 +151,10 @@ Falling output together with rising prices, typical of an adverse supply shock. 
 ## IS-LM
 
 ### IS Curve
-Combinations of Y and r that clear the goods market, Y = C(Y - T) + I(r) + G; downward sloping. → [[Lec_07-Aggregate Demand I & the IS-LM Model|Lec 07]]
+Combinations of Y and r that clear the goods market, Y = C(Y - T) + I(r) + G; downward sloping. Open-economy version (IS*, Lec 09): goods-market equilibrium in (Y, e) space; slopes down because a lower e raises net exports. → [[Lec_07-Aggregate Demand I & the IS-LM Model|Lec 07]]
 
 ### LM Curve
-Combinations of Y and r that clear the money market, M/P = L(r, Y); upward sloping. → [[Lec_07-Aggregate Demand I & the IS-LM Model|Lec 07]]
+Combinations of Y and r that clear the money market, M/P = L(r, Y); upward sloping. Open-economy version (LM*, Lec 09): money-market equilibrium at r = r*; vertical at the income level set by M/P; under a fixed rate the central bank shifts LM* to defend the peg. → [[Lec_07-Aggregate Demand I & the IS-LM Model|Lec 07]]
 
 ### Keynesian Cross
 Model where planned expenditure PE = C + I + G is plotted against income Y and equilibrium is PE = Y; gives the multiplier. → [[Lec_07-Aggregate Demand I & the IS-LM Model|Lec 07]]
@@ -214,12 +214,6 @@ Also in Macro (Year 2, Sem 2).
 
 ### Mundell-Fleming Model
 IS-LM for a small open economy with perfect capital mobility: r = r*, with IS* and LM* in (Y, e) space. → [[Lec_09-The Open Economy Revisited & Mundell-Fleming Model|Lec 09]]
-
-### IS* Curve
-Goods-market equilibrium in (Y, e) space; slopes down because a lower e raises net exports. → [[Lec_09-The Open Economy Revisited & Mundell-Fleming Model|Lec 09]]
-
-### LM* Curve
-Money-market equilibrium at r = r*; vertical at the income level set by M/P; under a fixed rate the central bank shifts LM* to defend the peg. → [[Lec_09-The Open Economy Revisited & Mundell-Fleming Model|Lec 09]]
 
 ### Floating Exchange Rate
 Rate set by the market; fiscal and trade shocks move e only (Y fixed by LM*), while money policy moves Y. → [[Lec_09-The Open Economy Revisited & Mundell-Fleming Model|Lec 09]]

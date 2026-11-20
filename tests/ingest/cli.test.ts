@@ -39,3 +39,17 @@ describe("runCli", () => {
     expect(existsSync(join(tmp, "site/public/papers/pilot/ex-1.pdf"))).toBe(true);
   });
 });
+
+describe("runCli slug collisions", () => {
+  it("reports registry titles that would share one term page", async () => {
+    await writeFile(join(tmp, "vault", "_Wiki-Link Registry.md"),
+      "# Wiki-Link Registry\n\n## Unresolved Links\n\n- `[[IS* Curve]]` — open\n- `[[IS Curve]]` — closed\n");
+    const summary = await runCli({
+      subject: { slug: "pilot", title: "Pilot", vaultPath: join(tmp, "vault"), sourceDocPath: join(tmp, "docs") },
+      siteRoot: join(tmp, "site"),
+    });
+    // Both are queued under one slug, so the second draft overwrites the first.
+    expect(summary.counts.term).toBe(2);
+    expect(summary.slugCollisions).toEqual([{ source: "registry", slug: "is-curve", titles: ["IS* Curve", "IS Curve"] }]);
+  });
+});

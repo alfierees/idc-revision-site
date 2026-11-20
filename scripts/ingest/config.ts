@@ -1,3 +1,12 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+// One file per course: scripts/ingest/subjects/<key>.json, auto-discovered.
+// The key (filename) is what you pass to cli.ts/audit.ts; `slug` is the site
+// subject it writes into (usually the same; data-science -> machine-learning).
+// Per-course files keep parallel ingest/<course> branches from conflicting.
+
 export interface SubjectConfig {
   slug: string;          // e.g. "micro"
   title: string;         // e.g. "Micro-Economics"
@@ -16,104 +25,58 @@ export interface SubjectConfig {
   // (e.g. "ps-1") instead of the raw slugified filename. Falls back to the raw slug when
   // no exercise number can be extracted.
   problemSetSlugPrefix?: string;
+
+  // Lecture/PS tags that are page metadata, not concepts (the course's own
+  // subject tag, e.g. "micro-economics-ii"). The audit doesn't flag them.
+  mutedTags?: string[];
+
+  // Free-text notes for humans (JSON has no comments).
+  notes?: string;
 }
 
-export const subjects: Record<string, SubjectConfig> = {
-  micro: {
-    slug: "micro",
-    title: "Micro-Economics",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Micro-Economics",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Micro-Economics",
-  },
-  econometrics: {
-    slug: "econometrics",
-    title: "Econometrics",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Econometrics",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Econometrics ",
-    lecturesDir: "Lecture notes",
-    vaultSolutionsDir: "Problem Sets",
-    requireSolutionKeyword: false,
-    problemSetSlugPrefix: "ps",
-  },
-  accounting: {
-    slug: "accounting",
-    title: "Accounting",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Accounting",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Accounting",
-    lecturesDir: "Lectures",
-    vaultSolutionsDir: "Problem Sets",
-    requireSolutionKeyword: false,
-    assignmentsDir: "Problem Sets",
-    problemSetSlugPrefix: "assignment",
-  },
-  "machine-learning": {
-    slug: "machine-learning",
-    title: "Machine Learning",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Machine Learning",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Machine learning",
-    lecturesDir: "Lecture notes",
-  },
-  // The Data Science course covers the same ML curriculum (EDA, classification,
-  // regression, clustering/PCA); its lectures + registry terms are ingested into
-  // the SAME `machine-learning` subject. Run `cli.ts data-science` after
-  // `cli.ts machine-learning` — it writes into machine-learning/ via the shared slug.
-  "data-science": {
-    slug: "machine-learning",
-    title: "Machine Learning",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Data Science",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Data Science",
-    lecturesDir: "Lectures",
-  },
-  "macro-economics": {
-    slug: "macro-economics",
-    title: "Macro-Economics",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Macro-Economics",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Macro-Economics",
-    lecturesDir: "Lectures",
-    vaultSolutionsDir: "Problem Sets",
-    requireSolutionKeyword: false,
-    assignmentsDir: "Problem Sets",
-    problemSetSlugPrefix: "ps",
-  },
-  // Year 2 Semester 1 (first course of the whole-degree expansion). The six
-  // lecture decks are cumulative, so the vault has one note per new slide range.
-  // PS sources sit in "Problem sets"; worked solutions are vault notes.
-  "micro-ii": {
-    slug: "micro-ii",
-    title: "Micro-Economics II",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 1/Micro-Economics II",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 1/Micro econ",
-    lecturesDir: "Lecture notes",
-    vaultSolutionsDir: "Problem Sets",
-    requireSolutionKeyword: false,
-    assignmentsDir: "Problem sets",
-    problemSetSlugPrefix: "ps",
-  },
-  // Year 2 Semester 1. No problem sets: the source "Problem sets" folder only
-  // holds misfiled Micro II sheets, so assignmentsDir is left at the default
-  // ("Assignments"), which doesn't exist here and keeps them out of the scan.
-  "macro-ii": {
-    slug: "macro-ii",
-    title: "Macro-Economics II",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 1/Macro-Economics II",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 1/Macro-econ",
-    lecturesDir: "Lecture notes",
-  },
-  // Qualitative subject: hand-ported (readings → lectures, concepts+acronyms →
-  // glossary, cram sheet → exam-prep). No problem sets. `lecturesDir: "Readings"`
-  // maps the reading notes to the lectures collection. Visual lecture decks and
-  // worked past papers are added in later passes.
-  "digital-marketing": {
-    slug: "digital-marketing",
-    title: "Digital Marketing",
-    vaultPath: "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Digital Marketing",
-    sourceDocPath: "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Digital marketing",
-    lecturesDir: "Readings",
-  },
-};
+const REQUIRED_FIELDS = ["slug", "title", "vaultPath", "sourceDocPath"] as const;
 
-export function getSubjectConfig(slug: string): SubjectConfig {
-  const cfg = subjects[slug];
-  if (!cfg) throw new Error(`Unknown subject: ${slug}. Add it to scripts/ingest/config.ts.`);
-  return cfg;
+export function loadSubjects(dir: string): Record<string, SubjectConfig> {
+  const configs: Record<string, SubjectConfig> = {};
+  const fileNames = readdirSync(dir).filter((name) => name.endsWith(".json")).sort();
+  for (const fileName of fileNames) {
+    let parsed: Record<string, unknown>;
+    try {
+      parsed = JSON.parse(readFileSync(join(dir, fileName), "utf8"));
+    } catch (error) {
+      throw new Error(`${fileName}: invalid JSON (${(error as Error).message})`);
+    }
+    for (const field of REQUIRED_FIELDS) {
+      if (typeof parsed[field] !== "string" || parsed[field] === "") {
+        throw new Error(`${fileName}: missing required field "${field}"`);
+      }
+    }
+    configs[fileName.replace(/\.json$/, "")] = parsed as unknown as SubjectConfig;
+  }
+  return configs;
+}
+
+export const SUBJECTS_DIR = fileURLToPath(new URL("./subjects/", import.meta.url));
+
+export const subjects: Record<string, SubjectConfig> = loadSubjects(SUBJECTS_DIR);
+
+export function getSubjectConfig(key: string): SubjectConfig {
+  const config = subjects[key];
+  if (!config) throw new Error(`Unknown subject: ${key}. Add scripts/ingest/subjects/${key}.json.`);
+  return config;
+}
+
+// Tags muted for every subject: generic page metadata.
+export const SHARED_MUTED_TAGS = ["assignment-solution", "problem-set"];
+
+// Muted tags for one site subject: the shared ones plus the mutedTags of every
+// course config that writes into it (so machine-learning also mutes
+// data-science's course tag).
+export function mutedTagsFor(siteSlug: string): Set<string> {
+  const muted = new Set(SHARED_MUTED_TAGS);
+  for (const [key, config] of Object.entries(subjects)) {
+    if (config.slug !== siteSlug && key !== siteSlug) continue;
+    for (const tag of config.mutedTags ?? []) muted.add(tag);
+  }
+  return muted;
 }

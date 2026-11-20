@@ -33,4 +33,7 @@ scripts/ingest/.backup-pre-vault-solutions/
 .worktrees/
 .vercel/
 src/generated/
+
+# verify reports (npm run verify -- <slug>)
+.verify/
 .verify-shots/

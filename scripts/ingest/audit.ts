@@ -16,7 +16,8 @@
 import { readFileSync, existsSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, basename, extname } from "node:path";
-import { getSubjectConfig } from "./config.js";
+import { getSubjectConfig, mutedTagsFor, subjects } from "./config.js";
+import { termSlugCollisions, formatCollision, type SourcedSlugCollision } from "./slug-collisions.js";
 import { slugify } from "../../src/lib/slugify.js";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -180,26 +181,22 @@ function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
   return undefined;
 }
 
-// ─── intentionally-muted slugs (subject's own slug + metadata) ───────────────
+// ─── bucket 5: term slug collisions ──────────────────────────────────────────
+// Two term titles with one slug means one of them silently gets no page.
 
-const ALWAYS_MUTED = new Set([
-  "microeconomics",
-  "econometrics",
-  "accounting",
-  "machine-learning",
-  "macroeconomics",
-  "micro-economics-ii",  // Micro II's own subject tag in the vault
-  "macro-economics-ii",  // Macro II's own subject tag in the vault
-  "short-run",           // Macro II time-horizon metadata pill, not a concept (SR/LR are covered by SRAS/LRAS terms)
-  "assignment-solution",
-  "problem-set",         // generic metadata pill used in econometrics
-  "recap",               // accounting Session 9 metadata, not a concept
-  "exam-prep",           // accounting Session 9 metadata, not a concept
-  // The Data Science course name — appears as a lecture metadata pill on the
-  // ingested DS lectures; not a glossary concept. (The DS *concepts* — pandas,
-  // matplotlib, EDA, dataframes, etc. — all have term pages and resolve.)
-  "data-science",
-]);
+function findTermSlugCollisions(subject: string): SourcedSlugCollision[] {
+  const readIfExists = (path: string) => (existsSync(path) ? readFileSync(path, "utf8") : null);
+  const collisions: SourcedSlugCollision[] = [];
+  // Every course config writing into this site subject has its own registry.
+  for (const [key, config] of Object.entries(subjects)) {
+    if (config.slug !== subject && key !== subject) continue;
+    const registry = readIfExists(join(config.vaultPath, "_Wiki-Link Registry.md"));
+    collisions.push(...termSlugCollisions({ registry, glossary: null }));
+  }
+  const glossary = readIfExists(join(REPO_ROOT, "src/content/glossary", `${subject}.md`));
+  collisions.push(...termSlugCollisions({ registry: null, glossary }));
+  return collisions;
+}
 
 // ─── bucket 1: muted-tag candidates ──────────────────────────────────────────
 
@@ -217,6 +214,7 @@ async function findMutedTagCandidates(
   const files = await mdFiles(lecDir);
   const results: MutedTagCandidate[] = [];
   const seen = new Set<string>();
+  const muted = mutedTagsFor(subject);
 
   for (const f of files) {
     const content = readMd(f);
@@ -226,8 +224,8 @@ async function findMutedTagCandidates(
     for (const tag of tags) {
       const slugged = slugifyAlias(tag);
       // Muted check is case-insensitive: match the raw tag or its slug form so
-      // entries like "EDA" resolve against a lowercase "eda" in ALWAYS_MUTED.
-      if (ALWAYS_MUTED.has(tag) || ALWAYS_MUTED.has(slugged)) continue;
+      // entries like "EDA" resolve against a lowercase "eda" in the muted set.
+      if (muted.has(tag) || muted.has(slugged)) continue;
       if (seen.has(slugged)) continue;
       if (resolveLink(links, tag)) continue;
 
@@ -395,7 +393,7 @@ async function main() {
   try {
     getSubjectConfig(subject);
   } catch {
-    console.error(`Unknown subject: "${subject}". Add it to scripts/ingest/config.ts first.`);
+    console.error(`Unknown subject: "${subject}". Add scripts/ingest/subjects/${subject}.json first.`);
     process.exit(2);
   }
 
@@ -454,7 +452,16 @@ async function main() {
     }
   }
 
-  const total = muted.length + brokenLinks.length + missingImages.length;
+  // Bucket 5
+  const collisions = findTermSlugCollisions(subject);
+  console.log(`\nTerm slug collisions (${collisions.length}):`);
+  if (collisions.length === 0) {
+    console.log("  (none)");
+  } else {
+    for (const collision of collisions) console.log(`  • ${formatCollision(collision)}`);
+  }
+
+  const total = muted.length + brokenLinks.length + missingImages.length + collisions.length;
   console.log(`\nTotal issues: ${total}`);
   console.log();
 
