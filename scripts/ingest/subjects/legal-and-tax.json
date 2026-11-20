@@ -6,7 +6,9 @@
   "lecturesDir": "Lecture notes",
   "vaultSolutionsDir": "Problem Sets",
   "requireSolutionKeyword": false,
-  "assignmentsDir": "Problem sets",
+  "assignmentFiles": [
+    "Midterm assignment (1).pdf"
+  ],
   "problemSetSlugPrefix": "ps",
   "mutedTags": [
     "legal-and-tax-aspects",
@@ -17,5 +19,5 @@
     "reading",
     "cheat-sheet"
   ],
-  "notes": "Year 2 Semester 1. Qualitative, law-heavy course (90% final paper, 10% group midterm). Decks in Powerpoints/; exam material (example exam + key, practice question sets, cheat sheets) sits loose in the course root. BlackBerry_Innovation_Plan deck belongs to another course."
+  "notes": "Year 2 Semester 1. Qualitative, law-heavy course (90% final paper, 10% group midterm). Decks in Powerpoints/; exam material (example exam + key, practice question sets, cheat sheets) sits loose in the course root. BlackBerry_Innovation_Plan deck belongs to another course. The only problem set is the midterm group assignment, loose in the course root, so it's listed in assignmentFiles (no answer key exists; its site page stays TODO)."
 }
