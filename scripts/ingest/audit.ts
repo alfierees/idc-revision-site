@@ -188,6 +188,7 @@ const ALWAYS_MUTED = new Set([
   "accounting",
   "machine-learning",
   "macroeconomics",
+  "micro-economics-ii",  // Micro II's own subject tag in the vault
   "assignment-solution",
   "problem-set",         // generic metadata pill used in econometrics
   "recap",               // accounting Session 9 metadata, not a concept
