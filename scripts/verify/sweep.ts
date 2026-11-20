@@ -18,6 +18,7 @@ export interface SweepOptions {
   hydrationTimeoutMs?: number;
   imageTimeoutMs?: number;
   graphTimeoutMs?: number;
+  mermaidTimeoutMs?: number;
 }
 
 const DEFAULTS: Required<SweepOptions> = {
@@ -25,6 +26,7 @@ const DEFAULTS: Required<SweepOptions> = {
   hydrationTimeoutMs: 10_000,
   imageTimeoutMs: 5_000,
   graphTimeoutMs: 5_000,
+  mermaidTimeoutMs: 10_000, // first diagram loads mermaid from the CDN
 };
 
 // Vercel Analytics requests /_vercel/insights/* which only exists on Vercel.
@@ -123,6 +125,19 @@ function inspectInBrowser(): { issues: { kind: string; detail: string }[]; links
     else if (host.childElementCount === 0) issues.push({ kind: "graph-not-mounted", detail: "empty graph host" });
   });
 
+  // Mermaid blocks never converted (no Mermaid mount on the page), or hosts
+  // mermaid failed to draw: no <svg>, or mermaid's own "Syntax error" diagram.
+  document.querySelectorAll("code.language-mermaid, code.language-Mermaid").forEach((code) => {
+    issues.push({ kind: "mermaid-not-rendered", detail: `left as code: ${(code.textContent ?? "").split("\n")[0].slice(0, 80)}` });
+  });
+  document.querySelectorAll(".mermaid").forEach((host) => {
+    const svg = host.querySelector("svg");
+    if (!svg) issues.push({ kind: "mermaid-not-rendered", detail: `not drawn: ${(host.textContent ?? "").trim().slice(0, 80)}` });
+    else if (svg.getAttribute("aria-roledescription") === "error" || svg.querySelector(".error-icon")) {
+      issues.push({ kind: "mermaid-not-rendered", detail: `syntax error in diagram ${host.id || ""}`.trim() });
+    }
+  });
+
   // Broken images.
   Array.from(document.images).forEach((image) => {
     if (!image.complete) issues.push({ kind: "broken-image", detail: `did not load: ${image.getAttribute("src")}` });
@@ -191,6 +206,14 @@ export async function sweepPage(
     await waitForImages(page, settings.imageTimeoutMs);
     await page
       .waitForFunction(() => !document.querySelector("code.language-graph"), null, { timeout: settings.graphTimeoutMs })
+      .catch(() => undefined); // leftovers are reported by inspectInBrowser
+    await page
+      .waitForFunction(
+        () => !document.querySelector("code.language-mermaid, code.language-Mermaid")
+          && Array.from(document.querySelectorAll(".mermaid")).every((host) => host.querySelector("svg")),
+        null,
+        { timeout: settings.mermaidTimeoutMs },
+      )
       .catch(() => undefined); // leftovers are reported by inspectInBrowser
 
     const inspected = await page.evaluate(inspectInBrowser);

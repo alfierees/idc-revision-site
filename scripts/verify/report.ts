@@ -11,6 +11,7 @@ export type SweepIssueKind =
   | "raw-graph-fence"
   | "raw-display-math"
   | "graph-not-mounted"
+  | "mermaid-not-rendered"
   | "broken-image";
 
 export type Viewport = "mobile" | "desktop";

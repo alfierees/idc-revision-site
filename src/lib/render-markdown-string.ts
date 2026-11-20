@@ -50,7 +50,8 @@ function rewriteObsidianEmbeds(md: string, subject: string): string {
 }
 
 /**
- * Pre-pass: drop Obsidian block IDs (` ^some-id` at the end of a line). Obsidian
+ * Pre-pass: drop Obsidian block IDs (` ^some-id` at the end of a line, or `^some-id`
+ * alone on a line). Obsidian
  * uses them as targets for `[[Note#^id]]`; the site has no use for them. Left in,
  * they show as stray "^id" text, and after a `$$…$$` line they stop
  * promoteDisplayMath from matching, which ends in a KaTeX parse error.
@@ -63,7 +64,9 @@ function stripBlockIds(md: string): string {
     .map((line) => {
       if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
       if (inFence) return line;
-      return line.replace(/[ \t]+\^(?=[A-Za-z0-9-]*[A-Za-z])[A-Za-z0-9-]+[ \t]*$/, "");
+      // `(?:^|[ \t]+)`: the ID either ends a line of text or sits on its own
+      // line (Obsidian's form after a table, list or callout).
+      return line.replace(/(?:^|[ \t]+)\^(?=[A-Za-z0-9-]*[A-Za-z])[A-Za-z0-9-]+[ \t]*$/, "");
     })
     .join("\n");
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { slugify } from "../src/lib/slugify";
+import { slugify, termSlug } from "../src/lib/slugify";
 
 describe("slugify (shared)", () => {
   it("lowercases and hyphenates ascii", () => {
@@ -13,5 +13,20 @@ describe("slugify (shared)", () => {
   });
   it("trims leading and trailing hyphens", () => {
     expect(slugify("-foo-bar-")).toBe("foo-bar");
+  });
+});
+
+describe("termSlug", () => {
+  it("is slugify for an ordinary term", () => {
+    expect(termSlug("Primary Key")).toBe("primary-key");
+  });
+  // A term file named index.md becomes the folder's own id in Astro's glob
+  // loader, and /dictionary/index is the dictionary page (Databases & SQL crash).
+  it("renames a term titled Index so it can't become index.md", () => {
+    expect(termSlug("Index")).toBe("index-term");
+    expect(termSlug("  INDEX ")).toBe("index-term");
+  });
+  it("leaves longer titles that start with index alone", () => {
+    expect(termSlug("Index Funds")).toBe("index-funds");
   });
 });

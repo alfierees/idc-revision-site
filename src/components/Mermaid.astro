@@ -2,24 +2,53 @@
 // Client-side mermaid: converts <pre><code class="language-mermaid"> blocks
 // (produced by the markdown renderer from ```mermaid fences) into diagrams.
 // Loads mermaid from CDN only when a mermaid block is present.
+//
+// Solutions on problem-set and past-paper pages are injected into the DOM only
+// when "Show solution" is clicked (OpenAnswer), so a one-off scan at load misses
+// diagrams inside them (Databases & SQL ERDs). A MutationObserver renders any
+// mermaid blocks that appear later, as GraphMounter does for graphs.
 ---
 <script>
-  const blocks = Array.from(
-    document.querySelectorAll<HTMLElement>("code.language-mermaid, code.language-Mermaid"),
-  );
-  if (blocks.length > 0) {
-    const { default: mermaid } = await import(
-      "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
-    );
-    mermaid.initialize({ startOnLoad: false, securityLevel: "loose", theme: "neutral" });
-    blocks.forEach((code, i) => {
-      const pre = code.closest("pre");
-      const host = document.createElement("div");
-      host.className = "mermaid";
-      host.id = `mermaid-${i}`;
-      host.textContent = code.textContent ?? "";
-      (pre ?? code).replaceWith(host);
-    });
-    await mermaid.run({ querySelector: ".mermaid" });
+  const SELECTOR = "code.language-mermaid, code.language-Mermaid";
+  // The slice of the CDN module's API used here (mermaid isn't an npm dependency).
+  type MermaidApi = {
+    initialize: (config: Record<string, unknown>) => void;
+    run: (options: { nodes: HTMLElement[] }) => Promise<void>;
+  };
+  let mermaidReady: Promise<MermaidApi> | null = null;
+  let nextId = 0;
+
+  const loadMermaid = () =>
+    (mermaidReady ??= import(
+      /* @vite-ignore */ "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
+    ).then(({ default: mermaid }: { default: MermaidApi }) => {
+      mermaid.initialize({ startOnLoad: false, securityLevel: "loose", theme: "neutral" });
+      return mermaid;
+    }));
+
+  async function renderWithin(root: ParentNode) {
+    const blocks = Array.from(root.querySelectorAll<HTMLElement>(SELECTOR));
+    if (blocks.length === 0) return;
+    const mermaid = await loadMermaid();
+    const hosts = blocks
+      .filter((code) => code.isConnected)
+      .map((code) => {
+        const host = document.createElement("div");
+        host.className = "mermaid";
+        host.id = `mermaid-${nextId++}`;
+        host.textContent = code.textContent ?? "";
+        (code.closest("pre") ?? code).replaceWith(host);
+        return host;
+      });
+    if (hosts.length > 0) await mermaid.run({ nodes: hosts });
   }
+
+  renderWithin(document);
+
+  new MutationObserver((mutations) => {
+    for (const mutation of mutations)
+      for (const node of mutation.addedNodes)
+        if (node instanceof Element && (node.matches(SELECTOR) || node.querySelector(SELECTOR)))
+          renderWithin(node.matches(SELECTOR) ? node.parentElement ?? document : node);
+  }).observe(document.body, { childList: true, subtree: true });
 </script>

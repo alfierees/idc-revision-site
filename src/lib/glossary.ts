@@ -1,4 +1,4 @@
-import { slugify } from "./slugify";
+import { slugify, termSlug } from "./slugify";
 
 export interface GlossaryEntry {
   term: string;
@@ -51,10 +51,10 @@ export function parseGlossary(md: string): GlossaryData {
     if (inAliases) {
       // Body is "See [[#Canonical]]." — map shorthand slug -> canonical term slug.
       const m = raw.match(/\[\[#([^\]|]+)(?:\|[^\]]+)?\]\]/);
-      if (m) aliases.set(slugify(entryTerm), slugify(m[1]));
+      if (m) aliases.set(slugify(entryTerm), termSlug(m[1]));
     } else if (currentTopic) {
       const { definition, lectureRef } = splitCitation(raw);
-      currentTopic.entries.push({ term: entryTerm, slug: slugify(entryTerm), definition, lectureRef });
+      currentTopic.entries.push({ term: entryTerm, slug: termSlug(entryTerm), definition, lectureRef });
     }
     entryTerm = null;
     entryLines = [];
