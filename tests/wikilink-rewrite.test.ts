@@ -151,6 +151,15 @@ describe("resolveLink — problem-set vault-name fallback", () => {
   it("returns undefined when the target ps-N page does not exist", () => {
     expect(resolveLink(map, "ps-09-nonexistent")).toBeUndefined();
   });
+
+  it("resolves an Assign_NN vault name to the assignment-N page", () => {
+    const assignmentMap: LinkMap = new Map([
+      ["assignment-1", { kind: "problem-set", slug: "assignment-1" }],
+    ]);
+    // [[Assign_01-Simple Regression]] and its answer-key note slugify to these.
+    expect(resolveLink(assignmentMap, "assign-01-simple-regression")?.slug).toBe("assignment-1");
+    expect(resolveLink(assignmentMap, "assign-01-solutions-answer-key")?.slug).toBe("assignment-1");
+  });
 });
 
 describe("rewriteWikiHrefs — lecture title & recipe title aliases", () => {

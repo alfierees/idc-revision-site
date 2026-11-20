@@ -1,0 +1,18 @@
+{
+  "slug": "intro-econometrics",
+  "title": "Intro to Econometrics",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 1/Intro Econometrics",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 1/Econometrics",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Assignments",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Assignments",
+  "problemSetSlugPrefix": "assignment",
+  "mutedTags": [
+    "intro-econometrics",
+    "econometrics",
+    "revision",
+    "statistics-review"
+  ],
+  "notes": "Year 2 Semester 1, the foundational metrics course (distinct from Year 2 Sem 2 'econometrics'). Vault problem-set notes are Assign_NN-... in Assignments/ (a full note plus a short answer-key note each). Source assignments sit in one folder per assignment ('Assignment 0'..'Assignment 4', 'assingment 5' typo) with no common parent, which collectDocs cannot walk (it matches one folder name), so assignmentsDir points at a folder that does not exist and site problem sets are placed by hand. Slides for lectures 1-7 and 9 were found in ~/Downloads/Academic/Econometrics/Lectures and copied into LECTURE SLIDES on 2026-11-20 (lecture 2 has two decks: stats_review and ols_estimation)."
+}

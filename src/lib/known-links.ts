@@ -43,10 +43,11 @@ export function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined
   // Problem-set vault-name fallback: vault links carry the full descriptive
   // name, e.g. [[PS_04-Seatbelt Laws & Traffic Fatalities]] slugifies to
   // "ps-04-seatbelt-laws-traffic-fatalities" and [[Assignment 3 - CoreWeave …]]
-  // to "assignment-3-coreweave-…", but the ingested pages are "ps-4" /
+  // to "assignment-3-coreweave-…" ([[Assign_01-Simple Regression]] to
+  // "assign-01-simple-regression"), but the ingested pages are "ps-4" /
   // "assignment-3". Strip the leading zero-padded number off any trailing
   // description and retry against the prefix-number slug.
-  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|ex|hw)-0*(\d+)(?:-.*)?$/);
+  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|assign|ex|hw)-0*(\d+)(?:-.*)?$/);
   if (psMatch) {
     const n = psMatch[1];
     // The canonical slug prefix depends on the subject's problemSetSlugPrefix

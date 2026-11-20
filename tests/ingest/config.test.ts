@@ -47,7 +47,8 @@ describe("real subject configs", () => {
   it("keeps every existing subject", () => {
     expect(Object.keys(subjects)).toEqual(expect.arrayContaining([
       "accounting", "data-science", "digital-marketing", "econometrics",
-      "machine-learning", "macro-economics", "macro-ii", "micro", "micro-ii",
+      "intro-econometrics", "machine-learning", "macro-economics", "macro-ii",
+      "micro", "micro-ii",
     ]));
   });
 
