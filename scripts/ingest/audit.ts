@@ -19,6 +19,7 @@ import { join, basename, extname } from "node:path";
 import { getSubjectConfig, mutedTagsFor, subjects } from "./config.js";
 import { termSlugCollisions, formatCollision, type SourcedSlugCollision } from "./slug-collisions.js";
 import { slugify } from "../../src/lib/slugify.js";
+import { stripCode } from "./text.js";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -272,7 +273,7 @@ async function findBrokenWikiLinks(subject: string, links: LinkMap): Promise<Bro
   for (const kind of ["terms", "recipes", "problem-sets"] as const) {
     const files = await mdFiles(contentDir(kind, subject));
     for (const f of files) {
-      const content = readMd(f);
+      const content = stripCode(readMd(f));
       // Find [[...]] patterns (possibly with fragment)
       const matches = [...content.matchAll(/\[\[([^\]]+)\]\]/g)];
       for (const m of matches) {

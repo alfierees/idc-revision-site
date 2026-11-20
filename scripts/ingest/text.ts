@@ -7,6 +7,15 @@ const IMG_EXT = "png|jpe?g|gif|svg|webp|heic|heif|avif|bmp";
 const OBSIDIAN_IMG = new RegExp(`!\\[\\[([^\\]|]+\\.(?:${IMG_EXT}))(?:\\|[^\\]]*)?\\]\\]`, "gi");
 const STANDARD_IMG = new RegExp(`!\\[[^\\]]*\\]\\(([^)\\s]+\\.(?:${IMG_EXT}))(?:\\s+"[^"]*")?\\)`, "gi");
 
+/**
+ * Drop fenced code blocks (also when indented inside YAML block scalars) and
+ * inline code spans. The renderer never turns `[[...]]` inside code into a
+ * link, so the audit mustn't count Python like `df[['age']]` as a broken link.
+ */
+export function stripCode(markdown: string): string {
+  return markdown.replace(/```[\s\S]*?```/g, "").replace(/`[^`\n]*`/g, "");
+}
+
 export function extractImageRefs(markdown: string): string[] {
   const out: string[] = [];
   for (const m of markdown.matchAll(OBSIDIAN_IMG)) out.push(m[1]);

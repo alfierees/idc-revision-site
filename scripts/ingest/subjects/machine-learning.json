@@ -5,6 +5,8 @@
   "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Machine learning",
   "lecturesDir": "Lecture notes",
   "mutedTags": [
-    "machine-learning"
-  ]
+    "machine-learning",
+    "data-science"
+  ],
+  "notes": "Lectures 2 to 5 (EDA, classification, regression, clustering/PCA) and their terms came from the Data Science vault folder, through a data-science.json config that was retired on 2026-11-20 when Data Science became its own site course (intro-data-science.json). Those pages stay here as they are. data-science is muted because those lectures carry the Data Science course tag."
 }
