@@ -154,6 +154,10 @@ const section = active ?? "dictionary";
 
     <script>
       import { progressStore } from "../lib/progress/store";
+      import { keepDisplayMathFitted } from "../lib/fit-display-math";
+
+      // ---- display math: shrink formulas wider than their box ----
+      keepDisplayMathFitted();
 
       // ---- last seen (for "Continue where you left off" on Home) ----
       const lastSeenData = document.getElementById("last-seen-data");

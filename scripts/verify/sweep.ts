@@ -72,7 +72,7 @@ async function waitForImages(page: Page, timeoutMs: number): Promise<void> {
 }
 
 // Runs in the browser. Kept self-contained: Playwright serialises it.
-function inspectInBrowser(): { issues: { kind: string; detail: string }[]; links: string[]; stats: Record<string, number> } {
+function inspectInBrowser(): { issues: { kind: string; detail: string }[]; links: string[]; stats: Record<string, number>; clippedMath: string[] } {
   const issues: { kind: string; detail: string }[] = [];
   const describe = (element: Element) => {
     const id = element.id ? `#${element.id}` : "";
@@ -150,6 +150,14 @@ function inspectInBrowser(): { issues: { kind: string; detail: string }[]; links
     .filter((href) => href.startsWith(location.origin))
     .map((href) => new URL(href).pathname);
 
+  // Display formulas still wider than their box, so a reader has to scroll
+  // sideways to see all of it. Not an issue (a scrolling formula with an edge
+  // shadow is acceptable, and the fit script has already shrunk what it can);
+  // reported as a count so it can be watched. The +2 absorbs sub-pixel rounding.
+  const clippedMath = Array.from(document.querySelectorAll<HTMLElement>(".katex-display"))
+    .filter((block) => block.scrollWidth > block.clientWidth + 2)
+    .map((block) => (block.querySelector(".katex-html")?.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 60));
+
   // Evidence that the checks had something to look at.
   const stats = {
     solutionsRevealed: document.querySelectorAll(".oa-body, .mc-working").length,
@@ -158,7 +166,7 @@ function inspectInBrowser(): { issues: { kind: string; detail: string }[]; links
     mathBlocks: document.querySelectorAll(".katex").length,
   };
 
-  return { issues, links: Array.from(new Set(links)), stats };
+  return { issues, links: Array.from(new Set(links)), stats, clippedMath };
 }
 
 export async function sweepPage(
@@ -192,6 +200,7 @@ export async function sweepPage(
   let status: number | null = null;
   let links: string[] = [];
   let stats: SweptPage["stats"];
+  let clippedMath: string[] = [];
   try {
     const response = await page.goto(baseUrl + path, { waitUntil: "load", timeout: settings.navigationTimeoutMs });
     status = response?.status() ?? null;
@@ -216,16 +225,21 @@ export async function sweepPage(
       )
       .catch(() => undefined); // leftovers are reported by inspectInBrowser
 
+    // The display-math fit script resizes through a ResizeObserver; give it
+    // two frames to settle so we measure the fitted formulas.
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+
     const inspected = await page.evaluate(inspectInBrowser);
     issues.push(...(inspected.issues as SweepIssue[]));
     links = inspected.links;
     stats = inspected.stats as SweptPage["stats"];
+    clippedMath = inspected.clippedMath;
   } catch (error) {
     issues.push({ kind: "load-failed", detail: (error as Error).message.split("\n")[0].slice(0, 200) });
   } finally {
     await page.close();
   }
-  return { path, viewport, status, issues, links, stats };
+  return { path, viewport, status, issues, links, stats, clippedMath };
 }
 
 // Run jobs with a fixed number of pages open at once.

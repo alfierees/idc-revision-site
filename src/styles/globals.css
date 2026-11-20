@@ -90,7 +90,9 @@
   }
 
   .katex { font-size: 1.05em; }
-  .katex-display { margin: 1.25rem 0; }
+  /* --math-fit (0.66–1) is set by src/lib/fit-display-math.ts on formulas wider
+     than their box; KaTeX sizes everything in em, so this scales the lot. */
+  .katex-display { margin: 1.25rem 0; font-size: calc(var(--math-fit, 1) * 1em); }
 
   .reading { max-width: 70ch; }
 
@@ -392,11 +394,42 @@
     margin: 1.7em 0;
     padding: 1.1rem 1.4rem;
     border-radius: var(--radius-chip);
-    background: color-mix(in srgb, var(--color-paper-deep) 45%, var(--color-card));
+    --eqn-bg: color-mix(in srgb, var(--color-paper-deep) 45%, var(--color-card));
+    background: var(--eqn-bg);
     box-shadow: inset 3px 0 0 var(--color-accent);
     overflow-x: auto;
   }
   .eqn .katex-display { margin: 0; }
+  /* Phones: give the formula the width the slab's padding was spending. */
+  @media (max-width: 480px) {
+    .eqn { padding: 1rem 0.8rem 1rem 1rem; }
+  }
+  /* Scroll cue for a formula still wider than its box after fitting. The fit
+     script sets data-math-scrolls on those; gating on it keeps a hairline of
+     shadow off formulas that fit. Two parts: a soft shadow on whichever edge has
+     more to scroll to (gone once you reach it), and a small label under the
+     formula. The two "local" layers are slab-coloured covers that move with the
+     content and hide the "scroll" shadows underneath when that edge is reached. */
+  .eqn .katex-display[data-math-scrolls] {
+    --eqn-shadow: color-mix(in srgb, var(--color-ink) 50%, transparent);
+    background:
+      linear-gradient(to right, var(--eqn-bg) 30%, transparent) left center / 2.4rem 100% no-repeat local,
+      linear-gradient(to left, var(--eqn-bg) 30%, transparent) right center / 2.4rem 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, var(--eqn-shadow), transparent) left center / 1.1rem 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, var(--eqn-shadow), transparent) right center / 1.1rem 100% no-repeat scroll;
+  }
+  .eqn:has(> .katex-display[data-math-scrolls])::after {
+    content: "Scroll sideways \2192";
+    display: block;
+    position: sticky;
+    left: 0;
+    margin-top: 0.15rem;
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    text-align: right;
+    color: var(--color-ink-muted);
+  }
 
   /* prose headings (shared) */
   .prose-card h2, .prose-card h3, .prose-card h4 {

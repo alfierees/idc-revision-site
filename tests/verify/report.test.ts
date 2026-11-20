@@ -55,6 +55,45 @@ describe("buildReport", () => {
   });
 });
 
+describe("clipped display math", () => {
+  const withClipped = () => {
+    const input = cleanInput();
+    input.sweptPages[0].clippedMath = ["Pre-money + Investment = Post-money", "New shares = Current shares × p / (1 − p)"];
+    input.sweptPages[1].clippedMath = ["x"];
+    return input;
+  };
+
+  it("is informational: a clean run with clipped formulas still passes", () => {
+    const report = buildReport(withClipped());
+    expect(report.ok).toBe(true);
+    expect(report.checks.sweep.ok).toBe(true);
+    expect(report.checks.sweep.failures).toEqual([]);
+    expect(report.counts).toEqual({});
+  });
+
+  it("totals blocks per viewport and keeps a few examples per page", () => {
+    const { clippedMath } = buildReport(withClipped()).checks.sweep;
+    expect(clippedMath.total).toBe(3);
+    expect(clippedMath.byViewport).toEqual({ mobile: 2, desktop: 1 });
+    expect(clippedMath.pages[0]).toMatchObject({ path: "/subjects/pilot/", viewport: "mobile", count: 2 });
+    expect(clippedMath.pages[0].examples).toContain("Pre-money + Investment = Post-money");
+  });
+
+  it("shows the count in the summary table and lists the pages", () => {
+    const summary = renderSummary(buildReport(withClipped()));
+    expect(summary).toContain("**PASS**");
+    expect(summary).toContain("Clipped display math | 2 blocks on 1 pages at 390px, 1 on 1 at 1280px (non-failing");
+    expect(summary).toContain("## Clipped display math (non-failing)");
+    expect(summary).toContain("Pre-money + Investment = Post-money");
+  });
+
+  it("says none when nothing is clipped, with no detail section", () => {
+    const summary = renderSummary(buildReport(cleanInput()));
+    expect(summary).toContain("Clipped display math | none");
+    expect(summary).not.toContain("## Clipped display math");
+  });
+});
+
 describe("build check", () => {
   it("fails the report when the build fails and keeps the log tail", () => {
     const input = cleanInput();
