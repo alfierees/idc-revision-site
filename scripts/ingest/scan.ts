@@ -1,6 +1,6 @@
 import { readFile, readdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join, basename, extname } from "node:path";
+import { join, basename, extname, resolve, relative, isAbsolute } from "node:path";
 import type { SubjectConfig } from "./config.js";
 import type { ScanResult, PendingItem, ImageOp, DocOp } from "./types.js";
 import { parseRegistry } from "./registry.js";
@@ -105,7 +105,9 @@ export async function scan(cfg: SubjectConfig, destContentRoot: string): Promise
   }
 
   if (existsSync(cfg.sourceDocPath)) {
-    const docFiles = await collectDocs(cfg.sourceDocPath, assignmentsDirName);
+    const docFiles = cfg.assignmentFiles
+      ? listAssignmentFiles(cfg.sourceDocPath, cfg.assignmentFiles)
+      : await collectDocs(cfg.sourceDocPath, assignmentsDirName);
     const vaultSolutions = await listVaultSolutions(cfg.vaultPath, vaultSolutionsDirName, requireSolutionKeyword);
     const docxSolutions = await listDocxSolutions(cfg.sourceDocPath);
     for (const docPath of docFiles) {
@@ -271,6 +273,22 @@ function containsContiguous(haystack: string[], needle: string[]): boolean {
     return true;
   }
   return false;
+}
+
+// The config's explicit assignmentFiles, resolved under sourceDocPath. A missing
+// file or a path outside the source folder is a config error, so fail loudly.
+function listAssignmentFiles(sourceDocPath: string, assignmentFiles: string[]): string[] {
+  return assignmentFiles.map((file) => {
+    const full = resolve(sourceDocPath, file);
+    const fromRoot = relative(sourceDocPath, full);
+    if (fromRoot.startsWith("..") || isAbsolute(fromRoot)) {
+      throw new Error(`assignmentFiles: "${file}" is outside sourceDocPath`);
+    }
+    if (!existsSync(full)) {
+      throw new Error(`assignmentFiles: "${file}" not found under ${sourceDocPath}`);
+    }
+    return full;
+  });
 }
 
 // Recursively find .pdf and .docx files but only inside the configured assignments folder

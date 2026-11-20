@@ -21,6 +21,13 @@ export interface SubjectConfig {
   // Optional source-doc folder name — default "Assignments". Sibling solutions folder lives at "<sourceDocPath>/Assignment solutions".
   assignmentsDir?: string;       // default "Assignments"
 
+  // Optional explicit list of problem-set source files, relative to sourceDocPath.
+  // When set, it replaces the assignmentsDir walk: only these files are queued
+  // and copied into public/papers. Use it when assignments sit in several
+  // folders or loose in the course root, or when their folders also hold
+  // solutions, data files or student submissions that must not be published.
+  assignmentFiles?: string[];
+
   // Optional problem-set slug prefix. When set, the slug becomes "<prefix>-<exerciseNum>"
   // (e.g. "ps-1") instead of the raw slugified filename. Falls back to the raw slug when
   // no exercise number can be extracted.
@@ -50,6 +57,11 @@ export function loadSubjects(dir: string): Record<string, SubjectConfig> {
       if (typeof parsed[field] !== "string" || parsed[field] === "") {
         throw new Error(`${fileName}: missing required field "${field}"`);
       }
+    }
+    const assignmentFiles = parsed.assignmentFiles;
+    if (assignmentFiles !== undefined
+      && !(Array.isArray(assignmentFiles) && assignmentFiles.every((file) => typeof file === "string" && file !== ""))) {
+      throw new Error(`${fileName}: "assignmentFiles" must be a list of file paths relative to sourceDocPath`);
     }
     configs[fileName.replace(/\.json$/, "")] = parsed as unknown as SubjectConfig;
   }
