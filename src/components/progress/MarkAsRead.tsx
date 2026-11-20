@@ -24,13 +24,21 @@ export default function MarkAsRead({ subject, lecture }: Props) {
     window.dispatchEvent(new CustomEvent(LECTURE_EVENT, { detail: { subject, lecture, read: nextRead } }));
   };
 
-  return read ? (
-    <p class="mark-read mark-read-done">
-      <span aria-hidden="true">✓</span> Read
-      <span aria-hidden="true"> · </span>
-      <button type="button" class="mark-read-undo" onClick={() => change(false)}>Undo</button>
-    </p>
-  ) : (
-    <button type="button" class="mark-read-btn" onClick={() => change(true)}>Mark as read</button>
+  // One button that toggles, so keyboard focus stays on it after a click.
+  return (
+    <button
+      type="button"
+      class={`mark-read-btn${read ? " mark-read-on" : ""}`}
+      aria-pressed={read}
+      onClick={() => change(!read)}
+    >
+      {read ? (
+        <>
+          <span aria-hidden="true">✓ </span>Read<span class="mark-read-undo" aria-hidden="true"> · Undo</span>
+        </>
+      ) : (
+        "Mark as read"
+      )}
+    </button>
   );
 }

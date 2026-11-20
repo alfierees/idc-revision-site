@@ -5,7 +5,7 @@ import { BADGE_EVENT, LECTURE_EVENT } from "../../lib/progress/store";
 import { STATUS_EVENT } from "../../lib/status";
 import BadgeMedal from "./BadgeMedal";
 
-const SHOW_MS = 4000;
+const SHOW_MS = 6000;
 const DEBOUNCE_MS = 300;
 
 // Sitewide: silently backfills the badge ledger on load, then announces badges
@@ -17,7 +17,10 @@ export default function BadgeToaster() {
   useEffect(() => {
     let debounce: number | undefined;
     syncBadges(false).catch(() => {});
-    const onMark = () => {
+    // Only a real mark can earn a badge: clearing a status (exam reset) or undoing a read can't.
+    const onMark = (event: Event) => {
+      const detail = (event as CustomEvent<{ value?: string; read?: boolean }>).detail ?? {};
+      if (detail.value === "untried" || detail.read === false) return;
       window.clearTimeout(debounce);
       debounce = window.setTimeout(() => void syncBadges(true).catch(() => {}), DEBOUNCE_MS);
     };
@@ -45,19 +48,26 @@ export default function BadgeToaster() {
     window.clearTimeout(hideTimer.current);
     setIds([]);
   };
+  // Hold the toast while it's hovered or focused, so keyboard users can reach the link.
+  const hold = () => window.clearTimeout(hideTimer.current);
+  const release = () => {
+    window.clearTimeout(hideTimer.current);
+    hideTimer.current = window.setTimeout(() => setIds([]), SHOW_MS);
+  };
 
   return (
     <div class="toaster" role="status" aria-live="polite">
       {badges.length > 0 && (
-        <div class="toast" onClick={dismiss}>
+        <div class="toast" onMouseEnter={hold} onMouseLeave={release} onFocusIn={hold} onFocusOut={release}>
           <BadgeMedal badge={badges[0]} earnedOn="today" size="sm" />
           <div class="toast-text">
             <p class="toast-line">
               New badge · <strong>{badges.slice(0, 2).map((b) => b.name).join(", ")}</strong>
               {badges.length > 2 && ` +${badges.length - 2} more`}
             </p>
-            <a class="toast-link" href="/#progress" onClick={(e) => e.stopPropagation()}>See your badges →</a>
+            <a class="toast-link" href="/#progress">See your badges →</a>
           </div>
+          <button type="button" class="toast-close" aria-label="Dismiss" onClick={dismiss}>×</button>
         </div>
       )}
     </div>

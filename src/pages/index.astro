@@ -289,11 +289,12 @@ const tileNote = (live: number, coming: number) =>
       const { degree } = evaluate(await loadTotals());
       for (const course of degree.courses) {
         const bar = document.querySelector<HTMLElement>(`[data-course-progress="${course.slug}"]`);
-        if (!bar || course.percent <= 0) continue;
+        if (!bar) continue;
+        bar.hidden = course.percent <= 0;
+        if (bar.hidden) continue;
         bar.style.setProperty("--pct", `${course.percent}%`);
         const label = bar.querySelector(".cov-label");
         if (label) label.textContent = `${course.percent}%`;
-        bar.hidden = false;
       }
       const bySemester = new Map<string, number[]>();
       for (const course of degree.courses) {
@@ -303,9 +304,9 @@ const tileNote = (live: number, coming: number) =>
       for (const [id, percents] of bySemester) {
         const line = document.querySelector<HTMLElement>(`[data-semester-progress="${id}"]`);
         const mean = Math.round(percents.reduce((sum, p) => sum + p, 0) / percents.length);
-        if (!line || mean <= 0) continue;
+        if (!line) continue;
+        line.hidden = mean <= 0;
         line.textContent = `${mean}% covered`;
-        line.hidden = false;
       }
     } catch {}
   };

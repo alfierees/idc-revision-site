@@ -1,13 +1,22 @@
 import { BADGES, earnedBadgeIds, keepsakesAt, rankFor } from "./badges";
 import { degreeProgress } from "./coverage";
 import { localDay } from "./days";
-import { BADGE_EVENT, progressStore } from "./store";
+import { BADGE_EVENT, BADGE_SYNC_EVENT, progressStore } from "./store";
 import { gentleStreak } from "./streak";
 import type { ProgressTotals } from "./types";
 
 let totalsRequest: Promise<ProgressTotals> | null = null;
 export function loadTotals(): Promise<ProgressTotals> {
-  totalsRequest ??= fetch("/progress-totals.json").then((r) => r.json() as Promise<ProgressTotals>);
+  // A failed request is forgotten so the next caller retries instead of reusing the rejection.
+  totalsRequest ??= fetch("/progress-totals.json")
+    .then((response) => {
+      if (!response.ok) throw new Error(`progress totals: HTTP ${response.status}`);
+      return response.json() as Promise<ProgressTotals>;
+    })
+    .catch((error) => {
+      totalsRequest = null;
+      throw error;
+    });
   return totalsRequest;
 }
 
@@ -31,8 +40,8 @@ export async function syncBadges(live: boolean, now = new Date()): Promise<strin
   const { ctx } = evaluate(totals, now);
   const candidates = [...earnedBadgeIds(ctx), ...(live ? keepsakesAt(now.getHours()) : [])];
   const fresh = progressStore().addToLedger(candidates, localDay(now));
-  if (live && fresh.length > 0) {
-    window.dispatchEvent(new CustomEvent(BADGE_EVENT, { detail: { ids: fresh } }));
+  if (fresh.length > 0) {
+    window.dispatchEvent(new CustomEvent(live ? BADGE_EVENT : BADGE_SYNC_EVENT, { detail: { ids: fresh } }));
   }
   return fresh;
 }

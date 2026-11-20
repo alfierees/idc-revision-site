@@ -7,7 +7,7 @@ export interface TotalsInput {
   subjects: { slug: string; title: string; year: 1 | 2; semester: 1 | 2; placeholder: boolean }[];
   lectures: Entry<{ subject: string; in_scope?: boolean }>[];
   problemSets: Entry<{ subject: string; questions: QuestionLike[] }>[];
-  pastPapers: Entry<{ subject: string; questions?: QuestionLike[] }>[];
+  pastPapers: Entry<{ subject: string; in_scope?: boolean; questions?: QuestionLike[] }>[];
 }
 
 const hasSolution = (q: QuestionLike) => q.solution.trim().length > 0;
@@ -24,7 +24,7 @@ export function buildTotals(input: TotalsInput): ProgressTotals {
         if (ids.length > 0) problemSets[entrySlug(set.id)] = ids;
       }
       const pastPapers: Record<string, string[]> = {};
-      for (const paper of input.pastPapers.filter((p) => p.data.subject === s.slug)) {
+      for (const paper of input.pastPapers.filter((p) => p.data.subject === s.slug && p.data.in_scope !== false)) {
         const ids = (paper.data.questions ?? []).filter(isGradable).map((q) => q.id);
         if (ids.length > 0) pastPapers[entrySlug(paper.id)] = ids;
       }

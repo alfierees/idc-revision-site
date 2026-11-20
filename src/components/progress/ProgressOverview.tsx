@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { evaluate, loadTotals } from "../../lib/progress/client";
 import { localDay } from "../../lib/progress/days";
-import { BADGE_EVENT, LECTURE_EVENT } from "../../lib/progress/store";
+import { BADGE_EVENT, BADGE_SYNC_EVENT, LECTURE_EVENT } from "../../lib/progress/store";
 import { calendarWeeks } from "../../lib/progress/streak";
 import { STATUS_EVENT } from "../../lib/status";
 import type { BadgeFamily } from "../../lib/progress/badges";
@@ -40,11 +40,13 @@ export default function ProgressOverview() {
     };
     refresh();
     window.addEventListener(BADGE_EVENT, refresh);
+    window.addEventListener(BADGE_SYNC_EVENT, refresh);
     window.addEventListener(STATUS_EVENT, refresh);
     window.addEventListener(LECTURE_EVENT, refresh);
     return () => {
       cancelled = true;
       window.removeEventListener(BADGE_EVENT, refresh);
+      window.removeEventListener(BADGE_SYNC_EVENT, refresh);
       window.removeEventListener(STATUS_EVENT, refresh);
       window.removeEventListener(LECTURE_EVENT, refresh);
     };

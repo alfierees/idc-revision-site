@@ -31,6 +31,10 @@ describe("buildTotals", () => {
         data: { subject: "micro-ii", questions: [{ id: "q1", solution: "", options: [{}] }, { id: "q2", solution: "" }] },
       },
       { id: "micro-ii/pp-prose", data: { subject: "micro-ii" } },
+      {
+        id: "micro-ii/pp-hidden",
+        data: { subject: "micro-ii", in_scope: false, questions: [{ id: "h1", solution: "x" }] },
+      },
     ],
   };
 

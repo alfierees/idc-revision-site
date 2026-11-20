@@ -19,6 +19,8 @@ const lectureKey = (subject: string, lecture: string) => `${PREFIX}${subject}:le
 export const LECTURE_EVENT = "idc-lecture-read";
 /** Fired with the badge ids newly earned by a live mark. detail: { ids: string[] } */
 export const BADGE_EVENT = "idc-badges-earned";
+/** Fired when the silent on-load backfill adds badges (no toast). detail: { ids: string[] } */
+export const BADGE_SYNC_EVENT = "idc-badges-synced";
 
 function readJson<T>(storage: KeyValueStore, key: string, isValid: (v: unknown) => v is T, fallback: T): T {
   try {
