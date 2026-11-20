@@ -73,7 +73,7 @@ export default function BadgeToaster() {
               New badge · <strong>{badges.slice(0, 2).map((b) => b.name).join(", ")}</strong>
               {badges.length > 2 && ` +${badges.length - 2} more`}
             </p>
-            <a class="toast-link" href="/#progress">See your badges →</a>
+            <a class="toast-link" href="/progress">See your badges →</a>
           </div>
           <button type="button" class="toast-close" aria-label="Dismiss" onClick={dismiss}>×</button>
         </div>

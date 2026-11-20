@@ -1303,3 +1303,79 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
   .pitch-title { font-size: 1.4rem; }
 }
 .rank-redacted { color: var(--color-ink-faint); }
+
+/* ---- Home progress strip (B2) ---- */
+.strip {
+  display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.55rem; margin-top: 1.1rem;
+  padding: 0.6rem 1rem; border-radius: 999px; background: var(--color-card); box-shadow: var(--shadow-soft);
+  font-family: var(--font-ui); font-size: 0.875rem; color: var(--color-ink-soft); text-decoration: none;
+}
+.strip strong { color: var(--color-ink); font-weight: 700; }
+.strip-sep { color: var(--color-ink-faint); }
+.strip-arrow { color: var(--color-accent); transition: transform 0.15s ease; }
+.strip:hover .strip-arrow { transform: translateX(2px); }
+.strip:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.strip-locked { background: var(--color-accent-soft); color: var(--color-accent-ink); }
+.strip-locked strong { color: var(--color-accent-ink); }
+@media (max-width: 640px) { .strip { border-radius: var(--radius-card); } }
+
+/* ---- You page (B2) ---- */
+.you-page { max-width: 44rem; }
+.you { display: grid; gap: 1rem; }
+.you-card { background: var(--color-card); border-radius: var(--radius-card); box-shadow: var(--shadow-soft); padding: 1.4rem 1.6rem; }
+.you-head { display: flex; align-items: center; gap: 1rem; }
+.you-avatar { width: 3.5rem; height: 3.5rem; font-size: 1.1rem; flex: none; }
+.you-id { min-width: 0; }
+.you-name-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.8rem; }
+.you-name { margin: 0; font-family: var(--font-display); font-size: 1.6rem; line-height: 1.2; font-variation-settings: "opsz" 72, "wght" 500; overflow-wrap: anywhere; }
+.you-meta { margin: 0.25rem 0 0; font-family: var(--font-ui); font-size: 0.82rem; color: var(--color-ink-muted); overflow-wrap: anywhere; }
+.you-facts { margin: 1.25rem 0 0; display: grid; gap: 0.6rem; border-top: 1px solid var(--color-rule); padding-top: 1rem; }
+.you-facts div { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: 0.75rem; align-items: baseline; }
+.you-facts dt { font-family: var(--font-ui); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-muted); }
+.you-facts dd { margin: 0; font-family: var(--font-ui); font-size: 0.92rem; color: var(--color-ink); }
+.you-facts dd a:not(.btn-link) { color: var(--color-ink); text-decoration-color: var(--color-rule-strong); }
+.you-section-title { margin: 0 0 0.5rem; font-family: var(--font-ui); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--color-ink-muted); }
+.you-body { margin: 0; font-family: var(--font-body); font-size: 1rem; line-height: 1.55; color: var(--color-ink-soft); }
+.you-body a, .pitch-small a { color: var(--color-accent-ink); }
+.you-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-top: 1rem; }
+.you-small { margin: 0.75rem 0 0; font-family: var(--font-ui); font-size: 0.78rem; color: var(--color-ink-muted); }
+.you-list { list-style: disc; margin: 0.75rem 0 1.25rem; padding-left: 1.1rem; font-family: var(--font-body); font-size: 1.02rem; line-height: 1.6; color: var(--color-ink-soft); }
+.you-label { display: block; margin-bottom: 0.35rem; font-family: var(--font-ui); font-size: 0.78rem; font-weight: 600; color: var(--color-ink-soft); }
+.you-name-fields { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.you-input { flex: 1 1 12rem; min-width: 0; padding: 0.55rem 0.75rem; border: 1px solid var(--color-rule-strong); border-radius: 10px; background: var(--color-paper); font: 500 1rem var(--font-ui); color: var(--color-ink); }
+.you-input:focus { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+.you-error { margin: 0.5rem 0 0; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-status-wrong); }
+.you-confirm-title { margin: 0; font-family: var(--font-ui); font-weight: 700; color: var(--color-ink); }
+.you-confirm-body { margin: 0.35rem 0 0; font-family: var(--font-body); color: var(--color-ink-soft); line-height: 1.5; }
+.btn-link { background: none; padding: 0; font: 600 0.85rem var(--font-ui); color: var(--color-accent-ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.btn-outline { display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0.55rem 1.1rem; border-radius: 999px; border: 1px solid var(--color-rule-strong); background: var(--color-card); font: 600 0.875rem var(--font-ui); color: var(--color-ink); text-decoration: none; cursor: pointer; }
+.btn-outline:hover { border-color: var(--color-ink-muted); }
+.btn-danger-text { background: none; padding: 0; font: 600 0.85rem var(--font-ui); color: var(--color-status-wrong); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.btn-danger { min-height: 2.5rem; padding: 0.55rem 1.1rem; border-radius: 999px; background: var(--color-status-wrong); color: #fff; font: 600 0.875rem var(--font-ui); cursor: pointer; }
+.btn-danger:disabled, .acct-signin:disabled { opacity: 0.6; cursor: progress; }
+.you-danger { box-shadow: none; background: transparent; padding: 0.25rem 0.25rem; }
+@media (max-width: 640px) {
+  .you-card { padding: 1.15rem; }
+  .you-facts div { grid-template-columns: minmax(0, 1fr); gap: 0.15rem; }
+}
+
+/* ---- account notices (B2), in the toast slot ---- */
+.toast-actions { margin: 0.35rem 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; }
+.toast-actions .toast-link { background: none; padding: 0; cursor: pointer; }
+.toast-quiet { background: none; padding: 0; font: 500 0.75rem var(--font-ui); color: var(--color-ink-muted); cursor: pointer; }
+.toast-quiet:hover { color: var(--color-ink); text-decoration: underline; }
+/* Phones: notices sit above the bottom tab bar (3.5rem tall plus the safe area), not behind it. */
+@media (max-width: 640px) {
+  .toaster { bottom: calc(3.5rem + env(safe-area-inset-bottom) + 0.75rem); }
+}
+
+/* ---- Your data (privacy) page ---- */
+.privacy { max-width: 40rem; font-family: var(--font-body); font-size: 1.05rem; line-height: 1.65; color: var(--color-ink-soft); }
+.privacy .page-title { margin-bottom: 0.5rem; }
+.privacy-lede { margin: 0 0 1.5rem; color: var(--color-ink-muted); }
+.privacy h2 { margin: 2rem 0 0.5rem; font-family: var(--font-display); font-size: 1.3rem; line-height: 1.25; color: var(--color-ink); font-variation-settings: "opsz" 48, "wght" 500; }
+.privacy p { margin: 0 0 0.9rem; }
+.privacy ul { margin: 0 0 0.9rem; padding-left: 1.2rem; list-style: disc; }
+.privacy li + li { margin-top: 0.3rem; }
+.privacy a { color: var(--color-accent-ink); }
+.privacy strong { color: var(--color-ink); }
