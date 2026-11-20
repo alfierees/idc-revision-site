@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import { getCollection } from "astro:content";
 import Analytics from '@vercel/analytics/astro';
 import { groupBySemester } from "../lib/semesters";
+import BadgeToaster from "./progress/BadgeToaster";
 
 interface Props {
   title?: string;
@@ -246,5 +247,6 @@ const section = active ?? "dictionary";
         window.addEventListener("scroll", onSpy, { passive: true });
       }
     </script>
+    <BadgeToaster client:idle />
   </body>
 </html>
