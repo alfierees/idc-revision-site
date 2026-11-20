@@ -35,6 +35,20 @@ describe("earnedBadgeIds", () => {
     expect(earnedBadgeIds(ctx)).not.toContain("practice-250");
   });
 
+  it("needs two or more live courses in a semester for Semester Sweep", () => {
+    const base = context();
+    // micro (Y2 S2) and micro-ii (Y2 S1) each sit alone in their semester
+    const allMarked = { ...base.degree, courses: base.degree.courses.map((c) => ({ ...c, hasMark: true })) };
+    expect(earnedBadgeIds(context({ degree: allMarked }))).not.toContain("coverage-sweep");
+    const twoInOne = {
+      ...base.degree,
+      courses: [...allMarked.courses, { ...blankCourse("macro", 2, 2), hasMark: true }],
+    };
+    expect(earnedBadgeIds(context({ degree: twoInOne }))).toContain("coverage-sweep");
+    const oneUnmarked = { ...twoInOne, courses: [...allMarked.courses, blankCourse("macro", 2, 2)] };
+    expect(earnedBadgeIds(context({ degree: oneUnmarked }))).not.toContain("coverage-sweep");
+  });
+
   it("earns Two-Year Tour only with a mark in every semester that has courses", () => {
     const base = context();
     const oneMarked = { ...base.degree, courses: [{ ...base.degree.courses[0], hasMark: true }, base.degree.courses[1]] };

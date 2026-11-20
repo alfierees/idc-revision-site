@@ -78,8 +78,9 @@ export const BADGES: BadgeDef[] = [
   countBadge("coverage-50", "Halfway There", "coverage", 2, 50, "Get a course to 50%", bestPercent),
   countBadge("coverage-100", "Course Conquered", "coverage", 3, 100, "Get a course to 100%", bestPercent),
   { id: "coverage-sweep", name: "Semester Sweep", family: "coverage", step: 4,
-    rule: "Mark something in every course of a semester",
-    earned: (ctx) => semesterMarks(ctx).some((marks) => marks.every(Boolean)) },
+    rule: "Mark something in every course of a semester (2+ courses)",
+    // A one-course semester would make this free on the first mark (Alfie, 2026-11-20).
+    earned: (ctx) => semesterMarks(ctx).some((marks) => marks.length >= 2 && marks.every(Boolean)) },
   // Breadth
   countBadge("breadth-3", "Interdisciplinary", "breadth", 1, 3, "Mark something in 3 courses", coursesMarked),
   countBadge("breadth-5", "Polymath", "breadth", 2, 5, "Mark something in 5 courses", coursesMarked),
