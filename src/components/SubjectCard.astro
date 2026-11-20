@@ -26,6 +26,10 @@ const delay = `${index * 60}ms`;
     <h2 style={`view-transition-name: subj-${slug};`}>{title}</h2>
     {tagline && <p class="tagline">{tagline}</p>}
     <div class="foot">
+      <div class="cov" data-course-progress={slug} hidden>
+        <span class="cov-track"><span class="cov-fill"></span></span>
+        <span class="cov-label"></span>
+      </div>
       {counts && <p class="counts">{counts}</p>}
       <span class="open" aria-hidden="true"><span class="arr">→</span></span>
     </div>
@@ -78,7 +82,35 @@ const delay = `${index * 60}ms`;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 1rem;
+  }
+  .cov {
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: -0.4rem;
+  }
+  .cov[hidden] { display: none; }
+  .cov-track {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--color-rule);
+    overflow: hidden;
+  }
+  .cov-fill {
+    display: block;
+    height: 100%;
+    width: var(--pct, 0%);
+    background: var(--color-accent);
+  }
+  .cov-label {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-ink-muted);
   }
   .counts {
     font-family: var(--font-ui);
