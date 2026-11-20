@@ -9,6 +9,7 @@ Package manager is **npm** (package-lock.json).
 - `npm run dev` — Astro dev server, default port **4321**. `.claude/launch.json` pins it to **4322** (`npm run dev -- --port 4322`).
 - `npm run build` — static build (500+ pages).
 - `npm test` — vitest run.
+- `npm run verify -- <slug> [--skip-build]` — machine check for one course: build, ingest audit, static scan of `dist/subjects/<slug>` (KaTeX errors, leaked `==highlights==`/`^block-ids`), headless Playwright sweep of every subject page at 390px and 1280px (console errors, overflow, raw `$$`/graph fences, unmounted graphs, broken images, dead internal links). Writes `.verify/<slug>/report.json` + `summary.md`; exit 1 on failure. Serves `dist/` on a random port, so it's safe in parallel worktrees. Playwright is pinned to the version whose Chromium is in the local cache; bumping it means `npx playwright install chromium-headless-shell`.
 
 **Port quirk (bit us for weeks):** stale node processes squat ports 4321/4322 and make dev silently start on the wrong port or fail. Kill them first:
 
@@ -22,7 +23,8 @@ Ingestion is driven by the user-level **`/ingest <subject-slug>`** slash command
 
 - `npx tsx scripts/ingest/cli.ts <subject-slug>` — deterministic scan/copy pass (lectures, assets, glossary, term stubs, queue of pending AI drafts).
 - `npx tsx scripts/ingest/audit.ts <subject-slug>` — post-ingest audit (muted tags, broken wiki-links, missing images). Exit 1 = issues.
-- Per-subject vault/source paths are configured in `scripts/ingest/config.ts`.
+- Per-course config is **one file per course**: `scripts/ingest/subjects/<key>.json` (vault/source paths, folder names, the course's own `mutedTags`), auto-discovered by `scripts/ingest/config.ts`. Graph swaps likewise: `src/data/graph-swaps/<subject>.ts`. Never re-centralise these: parallel `ingest/<course>` branches would conflict.
+- Whole-course overnight runs use the user-level **`/ingest-course <slug>`** (`~/.claude/commands/ingest-course.md`), which calls `/ingest` for the site stage.
 
 ## Architecture facts (non-obvious)
 
