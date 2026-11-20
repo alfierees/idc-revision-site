@@ -1,0 +1,17 @@
+{
+  "slug": "accounting",
+  "title": "Accounting",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Accounting",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Accounting",
+  "lecturesDir": "Lectures",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Problem Sets",
+  "problemSetSlugPrefix": "assignment",
+  "mutedTags": [
+    "accounting",
+    "recap",
+    "exam-prep"
+  ],
+  "notes": "recap and exam-prep are Session 9 metadata pills, not concepts."
+}

@@ -8,6 +8,8 @@ import { copyAssets } from "./copy-assets.js";
 import { writeQueue } from "./queue.js";
 import { copyLectures, copyPastPapers, copyGlossary } from "./copy-prose.js";
 import { reconcileTerms } from "./reconcile-terms.js";
+import { termSlugCollisions, formatCollision, type SourcedSlugCollision } from "./slug-collisions.js";
+import { existsSync, readFileSync } from "node:fs";
 
 export interface RunCliInput {
   subject: SubjectConfig;
@@ -18,7 +20,10 @@ export interface RunCliSummary {
   subject: string;
   counts: Record<string, number>;
   queuePath: string;
+  slugCollisions: SourcedSlugCollision[];
 }
+
+const readIfExists = (path: string) => (existsSync(path) ? readFileSync(path, "utf8") : null);
 
 export async function runCli(input: RunCliInput): Promise<RunCliSummary> {
   const contentRoot = join(input.siteRoot, "src/content");
@@ -37,7 +42,11 @@ export async function runCli(input: RunCliInput): Promise<RunCliSummary> {
   counts["past-paper"] = pastPapers.length;
   counts["glossary"] = glossaryCopied ? 1 : 0;
   counts["term-stub"] = reconciledTerms.length;
-  return { subject: input.subject.slug, counts, queuePath };
+  const slugCollisions = termSlugCollisions({
+    registry: readIfExists(join(input.subject.vaultPath, "_Wiki-Link Registry.md")),
+    glossary: readIfExists(join(contentRoot, "glossary", `${input.subject.slug}.md`)),
+  });
+  return { subject: input.subject.slug, counts, queuePath, slugCollisions };
 }
 
 // CLI shim: `npx tsx scripts/ingest/cli.ts <subject>`
@@ -55,6 +64,10 @@ async function main() {
   const pretty = order.map(k => `${s.counts[k] ?? 0} ${k}${(s.counts[k] ?? 0) === 1 ? "" : "s"}`).join(", ");
   console.log(`${s.subject}: ${pretty} pending`);
   console.log(`queue: ${s.queuePath}`);
+  if (s.slugCollisions.length > 0) {
+    console.warn(`\nWARNING: ${s.slugCollisions.length} term slug collision(s); a term page is missing for each:`);
+    for (const collision of s.slugCollisions) console.warn(`  • ${formatCollision(collision)}`);
+  }
 }
 
 const isDirectInvocation = process.argv[1] && process.argv[1].endsWith("cli.ts");
