@@ -16,7 +16,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, basename, extname } from "node:path";
-import { getSubjectConfig } from "./config.js";
+import { getSubjectConfig, mutedTagsFor } from "./config.js";
 import { slugify } from "../../src/lib/slugify.js";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -180,25 +180,6 @@ function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
   return undefined;
 }
 
-// ─── intentionally-muted slugs (subject's own slug + metadata) ───────────────
-
-const ALWAYS_MUTED = new Set([
-  "microeconomics",
-  "econometrics",
-  "accounting",
-  "machine-learning",
-  "macroeconomics",
-  "micro-economics-ii",  // Micro II's own subject tag in the vault
-  "assignment-solution",
-  "problem-set",         // generic metadata pill used in econometrics
-  "recap",               // accounting Session 9 metadata, not a concept
-  "exam-prep",           // accounting Session 9 metadata, not a concept
-  // The Data Science course name — appears as a lecture metadata pill on the
-  // ingested DS lectures; not a glossary concept. (The DS *concepts* — pandas,
-  // matplotlib, EDA, dataframes, etc. — all have term pages and resolve.)
-  "data-science",
-]);
-
 // ─── bucket 1: muted-tag candidates ──────────────────────────────────────────
 
 interface MutedTagCandidate {
@@ -215,6 +196,7 @@ async function findMutedTagCandidates(
   const files = await mdFiles(lecDir);
   const results: MutedTagCandidate[] = [];
   const seen = new Set<string>();
+  const muted = mutedTagsFor(subject);
 
   for (const f of files) {
     const content = readMd(f);
@@ -224,8 +206,8 @@ async function findMutedTagCandidates(
     for (const tag of tags) {
       const slugged = slugifyAlias(tag);
       // Muted check is case-insensitive: match the raw tag or its slug form so
-      // entries like "EDA" resolve against a lowercase "eda" in ALWAYS_MUTED.
-      if (ALWAYS_MUTED.has(tag) || ALWAYS_MUTED.has(slugged)) continue;
+      // entries like "EDA" resolve against a lowercase "eda" in the muted set.
+      if (muted.has(tag) || muted.has(slugged)) continue;
       if (seen.has(slugged)) continue;
       if (resolveLink(links, tag)) continue;
 
@@ -393,7 +375,7 @@ async function main() {
   try {
     getSubjectConfig(subject);
   } catch {
-    console.error(`Unknown subject: "${subject}". Add it to scripts/ingest/config.ts first.`);
+    console.error(`Unknown subject: "${subject}". Add scripts/ingest/subjects/${subject}.json first.`);
     process.exit(2);
   }
 
