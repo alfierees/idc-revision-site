@@ -33,7 +33,7 @@ describe("real subject configs", () => {
   it("keeps every existing subject", () => {
     expect(Object.keys(subjects).sort()).toEqual([
       "accounting", "data-science", "digital-marketing", "econometrics",
-      "machine-learning", "macro-economics", "micro", "micro-ii",
+      "machine-learning", "macro-economics", "macro-ii", "micro", "micro-ii",
     ]);
   });
 

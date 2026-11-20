@@ -16,7 +16,8 @@
 import { readFileSync, existsSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join, basename, extname } from "node:path";
-import { getSubjectConfig, mutedTagsFor } from "./config.js";
+import { getSubjectConfig, mutedTagsFor, subjects } from "./config.js";
+import { termSlugCollisions, formatCollision, type SourcedSlugCollision } from "./slug-collisions.js";
 import { slugify } from "../../src/lib/slugify.js";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -178,6 +179,23 @@ function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
     }
   }
   return undefined;
+}
+
+// ─── bucket 5: term slug collisions ──────────────────────────────────────────
+// Two term titles with one slug means one of them silently gets no page.
+
+function findTermSlugCollisions(subject: string): SourcedSlugCollision[] {
+  const readIfExists = (path: string) => (existsSync(path) ? readFileSync(path, "utf8") : null);
+  const collisions: SourcedSlugCollision[] = [];
+  // Every course config writing into this site subject has its own registry.
+  for (const [key, config] of Object.entries(subjects)) {
+    if (config.slug !== subject && key !== subject) continue;
+    const registry = readIfExists(join(config.vaultPath, "_Wiki-Link Registry.md"));
+    collisions.push(...termSlugCollisions({ registry, glossary: null }));
+  }
+  const glossary = readIfExists(join(REPO_ROOT, "src/content/glossary", `${subject}.md`));
+  collisions.push(...termSlugCollisions({ registry: null, glossary }));
+  return collisions;
 }
 
 // ─── bucket 1: muted-tag candidates ──────────────────────────────────────────
@@ -434,7 +452,16 @@ async function main() {
     }
   }
 
-  const total = muted.length + brokenLinks.length + missingImages.length;
+  // Bucket 5
+  const collisions = findTermSlugCollisions(subject);
+  console.log(`\nTerm slug collisions (${collisions.length}):`);
+  if (collisions.length === 0) {
+    console.log("  (none)");
+  } else {
+    for (const collision of collisions) console.log(`  • ${formatCollision(collision)}`);
+  }
+
+  const total = muted.length + brokenLinks.length + missingImages.length + collisions.length;
   console.log(`\nTotal issues: ${total}`);
   console.log();
 
