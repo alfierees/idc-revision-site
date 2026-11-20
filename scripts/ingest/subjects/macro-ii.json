@@ -5,7 +5,8 @@
   "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 1/Macro-econ",
   "lecturesDir": "Lecture notes",
   "mutedTags": [
-    "macro-economics-ii"
+    "macro-economics-ii",
+    "short-run"
   ],
-  "notes": "No assignmentsDir on purpose: the source 'Problem sets' folder holds misfiled Micro II sheets, and Macro II has no problem-set notes. Mirrors the entry added to the old config.ts on ingest/macro-ii; whichever branch lands second keeps this file and drops that hunk."
+  "notes": "No assignmentsDir on purpose: the source 'Problem sets' folder holds misfiled Micro II sheets, and Macro II has no problem-set notes. 'short-run' is a time-horizon lecture tag, not a concept (SRAS/LRAS cover it)."
 }

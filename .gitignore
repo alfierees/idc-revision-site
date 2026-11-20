@@ -36,3 +36,4 @@ src/generated/
 
 # verify reports (npm run verify -- <slug>)
 .verify/
+.verify-shots/
