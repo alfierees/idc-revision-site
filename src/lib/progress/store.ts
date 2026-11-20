@@ -15,6 +15,8 @@ const ACTIVITY_KEY = `${PREFIX}activity`;
 const LEDGER_KEY = `${PREFIX}badges`;
 /** mark key → ms timestamp of its last change (clears included), for B2's newest-wins sync. */
 const STAMPS_KEY = `${PREFIX}stamps`;
+/** Most recently opened item per course, for "Continue where you left off". */
+const LAST_SEEN_KEY = `${PREFIX}last-seen`;
 const lectureKey = (subject: string, lecture: string) => `${PREFIX}${subject}:lecture:${lecture}`;
 
 /** Fired after a lecture is marked read or unread. detail: { subject, lecture, read } */
@@ -37,6 +39,20 @@ const isLedger = (v: unknown): v is Record<string, string> =>
   typeof v === "object" && v !== null && !Array.isArray(v) && Object.values(v).every((d) => typeof d === "string");
 const isStampIndex = (v: unknown): v is Record<string, number> =>
   typeof v === "object" && v !== null && !Array.isArray(v) && Object.values(v).every((t) => typeof t === "number");
+
+export interface LastSeenEntry {
+  subject: string;
+  path: string;
+  title: string;
+  at: number;
+}
+const isLastSeenList = (v: unknown): v is LastSeenEntry[] =>
+  Array.isArray(v) &&
+  v.every(
+    (e) =>
+      typeof e === "object" && e !== null && typeof e.subject === "string" &&
+      typeof e.path === "string" && typeof e.title === "string" && typeof e.at === "number",
+  );
 
 export function createProgressStore(storage: KeyValueStore, now: () => number = Date.now) {
   const readStatusRaw = (key: string): StatusValue => {
@@ -65,6 +81,13 @@ export function createProgressStore(storage: KeyValueStore, now: () => number = 
     },
     /** When each mark last changed. Legacy marks made before stamps existed are absent (treated as 0 by sync). */
     stamps: () => readJson(storage, STAMPS_KEY, isStampIndex, {}),
+    /** Newest first, one entry per subject. */
+    lastSeen: (): LastSeenEntry[] =>
+      readJson(storage, LAST_SEEN_KEY, isLastSeenList, []).sort((a, b) => b.at - a.at),
+    recordLastSeen(subject: string, path: string, title: string, at: number = now()) {
+      const others = readJson(storage, LAST_SEEN_KEY, isLastSeenList, []).filter((e) => e.subject !== subject);
+      storage.setItem(LAST_SEEN_KEY, JSON.stringify([{ subject, path, title, at }, ...others]));
+    },
     activityDays: () => readJson(storage, ACTIVITY_KEY, isDayList, []),
     recordActivity(day: string) {
       const days = new Set(readJson(storage, ACTIVITY_KEY, isDayList, []));
