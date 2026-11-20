@@ -659,6 +659,26 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 
 .bar-right { display: flex; align-items: center; gap: 1rem; flex: none; margin-left: auto; }
 
+/* ---- account (B2): Sign in / avatar at the right of the top bar ---- */
+.acct-slot { display: inline-block; width: 5.25rem; height: 2.25rem; }
+.acct-signin {
+  font-family: var(--font-ui); font-weight: 600; font-size: 0.875rem; line-height: 1;
+  padding: 0.65rem 1rem; min-height: 2.25rem; border-radius: 999px;
+  background: var(--color-accent); color: #fff; transition: background-color 0.15s ease;
+}
+.acct-signin:hover { background: var(--color-accent-ink); }
+.acct-signin:focus-visible, .acct-avatar:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.acct-avatar {
+  position: relative; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%;
+  background: var(--color-accent-soft); color: var(--color-accent-ink);
+  font: 700 0.8rem var(--font-ui); letter-spacing: 0.02em; text-decoration: none; overflow: visible;
+}
+.acct-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.acct-dot {
+  position: absolute; top: -1px; right: -1px; width: 0.6rem; height: 0.6rem; border-radius: 50%;
+  background: var(--color-accent); box-shadow: 0 0 0 2px var(--color-paper);
+}
+
 /* ---- main navigation: top bar on desktop, fixed bottom tab bar on phones ---- */
 .main-nav a {
   display: inline-flex;
@@ -1201,3 +1221,85 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 .mark-read { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: var(--color-ink-soft); }
 .mark-read-undo { font: inherit; font-weight: 500; color: var(--color-ink-muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .mark-read-undo:hover { color: var(--color-ink); }
+
+/* ---- Progress page (B2) ---- */
+.progress-page { max-width: 56rem; }
+.progress-page .page-title {
+  font-family: var(--font-display); font-size: 2.15rem; line-height: 1.12;
+  font-variation-settings: "opsz" 96, "wght" 500; margin-bottom: 1.75rem;
+}
+.progress-page .section-label {
+  margin: 0 0 0.9rem; font-family: var(--font-ui); font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--color-ink-muted);
+}
+.pp-loading { font-family: var(--font-ui); color: var(--color-ink-muted); }
+.progress-eyebrow { margin: 0 0 0.6rem; font-family: var(--font-ui); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--color-ink-muted); }
+.progress-eyebrow strong { color: var(--color-ink); letter-spacing: 0.04em; }
+.pp-top { display: grid; gap: 1rem; }
+.rank-card, .calendar-card, .ladders, .pp-courses, .pitch-card {
+  background: var(--color-card); border-radius: var(--radius-card); box-shadow: var(--shadow-soft);
+}
+.rank-card, .calendar-card { padding: 1.4rem 1.6rem; }
+.rank-name { margin: 0; font-family: var(--font-display); font-size: 2rem; line-height: 1.15; font-variation-settings: "opsz" 72, "wght" 500; color: var(--color-ink); }
+.rank-count { margin: 0.3rem 0 0; font-family: var(--font-ui); font-size: 0.9rem; font-weight: 600; color: var(--color-ink-soft); }
+.rank-next { margin: 0.2rem 0 0; font-family: var(--font-ui); font-size: 0.82rem; color: var(--color-ink-muted); }
+.rank-next strong { color: var(--color-ink-soft); }
+.calendar-note { text-transform: none; letter-spacing: 0; font-size: 0.78rem; }
+.calendar { display: flex; gap: 3px; }
+.calendar-week { display: flex; flex-direction: column; gap: 3px; }
+.calendar-day { display: block; width: 12px; height: 12px; border-radius: 3px; background: var(--color-paper-deep); }
+.calendar-on { background: color-mix(in srgb, var(--color-accent) 70%, transparent); }
+.calendar-today { box-shadow: 0 0 0 1px var(--color-ink); }
+.calendar-future { background: transparent; }
+.pp-section { margin-top: 2.25rem; }
+
+.ladders { list-style: none; margin: 0; padding: 0.4rem 1.4rem; }
+.ladder { display: grid; grid-template-columns: 11rem minmax(0, 1fr); align-items: center; gap: 0.35rem 1.25rem; padding: 0.9rem 0; }
+.ladder + .ladder { border-top: 1px solid var(--color-rule); }
+.ladder-head { min-width: 0; }
+.ladder-family { margin: 0; font-family: var(--font-ui); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); }
+.ladder-title { margin: 0.15rem 0 0; font-family: var(--font-display); font-size: 1.05rem; line-height: 1.25; color: var(--color-ink); }
+.ladder-none { color: var(--color-ink-faint); }
+.ladder-medals { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.ladder-next { grid-column: 2; margin: 0; font-family: var(--font-ui); font-size: 0.8rem; color: var(--color-ink-muted); }
+.ladder-next strong { color: var(--color-ink-soft); font-weight: 600; }
+
+.pp-courses { list-style: none; margin: 0; padding: 0.4rem 1.4rem; }
+.pp-course { display: grid; grid-template-columns: minmax(0, 1fr) 9rem 3rem; align-items: center; gap: 0.25rem 1rem; padding: 0.85rem 0; scroll-margin-top: 6rem; }
+.pp-course + .pp-course { border-top: 1px solid var(--color-rule); }
+.pp-course:target { background: var(--color-paper-tint); }
+.pp-course-name { font-family: var(--font-ui); font-weight: 600; font-size: 0.95rem; color: var(--color-ink); text-decoration: none; }
+.pp-course-name:hover { color: var(--color-accent-ink); text-decoration: underline; }
+.pp-course-bar { height: 6px; border-radius: 999px; background: var(--color-paper-deep); overflow: hidden; }
+.pp-course-bar span { display: block; height: 100%; border-radius: inherit; background: var(--color-accent); }
+.pp-course-pct { font-family: var(--font-ui); font-weight: 700; font-size: 0.85rem; text-align: right; color: var(--color-ink-soft); font-variant-numeric: tabular-nums; }
+.pp-course-detail { grid-column: 1 / -1; font-family: var(--font-ui); font-size: 0.78rem; color: var(--color-ink-muted); }
+.pp-empty { font-family: var(--font-ui); font-size: 0.9rem; color: var(--color-ink-muted); }
+
+/* Signed out: a real pitch over a faded, inert copy of the dashboard. */
+.pitch-card { position: relative; z-index: 1; padding: 1.6rem 1.75rem; border: 1px solid var(--color-accent-soft); }
+.pitch-title { margin: 0; font-family: var(--font-display); font-size: 1.6rem; line-height: 1.2; font-variation-settings: "opsz" 72, "wght" 500; }
+.pitch-body { margin: 0.6rem 0 1.1rem; max-width: 36rem; font-family: var(--font-body); font-size: 1.05rem; line-height: 1.55; color: var(--color-ink-soft); }
+.pitch-body strong { color: var(--color-ink); }
+.pitch-cta { font-size: 0.95rem; padding: 0.8rem 1.25rem; }
+.pitch-small { margin: 0.75rem 0 0; font-family: var(--font-ui); font-size: 0.78rem; color: var(--color-ink-muted); }
+.pp-locked { margin-top: 1.25rem; opacity: 0.5; filter: blur(5px) grayscale(0.4); pointer-events: none; user-select: none;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%); }
+
+@media (min-width: 768px) {
+  .pp-top { grid-template-columns: minmax(0, 1fr) auto; }
+  .calendar-day { width: 14px; height: 14px; }
+}
+@media (max-width: 640px) {
+  .progress-page .page-title { font-size: 1.9rem; }
+  .rank-card, .calendar-card, .pitch-card { padding: 1.15rem 1.15rem; }
+  .rank-name { font-size: 1.7rem; }
+  .ladders, .pp-courses { padding: 0.3rem 1.05rem; }
+  .ladder { grid-template-columns: minmax(0, 1fr); }
+  .ladder-next { grid-column: 1; }
+  .pp-course { grid-template-columns: minmax(0, 1fr) 3rem; }
+  .pp-course-bar { grid-column: 1 / -1; grid-row: 2; }
+  .pp-course-detail { grid-row: 3; }
+  .pitch-title { font-size: 1.4rem; }
+}
+.rank-redacted { color: var(--color-ink-faint); }

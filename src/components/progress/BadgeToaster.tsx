@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import { isSignedIn } from "../../lib/auth/session";
 import { SYNC_PULLED_EVENT } from "../../lib/progress/sync-constants";
 import { BADGES } from "../../lib/progress/badges";
 import { syncBadges } from "../../lib/progress/client";
@@ -29,7 +30,7 @@ export default function BadgeToaster() {
     };
     const onBadges = (event: Event) => {
       const fresh = (event as CustomEvent<{ ids: string[] }>).detail?.ids ?? [];
-      if (fresh.length === 0 || !PROGRESS_UI_ENABLED) return;
+      if (fresh.length === 0 || !PROGRESS_UI_ENABLED || !isSignedIn()) return;
       setIds(fresh);
       window.clearTimeout(hideTimer.current);
       hideTimer.current = window.setTimeout(() => setIds([]), SHOW_MS);

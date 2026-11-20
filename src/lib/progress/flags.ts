@@ -1,4 +1,4 @@
-// Progress dashboard screens (rank, badge shelf, coverage, toasts) go live
-// together with accounts (B2): "nobody gets a dashboard that's later taken
-// away". Until then progress is recorded silently. Flip to true with B2.
-export const PROGRESS_UI_ENABLED = false;
+// Progress dashboard screens (rank, badges, coverage, toasts) ship with accounts (B2),
+// and only signed-in students see them: the dashboard is the reason to sign up.
+// Signed out, the Progress page shows a locked preview built from the visitor's own ticks.
+export const PROGRESS_UI_ENABLED = true;

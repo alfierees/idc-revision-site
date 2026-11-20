@@ -1,0 +1,10 @@
+---
+import Layout from "../components/Layout.astro";
+import ProgressPage from "../components/progress/ProgressPage";
+---
+<Layout title="Progress · IDC Revision">
+  <section class="progress-page">
+    <h1 class="page-title">Progress</h1>
+    <ProgressPage client:load />
+  </section>
+</Layout>
