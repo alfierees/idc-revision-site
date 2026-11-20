@@ -1,6 +1,8 @@
 // The one place progress lives on this device. Swap the backend here for accounts (B2).
 import type { StatusValue } from "../status";
 import type { ProgressSnapshot } from "./types";
+import ALIASES from "../../data/progress-aliases.json";
+import { migrateLocalKeys, type Aliases } from "./aliases";
 
 export interface KeyValueStore {
   getItem(key: string): string | null;
@@ -115,6 +117,8 @@ export function progressStore(): ProgressStore {
   }
   if (!browserStore || browserStorage !== storage) {
     browserStorage = storage;
+    // Renamed courses or questions: move this device's marks to their new keys, once per page.
+    try { migrateLocalKeys(storage, ALIASES as Aliases); } catch {}
     browserStore = createProgressStore(storage);
   }
   return browserStore;

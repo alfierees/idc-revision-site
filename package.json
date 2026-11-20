@@ -8,10 +8,12 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "tsx scripts/progress-ids/check.ts",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "verify": "tsx scripts/verify/cli.ts"
+    "verify": "tsx scripts/verify/cli.ts",
+    "ids:record": "tsx scripts/progress-ids/record.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.2",
