@@ -40,3 +40,25 @@ describe("graph swaps", () => {
     expect(html).toContain('<img src="/images/micro/other.png"');
   });
 });
+
+import { GRAPH_SWAPS, buildSwapMap } from "../src/lib/graph-swaps";
+
+describe("per-subject swap files", () => {
+  it("prefixes each subject file's keys with the subject from its file name", () => {
+    const modules = {
+      "../data/graph-swaps/micro.ts": { default: { "a.png": { type: "x" } } },
+      "../data/graph-swaps/micro-ii.ts": { default: { "a.png": { type: "y", n: 2 } } },
+    };
+    expect(buildSwapMap(modules)).toEqual({
+      "micro/a.png": { type: "x" },
+      "micro-ii/a.png": { type: "y", n: 2 },
+    });
+  });
+
+  it("discovers every subject file under src/data/graph-swaps", () => {
+    expect(GRAPH_SWAPS["micro/t1-lemons-threshold.png"]).toEqual({ type: "lemons-threshold" });
+    expect(GRAPH_SWAPS["econometrics/ps04-causal-diagram.png"]).toEqual({ type: "causal-diagram", diagram: "seatbelt" });
+    expect(GRAPH_SWAPS["macro-economics/q5-task-assignment.png"]).toEqual({ type: "production-capital", figure: "tasks" });
+    expect(Object.keys(GRAPH_SWAPS).every((key) => /^[a-z0-9-]+\/[^/]+$/.test(key))).toBe(true);
+  });
+});
