@@ -1,7 +1,7 @@
 ---
 title: Causality vs Correlation
 subject: intro-econometrics
-aliases: []
+aliases: ["Correlation vs Causation"]
 related: ["Correlation", "Omitted Variable Bias", "Simple Linear Regression"]
 source_folder: intro-econometrics
 ai_drafted: true

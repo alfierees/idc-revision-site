@@ -79,6 +79,9 @@ The estimated line $\hat y=\hat\beta_0+\hat\beta_1 x$, the sample counterpart of
 ### Residuals
 $\hat u_i=y_i-\hat y_i$, the gap between observed and fitted values; an estimate of the error $u_i$, and sums to zero when there is an intercept. → [[Lec_02-Statistics Review & OLS Estimation|Lec 2]]
 
+### Multiple Regression
+A regression with $K$ regressors, $y=\beta_0+\beta_1x_1+\dots+\beta_Kx_K+u$; each $\beta_k$ is the effect of $x_k$ holding the others fixed, and OLS has $K+1$ first-order conditions. → [[Lec_03-Nonlinear Models with OLS|Lec 3]]
+
 ## Functional form & logs
 
 ### Functional Form
@@ -316,3 +319,15 @@ See [[#Causality vs Correlation]].
 
 ### Change of Units
 See [[#Change of Variables]].
+
+### Causal Inference
+See [[#Causal Effect]].
+
+### Log Models
+See [[#Functional Form]].
+
+### Normality Assumption
+See [[#Normality of Errors (A5)]].
+
+### Regression Through Origin
+See [[#Regression Through the Origin]].

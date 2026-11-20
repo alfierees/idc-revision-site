@@ -1,7 +1,7 @@
 ---
 title: Normality of Errors (A5)
 subject: intro-econometrics
-aliases: ["normal errors"]
+aliases: ["normal errors", "Normality Assumption"]
 related: ["Error Term", "t-Distribution", "F-test", "Classical Assumptions", "Confidence Interval"]
 source_folder: intro-econometrics
 ai_drafted: true

@@ -1,7 +1,7 @@
 ---
 title: Regression Through the Origin
 subject: intro-econometrics
-aliases: []
+aliases: ["Regression Through Origin"]
 related: ["OLS Estimation", "R-squared"]
 source_folder: intro-econometrics
 ai_drafted: true

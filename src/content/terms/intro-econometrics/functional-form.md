@@ -1,7 +1,7 @@
 ---
 title: Functional Form
 subject: intro-econometrics
-aliases: []
+aliases: ["Log Models"]
 related: ["Log-Level Model", "Log-Log Model", "Quadratic Model", "Marginal Effect"]
 source_folder: intro-econometrics
 ai_drafted: true

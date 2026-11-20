@@ -1,7 +1,7 @@
 ---
 title: Causal Effect
 subject: intro-econometrics
-aliases: []
+aliases: ["Causal Inference"]
 related: ["Causality vs Correlation", "Randomised Experiment", "Confounding Factor", "Population Regression Function"]
 source_folder: intro-econometrics
 ai_drafted: true
