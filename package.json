@@ -15,7 +15,8 @@
     "verify": "tsx scripts/verify/cli.ts",
     "ids:record": "tsx scripts/progress-ids/record.ts",
     "db:migrate": "tsx --env-file=.env.local scripts/db/migrate.ts",
-    "test:db": "node --env-file=.env.local ./node_modules/vitest/vitest.mjs run tests/db-"
+    "db:check-views": "tsx --env-file=.env.local scripts/db/check-owner-views.ts",
+    "test:db":"node --env-file=.env.local ./node_modules/vitest/vitest.mjs run tests/db-"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.2",
