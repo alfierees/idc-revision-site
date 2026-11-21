@@ -105,26 +105,26 @@ $$\boxed{\text{Real GDP}_t = \sum_i p_i^{\text{base}} \, q_i^{t}}$$
 
 | Product | 2016 Price | 2016 Qty | 2017 Price | 2017 Qty |
 |---------|-----------|----------|-----------|----------|
-| Tables | 100 | 50 | 150 | 150 |
-| Avocado | 10 | 20 | 20 | 30 |
+| Tables | 50 | 100 | 150 | 150 |
+| Avocado | 10 | 20 | 30 | 20 |
 
 **(a) Nominal GDP each year** — current prices × current quantities:
 
-$$\text{Nom}_{2016} = 100(50) + 10(20) = 5{,}000 + 200 = 5{,}200$$
-$$\text{Nom}_{2017} = 150(150) + 20(30) = 22{,}500 + 600 = 23{,}100$$
+$$\text{Nom}_{2016} = 50(100) + 10(20) = 5{,}000 + 200 = 5{,}200$$
+$$\text{Nom}_{2017} = 150(150) + 30(20) = 22{,}500 + 600 = 23{,}100$$
 
 > [!tip] 🗣️ In plain English
 > Nominal GDP is just **price times quantity** added up for each year, so 2016 comes to 5,200 and 2017 jumps to 23,100. Most of that jump is prices going up, which is why we need the next step.
 
 **(b) Real GDP 2017 in 2016 prices** — 2017 *quantities* valued at 2016 *prices*:
 
-$$\text{Real}_{2017} = 100(150) + 10(30) = 15{,}000 + 300 = 15{,}300$$
+$$\text{Real}_{2017} = 50(150) + 10(20) = 7{,}500 + 200 = 7{,}700$$
 
-> [!warning] Slide arithmetic check
-> The recitation slide wrote "$150 \times 50 + 20 \times 10 = 7{,}700$" — that used the wrong (base-year) quantities and mixed prices. Applying the correct rule (**2017 quantities at 2016 prices**) gives **15,300**. Always pin down explicitly: *which year's quantities, which year's prices?* Real GDP = **current quantities, base prices**.
+> [!warning] Keep the two years straight
+> Take the **quantities from 2017** and the **prices from 2016**: Tables $150 \times 50$ and Avocado $20 \times 10$. Swapping the price and quantity columns is the classic slip here. Always pin down explicitly: *which year's quantities, which year's prices?* Real GDP = **current quantities, base prices**.
 
 > [!tip] 🗣️ In plain English
-> **Real GDP** means this year's quantities at base-year prices, so 2017 comes to 15,300. Always ask yourself which year's quantities and which year's prices before you multiply.
+> **Real GDP** means this year's quantities at base-year prices, so 2017 comes to 7,700. Always ask yourself which year's quantities and which year's prices before you multiply.
 
 **(c) Rate of change in real GDP, 2016 → 2017.** Use the general growth formula:
 
@@ -132,10 +132,10 @@ $$\text{rate of change} = \frac{\text{New}}{\text{Old}} - 1$$
 
 Since 2016 is the base year, $\text{Real}_{2016} = \text{Nom}_{2016} = 5{,}200$:
 
-$$\frac{15{,}300}{5{,}200} - 1 = 1.94 \Rightarrow \text{a } 194\% \text{ increase}$$
+$$\frac{7{,}700}{5{,}200} - 1 \approx 0.48 \Rightarrow \text{a } 48\% \text{ increase}$$
 
 > [!tip] 🗣️ In plain English
-> Real GDP went from 5,200 to 15,300, which is **194%** growth, so real output roughly tripled. Because 2016 is the **base year**, its real and nominal GDP are the same number, so you can use 5,200 straight away.
+> Real GDP went from 5,200 to 7,700, which is about **48%** growth, so real output rose by roughly half. Because 2016 is the **base year**, its real and nominal GDP are the same number, so you can use 5,200 straight away.
 
 > [!tip] Reusable move
 > Whenever the base year appears in a "rate of change of real GDP" question, replace its real GDP with its nominal GDP — they are identical — and you avoid an extra calculation.
