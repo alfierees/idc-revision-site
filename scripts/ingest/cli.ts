@@ -20,6 +20,7 @@ export interface RunCliSummary {
   subject: string;
   counts: Record<string, number>;
   queuePath: string;
+  keptPastPapers: string[];
   slugCollisions: SourcedSlugCollision[];
 }
 
@@ -32,21 +33,21 @@ export async function runCli(input: RunCliInput): Promise<RunCliSummary> {
   const result = await scan(input.subject, contentRoot);
   await copyAssets({ imageOps: result.imageOps, docOps: result.docOps });
   await copyLectures(input.subject, contentRoot);
-  const pastPapers = await copyPastPapers(input.subject, contentRoot);
+  const { copied: copiedPastPapers, kept: keptPastPapers } = await copyPastPapers(input.subject, contentRoot);
   const glossaryCopied = await copyGlossary(input.subject, contentRoot);
   const reconciledTerms = glossaryCopied ? await reconcileTerms(input.subject, contentRoot) : [];
   const queuePath = await writeQueue(result, ingestRoot);
 
   const counts: Record<string, number> = { term: 0, recipe: 0, "problem-set": 0, lecture: 0 };
   for (const p of result.pending) counts[p.kind]++;
-  counts["past-paper"] = pastPapers.length;
+  counts["past-paper"] = copiedPastPapers.length;
   counts["glossary"] = glossaryCopied ? 1 : 0;
   counts["term-stub"] = reconciledTerms.length;
   const slugCollisions = termSlugCollisions({
     registry: readIfExists(join(input.subject.vaultPath, "_Wiki-Link Registry.md")),
     glossary: readIfExists(join(contentRoot, "glossary", `${input.subject.slug}.md`)),
   });
-  return { subject: input.subject.slug, counts, queuePath, slugCollisions };
+  return { subject: input.subject.slug, counts, queuePath, keptPastPapers, slugCollisions };
 }
 
 // CLI shim: `npx tsx scripts/ingest/cli.ts <subject>`
@@ -64,6 +65,9 @@ async function main() {
   const pretty = order.map(k => `${s.counts[k] ?? 0} ${k}${(s.counts[k] ?? 0) === 1 ? "" : "s"}`).join(", ");
   console.log(`${s.subject}: ${pretty} pending`);
   console.log(`queue: ${s.queuePath}`);
+  if (s.keptPastPapers.length > 0) {
+    console.log(`kept ${s.keptPastPapers.length} structured past paper(s): ${s.keptPastPapers.join(", ")}`);
+  }
   if (s.slugCollisions.length > 0) {
     console.warn(`\nWARNING: ${s.slugCollisions.length} term slug collision(s); a term page is missing for each:`);
     for (const collision of s.slugCollisions) console.warn(`  • ${formatCollision(collision)}`);

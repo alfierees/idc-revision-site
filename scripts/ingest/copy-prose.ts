@@ -53,16 +53,36 @@ async function copyImagesFromBody(md: string, vaultPath: string, imagesDestDir: 
   }
 }
 
-/** Copy all `Past Papers/*.md` into src/content/past-papers/<subject>/ (overwrite). */
-export async function copyPastPapers(cfg: SubjectConfig, contentRoot: string): Promise<string[]> {
+/** True when a markdown file's frontmatter declares a non-empty `questions` list. */
+export function hasStructuredQuestions(markdown: string): boolean {
+  const frontmatter = markdown.match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/)?.[1];
+  if (!frontmatter) return false;
+  const blockList = /^questions:[ \t]*(?:#[^\n]*)?\r?\n(?:[ \t]*\r?\n)*[ \t]*-(?:[ \t]|\r?$)/m;
+  const inlineList = /^questions:[ \t]*\[\s*[^\]\s]/m;
+  return blockList.test(frontmatter) || inlineList.test(frontmatter);
+}
+
+export interface CopyPastPapersResult {
+  copied: string[];
+  /** Existing structured papers left untouched: their question IDs are permanent. */
+  kept: string[];
+}
+
+/**
+ * Copy `Past Papers/*.md` into src/content/past-papers/<subject>/. New and flat
+ * papers are written from the vault. A destination with `questions[]` is kept,
+ * because the vault copy is flat and would remove its recorded question IDs.
+ */
+export async function copyPastPapers(cfg: SubjectConfig, contentRoot: string): Promise<CopyPastPapersResult> {
   const dir = join(cfg.vaultPath, "Past Papers");
-  if (!existsSync(dir)) return [];
+  if (!existsSync(dir)) return { copied: [], kept: [] };
   const attachmentsDir = join(cfg.vaultPath, "Attachments");
   const imagesDestDir = join(contentRoot, "..", "..", "public", "images", cfg.slug);
   const destDir = join(contentRoot, "past-papers", cfg.slug);
   await mkdir(destDir, { recursive: true });
 
   const copied: string[] = [];
+  const kept: string[] = [];
   const files = (await readdir(dir)).filter((f) => f.endsWith(".md") && !f.endsWith(".excalidraw.md"));
   for (const f of files) {
     const raw = await readFile(join(dir, f), "utf8");
@@ -70,10 +90,15 @@ export async function copyPastPapers(cfg: SubjectConfig, contentRoot: string): P
     const withDiagrams = transformExcalidrawEmbeds(withFm, (name) => findExcalidrawExport(attachmentsDir, name));
     await copyImagesFromBody(withDiagrams, cfg.vaultPath, imagesDestDir);
     const slug = slugify(f.replace(/\.md$/, ""));
-    await writeFile(join(destDir, `${slug}.md`), withDiagrams, "utf8");
+    const destFile = join(destDir, `${slug}.md`);
+    if (existsSync(destFile) && hasStructuredQuestions(await readFile(destFile, "utf8"))) {
+      kept.push(slug);
+      continue;
+    }
+    await writeFile(destFile, withDiagrams, "utf8");
     copied.push(slug);
   }
-  return copied;
+  return { copied, kept };
 }
 
 /**
