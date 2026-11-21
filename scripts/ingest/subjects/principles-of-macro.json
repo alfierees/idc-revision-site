@@ -1,0 +1,22 @@
+{
+  "slug": "principles-of-macro",
+  "title": "Principles of Macro",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 2/Macro-Economics (Intro)",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 2/Macro econ",
+  "lecturesDir": "Recitations",
+  "vaultSolutionsDir": "Exercises",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Problem sets",
+  "assignmentFiles": [
+    "Exercise 4 .pdf"
+  ],
+  "problemSetSlugPrefix": "exercise",
+  "mutedTags": [
+    "principles-of-macro",
+    "macro-economics-intro",
+    "reading",
+    "formula-sheet",
+    "marginal-product"
+  ],
+  "notes": "Year 1 Semester 2 (Intro Macro, Yosi Ganel, 2024-25). Source and vault paths set by the nightly queue (folder names don't match the title). The source folder has recitation decks only (no lecture decks, no past papers); the vault's teaching notes are Rec_NN in Recitations/, so lecturesDir points there. The one exercise PDF sits loose in the course root, so it's listed in assignmentFiles. MAcro project.pdf / Macro-project - Google Docs.html are a student group project and stay out."
+}
