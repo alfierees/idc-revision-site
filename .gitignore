@@ -13,9 +13,12 @@ yarn-error.log*
 pnpm-debug.log*
 
 
-# environment variables
+# environment variables (every .env variant: local keys must never be committed)
 .env
-.env.production
+.env.*
+!.env.example
+# Clerk CLI claim and temp files
+.clerk/
 
 # macOS-specific files
 .DS_Store

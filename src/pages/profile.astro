@@ -1,0 +1,10 @@
+---
+import Layout from "../components/Layout.astro";
+import ProfilePage from "../components/account/ProfilePage";
+---
+<Layout title="You · IDC Revision">
+  <section class="progress-page you-page">
+    <h1 class="page-title">You</h1>
+    <ProfilePage client:load />
+  </section>
+</Layout>
