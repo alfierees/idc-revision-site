@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { splitPaperLeadIn, stripVaultLeadIn } from "../src/lib/vault-lead-in";
+import { splitPaperLeadIn, stripVaultLeadIn, vaultKeyConcepts } from "../src/lib/vault-lead-in";
 
 describe("stripVaultLeadIn", () => {
   it("removes the repeated title and the vault navigation lines", () => {
@@ -61,5 +61,19 @@ describe("splitPaperLeadIn", () => {
   });
   it("gives an untitled warning a readable label", () => {
     expect(splitPaperLeadIn("> [!warning]\n> Careful.\n").warningTitles).toEqual(["Check these answers before relying on them"]);
+  });
+});
+
+describe("vaultKeyConcepts", () => {
+  it("keeps the curated concepts the lead-in line listed", () => {
+    const body = "> Part of: [[Macro]] | Key concepts: [[Velocity]], [[Fisher Effect|Fisher]]\n\nText";
+    expect(vaultKeyConcepts(body)).toEqual(["Velocity", "Fisher Effect"]);
+  });
+  it("reads a bold label on its own line", () => {
+    expect(vaultKeyConcepts("> **Key concepts:** [[Foreign Key]]\n")).toEqual(["Foreign Key"]);
+  });
+  it("ignores links elsewhere on the line and after the first section", () => {
+    const body = "> Part of: [[Macro]]\n\n## Part 1\n\n> Key concepts: [[Later]]\n";
+    expect(vaultKeyConcepts(body)).toEqual([]);
   });
 });

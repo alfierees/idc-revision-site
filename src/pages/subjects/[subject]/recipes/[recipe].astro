@@ -1,4 +1,8 @@
 ---
+import PageHead from "../../../../components/PageHead.astro";
+import PageFoot from "../../../../components/PageFoot.astro";
+import { entrySlug } from "../../../../lib/entry-slug";
+import { neighbours } from "../../../../lib/reading-order";
 import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
 import GraphMounter from "../../../../components/GraphMounter.astro";
@@ -26,13 +30,23 @@ const links = await buildLinkMap(subjectSlug);
 const html = await renderMarkdownString(entry.body ?? "", subjectSlug, links);
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+const recipesByName = (await getCollection("recipes", (r) => r.data.subject === subjectSlug && r.data.in_scope))
+  .map((r) => ({ slug: entrySlug(r.id), title: r.data.title }))
+  .sort((first, second) => first.title.localeCompare(second.title));
+const recipeHref = (slug: string) => `/subjects/${subjectSlug}/recipes/${slug}`;
+const { previous, next } = neighbours(recipesByName, entrySlug(entry.id));
 ---
 <Layout title={`${entry.data.title} · ${subject.data.title}`} subject={subjectSlug} active="recipes">
-  <article>
-    <p class="doc-meta">Recipe</p>
-    <h1 class="doc-title">{entry.data.title}</h1>
-    <div class="recipe-body mt-6 text-base text-ink" set:html={html} />
-  </article>
+  <div class="reading-column">
+    <article>
+      <PageHead eyebrow="Recipe" title={entry.data.title} />
+      <div class="recipe-body mt-6 text-base text-ink" set:html={html} />
+    </article>
+    <PageFoot
+      previous={previous && { title: previous.title, href: recipeHref(previous.slug) }}
+      next={next && { title: next.title, href: recipeHref(next.slug) }}
+    />
+  </div>
   <GraphMounter />
   <HoverPreview subject={subjectSlug} />
 </Layout>

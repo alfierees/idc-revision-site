@@ -1,0 +1,32 @@
+---
+// The top of every reading page: source line, title, one quiet row of concepts.
+import type { ConceptLink } from "../lib/concepts";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  concepts?: ConceptLink[];
+}
+const VISIBLE_CONCEPTS = 3;
+const { eyebrow, title, concepts = [] } = Astro.props;
+const hiddenCount = Math.max(0, concepts.length - VISIBLE_CONCEPTS);
+---
+<header class="page-head">
+  {eyebrow && <p class="doc-meta">{eyebrow}</p>}
+  <div class="page-head-title">
+    <h1 class="doc-title">{title}</h1>
+    {Astro.slots.has("actions") && <div class="page-head-actions"><slot name="actions" /></div>}
+  </div>
+  <slot />
+  {concepts.length > 0 && (
+    <p class="concept-row" data-concept-row>
+      <span class="concept-label">Concepts</span>
+      {concepts.map((concept, index) => (
+        <a href={concept.href} class:list={["concept-link", { "concept-extra": index >= VISIBLE_CONCEPTS }]}>{concept.label}</a>
+      ))}
+      {hiddenCount > 0 && (
+        <button type="button" class="concept-more" data-concept-more aria-label={`Show ${hiddenCount} more concepts`}>+{hiddenCount}</button>
+      )}
+    </p>
+  )}
+</header>

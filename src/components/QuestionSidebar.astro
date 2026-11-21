@@ -1,4 +1,6 @@
 ---
+import ContentsHead from "./ContentsHead.astro";
+import { sortProblemSets } from "../lib/reading-order";
 interface ProblemSetEntry {
   slug: string;
   title: string;
@@ -14,23 +16,12 @@ interface Props {
 }
 const { subject, problemSets, currentSlug, currentQuestions } = Astro.props;
 
-// Sort by extracted leading number (ex-1, ex-2 ... ; ps-1, ps-2 ...). Falls
-// back to alphabetical when no number is extractable.
-function sortKey(slug: string): [number, string] {
-  const m = slug.match(/(\d+)/);
-  return [m ? parseInt(m[1], 10) : Infinity, slug];
-}
-const sorted = [...problemSets].sort((a, b) => {
-  const [an, as] = sortKey(a.slug);
-  const [bn, bs] = sortKey(b.slug);
-  if (an !== bn) return an - bn;
-  return as.localeCompare(bs);
-});
+const sorted = sortProblemSets(problemSets);
 const current = sorted.find((p) => p.slug === currentSlug);
 const others = sorted.filter((p) => p.slug !== currentSlug);
 ---
-<aside class="rail">
-  <p class="toc-label">Questions</p>
+<aside class="rail" id="contents-panel" aria-label="Contents">
+  <ContentsHead label="Questions" />
   {current && <p class="toc-current">{current.title}</p>}
   {currentQuestions.length > 0 && (
     <ul class="toc-list">

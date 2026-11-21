@@ -69,6 +69,20 @@ export function stripVaultLeadIn(markdown: string, pageTitle: string): string {
   return [...dropLeadingBlanksAndRule(leadIn), ...lines.slice(end)].join("\n");
 }
 
+/** The terms a note's "Key concepts:" line named, so the concepts row can show them. */
+export function vaultKeyConcepts(markdown: string): string[] {
+  const lines = markdown.split("\n");
+  const concepts: string[] = [];
+  for (const line of lines.slice(0, leadInEnd(lines))) {
+    if (!line.startsWith(">")) continue;
+    for (const segment of splitSegments(line.replace(/^>\s?/, ""))) {
+      if (!/^\**Key concepts\**:/i.test(segment)) continue;
+      for (const link of segment.matchAll(/\[\[([^\]|#]+)/g)) concepts.push(link[1].trim());
+    }
+  }
+  return concepts;
+}
+
 const plainTitle = (title: string) =>
   title
     .replace(/\[\[[^\]|]*\|([^\]]+)\]\]/g, "$1")

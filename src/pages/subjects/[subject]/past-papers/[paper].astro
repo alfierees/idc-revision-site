@@ -7,10 +7,18 @@ import OpenAnswer from "../../../../components/OpenAnswer";
 import McQuestion from "../../../../components/McQuestion";
 import ExamScorebar from "../../../../components/ExamScorebar";
 import Mermaid from "../../../../components/Mermaid.astro";
+import AboutPaper from "../../../../components/AboutPaper.astro";
+import PageHead from "../../../../components/PageHead.astro";
+import PageFoot from "../../../../components/PageFoot.astro";
 import { getCollection, getEntry } from "astro:content";
 import { entrySlug } from "../../../../lib/entry-slug";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
-import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
+import { buildLinkMap } from "../../../../lib/known-links";
+import { conceptLinks } from "../../../../lib/concepts";
+import { loadCourseContent } from "../../../../lib/course-content";
+import { comparePapersNewestFirst } from "../../../../lib/past-paper-order";
+import { neighbours } from "../../../../lib/reading-order";
+import { splitPaperLeadIn, stripVaultLeadIn, vaultKeyConcepts } from "../../../../lib/vault-lead-in";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
 
 export async function getStaticPaths() {
@@ -34,8 +42,12 @@ const links = await buildLinkMap(subjectSlug);
 // so the Setup intro renders above the cards and the recap/related-notes below.
 const structured = (paper.data.questions ?? []).length > 0;
 
+// Vault navigation goes; provenance notes move to "About this paper".
+const { mainMarkdown, aboutMarkdown, warningTitles } = splitPaperLeadIn(stripVaultLeadIn(paper.body ?? "", paper.data.title));
+const aboutHtml = aboutMarkdown ? await renderMarkdownString(aboutMarkdown, subjectSlug, links) : "";
+
 const [introMd, outroMd] = (() => {
-  const body = paper.body ?? "";
+  const body = mainMarkdown;
   if (!structured) return [body, ""];
   const idx = body.indexOf("<!--questions-->");
   return idx === -1 ? [body, ""] : [body.slice(0, idx), body.slice(idx + "<!--questions-->".length)];
@@ -64,7 +76,7 @@ const renderedQuestions = await Promise.all((paper.data.questions ?? []).map(asy
 })));
 
 // Flat-mode body (unchanged behaviour for papers without `questions`).
-const flatHtml = structured ? "" : await renderMarkdownString(paper.body ?? "", subjectSlug, links);
+const flatHtml = structured ? "" : await renderMarkdownString(mainMarkdown, subjectSlug, links);
 
 const allPapers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug && p.data.in_scope))
   .map((p) => ({ slug: p.id.split("/").pop()!, title: p.data.title, year: p.data.year }));
@@ -81,39 +93,24 @@ if (structured) {
   }
 }
 
-const meta = [paper.data.exam, paper.data.instructor, paper.data.status].filter(Boolean);
+const eyebrow = [paper.data.exam, paper.data.instructor].filter(Boolean).join(" · ");
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+const termTitles = (await loadCourseContent()).get(subjectSlug)?.termTitles ?? new Map<string, string>();
+const concepts = conceptLinks([...vaultKeyConcepts(paper.body ?? ""), ...paper.data.tags], subjectSlug, links, termTitles);
+// Some papers record a vault file path here, which isn't a link a browser can open.
+const sourceHref = /^(https?:\/\/|\/)/.test(paper.data.source_doc ?? "") ? paper.data.source_doc : undefined;
+const paperHref = (slug: string) => `/subjects/${subjectSlug}/past-papers/${slug}`;
+const { previous, next } = neighbours([...allPapers].sort(comparePapersNewestFirst), paperSlug);
 ---
 <Layout title={`${paper.data.title} · ${subject.data.title}`} subject={subjectSlug} active="past-papers" hasSidebar continueTitle={paper.data.title}>
   <div id="content-grid" class="content-grid">
     <PaperSidebar subject={subjectSlug} papers={allPapers} currentSlug={paperSlug} currentSections={sections} />
     <article class="paper-body">
-      {meta.length > 0 && (
-        <p class="doc-meta">{meta.join(" · ")}</p>
-      )}
-      <div class="flex items-baseline justify-between gap-4">
-        <h1 class="doc-title">{paper.data.title}</h1>
-        {paper.data.source_doc && (
-          <a href={paper.data.source_doc} class="shrink-0 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent">
-            Original paper ↗
-          </a>
-        )}
-      </div>
-      {paper.data.dataset && (
-        <p class="mt-2 font-ui text-sm text-ink-muted italic">Dataset: {paper.data.dataset}</p>
-      )}
-      {paper.data.tags.length > 0 && (
-        <ul class="mt-4 flex flex-wrap gap-2 list-none p-0">
-          {paper.data.tags.map((tag) => {
-            const target = resolveLink(links, tag);
-            return target ? (
-              <li><a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a></li>
-            ) : (
-              <li><span class="tag tag-muted">#{tag}</span></li>
-            );
-          })}
-        </ul>
-      )}
+      <PageHead eyebrow={eyebrow} title={paper.data.title} concepts={concepts}>
+        {sourceHref && <a slot="actions" href={sourceHref} class="page-head-link">Original paper ↗</a>}
+        {paper.data.dataset && <p class="page-head-note">Dataset: {paper.data.dataset}</p>}
+      </PageHead>
+      <AboutPaper html={aboutHtml} warningTitles={warningTitles} />
 
       {structured ? (
         <>
@@ -152,6 +149,10 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
       ) : (
         <div class="mt-8 paper-prose prose-card" set:html={flatHtml} />
       )}
+      <PageFoot
+        previous={previous && { title: previous.title, href: paperHref(previous.slug) }}
+        next={next && { title: next.title, href: paperHref(next.slug) }}
+      />
     </article>
   </div>
   {structured && renderedQuestions.some((q) => q.gradable) && (

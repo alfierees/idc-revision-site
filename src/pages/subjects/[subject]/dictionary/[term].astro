@@ -3,10 +3,13 @@ import Layout from "../../../../components/Layout.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
 import GraphMounter from "../../../../components/GraphMounter.astro";
 import BacklinkList from "../../../../components/BacklinkList.astro";
+import PageHead from "../../../../components/PageHead.astro";
+import PageFoot from "../../../../components/PageFoot.astro";
 import { getCollection, getEntry } from "astro:content";
 import { computeBacklinks } from "../../../../lib/backlinks";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap } from "../../../../lib/known-links";
+import { neighbours } from "../../../../lib/reading-order";
 
 export async function getStaticPaths() {
   const terms = await getCollection("terms", (t) => t.data.in_scope);
@@ -52,19 +55,32 @@ const backlinks = computeBacklinks({
 const entries = backlinks.get(termSlug) ?? [];
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+const termsByName = allTerms
+  .filter((entry) => entry.data.in_scope)
+  .map((entry) => ({ slug: slugOf(entry.id), title: entry.data.title }))
+  .sort((first, second) => first.title.localeCompare(second.title));
+const termHref = (slug: string) => `/subjects/${subjectSlug}/dictionary/${slug}`;
+const { previous, next } = neighbours(termsByName, termSlug);
 ---
 <Layout title={`${termEntry.data.title} · ${subject.data.title}`} subject={subjectSlug} active="dictionary">
-  <article>
-    <h1 class="doc-title" style="margin-top:0;">{termEntry.data.title}</h1>
-    {termEntry.data.aliases.length > 0 && (
-      <p class="mt-2 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted">Also known as · {termEntry.data.aliases.join(" · ")}</p>
-    )}
-    <div class="term-body mt-6 text-base text-ink" set:html={html} />
-  </article>
-  <section class="mt-12 border-t border-rule pt-6">
-    <h3 class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">Appears in</h3>
-    <div class="mt-3"><BacklinkList subject={subjectSlug} entries={entries} /></div>
-  </section>
+  <div class="reading-column">
+    <article>
+      <PageHead title={termEntry.data.title}>
+        {termEntry.data.aliases.length > 0 && (
+          <p class="page-head-note">Also known as: {termEntry.data.aliases.join(", ")}</p>
+        )}
+      </PageHead>
+      <div class="term-body mt-6 text-base text-ink" set:html={html} />
+    </article>
+    <section class="mt-12 border-t border-rule pt-6">
+      <h2 class="font-ui text-xs uppercase tracking-[0.18em] text-ink-muted">Appears in</h2>
+      <div class="mt-3"><BacklinkList subject={subjectSlug} entries={entries} /></div>
+    </section>
+    <PageFoot
+      previous={previous && { title: previous.title, href: termHref(previous.slug) }}
+      next={next && { title: next.title, href: termHref(next.slug) }}
+    />
+  </div>
   <GraphMounter />
   <HoverPreview subject={subjectSlug} />
 </Layout>
