@@ -6,10 +6,15 @@ import ExamScorebar from "../../../../components/ExamScorebar";
 import GraphMounter from "../../../../components/GraphMounter.astro";
 import Mermaid from "../../../../components/Mermaid.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
+import PageHead from "../../../../components/PageHead.astro";
+import PageFoot from "../../../../components/PageFoot.astro";
 import { getCollection, getEntry } from "astro:content";
 import { entrySlug } from "../../../../lib/entry-slug";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
+import { conceptLinks } from "../../../../lib/concepts";
+import { loadCourseContent } from "../../../../lib/course-content";
+import { neighbours, sortProblemSets } from "../../../../lib/reading-order";
 
 export async function getStaticPaths() {
   const sets = await getCollection("problem-sets");
@@ -47,6 +52,7 @@ const allRelatedTerms = [...new Set(
 )];
 
 // Partition into terms and recipes by resolving each slug.
+const termTitles = (await loadCourseContent()).get(subjectSlug)?.termTitles ?? new Map<string, string>();
 const toolkitTerms: { slug: string; href: string; label: string }[] = [];
 const toolkitRecipes: { slug: string; href: string; label: string }[] = [];
 
@@ -54,7 +60,7 @@ for (const raw of allRelatedTerms) {
   const target = resolveLink(links, raw);
   if (!target) continue;
   const entry = { slug: target.slug, href: linkHref(subjectSlug, target), label: raw };
-  if (target.kind === "term") toolkitTerms.push(entry);
+  if (target.kind === "term") toolkitTerms.push({ ...entry, label: termTitles.get(target.slug) ?? raw });
   else if (target.kind === "recipe") toolkitRecipes.push(entry);
 }
 
@@ -109,49 +115,13 @@ const hasToolkit =
   uniqueToolkitTerms.length > 0 ||
   uniqueToolkitRecipes.length > 0 ||
   toolkitLectures.length > 0;
+
+const concepts = conceptLinks([...allRelatedTerms, ...set.data.tags], subjectSlug, links, termTitles);
+const sourceHref = /^(https?:\/\/|\/)/.test(set.data.source_doc ?? "") ? set.data.source_doc : undefined;
+const setHref = (slug: string) => `/subjects/${subjectSlug}/problem-sets/${slug}`;
+const { previous, next } = neighbours(sortProblemSets(siblingProblemSets), setSlug);
 ---
 <Layout title={`${set.data.title} · ${subject.data.title}`} subject={subjectSlug} active="problem-sets" hasSidebar continueTitle={set.data.title}>
-  <div class="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-    <h1 class="doc-title" style="margin-top:0;">{set.data.title}</h1>
-    <div class="shrink-0 flex flex-wrap items-baseline gap-x-4 gap-y-2">
-      {set.data.source_doc && (
-        <a href={set.data.source_doc} class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent">
-          Original PDF ↗
-        </a>
-      )}
-      {set.data.official_solution && (
-        <a
-          href={set.data.official_solution}
-          download
-          class="official-dl font-ui text-xs uppercase tracking-[0.15em]"
-          title={set.data.official_solution_note}
-        >
-          Official solution ↓
-        </a>
-      )}
-    </div>
-  </div>
-  {set.data.official_solution_note && (
-    <p class="mb-4 font-ui text-sm text-ink-muted italic">{set.data.official_solution_note}</p>
-  )}
-
-  {set.data.tags.length > 0 && (
-    <ul class="mb-6 flex flex-wrap gap-2 list-none p-0">
-      {set.data.tags.map((tag) => {
-        const target = resolveLink(links, tag);
-        return target ? (
-          <li>
-            <a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a>
-          </li>
-        ) : (
-          <li>
-            <span class="tag tag-muted">#{tag}</span>
-          </li>
-        );
-      })}
-    </ul>
-  )}
-
   <div id="content-grid" class="content-grid wide-toc">
     <QuestionSidebar
       subject={subjectSlug}
@@ -160,9 +130,48 @@ const hasToolkit =
       currentQuestions={rendered}
     />
 
-    <div>
+    <div class="min-w-0">
+      <PageHead title={set.data.title} concepts={concepts}>
+        {(sourceHref || set.data.official_solution) && (
+          <Fragment slot="actions">
+            {sourceHref && <a href={sourceHref} class="page-head-link">Original PDF ↗</a>}
+            {set.data.official_solution && (
+              <a href={set.data.official_solution} download class="official-dl font-ui text-xs uppercase tracking-[0.15em]" title={set.data.official_solution_note}>
+                Official solution ↓
+              </a>
+            )}
+          </Fragment>
+        )}
+        {set.data.official_solution_note && <p class="page-head-note">{set.data.official_solution_note}</p>}
+      </PageHead>
+
+      <ol class="mt-8 space-y-6 list-none p-0">
+        {rendered.map((q) => (
+          <li id={q.id} class="qcard rounded-card bg-card p-7 shadow-soft">
+            <div class="flex items-start justify-between gap-4">
+              <span class="qid"><span class="qnum">{q.id}</span></span>
+            </div>
+            <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
+            {q.hasSolution && (
+              <OpenAnswer
+                client:load
+                subject={subjectSlug}
+                kind="problem-set"
+                refSlug={setSlug}
+                questionId={q.id}
+                solutionHtml={q.solutionHtml}
+              />
+            )}
+          </li>
+        ))}
+      </ol>
+
+      {bodyHtml && (
+        <section class="mt-8 rounded-card bg-card p-7 shadow-soft question-body prose-card" set:html={bodyHtml} />
+      )}
+
       {hasToolkit && (
-        <div class="mb-6 rounded-card bg-card p-5 shadow-soft">
+        <section class="toolkit-foot" aria-label="Toolkit for this set">
           <p class="font-ui text-xs uppercase tracking-[0.15em] text-ink-muted mb-3">Toolkit</p>
           <div class="flex flex-col gap-3">
             {uniqueToolkitTerms.length > 0 && (
@@ -196,33 +205,13 @@ const hasToolkit =
               </div>
             )}
           </div>
-        </div>
+        </section>
       )}
 
-      <ol class="space-y-6 list-none p-0">
-        {rendered.map((q) => (
-          <li id={q.id} class="qcard rounded-card bg-card p-7 shadow-soft">
-            <div class="flex items-start justify-between gap-4">
-              <span class="qid"><span class="qnum">{q.id}</span></span>
-            </div>
-            <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
-            {q.hasSolution && (
-              <OpenAnswer
-                client:load
-                subject={subjectSlug}
-                kind="problem-set"
-                refSlug={setSlug}
-                questionId={q.id}
-                solutionHtml={q.solutionHtml}
-              />
-            )}
-          </li>
-        ))}
-      </ol>
-
-      {bodyHtml && (
-        <section class="mt-8 rounded-card bg-card p-7 shadow-soft question-body prose-card" set:html={bodyHtml} />
-      )}
+      <PageFoot
+        previous={previous && { title: previous.title, href: setHref(previous.slug) }}
+        next={next && { title: next.title, href: setHref(next.slug) }}
+      />
     </div>
   </div>
   {rendered.some((q) => q.hasSolution) && (

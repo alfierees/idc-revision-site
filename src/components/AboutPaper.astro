@@ -1,0 +1,27 @@
+---
+// A paper's provenance, folded away. Caveats about the answers stay visible:
+// a student must know when a solution is unofficial without opening anything.
+interface Props {
+  html: string;
+  warningTitles: string[];
+}
+const { html, warningTitles } = Astro.props;
+---
+{html && (
+  <section class="about-paper" aria-label="About this paper">
+    {warningTitles.length > 0 && (
+      <ul class="about-warnings">
+        {warningTitles.map((warningTitle) => (
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4 2.8 20h18.4L12 4z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>
+            <span>{warningTitle}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+    <details class="about-details">
+      <summary>{warningTitles.length > 0 ? "Read the details" : "About this paper"}</summary>
+      <div class="paper-prose prose-card" set:html={html} />
+    </details>
+  </section>
+)}

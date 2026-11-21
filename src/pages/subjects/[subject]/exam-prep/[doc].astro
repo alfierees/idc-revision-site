@@ -4,9 +4,15 @@ import HoverPreview from "../../../../components/HoverPreview.astro";
 import ExamPrepSidebar from "../../../../components/ExamPrepSidebar.astro";
 import GraphMounter from "../../../../components/GraphMounter.astro";
 import Mermaid from "../../../../components/Mermaid.astro";
+import PageHead from "../../../../components/PageHead.astro";
+import PageFoot from "../../../../components/PageFoot.astro";
 import { getCollection, getEntry } from "astro:content";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
-import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
+import { buildLinkMap } from "../../../../lib/known-links";
+import { conceptLinks } from "../../../../lib/concepts";
+import { loadCourseContent } from "../../../../lib/course-content";
+import { neighbours, sortExamPrep } from "../../../../lib/reading-order";
+import { stripVaultLeadIn, vaultKeyConcepts } from "../../../../lib/vault-lead-in";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
 
 export async function getStaticPaths() {
@@ -23,7 +29,7 @@ const doc = await getEntry("exam-prep", `${subjectSlug}/${docSlug}`);
 if (!doc) throw new Error(`exam-prep doc ${subjectSlug}/${docSlug} not found`);
 
 const links = await buildLinkMap(subjectSlug);
-const html = await renderMarkdownString(doc.body ?? "", subjectSlug, links);
+const html = await renderMarkdownString(stripVaultLeadIn(doc.body ?? "", doc.data.title), subjectSlug, links);
 
 const allDocs = (await getCollection("exam-prep", (e) => e.data.subject === subjectSlug && e.data.in_scope))
   .map((e) => ({ slug: e.id.split("/").pop()!, title: e.data.title, order: e.data.order }));
@@ -36,32 +42,20 @@ while ((m = sectionRe.exec(html)) !== null) {
   sections.push({ id: m[2], text: decodeHtmlEntities(m[3].replace(/<[^>]+>/g, "")).trim(), html: m[3].replace(/<\/?a\b[^>]*>/g, ""), level: m[1] === "h2" ? 2 : 3 });
 }
 
-const meta = [doc.data.course, doc.data.instructor].filter(Boolean);
+const eyebrow = [doc.data.course, doc.data.instructor].filter(Boolean).join(" · ");
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+const termTitles = (await loadCourseContent()).get(subjectSlug)?.termTitles ?? new Map<string, string>();
+const concepts = conceptLinks([...vaultKeyConcepts(doc.body ?? ""), ...doc.data.tags], subjectSlug, links, termTitles);
+const docHref = (slug: string) => `/subjects/${subjectSlug}/exam-prep/${slug}`;
+const { previous, next } = neighbours(sortExamPrep(allDocs), docSlug);
 ---
 <Layout title={`${doc.data.title} · ${subject.data.title}`} subject={subjectSlug} active="exam-prep" hasSidebar>
   <div id="content-grid" class="content-grid">
     <ExamPrepSidebar subject={subjectSlug} docs={allDocs} currentSlug={docSlug} currentSections={sections} />
     <article class="paper-body">
-      {meta.length > 0 && (
-        <p class="doc-meta">{meta.join(" · ")}</p>
-      )}
-      <h1 class="doc-title">{doc.data.title}</h1>
-      {doc.data.description && (
-        <p class="mt-2 font-ui text-sm text-ink-muted italic">{doc.data.description}</p>
-      )}
-      {doc.data.tags.length > 0 && (
-        <ul class="mt-4 flex flex-wrap gap-2 list-none p-0">
-          {doc.data.tags.map((tag) => {
-            const target = resolveLink(links, tag);
-            return target ? (
-              <li><a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a></li>
-            ) : (
-              <li><span class="tag tag-muted">#{tag}</span></li>
-            );
-          })}
-        </ul>
-      )}
+      <PageHead eyebrow={eyebrow} title={doc.data.title} concepts={concepts}>
+        {doc.data.description && <p class="page-head-note">{doc.data.description}</p>}
+      </PageHead>
       {doc.data.pdf ? (
         <div class="mt-6">
           <a href={doc.data.pdf} target="_blank" rel="noopener" class="pdf-open">
@@ -85,6 +79,10 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
           <div class="mt-8 paper-prose prose-card" set:html={html} />
         </>
       )}
+      <PageFoot
+        previous={previous && { title: previous.title, href: docHref(previous.slug) }}
+        next={next && { title: next.title, href: docHref(next.slug) }}
+      />
     </article>
   </div>
   <Mermaid />

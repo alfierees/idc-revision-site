@@ -1,0 +1,31 @@
+---
+// The end of a reading page: an optional action, then Previous and Next in this section.
+interface FootLink {
+  title: string;
+  href: string;
+}
+interface Props {
+  previous?: FootLink;
+  next?: FootLink;
+}
+const { previous, next } = Astro.props;
+---
+<footer class="page-foot">
+  {Astro.slots.has("default") && <div class="page-foot-action"><slot /></div>}
+  {(previous || next) && (
+    <nav class="page-foot-links" aria-label="Previous and next">
+      {previous ? (
+        <a href={previous.href} rel="prev" class="foot-link">
+          <span class="foot-direction"><span aria-hidden="true">←</span> Previous</span>
+          <span class="foot-title">{previous.title}</span>
+        </a>
+      ) : <span></span>}
+      {next && (
+        <a href={next.href} rel="next" class="foot-link foot-link-next">
+          <span class="foot-direction">Next <span aria-hidden="true">→</span></span>
+          <span class="foot-title">{next.title}</span>
+        </a>
+      )}
+    </nav>
+  )}
+</footer>

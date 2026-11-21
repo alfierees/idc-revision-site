@@ -1,0 +1,13 @@
+---
+// Label at the top of the contents list, with a Close button when it's a sheet.
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+<div class="contents-head">
+  <p class="toc-label">{label}</p>
+  <button type="button" class="contents-close" data-contents-close aria-label="Close contents">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+</div>

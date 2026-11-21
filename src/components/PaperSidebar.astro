@@ -1,4 +1,6 @@
 ---
+import ContentsHead from "./ContentsHead.astro";
+import { comparePapersNewestFirst } from "../lib/past-paper-order";
 interface PaperEntry { slug: string; title: string; year?: number; }
 interface Section { id: string; text: string; html?: string; level: number; }
 interface Props {
@@ -8,17 +10,12 @@ interface Props {
   currentSections: Section[];
 }
 const { subject, papers, currentSlug, currentSections } = Astro.props;
-const sorted = [...papers].sort((a, b) => {
-  if (a.year !== undefined && b.year !== undefined && a.year !== b.year) return b.year - a.year;
-  if (a.year !== undefined && b.year === undefined) return -1;
-  if (b.year !== undefined && a.year === undefined) return 1;
-  return a.title.localeCompare(b.title);
-});
+const sorted = [...papers].sort(comparePapersNewestFirst);
 const current = sorted.find((p) => p.slug === currentSlug);
 const others = sorted.filter((p) => p.slug !== currentSlug);
 ---
-<aside class="rail">
-  <p class="toc-label">Past Papers</p>
+<aside class="rail" id="contents-panel" aria-label="Contents">
+  <ContentsHead label="Past Papers" />
   {current && <p class="toc-current">{current.title}</p>}
   {currentSections.length > 0 && (
     <ul class="toc-list">

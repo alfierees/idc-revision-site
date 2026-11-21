@@ -65,6 +65,16 @@ const currentSection = activeSection(Astro.url.pathname);
       </main>
     </div>
 
+    {hasSidebar && (
+      <>
+        <button type="button" id="contents-open" class="contents-open" aria-label="Contents" aria-controls="contents-panel" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          <span class="contents-open-label">Contents</span>
+        </button>
+        <div id="contents-backdrop" class="contents-backdrop" hidden></div>
+      </>
+    )}
+
     <nav class="main-nav bottom-nav" aria-label="Main">
       {navSections.map((n) => (
         <a href={n.href} class={currentSection === n.id ? "active" : ""} aria-current={currentSection === n.id ? "page" : undefined}>
@@ -143,6 +153,69 @@ const currentSection = activeSection(Astro.url.pathname);
           apply(hidden);
         });
       }
+
+      // ---- Contents sheet (below 1280px) ----
+      const contentsPanel = document.getElementById("contents-panel");
+      const contentsOpen = document.getElementById("contents-open");
+      const contentsBackdrop = document.getElementById("contents-backdrop");
+      const contentsClose = contentsPanel?.querySelector<HTMLButtonElement>("[data-contents-close]");
+      if (contentsPanel && contentsOpen && contentsBackdrop && contentsClose) {
+        const setContentsOpen = (open: boolean, restoreFocus = true) => {
+          contentsPanel.classList.toggle("contents-sheet-open", open);
+          contentsBackdrop.hidden = !open;
+          contentsOpen.setAttribute("aria-expanded", String(open));
+          document.documentElement.classList.toggle("contents-locked", open);
+          if (open) {
+            contentsPanel.setAttribute("role", "dialog");
+            contentsPanel.setAttribute("aria-modal", "true");
+            contentsPanel.querySelector(".toc-list a.active")?.scrollIntoView({ block: "center" });
+            contentsClose.focus({ preventScroll: true });
+          } else {
+            contentsPanel.removeAttribute("role");
+            contentsPanel.removeAttribute("aria-modal");
+            if (restoreFocus) contentsOpen.focus({ preventScroll: true });
+          }
+        };
+        const isContentsOpen = () => contentsPanel.classList.contains("contents-sheet-open");
+        const updateContentsButton = () => contentsOpen.classList.toggle("is-compact", window.scrollY > 240);
+        updateContentsButton();
+        window.addEventListener("scroll", updateContentsButton, { passive: true });
+        contentsOpen.addEventListener("click", () => setContentsOpen(true));
+        contentsClose.addEventListener("click", () => setContentsOpen(false));
+        contentsBackdrop.addEventListener("click", () => setContentsOpen(false));
+        // Choosing a section closes the sheet and lets the browser jump to it.
+        contentsPanel.addEventListener("click", (event) => {
+          if (isContentsOpen() && (event.target as Element).closest("a")) setContentsOpen(false, false);
+        });
+        document.addEventListener("keydown", (event) => {
+          if (!isContentsOpen()) return;
+          if (event.key === "Escape") setContentsOpen(false);
+          if (event.key !== "Tab") return;
+          const focusable = contentsPanel.querySelectorAll<HTMLElement>("a[href], button");
+          const firstItem = focusable[0];
+          const lastItem = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === firstItem) {
+            event.preventDefault();
+            lastItem.focus();
+          } else if (!event.shiftKey && document.activeElement === lastItem) {
+            event.preventDefault();
+            firstItem.focus();
+          }
+        });
+        window.matchMedia("(min-width: 1280px)").addEventListener("change", (change) => {
+          if (change.matches && isContentsOpen()) setContentsOpen(false, false);
+        });
+      }
+
+      // ---- concepts row: "+n" shows the rest ----
+      document.querySelectorAll<HTMLButtonElement>("[data-concept-more]").forEach((moreButton) => {
+        moreButton.addEventListener("click", () => {
+          const row = moreButton.closest("[data-concept-row]");
+          row?.classList.add("is-expanded");
+          row?.querySelector<HTMLElement>(".concept-extra")?.focus();
+          moreButton.remove();
+        });
+      });
 
       // ---- TOC scroll-spy ----
       const tocLinks = Array.from(
