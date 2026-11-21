@@ -1,0 +1,16 @@
+{
+  "slug": "principles-of-micro",
+  "title": "Principles of Micro",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 1/Principles of Micro",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 1/Micro-Economics",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Home assignments",
+  "assignmentFiles": [],
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "principles-of-micro"
+  ],
+  "notes": "Year 1 Semester 1. Source has no lecture decks and no question sheets. Home assignments are Alfie's own answers, so assignmentFiles is deliberately empty and nothing is copied to public/papers. The one class worksheet (Production Costs) is the only teaching source."
+}
