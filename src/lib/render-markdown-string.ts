@@ -163,7 +163,12 @@ function promoteDisplayMath(md: string): string {
 // runs. Currency written inside inline math (`$P = \$10$`, `$\Delta P = \$75$`)
 // would otherwise break: remark-math treats the `$` in `\$` as a closing
 // delimiter, so KaTeX receives a dangling `\` and the rest leaks out as text.
-const DOLLAR_SENTINEL = "\uE000";
+const ESCAPED_DOLLAR_SENTINEL = "\uE000";
+
+// Stands in for a bare currency-style `$10`. It is kept apart from the escaped
+// sentinel because code must get back exactly what the author typed: `$B$10` in
+// an Excel formula has no backslash, while `\$HOME` in a shell snippet does.
+const BARE_DOLLAR_SENTINEL = "\uE001";
 
 // Sentinels bracketing a stashed inline-math span while currency is neutralised.
 const MATH_OPEN = "\uE003";
@@ -196,34 +201,35 @@ const INLINE_MATH = /(?<![$\\])\$(?![\s$])[^$\n]*?(?<![\s$])\$(?!\d)/g;
  * `restoreEscapedDollars` puts the sentinel back once parsing is done.
  */
 function protectLiteralDollars(md: string): string {
-  md = md.replace(/\\\$/g, DOLLAR_SENTINEL);
+  md = md.replace(/\\\$/g, ESCAPED_DOLLAR_SENTINEL);
   const spans: string[] = [];
   md = md.replace(INLINE_MATH, (m) => `${MATH_OPEN}${spans.push(m) - 1}${MATH_CLOSE}`);
-  md = md.replace(/(?<!\$)\$(?=[\d][\d.,]*(?:[^\d.,$]|$))/g, DOLLAR_SENTINEL);
+  md = md.replace(/(?<!\$)\$(?=[\d][\d.,]*(?:[^\d.,$]|$))/g, BARE_DOLLAR_SENTINEL);
   md = md.replace(new RegExp(`${MATH_OPEN}(\\d+)${MATH_CLOSE}`, "g"), (_m, i) => spans[Number(i)]);
   return md;
 }
 
 /**
  * rehype plugin (after remark-rehype, before rehype-katex): restore the dollar
- * sentinel now that math spans are delimited. It must run on hast, not mdast —
+ * sentinels now that math spans are delimited. It must run on hast, not mdast —
  * remark-math freezes each math node's rendered children into `data.hChildren`
  * at parse time, so a later mdast mutation of `node.value` is ignored. Here the
- * immediate parent tells us the context: inside a `math` span or a `code`/`pre`
- * element the sentinel becomes `\$` (KaTeX renders a literal dollar; code is
- * verbatim); everywhere else (prose) it becomes a plain `$`.
+ * immediate parent tells us the context: inside a `math` span both become `\$`
+ * (KaTeX renders a literal dollar); inside `code`/`pre` each goes back to what
+ * the author typed; everywhere else (prose) both become a plain `$`.
  */
 function restoreEscapedDollars() {
   return (tree: Root) => {
     visit(tree, "text", (node: { value: string }, _i, parent) => {
-      if (!node.value.includes(DOLLAR_SENTINEL)) return;
+      if (!node.value.includes(ESCAPED_DOLLAR_SENTINEL) && !node.value.includes(BARE_DOLLAR_SENTINEL)) return;
       const el = parent as Element | undefined;
       const cls = el?.properties?.className;
       const classList = Array.isArray(cls) ? cls.map(String) : [];
       const inMath = classList.some((c) => c.includes("math"));
       const inCode = el?.tagName === "code" || el?.tagName === "pre";
-      const replacement = inMath || inCode ? "\\$" : "$";
-      node.value = node.value.split(DOLLAR_SENTINEL).join(replacement);
+      node.value = node.value
+        .split(ESCAPED_DOLLAR_SENTINEL).join(inMath || inCode ? "\\$" : "$")
+        .split(BARE_DOLLAR_SENTINEL).join(inMath ? "\\$" : "$");
     });
   };
 }
