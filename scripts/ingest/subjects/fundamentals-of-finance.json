@@ -1,0 +1,18 @@
+{
+  "slug": "fundamentals-of-finance",
+  "title": "Fundamentals of Finance",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 2/Financial Management",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 2/Financial management and finance",
+  "lecturesDir": "Lessons",
+  "vaultSolutionsDir": "Homeworks",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Homeworks",
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "financial-management",
+    "fundamentals-of-finance",
+    "solutions",
+    "reading"
+  ],
+  "notes": "Year 1 Semester 2. Vault course name is 'Financial Management & Finance' (folder 'Financial Management'). Every source file is an Excel workbook (.xlsx), so scan.ts queues no problem sets (it only takes .pdf/.docx): the site problem sets are drafted directly from the vault Homeworks notes. Vault images live in lowercase 'attachments/'."
+}
