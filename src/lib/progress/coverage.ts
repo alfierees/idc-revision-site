@@ -58,6 +58,41 @@ export function courseProgress(course: CourseTotals, snap: ProgressSnapshot): Co
   };
 }
 
+export interface SectionCount {
+  answered: number;
+  total: number;
+}
+
+export interface CourseSectionProgress {
+  pastPapers: SectionCount;
+  problemSets: SectionCount;
+  lectures: SectionCount;
+  hasMark: boolean;
+}
+
+/** Answered (done or wrong, never skipped) out of what can be marked, per section. */
+export function sectionProgress(course: CourseTotals, snap: ProgressSnapshot): CourseSectionProgress {
+  const countAnswered = (kind: "problem-set" | "past-paper", refs: Record<string, string[]>): SectionCount => {
+    let answered = 0;
+    let total = 0;
+    for (const [ref, questionIds] of Object.entries(refs)) {
+      for (const questionId of questionIds) {
+        const value = snap.status(course.slug, kind, ref, questionId);
+        total += 1;
+        if (value === "done" || value === "wrong") answered += 1;
+      }
+    }
+    return { answered, total };
+  };
+  const lecturesRead = course.lectures.filter((lecture) => snap.lectureRead(course.slug, lecture)).length;
+  return {
+    pastPapers: countAnswered("past-paper", course.pastPapers),
+    problemSets: countAnswered("problem-set", course.problemSets),
+    lectures: { answered: lecturesRead, total: course.lectures.length },
+    hasMark: courseProgress(course, snap).hasMark,
+  };
+}
+
 export interface DegreeProgress {
   courses: CourseProgress[];
   questionsAttempted: number;

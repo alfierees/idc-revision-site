@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { courseProgress, degreeProgress } from "../src/lib/progress/coverage";
+import { courseProgress, degreeProgress, sectionProgress } from "../src/lib/progress/coverage";
 import type { CourseTotals, ProgressSnapshot } from "../src/lib/progress/types";
 import type { StatusValue } from "../src/lib/status";
 
@@ -61,5 +61,22 @@ describe("degreeProgress", () => {
     expect(d.questionsAttempted).toBe(1);
     expect(d.lecturesRead).toBe(1);
     expect(d.coursesMarked).toBe(2);
+  });
+});
+
+describe("sectionProgress", () => {
+  it("splits answered counts by section and ignores skips", () => {
+    const progress = sectionProgress(course, snapshot({
+      "micro:past-paper:pp-1:a": "done",
+      "micro:past-paper:pp-1:b": "skipped",
+      "micro:problem-set:ps-1:1": "wrong",
+    }, ["micro:l1"]));
+    expect(progress.pastPapers).toEqual({ answered: 1, total: 2 });
+    expect(progress.problemSets).toEqual({ answered: 1, total: 2 });
+    expect(progress.lectures).toEqual({ answered: 1, total: 2 });
+    expect(progress.hasMark).toBe(true);
+  });
+  it("has no mark on a fresh course", () => {
+    expect(sectionProgress(course, snapshot({})).hasMark).toBe(false);
   });
 });
