@@ -128,6 +128,9 @@ The empirical half of the problem set links back to Recitations 1–2. Two concl
 - **The base year is 2015.** By construction, in the base year nominal and real GDP per capita are *equal* (the deflator is 1). Before 2015 nominal $<$ real; after 2015 nominal $>$ real.
 - **The widening nominal–real gap reflects inflation.** Because prices generally rose, the nominal series drifts *above* the real series after the base year. The real (constant-price) series is the one that measures genuine improvements in living standards, having stripped out price changes. ^nominal-real-gap
 
+> [!note] Exercise 4 uses a different base year
+> The 2015 base year comes from this recitation's slide. The Exercise 4 workbook uses **2020**, the year its nominal and real GDP are equal (1,414,038.9). The logic is the same, so check which base year a question's data uses.
+
 > [!info] Reading the two downturns
 > The long-run trend of real GDP per capita is **upward** (growth), but two dips stand out: **2009** (global financial crisis) and a sharper one in **2020** (COVID-19). Note that in 2009 *nominal* GDP per capita still edged up even as *real* fell — inflation masked the real contraction. This is precisely why macro tracks real, not nominal, output. ^crisis-dips
 
