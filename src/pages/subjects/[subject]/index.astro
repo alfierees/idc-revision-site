@@ -1,10 +1,203 @@
 ---
+// The course's home: what to do next, then how far you've got in each section.
 import { getCollection } from "astro:content";
+import Layout from "../../../components/Layout.astro";
+import { loadCourseContent } from "../../../lib/course-content";
+import { courseSectionHref, type CourseSectionId } from "../../../lib/course-sections";
+import { LAST_SEEN_STORAGE_KEY } from "../../../lib/progress/store";
+import { semesterId, SEMESTERS } from "../../../lib/semesters";
 
 export async function getStaticPaths() {
   const subjects = await getCollection("subjects");
-  return subjects.map((s) => ({ params: { subject: s.data.slug } }));
+  return subjects.map((entry) => ({ params: { subject: entry.data.slug } }));
 }
 
-return Astro.redirect(`/subjects/${Astro.params.subject}/dictionary`);
+const subjectSlug = Astro.params.subject!;
+const subject = (await getCollection("subjects", (entry) => entry.data.slug === subjectSlug))[0].data;
+const content = (await loadCourseContent()).get(subjectSlug)!;
+const { counts, startHere, formulaSheet } = content;
+const semesterLabel = SEMESTERS.find((semester) => semester.id === semesterId(subject.year, subject.semester))?.label;
+
+const countLabel = (count: number, singular: string) => `${count} ${singular}${count === 1 ? "" : "s"}`;
+const progressRows: { id: CourseSectionId; label: string; detail: string }[] = [
+  { id: "past-papers" as const, label: "Past papers", count: counts.pastPapers, singular: "paper" },
+  { id: "problem-sets" as const, label: "Problem sets", count: counts.problemSets, singular: "set" },
+  { id: "lectures" as const, label: "Lectures", count: counts.lectures, singular: "lecture" },
+]
+  .filter((row) => row.count > 0)
+  .map((row) => ({ id: row.id, label: row.label, detail: countLabel(row.count, row.singular) }));
+
+const shortcuts = [
+  formulaSheet && { label: formulaSheet.title, href: formulaSheet.href },
+  counts.examPrep > 0 && { label: "All exam prep", href: courseSectionHref(subjectSlug, "exam-prep") },
+  counts.recipes > 0 && { label: `Recipes (${counts.recipes})`, href: courseSectionHref(subjectSlug, "recipes") },
+].filter((shortcut): shortcut is { label: string; href: string } => Boolean(shortcut));
 ---
+<Layout title={`${subject.title} · Overview`} subject={subjectSlug} active="overview">
+  <div class="overview">
+    <header class="overview-head">
+      {semesterLabel && <p class="overview-eyebrow">{semesterLabel}</p>}
+      <h1 class="overview-title">{subject.title}</h1>
+      {subject.tagline && <p class="overview-tagline">{subject.tagline}</p>}
+    </header>
+
+    <section class="next-up" aria-labelledby="next-up-label">
+      <h2 class="overview-label" id="next-up-label">Start here</h2>
+      <a class="next-up-card" id="next-up-card" href={startHere.href}>
+        <span class="next-up-text">
+          <span class="next-up-title" id="next-up-title">{startHere.title}</span>
+          <span class="next-up-reason" id="next-up-reason">{startHere.reason}</span>
+        </span>
+        <span class="next-up-action"><span id="next-up-action">Start</span> <span aria-hidden="true">→</span></span>
+      </a>
+    </section>
+    <script is:inline define:vars={{ lastSeenKey: LAST_SEEN_STORAGE_KEY, subjectSlug }}>
+      // Runs before first paint so a returning student never sees "Start here" flash.
+      try {
+        var entries = JSON.parse(localStorage.getItem(lastSeenKey) || "[]");
+        var lastPage = entries.find(function (entry) {
+          return entry.subject === subjectSlug && typeof entry.path === "string" &&
+            entry.path.indexOf("/subjects/" + subjectSlug + "/") === 0 && typeof entry.title === "string";
+        });
+        if (lastPage) {
+          document.getElementById("next-up-label").textContent = "Continue";
+          document.getElementById("next-up-card").href = lastPage.path;
+          document.getElementById("next-up-title").textContent = lastPage.title;
+          document.getElementById("next-up-reason").textContent = "Where you left off";
+          document.getElementById("next-up-action").textContent = "Continue";
+        }
+      } catch (error) {}
+    </script>
+
+    {progressRows.length > 0 && (
+      <section aria-labelledby="progress-label">
+        <h2 class="overview-label" id="progress-label">Your progress</h2>
+        <ul class="progress-rows">
+          {progressRows.map((row) => (
+            <li>
+              <a class="progress-row" href={courseSectionHref(subjectSlug, row.id)}>
+                <span class="progress-row-name">{row.label}</span>
+                <span class="progress-row-detail">{row.detail}</span>
+                <span class="progress-row-count" data-section-count={row.id} hidden></span>
+                <span class="progress-row-bar" data-section-bar={row.id} hidden><span></span></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {shortcuts.length > 0 && (
+      <section aria-labelledby="shortcuts-label">
+        <h2 class="overview-label" id="shortcuts-label">Shortcuts</h2>
+        <ul class="shortcuts">
+          {shortcuts.map((shortcut) => (
+            <li><a href={shortcut.href}>{shortcut.label}</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </div>
+</Layout>
+
+<style>
+  .overview { max-width: 42rem; display: flex; flex-direction: column; gap: 2rem; }
+  .overview-eyebrow { font-family: var(--font-ui); font-size: 0.78rem; font-weight: 600; color: var(--color-ink-muted); }
+  .overview-title {
+    margin-top: 0.15rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 5vw, 2.5rem);
+    line-height: 1.1;
+    font-variation-settings: "opsz" 96, "wght" 500;
+    text-wrap: balance;
+  }
+  .overview-tagline { margin-top: 0.45rem; color: var(--color-ink-soft); text-wrap: pretty; }
+  .overview-label { font-family: var(--font-ui); font-size: 0.82rem; font-weight: 700; color: var(--color-ink-soft); margin-bottom: 0.6rem; }
+
+  .next-up-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 1.15rem 1.3rem;
+    background: var(--color-card);
+    border-radius: var(--radius-card);
+    box-shadow: inset 0 0 0 1px var(--color-rule), var(--shadow-soft);
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .next-up-card:hover { box-shadow: inset 0 0 0 1px var(--color-rule-strong), var(--shadow-lift); transform: translateY(-1px); }
+  .next-up-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  .next-up-text { min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+  .next-up-title {
+    font-family: var(--font-display);
+    font-size: 1.22rem;
+    line-height: 1.25;
+    font-variation-settings: "opsz" 36, "wght" 520;
+    text-wrap: pretty;
+  }
+  .next-up-reason { font-family: var(--font-ui); font-size: 0.8rem; color: var(--color-ink-muted); }
+  .next-up-action {
+    flex: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 1.05rem;
+    border-radius: 10px;
+    background: var(--color-accent);
+    color: #fff;
+    font-family: var(--font-ui);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .progress-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--color-rule); }
+  .progress-rows li { border-bottom: 1px solid var(--color-rule); }
+  .progress-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.2rem 1rem;
+    min-height: 3rem;
+    padding: 0.6rem 0.35rem;
+    font-family: var(--font-ui);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .progress-row:hover { background: color-mix(in srgb, var(--color-accent) 5%, transparent); }
+  .progress-row:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+  .progress-row-name { font-size: 0.95rem; font-weight: 600; }
+  .progress-row-detail { font-size: 0.8rem; color: var(--color-ink-muted); }
+  .progress-row-count { min-width: 3rem; text-align: right; font-size: 0.82rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-accent-ink); }
+  .progress-row-count[hidden], .progress-row-bar[hidden] { display: none; }
+  .progress-row-bar { grid-column: 1 / -1; height: 4px; border-radius: 999px; overflow: hidden; background: var(--color-rule); }
+  .progress-row-bar > span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--color-accent); }
+
+  .shortcuts { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .shortcuts a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.3rem 0.85rem;
+    border-radius: 9px;
+    background: var(--color-paper-deep);
+    color: var(--color-ink-soft);
+    font-family: var(--font-ui);
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .shortcuts a:hover { color: var(--color-accent-ink); background: var(--color-accent-soft); }
+  .shortcuts a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+  @media (max-width: 520px) {
+    .next-up-card { flex-direction: column; align-items: stretch; }
+    .next-up-action { justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .next-up-card { transition: none; }
+    .next-up-card:hover { transform: none; }
+  }
+</style>

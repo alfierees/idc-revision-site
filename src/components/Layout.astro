@@ -1,19 +1,19 @@
 ---
 import "../styles/globals.css";
-import { getCollection } from "astro:content";
 import Analytics from '@vercel/analytics/astro';
-import { groupBySemester } from "../lib/semesters";
+import { SEMESTER_STORAGE_KEY } from "../lib/semesters";
+import type { CourseSectionId } from "../lib/course-sections";
 import BadgeToaster from "./progress/BadgeToaster";
-import CourseChip from "./progress/CourseChip";
+import SiteRail from "./SiteRail.astro";
 import NavIcon from "./NavIcon.astro";
 import { PROGRESS_UI_ENABLED } from "../lib/progress/flags";
 import { activeSection, visibleSections } from "../lib/nav";
 
 interface Props {
   title?: string;
-  /** Subject slug — when set, the header shows the subject switcher + section tabs. */
+  /** Subject slug: when set, the rail shows the course switcher and sections. */
   subject?: string;
-  active?: "lectures" | "dictionary" | "recipes" | "problem-sets" | "past-papers" | "exam-prep";
+  active?: CourseSectionId;
   /** Show the sidebar collapse toggle (pages with a #content-grid rail). */
   hasSidebar?: boolean;
   /** Item pages (lecture, problem set, past paper): the title recorded for "Continue where you left off". */
@@ -23,24 +23,6 @@ const { title = "IDC Revision", subject, active, hasSidebar = false, continueTit
 const navSections = visibleSections(PROGRESS_UI_ENABLED);
 const currentSection = activeSection(Astro.url.pathname);
 
-const subjects = (await getCollection("subjects")).map((s) => s.data);
-const current = subject ? subjects.find((s) => s.slug === subject) : undefined;
-// Header switcher: live courses only, under their semester, current semester first.
-const switcherGroups = groupBySemester(subjects)
-  .filter((g) => g.live.length > 0)
-  .sort((a, b) => {
-    const isCurrent = (g: typeof a) => g.live.some((s) => s.slug === subject);
-    return Number(isCurrent(b)) - Number(isCurrent(a));
-  });
-
-const tabs = [
-  { id: "lectures",     label: "Lectures" },
-  { id: "dictionary",   label: "Dictionary" },
-  { id: "exam-prep",    label: "Exam Prep" },
-  { id: "problem-sets", label: "Problem Sets" },
-  { id: "past-papers",  label: "Past Papers" },
-] as const;
-const section = active ?? "dictionary";
 ---
 <html lang="en">
   <head>
@@ -65,83 +47,23 @@ const section = active ?? "dictionary";
         });
       });
     </script>
+    <script is:inline define:vars={{ semesterStorageKey: SEMESTER_STORAGE_KEY }}>
+      // The rail lists your semester's courses on non-course pages.
+      try {
+        var chosenSemester = localStorage.getItem(semesterStorageKey);
+        if (/^y[12]s[12]$/.test(chosenSemester || "")) document.documentElement.setAttribute("data-rail-semester", chosenSemester);
+      } catch (error) {}
+    </script>
     <slot name="head" />
   </head>
   <body class="min-h-screen">
     <div class="read-progress" id="read-progress" aria-hidden="true"></div>
-    <header class="site-header">
-      <div class="bar">
-        <a href="/" class="brand"><img class="brand-mark" src="/images/brand/idc-mark.webp" alt="" width="29" height="24" /> <span class="brand-name">IDC Revision</span></a>
-        <nav class="main-nav top-nav" aria-label="Main">
-          {navSections.map((n) => (
-            <a href={n.href} class={currentSection === n.id ? "active" : ""} aria-current={currentSection === n.id ? "page" : undefined}>
-              <NavIcon id={n.id} /><span>{n.label}</span>
-            </a>
-          ))}
-        </nav>
-        <div class="bar-right">
-          {hasSidebar && (
-            <button id="sidebar-toggle" type="button" class="panel-toggle" aria-pressed="false" title="Toggle sidebar">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
-            </button>
-          )}
-        </div>
-      </div>
-      {current && (
-        <div class="course-row">
-          <div class="course-row-inner">
-            <div class="course-head">
-              <div class="subject-menu" id="subject-menu">
-                <button
-                  type="button"
-                  class="subject-trigger"
-                  aria-expanded="false"
-                  aria-haspopup="menu"
-                >
-                  <span class="subject-name" style={`view-transition-name: subj-${current.slug};`}>{current.title}</span>
-                  <span class="chev" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-                  </span>
-                </button>
-                <div class="subject-pop" hidden role="menu">
-                  <p class="subject-pop-label">Switch course</p>
-                  {switcherGroups.map((g) => (
-                    <div class="subject-group" role="group" aria-label={g.semester.label}>
-                      <p class="subject-group-label">{g.semester.label}</p>
-                      {g.live.map((s) => (
-                        <a
-                          href={`/subjects/${s.slug}/${section}`}
-                          class={`subject-opt ${s.slug === subject ? "current" : ""}`}
-                          role="menuitem"
-                        >
-                          {s.title}
-                          {s.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
-                        </a>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {PROGRESS_UI_ENABLED && subject && <CourseChip client:idle subject={subject} />}
-            </div>
-            <nav class="header-tabs" aria-label="Subject sections">
-              {tabs.map((t) => (
-                <a
-                  href={`/subjects/${subject}/${t.id}`}
-                  class={active === t.id ? "active" : ""}
-                  aria-current={active === t.id ? "page" : undefined}
-                >
-                  {t.label}
-                </a>
-              ))}
-            </nav>
-          </div>
-        </div>
-      )}
-    </header>
-    <main class="site-main mx-auto max-w-6xl px-6 py-10">
-      <slot />
-    </main>
+    <div class="app-shell">
+      <SiteRail subject={subject} activeCourseSection={active} hasSidebar={hasSidebar} />
+      <main class="site-main mx-auto max-w-6xl px-6 py-10">
+        <slot />
+      </main>
+    </div>
 
     <nav class="main-nav bottom-nav" aria-label="Main">
       {navSections.map((n) => (
@@ -151,10 +73,12 @@ const section = active ?? "dictionary";
       ))}
     </nav>
     {continueTitle && subject && <div id="last-seen-data" hidden data-subject={subject} data-title={continueTitle}></div>}
+    {subject && <div id="course-data" hidden data-subject={subject}></div>}
 
     <script>
       import { progressStore } from "../lib/progress/store";
       import { keepDisplayMathFitted } from "../lib/fit-display-math";
+      import { mountSectionCounts } from "../lib/section-counts-ui";
 
       // ---- display math: shrink formulas wider than their box ----
       keepDisplayMathFitted();
@@ -166,6 +90,10 @@ const section = active ?? "dictionary";
           progressStore().recordLastSeen(lastSeenData.dataset.subject, location.pathname, lastSeenData.dataset.title);
         } catch {}
       }
+
+      // ---- your counts in the rail and on the Overview ----
+      const courseSlug = document.getElementById("course-data")?.dataset.subject;
+      if (courseSlug) mountSectionCounts(courseSlug);
 
       // ---- reading progress bar ----
       const prog = document.getElementById("read-progress");
@@ -197,7 +125,7 @@ const section = active ?? "dictionary";
         });
       }
 
-      // ---- sidebar collapse (toggle lives in the header) ----
+      // ---- contents collapse (toggle lives in the rail) ----
       const KEY = "idc-sidebar-hidden";
       const grid = document.getElementById("content-grid");
       const toggleBtn = document.getElementById("sidebar-toggle");
@@ -227,9 +155,14 @@ const section = active ?? "dictionary";
             return el ? { a, el } : null;
           })
           .filter((x): x is { a: HTMLAnchorElement; el: HTMLElement } => x !== null);
-        const header = document.querySelector<HTMLElement>(".site-header");
+        const siteRail = document.querySelector<HTMLElement>(".site-rail");
+        // Below 1024px the course bar sticks to the top and covers the page.
+        const stickyBarHeight = () =>
+          !siteRail || window.matchMedia("(min-width: 1024px)").matches
+            ? 0
+            : Math.max(0, siteRail.getBoundingClientRect().bottom);
         const onSpy = () => {
-          const off = (header?.offsetHeight ?? 85) + 40;
+          const off = stickyBarHeight() + 40;
           const y = window.scrollY + off;
           let cur: HTMLAnchorElement | null = null;
           for (const t of targets) {
