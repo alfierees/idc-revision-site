@@ -40,6 +40,27 @@ describe("runCli", () => {
   });
 });
 
+describe("runCli past papers", () => {
+  it("reports structured papers it kept and counts only copied papers", async () => {
+    await mkdir(join(tmp, "vault/Past Papers"), { recursive: true });
+    await writeFile(join(tmp, "vault/Past Papers/PP 01.md"), "---\ntitle: Flat\n---\n\nVault body");
+    await writeFile(join(tmp, "vault/Past Papers/PP 02.md"), "---\ntitle: New\n---\n\nVault body");
+    await mkdir(join(tmp, "site/src/content/past-papers/pilot"), { recursive: true });
+    const structuredPaperPath = join(tmp, "site/src/content/past-papers/pilot/pp-01.md");
+    const structuredPaper = "---\ntitle: Structured\nquestions:\n  - id: q1\n    text: A\n    solution: B\n---\n";
+    await writeFile(structuredPaperPath, structuredPaper);
+
+    const summary = await runCli({
+      subject: { slug: "pilot", title: "Pilot", vaultPath: join(tmp, "vault"), sourceDocPath: join(tmp, "docs") },
+      siteRoot: join(tmp, "site"),
+    });
+
+    expect(summary.counts["past-paper"]).toBe(1);
+    expect(summary.keptPastPapers).toEqual(["pp-01"]);
+    expect(await readFile(structuredPaperPath, "utf8")).toBe(structuredPaper);
+  });
+});
+
 describe("runCli slug collisions", () => {
   it("reports registry titles that would share one term page", async () => {
     await writeFile(join(tmp, "vault", "_Wiki-Link Registry.md"),
