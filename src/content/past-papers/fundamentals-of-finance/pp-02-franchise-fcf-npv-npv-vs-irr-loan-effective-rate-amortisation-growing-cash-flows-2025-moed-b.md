@@ -153,7 +153,7 @@ $$
 
 In Excel: `=C18 + NPV(C2, D18:F18)`, the $t=0$ flow added outside the function (see [[Lesson_02-Perpetuities, NPV & IRR]]).
 
-**Decision:** $NPV > 0$, so the franchise adds value and should be bought.
+**Decision:** on the workbook's figure for lost screen sales, $NPV > 0$, so the franchise adds value and should be bought. Check point 1 below: a larger loss per sale reverses this.
 
 > [!warning] Workbook value differs: 2,576.18 is not the NPV at $t=0$
 > The workbook computes `=NPV(C2, C18:F18)` $= 2{,}576.18$. Excel's `NPV` treats the **first value as $t=1$**, so it discounts the $t=0$ flow of $-25{,}820$ by one period too many. The result is the NPV one year early: $2{,}576.18 \times 1.07 = 2{,}756.51$. The correct NPV at $t=0$ is **2,756.51**. The decision (invest) is unchanged. (Sheet `1` and sheet `7` use the function correctly.)
@@ -161,12 +161,13 @@ In Excel: `=C18 + NPV(C2, D18:F18)`, the $t=0$ flow added outside the function (
 > [!info] The `#N/A` in cell G17
 > Column G in this sheet is a set of **annotation cells**: `="<--"&FORMULATEXT(F17)` prints the formula of the cell to its left. `F17` (franchise cost in year 3) is **empty**, so `FORMULATEXT` has no formula to show and returns `#N/A`. It is a label only: no cash-flow, NPV or tax cell refers to column G, and the cash-flow row sums `C13:F17` only. So the `#N/A` **does not change any number**. The empty `F17` is also right: the franchise is bought only at $t=0$.
 
-> [!warning] Modelling points to check against the real paper (do not change the decision)
-> 1. **Purchases vs cost of goods sold.** The workbook expenses *purchases* (30,000, 10,000, 20,000) and also builds inventory into working capital. A textbook approach expenses cost of goods *sold* ($2 \times$ units sold: 18,000, 14,000, 28,000; same 60,000 total) and lets working capital carry the inventory. Using units sold with the same working-capital rules gives an NPV of about 3,709.16. Still positive.
-> 2. **Timing of holding cost.** The 6,000 and 4,000 unit balances are the stocks left at the **end** of years 1 and 2 ($15{,}000 - 9{,}000 = 6{,}000$; $6{,}000 + 5{,}000 - 7{,}000 = 4{,}000$), i.e. at $t=1$ and $t=2$, yet the workbook charges their cost at $t=0$ and $t=1$. Charging 900 at $t=1$ and 600 at $t=2$ gives an NPV of about 2,832.96. Still positive.
-> 3. **Tax at $t=0$.** The $+180$ saving at $t=0$ assumes the loss can be used immediately, consistent with the symmetric-tax rule in [[Lesson_06-Capital Budgeting & Free Cash Flow]].
+> [!warning] Modelling points to check against the real paper (point 1 can flip the decision)
+> 1. **What each lost screen sale costs.** The workbook labels the 25% as "% buying screens" and takes the loss as $25\% \times$ device units (2,250, 1,750, 3,500), which treats each lost sale as costing **1**. The paper may give a different figure. If the loss is 25% of device sales **revenue** (6,750, 5,250, 10,500), the NPV is about **$-7{,}624.87$**, so **do not buy**. The NPV turns negative once each lost sale costs more than about **1.53**.
+> 2. **Purchases vs cost of goods sold.** The workbook expenses *purchases* (30,000, 10,000, 20,000) and also builds inventory into working capital. A textbook approach expenses cost of goods *sold* ($2 \times$ units sold: 18,000, 14,000, 28,000; same 60,000 total) and lets working capital carry the inventory. Using units sold with the same working-capital rules gives an NPV of about 3,709.16. Still positive.
+> 3. **Timing of holding cost.** The 6,000 and 4,000 unit balances are the stocks left at the **end** of years 1 and 2 ($15{,}000 - 9{,}000 = 6{,}000$; $6{,}000 + 5{,}000 - 7{,}000 = 4{,}000$), i.e. at $t=1$ and $t=2$, yet the workbook charges their cost at $t=0$ and $t=1$. Charging 900 at $t=1$ and 600 at $t=2$ gives an NPV of about 2,832.96. Still positive.
+> 4. **Tax at $t=0$.** The $+180$ saving at $t=0$ assumes the loss can be used immediately, consistent with the symmetric-tax rule in [[Lesson_06-Capital Budgeting & Free Cash Flow]].
 >
-> All three variants keep $NPV > 0$, so "buy the franchise" is robust.
+> Points 2 to 4 keep $NPV > 0$. Point 1 does not, so "buy" holds only if the workbook's loss figure is what the paper intended.
 
 > [!tip] Intuition
 > The project looks bad in year 1 (costs 30,000 against sales of 27,000) because you stock up before you sell. The working capital you tie up at $t=0$ comes back at the end, which is why year 3 carries a 32,000 cash flow.

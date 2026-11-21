@@ -118,10 +118,38 @@ questions:
       | Yuddle | 210,000 | 14 years | 10,000 | none given |
 
       Use **after-tax** maintenance and the **depreciation tax shield** on the upfront cost, and compare the machines on a like-for-like basis given their different lifespans. Which machine should be bought?
-    solution: "TODO"
+    solution: |
+      > [!warning] AI-written answer, not official. The homework workbook stops before the comparison, so check this before relying on it.
+
+      **Assumptions:** straight-line depreciation to zero over each machine's life, maintenance paid at the end of each year, and Benzi's resale price fully taxed because its book value is zero by then.
+
+      **Step 1: net annual cash flow.**
+
+      | | Benzi | Yuddle |
+      |---|---|---|
+      | Annual depreciation | 10,000 | 15,000 |
+      | After-tax maintenance | $-15{,}000$ | $-6{,}000$ |
+      | Depreciation tax shield | $+4{,}000$ | $+6{,}000$ |
+      | **Net annual cash flow** | **$-11{,}000$** | **0** |
+
+      **Step 2: present value of each machine's costs.** The annuity factors at 10% are 6.4951 for 11 years and 7.3667 for 14 years.
+
+      $$PV_{Benzi} = -110{,}000 - 11{,}000(6.4951) + \frac{59{,}792(1 - 0.4)}{1.1^{11}} \approx -168{,}872$$
+
+      $$PV_{Yuddle} = -210{,}000 + 0 = -210{,}000$$
+
+      **Step 3: equivalent annual cost,** because the lives differ.
+
+      $$EAC_{Benzi} = \frac{168{,}872}{6.4951} \approx 26{,}000 \qquad EAC_{Yuddle} = \frac{210{,}000}{7.3667} \approx 28{,}507$$
+
+      > [!success] Decision
+      > **Choose Benzi.** It costs about 26,000 a year against 28,507 for Yuddle.
+
+      > [!note] Does the resale assumption matter?
+      > No. If the resale price is not taxed, Benzi's EAC is about 24,709. If you ignore the resale completely, it is about 27,936. Both are still below Yuddle's 28,507.
     related_terms: ["equivalent-annual-cost", "depreciation", "net-present-value", "discount-rate"]
 ---
 
 *Related: [[Lesson_06-Capital Budgeting & Free Cash Flow]] · [[Lesson_03-Rate Conversion, Effective Rates & EAC]]*
 
-HW7 has no source PDF: it was drafted from the vault note and the Excel workbook. Part 3 has no worked answer in the source (the workbook working is unfinished), so its solution is left as TODO.
+HW7 has no source PDF: it was drafted from the vault note and the Excel workbook. Part 3 has no worked answer in the source (the workbook working is unfinished), so its answer here is AI-written and flagged.
