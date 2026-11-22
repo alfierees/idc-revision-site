@@ -145,18 +145,48 @@ function wrapSpanningHighlights(children: MdNode[]): MdNode[] {
  * code-fence-style *info string* and then fails to find a close, swallowing the
  * rest of the block).
  *
- * The `^\$\$` anchor (column 0, no indent) is deliberate. Display math inside a
- * callout begins with `> `, and math indented under a list item begins with
- * spaces — both are left untouched so remark-callouts + remark-math handle them
- * (rewriting across a `> ` prefix, or promoting an indented block, corrupts
- * them). `$$` never appears in fenced code in the content, so this never
- * touches code.
+ * The `^\$\$` anchor (column 0, no indent) is deliberate. Math indented under a
+ * list item begins with spaces and is left untouched, because promoting an
+ * indented block corrupts it. `$$` never appears in unquoted fenced code in the
+ * content, so this never touches code. Callouts and blockquotes are handled
+ * line by line in promoteQuotedDisplayMath, which keeps the `> ` prefix.
  */
 function promoteDisplayMath(md: string): string {
-  return md.replace(
+  return promoteQuotedDisplayMath(md).replace(
     /^\$\$([^$][\s\S]*?)\$\$[ \t]*$/gm,
     (_m, inner: string) => `$$\n${inner.trim()}\n$$`,
   );
+}
+
+// `> $$x$$`, optionally followed by punctuation or prose on the same line.
+const QUOTED_ONE_LINE_DISPLAY = /^([ \t]{0,3}(?:>[ \t]?)+)\$\$((?:(?!\$\$).)+)\$\$([.,;:]?)[ \t]*(.*)$/;
+const QUOTED_CODE_FENCE = /^[ \t]{0,3}(?:>[ \t]?)*[ \t]{0,3}(?:`{3,}|~{3,})/;
+
+/**
+ * Pre-pass: give a one-line `$$…$$` inside a callout or blockquote its own
+ * delimiter lines, so remark-math reads it as display math rather than cramped
+ * inline math. Each new line keeps the original `> ` prefix. Multi-line blocks
+ * already work and don't match; a line holding two `$$…$$` spans is left alone
+ * because it can't be one equation; quoted code fences are skipped.
+ */
+function promoteQuotedDisplayMath(md: string): string {
+  let insideCodeFence = false;
+  const output: string[] = [];
+  for (const line of md.split("\n")) {
+    if (QUOTED_CODE_FENCE.test(line)) insideCodeFence = !insideCodeFence;
+    const match = insideCodeFence ? null : line.match(QUOTED_ONE_LINE_DISPLAY);
+    if (!match || match[4].includes("$$")) {
+      output.push(line);
+      continue;
+    }
+    const [, prefix, equation, punctuation, trailingProse] = match;
+    const blankQuotedLine = prefix.trimEnd();
+    const previousLine = output[output.length - 1] ?? "";
+    if (previousLine.replace(/[>\s]/g, "") !== "") output.push(blankQuotedLine);
+    output.push(`${prefix}$$`, `${prefix}${equation.trim()}${punctuation}`, `${prefix}$$`);
+    if (trailingProse) output.push(blankQuotedLine, `${prefix}${trailingProse}`);
+  }
+  return output.join("\n");
 }
 
 // Private-use sentinel standing in for an escaped dollar `\$` while remark-math
