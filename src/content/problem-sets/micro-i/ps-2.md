@@ -132,9 +132,12 @@ questions:
     solution: |
       > [!warning] Unofficial answer from a student-annotated copy. Check before relying on it.
 
-      > [!success] Answer (ink)
-      > **Negative slope:** more of one good can compensate for less of another. **More desirable bundles as we move left:** less $x$ is better. This person prefers bundles with less $x$ and more $Y$.
-    related_terms: ["indifference-curve", "preferences"]
+      > [!success] Answer (corrected): both $X$ and $Y$ are bads
+      > **Negative slope:** giving up some of one good can be offset by changing the other in the opposite direction, so the two goods are the same kind: both goods or both bads. **More desirable as we move left:** at a fixed $Y$, less $X$ is better, so $X$ is a bad. With a negative slope, $Y$ must be a bad too. Preference improves toward the origin (down and to the left): this person wants **less of both**.
+
+      > [!warning] The ink's answer is wrong here
+      > The ink says the person "prefers bundles with less $x$ and more $Y$". That would make $X$ a bad and $Y$ a good, which gives **upward**-sloping indifference curves (as in Q4b), not downward-sloping ones.
+    related_terms: ["indifference-curve", "preferences", "goods-and-bads"]
     source_doc_page: 1
   - id: "5"
     text: |
