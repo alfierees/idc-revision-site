@@ -237,3 +237,86 @@ See [[#Cobb-Douglas Production Function]].
 
 ### Golden Rule
 See [[#Golden-Rule Savings Rate]].
+
+## From the lectures: finance, trade and growth
+
+### Great Depression
+The severe worldwide downturn that followed the 1929 US stock market crash, with US unemployment near 25%. → [Lec 01](/subjects/principles-of-macro/lectures/lec-01-economic-crises-and-the-birth-of-macroeconomics)
+
+### Fiscal Policy
+Government action through spending, transfers and taxes. → [Lec 01](/subjects/principles-of-macro/lectures/lec-01-economic-crises-and-the-birth-of-macroeconomics)
+
+### Monetary Policy
+Central bank action through interest rates, bond purchases and credit conditions. → [Lec 01](/subjects/principles-of-macro/lectures/lec-01-economic-crises-and-the-birth-of-macroeconomics)
+
+### Keynesian Economics
+Keynes's view that in a recession, government can restore demand by creating income for consumers, so firms hire again. → [Lec 01](/subjects/principles-of-macro/lectures/lec-01-economic-crises-and-the-birth-of-macroeconomics)
+
+### Net Investment
+Gross investment minus depreciation. → [Lec 03](/subjects/principles-of-macro/lectures/lec-03-open-economy-capital-accumulation-and-savings)
+
+### Human Capital
+The education, skills and health that make workers productive. → [Lec 05](/subjects/principles-of-macro/lectures/lec-05-production-and-growth)
+
+### Foreign Direct Investment
+Investment in the economy that is owned and operated by foreign entities. Also called FDI. → [Lec 05](/subjects/principles-of-macro/lectures/lec-05-production-and-growth)
+
+### Average Product of Labor
+Output per worker, $Y/L$. Also called APL. → [Lec 05](/subjects/principles-of-macro/lectures/lec-05-production-and-growth)
+
+### Capital Dilution
+The fall in capital per worker when the workforce grows and the capital stock does not keep up. → [Lec 06](/subjects/principles-of-macro/lectures/lec-06-the-solow-model-constant-technology)
+
+### Poverty Trap
+A self-reinforcing cycle of low income, low saving and low investment, where $s f(k) < (\delta + n)k$ and capital per worker shrinks. → [Lec 07](/subjects/principles-of-macro/lectures/lec-07-golden-rule-and-poverty-trap)
+
+### Loanable Funds Market
+The market where saving supplies funds and borrowers demand them, with the interest rate as the price. → [Lec 08](/subjects/principles-of-macro/lectures/lec-08-savings-and-investment)
+
+### Bond
+A debt instrument: the issuer borrows and promises coupons plus the face value at maturity. → [Lec 08](/subjects/principles-of-macro/lectures/lec-08-savings-and-investment)
+
+### Present Value
+What a future cash flow is worth today after discounting at the interest rate. Also called PV. → [Lec 08](/subjects/principles-of-macro/lectures/lec-08-savings-and-investment)
+
+### Net Present Value
+The present value of an investment's cash flows minus its initial cost. Also called NPV. → [Lec 08](/subjects/principles-of-macro/lectures/lec-08-savings-and-investment)
+
+### Financial Intermediaries
+Institutions such as banks, funds, insurers and pension funds that connect savers with borrowers. → [Lec 08](/subjects/principles-of-macro/lectures/lec-08-savings-and-investment)
+
+### Balance of Payments
+The record of all of a country's economic transactions with the rest of the world. It always sums to zero. → [Lec 09](/subjects/principles-of-macro/lectures/lec-09-savings-investment-and-international-trade)
+
+### Current Account
+The part of the balance of payments covering goods and services, income flows and unilateral transfers. → [Lec 09](/subjects/principles-of-macro/lectures/lec-09-savings-investment-and-international-trade)
+
+### Capital Account
+The part of the balance of payments covering capital movements and foreign currency reserves. → [Lec 09](/subjects/principles-of-macro/lectures/lec-09-savings-investment-and-international-trade)
+
+### Foreign Exchange Reserves
+The foreign currency held by the economy. An increase is recorded as a debit. → [Lec 09](/subjects/principles-of-macro/lectures/lec-09-savings-investment-and-international-trade)
+
+### Unilateral Transfers
+One-way payments such as gifts, grants and aid, recorded in the current account. → [Lec 09](/subjects/principles-of-macro/lectures/lec-09-savings-investment-and-international-trade)
+
+### Marginal Propensity to Consume
+The share of each extra unit of disposable income that goes to consumption. Also called MPC. → [Lec 10](/subjects/principles-of-macro/lectures/lec-10-key-drivers-of-gdp-uses)
+
+### Marginal Propensity to Save
+The share of each extra unit of disposable income that is saved. Also called MPS. → [Lec 10](/subjects/principles-of-macro/lectures/lec-10-key-drivers-of-gdp-uses)
+
+### Life-Cycle Hypothesis
+Modigliani's theory that people smooth consumption over their lifetime: borrow when young, save in middle age, dissave in retirement. → [Lec 10](/subjects/principles-of-macro/lectures/lec-10-key-drivers-of-gdp-uses)
+
+### Permanent Income Hypothesis
+Friedman's theory that consumption follows long-run expected income, so temporary income changes matter little. → [Lec 10](/subjects/principles-of-macro/lectures/lec-10-key-drivers-of-gdp-uses)
+
+### Malthusian Trap
+The theory that population growth cancels income gains, keeping living standards near subsistence. → [Lec 10](/subjects/principles-of-macro/lectures/lec-10-key-drivers-of-gdp-uses)
+
+### Nominal Exchange Rate
+The price of one currency in terms of another, unadjusted for price levels. → [Lec 10](/subjects/principles-of-macro/lectures/lec-10-key-drivers-of-gdp-uses)
+
+### Real Exchange Rate
+The nominal exchange rate adjusted for relative prices, $e P_f / P_d$. → [Lec 10](/subjects/principles-of-macro/lectures/lec-10-key-drivers-of-gdp-uses)
