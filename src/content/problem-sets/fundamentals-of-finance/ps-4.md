@@ -26,15 +26,15 @@ questions:
     related_terms: ["effective-interest-rate", "stated-rate", "rate-conversion"]
   - id: "2"
     text: |
-      **Fees baked into the effective rate.** A $50k loan has a stated rate of 12% (monthly, so 1% per month), plus a $1,000 upfront fee and a $500 closing fee. Find the effective annual borrowing cost.
+      **Fees baked into the effective rate.** A $50k loan, repaid after 2 months, has a stated rate of 12% (monthly, so 1% per month), plus a $1,000 upfront fee and a $500 closing fee paid at repayment. Find the effective annual borrowing cost.
     solution: |
-      Net received is $49{,}000$ and the amount repaid is $51{,}505$ at month 24. The return over the period is
+      Interest over the two months is $50{,}000(1.01^2 - 1) = 1{,}005$, so the amount repaid at month 2 is $50{,}000 + 1{,}005 + 500 = 51{,}505$. Net received at the start is $49{,}000$. The return over the two months is
 
       $$
       \frac{51{,}505}{49{,}000}-1 = 5.11\%
       $$
 
-      Annualised:
+      A year has six 2-month periods, so annualised:
 
       $$
       (1.0511)^6-1 = \boxed{34.87\%}

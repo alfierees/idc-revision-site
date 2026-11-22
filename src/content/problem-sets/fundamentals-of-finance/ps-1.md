@@ -78,17 +78,17 @@ questions:
     related_terms: ["growing-perpetuity", "perpetuity", "present-value", "discount-rate"]
   - id: "5"
     text: |
-      **Two-stage growing perpetuity.** A cash flow of \$1000 grows at $g_1 = 10\%$ for 5 years, then at $g_2 = 7\%$ forever. The discount rate is $r = 12\%$. Find its present value.
+      **Two-stage growing perpetuity.** A cash flow of \$1000 is paid at $t=1$ and grows at $g_1 = 10\%$ a year for 5 years (up to $t=6$), then at $g_2 = 7\%$ forever. The discount rate is $r = 12\%$. Find its present value.
     solution: |
-      1. PV of years 1–5 (growing annuity) $\approx \$5{,}123.60$.
-      2. Year-6 cash flow $= 1000(1.1)^5(1.07) = \$1{,}723.25$; perpetuity value at $t=5$ $= \frac{1723.25}{0.12-0.07}$, discounted back: $\$17{,}461.00$.
+      1. PV of the six payments at $t=1$ to $t=6$ (growing annuity, from \$1,000 up to \$1,610.51) $\approx \$5{,}123.60$.
+      2. Payment at $t=7$ $= 1000(1.1)^5(1.07) = \$1{,}723.25$; perpetuity value at $t=6$ $= \frac{1723.25}{0.12-0.07} = \$34{,}464.91$, discounted back by $(1.12)^6$: $\$17{,}461.00$.
       3. Total $= \boxed{\$22{,}584.60}$.
 
       > [!warning] The stitch point
-      > The Gordon formula values a growing perpetuity **one period before** its first payment. Here that's $t=5$, so divide by $(1.12)^6$ (six periods) only after using $C_6$ in the numerator. Getting the timing offset wrong is the usual error.
+      > The Gordon formula values a growing perpetuity **one period before** its first payment. The 7% stream starts at $t=7$, so its value sits at $t=6$ and is discounted by $(1.12)^6$. Getting the timing offset wrong is the usual error.
 
-      > [!warning] Check before relying on this
-      > Recomputing gives a different split: the 5-year growing annuity is about $4{,}307.67$, and discounting $\frac{1723.25}{0.05}$ from $t=5$ by $1.12^5$ gives about $19{,}556.32$ (the note's $17{,}461.00$ uses $1.12^6$). The vault's step figures are carried over as written; confirm against the original homework key.
+      > [!note] Where the timing comes from
+      > The homework workbook places the payments at $t=1$ to $t=7$. Its row labels say `PV(t=5)` and `CF(t=6)`, but the cells behind them are $t=1$ to $t=6$ and $t=7$.
     related_terms: ["growing-annuity", "growing-perpetuity", "present-value", "discount-rate"]
 ---
 
