@@ -1,0 +1,17 @@
+{
+  "slug": "micro-i",
+  "title": "Micro-Economics I",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 2/Micro-Economics I",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 2/Micro-Econ I",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Exercises",
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "micro-economics-i",
+    "micro-i",
+    "multiple-choice"
+  ],
+  "notes": "Year 1 Semester 2. Source folder holds six homework sets (HW1-5, HW7) as .docx and one solution PDF (HW2). No lecture decks or past papers on disk. Paths come from the nightly queue row."
+}

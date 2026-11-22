@@ -42,7 +42,7 @@ Index of the prices producers receive for their output, a producer-side measure 
 Rate of change of the general price level over a period, pi = p(t+s)/p(t) - 1. Also in [Ex 04](/subjects/principles-of-macro/problem-sets/exercise-4). Seen in: [Macro-Economics](/subjects/macro-economics). → [[Rec_01-Nominal & Real GDP, Price Indices & GNP|Rec 01]]
 
 ### Gross National Product
-Value of final output produced by a country's residents wherever they produce it, GNP = GDP + NIFF. Also in [[Rec_03-Capital Accumulation, the Savings Identity & GNP vs GDP|Rec 03]]. Seen in: [Macro-Economics](/subjects/macro-economics). → [[Rec_01-Nominal & Real GDP, Price Indices & GNP|Rec 01]]
+Value of final output produced by a country's residents wherever they produce it, GNP = GDP − NIFF, where NIFF is net payments to foreign factors. Also in [[Rec_03-Capital Accumulation, the Savings Identity & GNP vs GDP|Rec 03]]. Seen in: [Macro-Economics](/subjects/macro-economics). → [[Rec_01-Nominal & Real GDP, Price Indices & GNP|Rec 01]]
 
 ## The three approaches & national accounts
 
