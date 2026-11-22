@@ -13,4 +13,4 @@ Total cost is [[Fixed Costs]] plus [[Variable Costs]]. In the bagel table it ris
 
 Build it as the first step of the cost table, then divide by quantity for [[Average Total Cost]] or take its change for [[Marginal Cost]]. In the factory example it is the factory cost plus the worker cost (45 plus 10 per worker).
 
-See [[Lec_01-Production and Costs|Lec 01]].
+See [[Lec_14-Production Costs Worksheet|Lec 14]].

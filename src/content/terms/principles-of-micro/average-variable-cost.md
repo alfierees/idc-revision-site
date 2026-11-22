@@ -13,4 +13,4 @@ Average variable cost is [[Variable Costs]] divided by quantity. It rises throug
 
 Use it as the other half of $ATC = AFC + AVC$. Its rise mirrors [[Diminishing Marginal Product]]: each extra bagel needs more input than the last. Note that the worksheet's definitions block mislabels this row as AFC; it should read AVC.
 
-See [[Lec_01-Production and Costs|Lec 01]].
+See [[Lec_14-Production Costs Worksheet|Lec 14]].

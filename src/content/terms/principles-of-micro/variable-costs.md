@@ -13,4 +13,4 @@ Variable costs are costs that vary with the quantity produced. In the lecture, w
 
 Identify them as the part of cost that rises with output, then add [[Fixed Costs]] to get [[Total Cost]]. Dividing by quantity gives [[Average Variable Cost]].
 
-See [[Lec_01-Production and Costs|Lec 01]].
+See [[Lec_14-Production Costs Worksheet|Lec 14]].

@@ -10,7 +10,15 @@
   "assignmentFiles": [],
   "problemSetSlugPrefix": "ps",
   "mutedTags": [
-    "principles-of-micro"
+    "ambiguity",
+    "demand-and-supply",
+    "demand-recap",
+    "efficiency-vs-equality",
+    "entry-and-exit",
+    "international-trade",
+    "principles-of-micro",
+    "shift-of-curve",
+    "welfare-economics"
   ],
-  "notes": "Year 1 Semester 1. Source has no lecture decks and no question sheets. Home assignments are Alfie's own answers, so assignmentFiles is deliberately empty and nothing is copied to public/papers. The one class worksheet (Production Costs) is the only teaching source."
+  "notes": "Year 1 Semester 1 (Dr. Yael Hadass). Full course ingested on 2026-11-22 from the 2025 Moodle site (course 2500990). The problem-set booklet was split into 13 PDFs, now published in public/papers/principles-of-micro. The downloaded sources were deleted after ingest, so assignmentFiles is empty to keep re-runs from failing. Home assignments are Alfie's own answers and stay out."
 }

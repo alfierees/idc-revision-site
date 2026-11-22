@@ -13,4 +13,4 @@ Each extra worker adds less output than the one before, so output rises at a fal
 
 Spot it by computing the marginal product for each additional worker and checking that it keeps shrinking. A consequence is a rising cost per extra unit of output: worker cost divided by marginal product gives 10/50 = 0.2, then 0.25, 0.33, 0.5 and 1. This is a separate exercise from the bagel table, so those figures are not comparable to its [[Marginal Cost]].
 
-See [[Lec_01-Production and Costs|Lec 01]].
+See [[Lec_14-Production Costs Worksheet|Lec 14]].

@@ -13,4 +13,4 @@ Fixed costs are costs that do not vary with the quantity produced. In the lectur
 
 Identify them as the part of cost that stays constant as output changes, then add [[Variable Costs]] to get [[Total Cost]]. Dividing by quantity gives [[Average Fixed Cost]].
 
-See [[Lec_01-Production and Costs|Lec 01]].
+See [[Lec_14-Production Costs Worksheet|Lec 14]].

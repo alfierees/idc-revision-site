@@ -13,4 +13,4 @@ Average fixed cost is [[Fixed Costs]] divided by quantity, so it falls as output
 
 Use it to split [[Average Total Cost]] into its two parts, since $ATC = AFC + AVC$. The gap between ATC and [[Average Variable Cost]] is exactly AFC, which shrinks as quantity grows. The worksheet's AFC at Q = 7 is mistyped as 0.42; the corrected value is 0.43 (3/7).
 
-See [[Lec_01-Production and Costs|Lec 01]].
+See [[Lec_14-Production Costs Worksheet|Lec 14]].

@@ -1,9 +1,9 @@
 ---
-title: "Lec 01: Production and Costs"
+title: "Lec 14: Production Costs Worksheet"
 semester: 1
 year: 1
 course: "Principles of Micro"
-lecture: 1
+lecture: 14
 tags:
   - principles-of-micro
   - marginal-product-of-labour
@@ -19,7 +19,7 @@ subject: principles-of-micro
 in_scope: true
 ---
 
-# Lec 01: Production and Costs
+# Lec 14: Production Costs Worksheet
 
 > Part of: Principles of Micro
 > Key concepts: [[Marginal Product of Labour]], [[Diminishing Marginal Product]], [[Fixed Costs]], [[Variable Costs]], [[Total Cost]], [[Average Fixed Cost]], [[Average Variable Cost]], [[Average Total Cost]], [[Marginal Cost]]
