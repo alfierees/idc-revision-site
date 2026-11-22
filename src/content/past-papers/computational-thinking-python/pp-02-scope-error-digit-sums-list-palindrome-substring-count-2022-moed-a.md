@@ -208,7 +208,7 @@ pal2 [False, True, True, True, True]
 
 ---
 
-## Item (c) — `count_most_three_substring` (15 pts)
+## Item (c) — Most common 3-letter substring (15 pts)
 
 *Translated question:* Implement the function `count_most_three_substring`, which receives a string (of **unknown** content) and returns the substring of length 3 that appears the most times in it, the one with the largest count. If several have the same count, it does not matter which one is returned.
 

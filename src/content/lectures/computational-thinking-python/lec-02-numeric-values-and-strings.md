@@ -131,7 +131,7 @@ inf
 ```
 
 - `1e309` becomes `inf`, which is still a `float`. Dividing by it gives `0.0`.
-- The slide also shows that a long literal such as `3.14159265358979323846264338327950288` is silently **truncated** to `3.141592653589793` (about 16 significant digits).
+- The slide also shows that a long literal (pi typed to 36 digits) is silently **truncated** to `3.141592653589793` (about 16 significant digits).
 
 ### Rounding errors ("Try" slide)
 

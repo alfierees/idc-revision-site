@@ -441,7 +441,7 @@ print(A ^ B)
 
 (In the slides' example `A.union(B)` and `B.union(A)` give the same set. The set `{6, 7, 8}` is printed in whatever order Python chooses.)
 
-The earlier fruit example in the lecture shows the same idea: `tropical_fruits.intersection(citrus_fruits)` gives `{'Orange'}` because Orange is the only fruit in both, and the union has no duplicate "Orange".
+The earlier fruit example in the lecture shows the same idea: calling `.intersection()` on `tropical_fruits` with `citrus_fruits` gives `{'Orange'}` because Orange is the only fruit in both, and the union has no duplicate "Orange".
 
 > [!note] In-place and test methods
 > - `difference_update`, `intersection_update`, `symmetric_difference_update` change the set itself instead of returning a new one.

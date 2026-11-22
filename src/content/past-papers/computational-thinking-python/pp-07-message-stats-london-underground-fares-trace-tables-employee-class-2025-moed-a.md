@@ -483,7 +483,7 @@ Output (run; the trailing space comes from `end=" "`):
 > [!tip] Intuition
 > The function prints the first `n` Fibonacci numbers: two are printed up front and `n-2` are produced by the loop. That is why the range is `n-2`, not `n`.
 
-## Q4: `process_string("aabbbcc")` (15 pts)
+## Q4: Tracing `process_string` (15 pts)
 
 **Question.** Run the given code and complete the trace table (columns `i`, `text[i]`, `text[i+1]`, `count`, `result`), write the printed output, and describe in a single sentence what the function does.
 
