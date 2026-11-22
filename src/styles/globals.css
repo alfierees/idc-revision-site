@@ -89,7 +89,11 @@
     border-radius: 2px;
   }
 
-  .katex { font-size: 1.05em; }
+  /* Maths keeps the case the author wrote. Callout titles, section labels and
+     other small-caps-style headings set text-transform: uppercase, which KaTeX
+     inherits: \rho became P, \beta became B, \text{} words were shouted.
+     Their wide letter-spacing also pulled formulas apart. */
+  .katex { font-size: 1.05em; text-transform: none; letter-spacing: normal; }
   /* --math-fit (0.66–1) is set by src/lib/fit-display-math.ts on formulas wider
      than their box; KaTeX sizes everything in em, so this scales the lot. */
   .katex-display { margin: 1.25rem 0; font-size: calc(var(--math-fit, 1) * 1em); }
