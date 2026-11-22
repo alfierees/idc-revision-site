@@ -67,6 +67,23 @@ import SeparateTariffs from "./SeparateTariffs";
 import TariffPriceVsA from "./TariffPriceVsA";
 
 // Maps a ```graph fenced block's `type:` to its component. Add new graphs here.
+// maths A (calculus) explainers
+import CalcFunctionFamily from "./CalcFunctionFamily";
+import CalcTransformations from "./CalcTransformations";
+import CalcLimitApproach from "./CalcLimitApproach";
+import CalcContinuityJoin from "./CalcContinuityJoin";
+import CalcAsymptotes from "./CalcAsymptotes";
+import CalcEulerLimit from "./CalcEulerLimit";
+import CalcTangentSlope from "./CalcTangentSlope";
+import CalcDerivativeGraph from "./CalcDerivativeGraph";
+import CalcDifferentiability from "./CalcDifferentiability";
+import CalcMarginalCost from "./CalcMarginalCost";
+import CalcExtrema from "./CalcExtrema";
+import CalcConcavity from "./CalcConcavity";
+import CalcOptimisation from "./CalcOptimisation";
+import CalcRiemann from "./CalcRiemann";
+import CalcAccumulation from "./CalcAccumulation";
+
 export const GRAPHS: Record<string, ComponentType<any>> = {
   "two-part-tariff": TwoPartTariff,
   "monopoly-cs-dwl": MonopolyCsDwl,
@@ -135,6 +152,22 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "coffee-monopoly": CoffeeMonopoly,
   "separate-tariffs": SeparateTariffs,
   "tariff-price-vs-a": TariffPriceVsA,
+  // maths A (calculus) explainers
+  "calc-function-family": CalcFunctionFamily,
+  "calc-transformations": CalcTransformations,
+  "calc-limit-approach": CalcLimitApproach,
+  "calc-continuity-join": CalcContinuityJoin,
+  "calc-asymptotes": CalcAsymptotes,
+  "calc-euler-limit": CalcEulerLimit,
+  "calc-tangent-slope": CalcTangentSlope,
+  "calc-derivative-graph": CalcDerivativeGraph,
+  "calc-differentiability": CalcDifferentiability,
+  "calc-marginal-cost": CalcMarginalCost,
+  "calc-extrema": CalcExtrema,
+  "calc-concavity": CalcConcavity,
+  "calc-optimisation": CalcOptimisation,
+  "calc-riemann": CalcRiemann,
+  "calc-accumulation": CalcAccumulation,
 };
 
 // Every registered type, for the /dev/graphs gallery.
