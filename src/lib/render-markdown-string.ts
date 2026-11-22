@@ -3,6 +3,7 @@ import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { remarkCalloutsLocal } from "./remark-callouts";
+import { remarkLineDisplayMath } from "./remark-line-display-math";
 import remarkRehype from "remark-rehype";
 import type { Root, Element } from "hast";
 import { toString as hastToString } from "hast-util-to-string";
@@ -269,6 +270,7 @@ const processor = unified()
   .use(remarkGfm)
   .use(remarkMath)
   .use(remarkCalloutsLocal)
+  .use(remarkLineDisplayMath)
   .use(remarkObsidianHighlights)
   .use(wikiLinkPlugin, {
     pageResolver: (n: string) => {
