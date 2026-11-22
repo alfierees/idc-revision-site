@@ -1,0 +1,14 @@
+---
+title: "IDEO"
+subject: entrepreneurship
+aliases: []
+related: []
+source_folder: entrepreneurship
+ai_drafted: true
+---
+
+Global design consultancy that pioneered and popularised design thinking (Kelley = founder, Brown = CEO).
+
+## When to use
+
+Use this when structuring a user-centered innovation process or testing whether a solution is worth pursuing. Covered in [[Lec_09-Practical Innovation 1|Lec 09]].

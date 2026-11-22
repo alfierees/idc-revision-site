@@ -66,6 +66,20 @@ import CoffeeMonopoly from "./CoffeeMonopoly";
 import SeparateTariffs from "./SeparateTariffs";
 import TariffPriceVsA from "./TariffPriceVsA";
 
+// maths B explainers
+import MathsBGlobalExtrema from "./MathsBGlobalExtrema";
+import MathsBFenceOptimum from "./MathsBFenceOptimum";
+import MathsBLogInverse from "./MathsBLogInverse";
+import MathsBImplicitCircle from "./MathsBImplicitCircle";
+import MathsBContourMap from "./MathsBContourMap";
+import MathsBPartialSlice from "./MathsBPartialSlice";
+import MathsBDifferential from "./MathsBDifferential";
+import MathsBCriticalTypes from "./MathsBCriticalTypes";
+import MathsBLagrange from "./MathsBLagrange";
+import MathsBLinearSystems from "./MathsBLinearSystems";
+import MathsBRowReduction from "./MathsBRowReduction";
+import MathsBParameterSystem from "./MathsBParameterSystem";
+
 // Maps a ```graph fenced block's `type:` to its component. Add new graphs here.
 // maths A (calculus) explainers
 import CalcFunctionFamily from "./CalcFunctionFamily";
@@ -168,6 +182,19 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "calc-optimisation": CalcOptimisation,
   "calc-riemann": CalcRiemann,
   "calc-accumulation": CalcAccumulation,
+  // maths B explainers
+  "mathsb-global-extrema": MathsBGlobalExtrema,
+  "mathsb-fence-optimum": MathsBFenceOptimum,
+  "mathsb-log-inverse": MathsBLogInverse,
+  "mathsb-implicit-circle": MathsBImplicitCircle,
+  "mathsb-contour-map": MathsBContourMap,
+  "mathsb-partial-slice": MathsBPartialSlice,
+  "mathsb-differential": MathsBDifferential,
+  "mathsb-critical-types": MathsBCriticalTypes,
+  "mathsb-lagrange": MathsBLagrange,
+  "mathsb-linear-systems": MathsBLinearSystems,
+  "mathsb-row-reduction": MathsBRowReduction,
+  "mathsb-parameter-system": MathsBParameterSystem,
 };
 
 // Every registered type, for the /dev/graphs gallery.

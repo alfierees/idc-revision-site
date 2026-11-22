@@ -1,7 +1,7 @@
 ---
 title: Utility Function
 subject: micro-i
-aliases: []
+aliases: ["Utility"]
 related: [Preferences, Ordinal Utility]
 source_folder: micro-i
 ai_drafted: true
