@@ -1,6 +1,7 @@
 ---
 title: "PS3"
 subject: databases-sql
+source_doc: /papers/databases-sql/ps-3.pdf
 tags:
   - databases-sql
   - sakila
@@ -15,9 +16,10 @@ ai_drafted: true
 questions:
   - id: "1"
     text: |
-      > [!note] Question reconstructed from the student submission (no question sheet in the source).
+      **Top Long Films.** Find the top 5 longest films that are frequently rented at a premium price. Only include films that have a length greater than 120 minutes. Display the film title and the average rental rate. Only include films whose average rental rate is greater than 3.5. Order the results in descending order by average rental rate.
 
-      Write a query that returns the title and average rental rate of films longer than 120 minutes whose average rental rate is above 3.5, ordered by average rental rate from highest to lowest, limited to 5 rows.
+      > [!warning] Ambiguous wording in the official sheet
+      > The sheet says "longest" and "frequently rented" but gives no threshold for frequency and orders by rate, not length. The student query follows the explicit filters and sort.
     solution: |
       > [!warning] Student answer, not official. Check before relying on it.
 
@@ -67,9 +69,7 @@ questions:
     related_terms: ["inner-join", "group-by", "having", "aggregate-function", "avg", "where", "order-by", "limit", "alias"]
   - id: "2"
     text: |
-      > [!note] Question reconstructed from the student submission (no question sheet in the source).
-
-      Write a query that returns each city and the total amount paid by its residents, ordered by that total from highest to lowest, limited to 5 rows.
+      **High-Spending Cities.** List the top 5 cities whose residents have paid the highest total rental amount. Display the city name and the total amount paid. (Hint: Use the payment, customer, address, and city tables)
     solution: |
       > [!warning] Student answer, not official. Check before relying on it.
 
@@ -110,13 +110,11 @@ questions:
       > To aggregate by something the fact table does not contain (here the city), join outward along the foreign keys until the grouping column is in reach, then `GROUP BY` it.
 
       > [!warning] Check
-      > The query is valid against the schema and answers the reconstructed question. The five totals shown are all different, so the displayed order is unambiguous. Whether a sixth city ties with 194.61 cannot be seen from the PDF. The PDF headers read `city` and `total_amou...`, from an earlier version of the aliases; values and logic are the same.
+      > The query is valid against the schema and answers the question. The five totals shown are all different, so the displayed order is unambiguous. Whether a sixth city ties with 194.61 cannot be seen from the PDF. The PDF headers read `city` and `total_amou...`, from an earlier version of the aliases; values and logic are the same.
     related_terms: ["inner-join", "group-by", "sum", "aggregate-function", "foreign-key", "order-by", "limit", "alias"]
   - id: "3"
     text: |
-      > [!note] Question reconstructed from the student submission (no question sheet in the source).
-
-      Write a query that returns each film and the number of distinct customers who rented it, ordered by that number from highest to lowest, limited to 5 rows.
+      **Most Popular Films by Unique Customers.** List the top 5 films that have been rented by the largest number of distinct customers. Display the film title and the number of unique customers who rented it.
     solution: |
       > [!warning] Student answer, not official. Check before relying on it.
 
@@ -157,9 +155,10 @@ questions:
     related_terms: ["inner-join", "group-by", "count", "distinct", "count-vs-count-column", "aggregate-function", "order-by", "limit"]
   - id: "4"
     text: |
-      > [!note] Question reconstructed from the student submission (no question sheet in the source).
+      **Top Languages by Rental Rate.** List all staff members and how many rentals they have processed. Display the staff member's full name, store ID, and number of rentals. Order the results by number of rentals, descending.
 
-      Write a query that returns each staff member's full name, their store, and the number of rentals they processed, ordered by that number from highest to lowest.
+      > [!warning] Mismatched heading in the official sheet
+      > The heading says "Top Languages by Rental Rate", but the task is about staff and rentals. The task text is what the answer follows.
     solution: |
       > [!warning] Student answer, not official. Check before relying on it.
 
