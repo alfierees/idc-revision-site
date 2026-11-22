@@ -11,7 +11,8 @@
   "mutedTags": [
     "micro-economics-i",
     "micro-i",
-    "multiple-choice"
+    "multiple-choice",
+    "lecture"
   ],
-  "notes": "Year 1 Semester 2. Source folder holds six homework sets (HW1-5, HW7) as .docx and one solution PDF (HW2). No lecture decks or past papers on disk. Paths come from the nightly queue row."
+  "notes": "Year 1 Semester 2. Lectures, past papers, PS_06 and PS_08 came from a Moodle gap fill on 2026-11-22 and live as vault notes; their source files are not kept on disk, so only HW1-5 and HW7 are scanned from Exercises."
 }
