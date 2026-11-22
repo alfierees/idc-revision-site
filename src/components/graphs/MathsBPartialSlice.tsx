@@ -1,7 +1,7 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
 import { useSketch, useGlide, SketchGraph, SketchAxes, InkCurve, InkLine, Note, Dot, Presets, curvePoints, fmt, clamp, ACCENT, MARKER } from "./sketch";
-import { contourPath } from "./MathsBShared";
+import { contourPath, makeEqualScale } from "./MathsBShared";
 
 // Lessons 5 and 6: a partial derivative is an ordinary slope on a slice of the
 // surface. Hold y fixed, and z = x² + y² becomes a parabola in x whose tangent
@@ -29,6 +29,7 @@ export default function MathsBPartialSlice(): VNode {
   });
   const { show, drawNow, step, dragging } = sketch;
   const [mapFrame, sliceFrame] = sketch.frames;
+  makeEqualScale(mapFrame);
   const { fixedY, pointX } = useGlide({ fixedY: step === 4 ? exploreY : 1, pointX: step === 4 ? exploreX : 1 }, dragging !== null);
   const pointZ = surface(pointX, fixedY), slope = 2 * pointX;
   const contourPaths = useMemo(() => LEVELS.map((level) => contourPath(mapFrame, surface, level)), [sketch.width, sketch.height]);

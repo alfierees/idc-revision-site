@@ -49,7 +49,7 @@ export default function MathsBDifferential(): VNode {
     <InkLine x1={left} y1={bottom} x2={baseRight} y2={bottom} id="bottom" color={INK} width={1.8} />,
     <InkLine x1={left} y1={bottom} x2={left} y2={baseTop} id="left" color={INK} width={1.8} />,
     <Note x={(left + baseRight) / 2} y={(baseTop + bottom) / 2 + 6} text="z = xy = 24" color={INK} anchor="middle" size={20} />,
-    <Note x={(left + baseRight) / 2} y={bottom + 2} text="x = 6" color={INK} anchor="middle" size={16} />,
+    <Note x={(left + baseRight) / 2} y={bottom - 8} text="x = 6" color={INK} anchor="middle" size={16} />,
     <Note x={left + 5} y={(baseTop + bottom) / 2 - 22} text="y = 4" color={INK} size={16} />,
   ];
   if (show(1) && scale > 0.01) {

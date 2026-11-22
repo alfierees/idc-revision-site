@@ -50,7 +50,7 @@ export default function MathsBParameterSystem(): VNode {
     ? `a = ${fmt(parameter)}:\\quad 0 = ${parameter === 1 ? 2 : 1} \\;\\Rightarrow\\; \\text{no solution}`
     : `a = ${fmt(parameter, 1)}:\\quad (x, y, z) = (${fmt(solution!.x, 2)},\\ ${fmt(solution!.y, 2)},\\ ${fmt(solution!.z, 2)})`;
   const TEX = [
-    "\\text{no solution? unique? infinitely many?}",
+    "\\text{none, one or infinitely many?}",
     "R_2 \\to R_2 - R_1,\\quad R_3 \\to R_3 - 2R_1",
     "R_3 \\to R_3 - R_2:\\quad \\text{pivots } a,\\ a,\\ a-1",
     outcomeTex, outcomeTex, outcomeTex, outcomeTex,

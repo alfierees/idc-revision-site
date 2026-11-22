@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
 import { useSketch, useGlide, SketchGraph, SketchAxes, InkCurve, InkDashed, Note, Dot, Arrow, Presets, curvePoints, fmt, INK_MUTED, ACCENT, MARKER } from "./sketch";
+import { makeEqualScale } from "./MathsBShared";
 
 // Lesson 2: the logarithm is the inverse of the exponential, so its graph is
 // the exponential's graph reflected across the line y = x.
@@ -22,6 +23,7 @@ export default function MathsBLogInverse(): VNode {
   });
   const { show, drawNow, step } = sketch;
   const frame = sketch.frames[0];
+  makeEqualScale(frame);
   const { base } = useGlide({ base: step === 4 ? exploreBase : 2 }, false);
   const exponential = (x: number) => base ** x;
   const logarithm = (x: number) => Math.log(x) / Math.log(base);

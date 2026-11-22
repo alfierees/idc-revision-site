@@ -50,7 +50,7 @@ export default function MathsBLinearSystems(): VNode {
       {step === 0 && <Dot x={frame.x(6)} y={frame.y(-1)} color={ACCENT} radius={6} />}
       {step === 0 && <Ring x={frame.x(6)} y={frame.y(-1)} id="crossing" color={ACCENT} radius={14} />}
       {step === 0 && <Note x={frame.x(6) + 16} y={frame.y(-1) + 6} text="(6, −1)" color={ACCENT} size={18} />}
-      <Note x={frame.left + 8} y={frame.top + 14} text={step === 0 ? "one solution" : coincide ? "infinitely many solutions" : "no solution"} color={step === 0 ? ACCENT : coincide ? MARKER.green : MARKER.red} size={20} />
+      <Note x={frame.x(4.6)} y={frame.top + 14} text={step === 0 ? "one solution" : coincide ? "infinitely many solutions" : "no solution"} color={step === 0 ? ACCENT : coincide ? MARKER.green : MARKER.red} anchor="middle" size={20} />
     </SketchGraph>
   );
 }

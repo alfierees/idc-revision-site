@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks";
 import type { VNode } from "preact";
 import { useSketch, useGlide, SketchGraph, SketchAxes, InkCurve, InkLine, InkDashed, Note, Dot, Presets, fmt, ACCENT, INK, MARKER } from "./sketch";
+import { makeEqualScale } from "./MathsBShared";
 
 // Lesson 4: implicit differentiation on x² + y² = 25. The circle is not a
 // function of x, yet every point has a slope, y′ = −x/y.
@@ -27,6 +28,7 @@ export default function MathsBImplicitCircle(): VNode {
   });
   const { show, drawNow, step, dragging } = sketch;
   const frame = sketch.frames[0];
+  makeEqualScale(frame);
   const targetAngle = step === 3 ? LOWER_ANGLE : step === 5 ? exploreAngle : UPPER_ANGLE;
   const { angle } = useGlide({ angle: targetAngle }, dragging !== null);
   const pointX = RADIUS * Math.cos(angle), pointY = RADIUS * Math.sin(angle);

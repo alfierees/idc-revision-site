@@ -14,7 +14,14 @@
     "past-paper-practice",
     "lecture-notes",
     "lecture",
-    "recap"
+    "recap",
+    "asymptotes",
+    "limits",
+    "differentiation",
+    "n-variable-functions",
+    "profit-maximisation",
+    "multivariable-calculus",
+    "linear-algebra"
   ],
   "notes": "Year 1 Semester 2 (Moodle 2025 course 2502497, Mathematics II for Economics, Hever Schulberg). Source files are downloaded for the ingest and removed afterwards: lesson frameworks in Lectures, exercises in Problem sets, exams with handwritten solutions and the formula sheet in Past papers."
 }

@@ -6,6 +6,29 @@ import { INK, INK_SOFT, ACCENT, WASH, fmt, type Frame } from "./sketch";
 
 type SurfaceFunction = (dataX: number, dataY: number) => number;
 
+// Gives a frame the same scale on both axes, so circles stay round and right
+// angles look right. The pixel box is unchanged: the shorter data range widens,
+// around its centre, or upward when the axis starts at zero. Mutates the frame
+// so the sketch's drag handles use the same mapping.
+export function makeEqualScale(frame: Frame): void {
+  const pixelWidth = frame.right - frame.left, pixelHeight = frame.bottom - frame.top;
+  const unitsPerPixel = Math.max((frame.xMax - frame.xMin) / pixelWidth, (frame.yMax - frame.yMin) / pixelHeight);
+  const widen = (low: number, high: number, span: number): [number, number] => {
+    if (low >= 0) return [low, low + span];
+    const middle = (low + high) / 2;
+    return [middle - span / 2, middle + span / 2];
+  };
+  const [xMin, xMax] = widen(frame.xMin, frame.xMax, unitsPerPixel * pixelWidth);
+  const [yMin, yMax] = widen(frame.yMin, frame.yMax, unitsPerPixel * pixelHeight);
+  Object.assign(frame, {
+    xMin, xMax, yMin, yMax,
+    x: (dataX: number) => frame.left + (dataX - xMin) / unitsPerPixel,
+    y: (dataY: number) => frame.bottom - (dataY - yMin) / unitsPerPixel,
+    dataX: (pixelX: number) => xMin + (pixelX - frame.left) * unitsPerPixel,
+    dataY: (pixelY: number) => yMin + (frame.bottom - pixelY) * unitsPerPixel,
+  });
+}
+
 // SVG path of the curve f(x, y) = level across the whole frame.
 export function contourPath(frame: Frame, surface: SurfaceFunction, level: number, cells = 72): string {
   const cellWidth = (frame.xMax - frame.xMin) / cells, cellHeight = (frame.yMax - frame.yMin) / cells;

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
 import { useSketch, useGlide, SketchGraph, SketchAxes, InkLine, Note, Dot, Ring, ShiftArrow, Presets, fmt, clamp, ACCENT, MARKER } from "./sketch";
-import { contourPath } from "./MathsBShared";
+import { contourPath, makeEqualScale } from "./MathsBShared";
 
 // Lessons 8 and 9: Lagrange multipliers. Maximise f = xy on the line x + y = k.
 // At the best point a level curve just touches the constraint, so the two
@@ -30,6 +30,7 @@ export default function MathsBLagrange(): VNode {
   });
   const { show, drawNow, step, dragging } = sketch;
   const frame = sketch.frames[0];
+  makeEqualScale(frame);
   const targetBudget = step === 4 ? 9 : step === 5 ? exploreBudget : 8;
   const targetX = step === 2 ? 2 : step === 4 ? 4.5 : step === 5 ? clamp(exploreX, 0.4, exploreBudget - 0.4) : 4;
   const { budget, pointX } = useGlide({ budget: targetBudget, pointX: targetX }, dragging !== null);

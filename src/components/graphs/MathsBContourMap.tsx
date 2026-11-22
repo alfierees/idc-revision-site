@@ -1,7 +1,7 @@
 import { useMemo, useState } from "preact/hooks";
 import type { VNode } from "preact";
 import { useSketch, SketchGraph, SketchAxes, Note, Toggle, Slider, fmt, ACCENT, INK_MUTED, MARKER } from "./sketch";
-import { contourPath } from "./MathsBShared";
+import { contourPath, makeEqualScale } from "./MathsBShared";
 
 // Lessons 4 and 5: a surface z = f(x, y) read from above. Cutting it with the
 // plane z = c gives a level curve; for a utility function that curve is an
@@ -31,6 +31,7 @@ export default function MathsBContourMap({ mode = "bowl" }: { mode?: string }): 
   });
   const { show, step } = sketch;
   const frame = sketch.frames[0];
+  makeEqualScale(frame);
   const firstLevel = config.levels[2], secondLevel = config.levels[3];
   const activeLevel = step === 3 ? exploreLevel : step === 1 ? secondLevel : firstLevel;
   const sizeKey = `${surfaceKey}-${sketch.width}-${sketch.height}`;
