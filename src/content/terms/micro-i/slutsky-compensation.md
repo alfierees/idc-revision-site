@@ -1,7 +1,7 @@
 ---
 title: Slutsky Compensation
 subject: micro-i
-aliases: [Slutzky Compensation]
+aliases: [Slutzky Compensation, "Slutsky Equation"]
 related: [Substitution Effect, Income Effect]
 source_folder: micro-i
 ai_drafted: true

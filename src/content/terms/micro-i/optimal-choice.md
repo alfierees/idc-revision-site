@@ -1,7 +1,7 @@
 ---
 title: Optimal Choice
 subject: micro-i
-aliases: []
+aliases: ["Consumer Choice"]
 related: [Budget Constraint, Utility Maximisation]
 source_folder: micro-i
 ai_drafted: true
