@@ -29,6 +29,8 @@ import LaborMarket from "./LaborMarket";
 import MacroShocks from "./MacroShocks";
 import ConsumptionChoice from "./ConsumptionChoice";
 import ProductionCapital from "./ProductionCapital";
+import SolowModel from "./SolowModel";
+import LoanableFunds from "./LoanableFunds";
 // econometrics sketch explainers
 import DiffInDiff from "./DiffInDiff";
 import ParallelTrends from "./ParallelTrends";
@@ -130,6 +132,8 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "macro-shocks": MacroShocks,
   "consumption-choice": ConsumptionChoice,
   "production-capital": ProductionCapital,
+  "solow-model": SolowModel,
+  "loanable-funds": LoanableFunds,
   // econometrics sketch explainers
   "diff-in-diff": DiffInDiff,
   "parallel-trends": ParallelTrends,
