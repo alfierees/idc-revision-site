@@ -1,0 +1,18 @@
+{
+  "slug": "statistics-a",
+  "title": "Statistics A",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 1/Statistics A",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 1/Statistics A",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Problem sets",
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "statistics-a",
+    "exam-prep",
+    "exam-structure",
+    "past-paper-practice"
+  ],
+  "notes": "Year 1 Semester 1 (Moodle 2025 course 2500973, Statistics I for Economics). Source files are downloaded for the ingest and removed afterwards: class decks in Lectures, exercises in Problem sets, official solutions in Assignment solutions, handouts and the Z table in Handouts, past exams and the formula sheet in Past papers. Recitations and tutorials are out of scope."
+}

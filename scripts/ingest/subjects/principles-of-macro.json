@@ -16,7 +16,9 @@
     "macro-economics-intro",
     "reading",
     "formula-sheet",
-    "marginal-product"
+    "marginal-product",
+    "class-slides",
+    "past-paper"
   ],
-  "notes": "Year 1 Semester 2 (Intro Macro, Yosi Ganel, 2024-25). Source and vault paths set by the nightly queue (folder names don't match the title). The source folder has recitation decks only (no lecture decks, no past papers); the vault's teaching notes are Rec_NN in Recitations/, so lecturesDir points there. The one exercise PDF sits loose in the course root, so it's listed in assignmentFiles. MAcro project.pdf / Macro-project - Google Docs.html are a student group project and stay out."
+  "notes": "Year 1 Semester 2 (Intro Macro, Yosi Ganel, 2024-25). Source and vault paths set by the nightly queue (folder names don't match the title). the vault's teaching notes are Rec_NN in Recitations/, so lecturesDir points there. The one exercise PDF sits loose in the course root, so it's listed in assignmentFiles. MAcro project.pdf / Macro-project - Google Docs.html are a student group project and stay out. 2026-11-22: lectures, home exercises 1-3 and 5-9, Moed A/B and the practice and sample exams were added from the 2025 Moodle (course 2502521). Those files were written directly to the content folders, and their downloads were deleted, so they are not listed here. Their vault notes are in Lectures/."
 }

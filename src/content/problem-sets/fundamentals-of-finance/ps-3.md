@@ -99,13 +99,13 @@ questions:
       When does a 15% cost cut to project M still beat J?
     solution: |
       > [!example] Solve for the horizon
-      > M's cash flow falls to $8{,}500. We need M's value to stay above J's EAV of $5{,}340. Solving
+      > M's cash flow falls to 8,500. We need M's value to stay above J's EAV of 5,340. Solving
       >
       > $$
-      > 10{,}000 \times 0.85^{t} < 5{,}340
+      > 10{,}000 \times 0.85^{t} > 5{,}340
       > $$
       >
-      > gives $t < 3.86$. The cut keeps M competitive only for a few years.
+      > gives $t < 3.86$ (dividing by $\ln 0.85$, which is negative, flips the inequality). The cut keeps M competitive only for a few years.
     related_terms: ["equivalent-annual-cost", "net-present-value"]
 ---
 

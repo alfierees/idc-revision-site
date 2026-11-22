@@ -11,7 +11,9 @@
   "mutedTags": [
     "databases-sql",
     "reading",
-    "sql-basics"
+    "sql-basics",
+    "lecture",
+    "class-slides"
   ],
-  "notes": "Year 2 Semester 1. No lecture slides locally (Moodle-only), so no lecture notes yet. The source has four assignment folders at its root ('Assigmnet 1' (sic), 'Assignment 2'..'Assignment 4') that also hold student submissions named by ID number. assignmentsDir deliberately points at a folder that does not exist, so cli.ts never copies a submission into public/papers; the official assignment PDFs are copied to public/papers/databases-sql/ps-N.pdf by hand and the site PS pages are drafted from the vault Problem Sets notes."
+  "notes": "Year 2 Semester 1. Lecture notes were written from the 13 Moodle decks on 2026-11-22. The source has four assignment folders at its root ('Assigmnet 1' (sic), 'Assignment 2'..'Assignment 4') that also hold student submissions named by ID number. assignmentsDir deliberately points at a folder that does not exist, so cli.ts never copies a submission into public/papers; the official assignment PDFs are copied to public/papers/databases-sql/ps-N.pdf by hand and the site PS pages are drafted from the vault Problem Sets notes."
 }

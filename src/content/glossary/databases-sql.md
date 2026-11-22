@@ -528,3 +528,98 @@ See [[#Keyword]].
 
 ### Sakila
 See [[#Sakila Database]].
+
+---
+
+## Concepts added from the lecture slides
+
+### Physical Model
+The ER model as implemented in one specific product, with data types, constraints, indexes and storage details. → [[Lec_02-Conceptual Entity-Relationship Modeling|Lec 02]]
+
+### Min-Max Notation
+Cardinality written as minimum..maximum next to each entity, such as 1..1 or 0..M. → [[Lec_02-Conceptual Entity-Relationship Modeling|Lec 02]]
+
+### Crow's Foot Notation
+An ERD notation that shows cardinality with line-end symbols: a circle for zero, a bar for one and a three-pronged foot for many. → [[Lec_02-Conceptual Entity-Relationship Modeling|Lec 02]]
+
+### Data Inheritance
+An "is a" 1-to-1 relationship where a child entity inherits the parent's attributes; at the logical level the child's PK is also an FK to the parent. → [[Lec_03-From Conceptual to Logical Models|Lec 03]]
+
+### Recursive Relationship
+A relationship between an entity type and itself, implemented with a self-referencing foreign key. → [[Lec_03-From Conceptual to Logical Models|Lec 03]]
+
+### Identifying Relationship
+The relationship between a weak entity and its parent, drawn as a double rhombus. → [[Lec_03-From Conceptual to Logical Models|Lec 03]]
+
+### Natural Key
+A primary key based on real data, such as a username or SSN; it is tightly coupled to the business domain. → [[Lec_03-From Conceptual to Logical Models|Lec 03]]
+
+### Redundancy
+Storing the same fact in more than one place, which wastes space and risks inconsistent copies. → [[Lec_05-Normalization & SQL Syntax|Lec 05]]
+
+### Insert Anomaly
+Being unable to insert a row because an unrelated field has no value yet. → [[Lec_05-Normalization & SQL Syntax|Lec 05]]
+
+### Update Anomaly
+Updating a value in one row but missing another copy of it elsewhere, leaving the data inconsistent. → [[Lec_05-Normalization & SQL Syntax|Lec 05]]
+
+### Delete Anomaly
+Deleting a row and accidentally losing other important information stored in it. → [[Lec_05-Normalization & SQL Syntax|Lec 05]]
+
+### Reserved Word
+A keyword such as SELECT or DISTINCT that can be used as an identifier only when quoted with backticks. → [[Lec_05-Normalization & SQL Syntax|Lec 05]]
+
+### Literal Value
+A piece of data written directly in a SQL command, such as 'Tom' or 42. → [[Lec_05-Normalization & SQL Syntax|Lec 05]]
+
+### DECIMAL
+An exact fixed-point number type declared as DECIMAL(precision, scale). → [[Lec_08-Constraints & Data Types|Lec 08]]
+
+### FLOAT
+A 32-bit floating-point type that stores approximate values; DOUBLE is the 64-bit version. → [[Lec_08-Constraints & Data Types|Lec 08]]
+
+### ENUM
+A string type limited to a closed list of allowed values. → [[Lec_08-Constraints & Data Types|Lec 08]]
+
+### VARCHAR
+A variable-length string type, declared with a maximum length, such as VARCHAR(64). → [[Lec_08-Constraints & Data Types|Lec 08]]
+
+### BLOB
+A Binary Large OBject type for binary data such as pictures and video. → [[Lec_08-Constraints & Data Types|Lec 08]]
+
+### TIMESTAMP
+A date-and-time type converted to UTC on storage and back on read, with a range ending in January 2038. → [[Lec_08-Constraints & Data Types|Lec 08]]
+
+### USING
+A shortcut for ON when the joined column has the same name in both tables; the column then appears once in the result. → [[Lec_11-Nested Subqueries, INSERT, UPDATE & DELETE|Lec 11]]
+
+### Safe Update Mode
+A MySQL setting that only allows UPDATE and DELETE to change data by key, preventing accidental mass changes. → [[Lec_11-Nested Subqueries, INSERT, UPDATE & DELETE|Lec 11]]
+
+### ETL
+The automated process of loading data into a database from outside sources; doing the same thing manually is called importing. → [[Lec_11-Nested Subqueries, INSERT, UPDATE & DELETE|Lec 11]]
+
+### WITH ROLLUP
+A GROUP BY modifier that adds sub-total rows for each group plus a grand total. → [[Lec_12-WITH ROLLUP, CTEs & Indexes|Lec 12]]
+
+### GROUPING
+A function that returns 1 for rollup rows and 0 for regular rows. → [[Lec_12-WITH ROLLUP, CTEs & Indexes|Lec 12]]
+
+### Recursive CTE
+A common table expression joined with itself, built from a base case and a recursive step combined with UNION ALL. → [[Lec_12-WITH ROLLUP, CTEs & Indexes|Lec 12]]
+
+### Full Table Scan
+Reading a table from start to finish to answer a query instead of using an index. → [[Lec_12-WITH ROLLUP, CTEs & Indexes|Lec 12]]
+
+### Updatable View
+A view whose rows map 1-to-1 to rows of the underlying table, so INSERT, UPDATE and DELETE through it change the real table. → [[Lec_13-Indexes, Views & NoSQL|Lec 13]]
+
+### NoSQL
+An umbrella term for database paradigms not based on relational theory, including document, columnar, graph, object and time-series databases. → [[Lec_13-Indexes, Views & NoSQL|Lec 13]]
+
+### Document Database
+A database that stores key-value documents in collections, with no fixed table schema. → [[Lec_13-Indexes, Views & NoSQL|Lec 13]]
+
+### MongoDB
+A document database with collections instead of tables and its own query language instead of SQL. → [[Lec_13-Indexes, Views & NoSQL|Lec 13]]
+

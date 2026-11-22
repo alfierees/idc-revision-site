@@ -1,0 +1,17 @@
+{
+  "slug": "intro-to-r",
+  "title": "Intro to R",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 2/Intro to R",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 2/Intro to R",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentFiles": [],
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "intro-to-r",
+    "r-basics",
+    "lecture"
+  ],
+  "notes": "Year 1 Semester 2. Lec 01-03 come from three class scripts. Lec 00 and Lec 04-11 and both past papers were written from Moodle course 2502614 on 2026-11-22; those downloads were temporary and are not a source path. assignmentFiles is deliberately empty so nothing is copied to public/papers (the exam guidelines contain a lecturer's personal phone number). The sibling folder 'R programmes' holds Alfie's own exercise and final assignment scripts: they are not ingested or moved."
+}
