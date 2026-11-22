@@ -200,8 +200,8 @@ Which BEST describes the substantive sense of the "rule of law"?
 > - **D** is a purely formal, content-blind view.
 > - **B** and **C** are the formal requirements in the standard theory.
 
-> [!warning] The lecture labels this the other way round
-> [[Lec_01-Introduction & the Israeli Legal System]] ("The Rule of Law") puts enforcement and equality under **Formal** and publication, clarity and non-retroactivity under **Substantive**. Read literally, that would make **B** or **C** the lecture's "substantive" answer. The key (A) matches the standard textbook meaning, so **keep A**, but if your exam follows the slide table, expect a different mapping. Check with the lecturer's slides.
+> [!warning] The course slides label this the other way round
+> Checked against the lecturer's own slide (Session 1, slide 38, "Rule of Law"): it puts publication, clarity and non-retroactivity under **substantive** and enforcement and equality under **formal**, and [[Lec_01-Introduction & the Israeli Legal System]] follows it. Read that way, **B** or **C** would be the course's "substantive" answer. The key (A) matches the standard textbook meaning, so **A stays the key** here, but an exam set by this lecturer is likely to use the slide's labels.
 
 ### Q10
 "Erga omnes" in a legal context means the right is:

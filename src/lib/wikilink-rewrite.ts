@@ -39,9 +39,10 @@ export function rewriteWikiHrefs(html: string, subject: string, links: LinkMap |
       return `data-selfhub`;
     }
 
-    // The Data Science course is ingested into the machine-learning subject;
-    // its lectures carry "Part of: [[Data Science]]" — resolve that to the ML hub.
-    if (subject === "machine-learning" && slug === "data-science") {
+    // Data Science lectures carry "Part of: [[Data Science]]". They live in their
+    // own intro-data-science subject, and lectures 2 to 5 were also copied into
+    // machine-learning earlier: resolve the link to whichever hub the page is in.
+    if ((subject === "machine-learning" || subject === "intro-data-science") && slug === "data-science") {
       return `href="/subjects/${subject}"`;
     }
 

@@ -46,8 +46,9 @@ describe("real subject configs", () => {
   // and an exact list would fail (and conflict) on every parallel course branch.
   it("keeps every existing subject", () => {
     expect(Object.keys(subjects)).toEqual(expect.arrayContaining([
-      "accounting", "data-science", "digital-marketing", "econometrics",
-      "machine-learning", "macro-economics", "macro-ii", "micro", "micro-ii",
+      "accounting", "digital-marketing", "econometrics",
+      "intro-data-science", "intro-econometrics", "machine-learning", "macro-economics", "macro-ii",
+      "micro", "micro-ii",
     ]));
   });
 
@@ -55,8 +56,13 @@ describe("real subject configs", () => {
     for (const key of Object.keys(subjects)) expect(key).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
   });
 
-  it("keeps data-science writing into the machine-learning site subject", () => {
-    expect(getSubjectConfig("data-science").slug).toBe("machine-learning");
+  it("gives the Data Science vault folder its own intro-data-science subject", () => {
+    // data-science.json used to write this folder into machine-learning; it was
+    // retired when Intro to Data Science became its own course (2026-11-20).
+    expect(subjects["data-science"]).toBeUndefined();
+    const config = getSubjectConfig("intro-data-science");
+    expect(config.slug).toBe("intro-data-science");
+    expect(config.vaultPath.endsWith("/Data Science")).toBe(true);
   });
 
   it("preserves the econometrics source path's trailing space", () => {

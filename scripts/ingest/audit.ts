@@ -19,6 +19,7 @@ import { join, basename, extname } from "node:path";
 import { getSubjectConfig, mutedTagsFor, subjects } from "./config.js";
 import { termSlugCollisions, formatCollision, type SourcedSlugCollision } from "./slug-collisions.js";
 import { slugify } from "../../src/lib/slugify.js";
+import { stripCode } from "./text.js";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -170,7 +171,7 @@ function resolveLink(links: LinkMap, raw: string): LinkTarget | undefined {
   if (candidate) return candidate;
   // Problem-set vault-name fallback: [[PS_04-…]] → "ps-04-…" → "ps-4",
   // [[Assignment 3 - CoreWeave …]] → "assignment-3-…" → "assignment-3".
-  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|ex|hw)-0*(\d+)(?:-.*)?$/);
+  const psMatch = slug.match(/^(?:problem[-_]?set|ps|assignment|assign|ex|hw)-0*(\d+)(?:-.*)?$/);
   if (psMatch) {
     const n = psMatch[1];
     for (const pref of ["ps", "assignment", "ex", "hw", "problem-set"]) {
@@ -272,7 +273,7 @@ async function findBrokenWikiLinks(subject: string, links: LinkMap): Promise<Bro
   for (const kind of ["terms", "recipes", "problem-sets"] as const) {
     const files = await mdFiles(contentDir(kind, subject));
     for (const f of files) {
-      const content = readMd(f);
+      const content = stripCode(readMd(f));
       // Find [[...]] patterns (possibly with fragment)
       const matches = [...content.matchAll(/\[\[([^\]]+)\]\]/g)];
       for (const m of matches) {

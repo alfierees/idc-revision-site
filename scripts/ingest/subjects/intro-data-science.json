@@ -1,0 +1,17 @@
+{
+  "slug": "intro-data-science",
+  "title": "Intro to Data Science",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 2/Semester 2/Data Science",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 2/Semester 2/Data Science",
+  "lecturesDir": "Lectures",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "data-science",
+    "intro-data-science",
+    "python",
+    "evaluation"
+  ],
+  "notes": "The Data Science course (Y2 S1, Alfie confirmed; the vault folder sits under Semester 2). Lectures 2 to 5 were first ingested into machine-learning through data-science.json, retired on 2026-11-20; ML keeps those copies. This file now owns the Data Science vault folder. python and evaluation are muted: generic lecture tags, not concepts. Homework notebooks are Alfie’s own submissions, so no assignment files are published; the recitation notebooks are copied to public/papers by hand."
+}
