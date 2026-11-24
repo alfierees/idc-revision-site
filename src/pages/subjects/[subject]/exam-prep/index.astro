@@ -14,7 +14,7 @@ const docs = (await getCollection("exam-prep", (e) => e.data.subject === subject
     const ao = a.data.order ?? Number.POSITIVE_INFINITY;
     const bo = b.data.order ?? Number.POSITIVE_INFINITY;
     if (ao !== bo) return ao - bo;
-    return a.data.title.localeCompare(b.data.title);
+    return a.data.title.localeCompare(b.data.title, undefined, { numeric: true });
   });
 
 // Method recipes live on under this section (the old "Recipes" tab folded into

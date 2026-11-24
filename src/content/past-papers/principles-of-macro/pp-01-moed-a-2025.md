@@ -1,5 +1,6 @@
 ---
 title: "Final Exam 2025, Moed A"
+topics: "Savings & deficits, GDP and GNP, opening the economy, Solow model, poverty traps"
 type: past-paper
 status: official-key
 exam: "Moed A, 4 August 2025"

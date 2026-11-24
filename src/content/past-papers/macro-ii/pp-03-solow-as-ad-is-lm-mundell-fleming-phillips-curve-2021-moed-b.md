@@ -1,5 +1,6 @@
 ---
 title: "Macro II Moed B 2021 — Worked Solutions"
+topics: "Solow, AS-AD, IS-LM, Mundell-Fleming, Phillips curve"
 type: past-paper
 status: worked-solution
 exam: "Moed B, 23 August 2021"

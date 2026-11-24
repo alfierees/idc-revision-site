@@ -1,5 +1,7 @@
 ---
 title: "Readings Practice — 25 MCQs (all readings, worked)"
+label: "Readings Practice"
+topics: "25 MCQs across the assigned readings: attribution, storytelling, positioning, SMM and trust"
 type: past-paper
 status: worked-solution
 exam: "Readings Practice (2026)"

@@ -1,5 +1,7 @@
 ---
 title: "Final Assignment Question Pool (2024)"
+label: "2024 Question Pool"
+topics: "Final assignment pool: 190 questions across the course"
 type: past-paper
 status: ai-worked-solution
 exam: "Intro to R final assignment, July 2024 (pool of 190 questions)"

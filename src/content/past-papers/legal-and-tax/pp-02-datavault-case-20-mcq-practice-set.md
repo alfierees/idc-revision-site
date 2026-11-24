@@ -1,5 +1,7 @@
 ---
 title: "Practice Exam (Exam_Practice_Questions) — Worked Solutions"
+label: "2026 Practice Exam"
+topics: "DataVault case: 20 MCQs on founders, contracts, IP, ESOPs and regulation"
 type: past-paper
 status: worked-solution
 exam: "Practice Set — Practice Exam (Feb 2026, authorship unclear)"

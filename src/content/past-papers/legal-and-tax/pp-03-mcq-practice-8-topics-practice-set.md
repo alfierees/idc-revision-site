@@ -1,5 +1,7 @@
 ---
 title: "MCQ Practice, 8 Topics (Practice Set) — Worked Solutions"
+label: "2026 MCQ Practice"
+topics: "MCQs across 8 course topics"
 type: past-paper
 status: worked-solution
 exam: "MCQ practice set, 8 topics (Feb 2026, authorship unclear)"

@@ -1,5 +1,6 @@
 ---
 title: "Labor Supply, Contracts, Slutsky & Intertemporal Mix (Extra Practice)"
+topics: "Labor supply, contracts, Slutsky & intertemporal choice"
 type: past-paper
 status: worked-solution
 exam: "Micro-Economics I, Extra Practice Questions"

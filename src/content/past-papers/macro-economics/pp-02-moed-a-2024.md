@@ -1,5 +1,7 @@
 ---
 title: "Moed A 2023–24 — Worked Solutions"
+label: "2024 Moed A"
+topics: "Debt-to-GDP, labour market, investment, inequality, deflators, growth accounting, consumption tax"
 type: past-paper
 status: worked-solution
 exam: "Final Exam — Intermediate Macro, Moed A (2023–24)"

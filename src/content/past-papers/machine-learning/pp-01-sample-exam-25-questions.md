@@ -1,5 +1,7 @@
 ---
 title: "Sample Exam — 25 Practice Questions (Loan Pipeline)"
+label: "Sample Exam"
+topics: "25 practice questions on a loan-approval pipeline"
 type: past-paper
 status: worked-solution
 exam: "Sample Exam — 25 Practice Questions"

@@ -8,7 +8,9 @@ import MarkAsRead from "../../../../components/progress/MarkAsRead";
 import { getCollection, getEntry } from "astro:content";
 import { entrySlug } from "../../../../lib/entry-slug";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
-import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
+import { buildLinkMap } from "../../../../lib/known-links";
+import { stripNoteMeta } from "../../../../lib/strip-note-meta";
+import { lectureDisplay } from "../../../../lib/ordering";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
 
 export async function getStaticPaths() {
@@ -25,7 +27,7 @@ const lecture = await getEntry("lectures", `${subjectSlug}/${lectureSlug}`);
 if (!lecture) throw new Error(`lecture ${subjectSlug}/${lectureSlug} not found`);
 
 const links = await buildLinkMap(subjectSlug);
-const html = await renderMarkdownString(lecture.body ?? "", subjectSlug, links);
+const html = await renderMarkdownString(stripNoteMeta(lecture.body ?? ""), subjectSlug, links);
 
 const allLectures = (await getCollection("lectures", (l) => l.data.subject === subjectSlug))
   .map((l) => ({
@@ -51,6 +53,12 @@ while ((m = sectionRe.exec(html)) !== null) {
 }
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
+const display = lectureDisplay(lectureSlug, lecture.data.title);
+const metaParts = [
+  display.kicker,
+  lecture.data.week !== undefined && !display.kicker.startsWith("Week") ? `Week ${lecture.data.week}` : null,
+  lecture.data.instructor,
+].filter(Boolean);
 ---
 <Layout title={`${lecture.data.title} · ${subject.data.title}`} subject={subjectSlug} active="lectures" hasSidebar continueTitle={lecture.data.title}>
   <div id="content-grid" class="content-grid">
@@ -62,26 +70,8 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
     />
     <div class="min-w-0">
     <article class="lecture-body">
-      {(lecture.data.week !== undefined || lecture.data.instructor) && (
-        <p class="doc-meta">
-          {lecture.data.week !== undefined && <span>Week {lecture.data.week}</span>}
-          {lecture.data.week !== undefined && lecture.data.instructor && <span> · </span>}
-          {lecture.data.instructor && <span>{lecture.data.instructor}</span>}
-        </p>
-      )}
-      <h1 class="doc-title">{lecture.data.title}</h1>
-      {lecture.data.tags.length > 0 && (
-        <ul class="mt-4 flex flex-wrap gap-2 list-none p-0">
-          {lecture.data.tags.map((tag) => {
-            const target = resolveLink(links, tag);
-            return target ? (
-              <li><a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a></li>
-            ) : (
-              <li><span class="tag tag-muted">#{tag}</span></li>
-            );
-          })}
-        </ul>
-      )}
+      {metaParts.length > 0 && <p class="doc-meta">{metaParts.join(" · ")}</p>}
+      <h1 class="doc-title">{display.topic}</h1>
       <div class="mt-8 lecture-prose prose-card" set:html={html} />
     </article>
     <div class="mt-10 flex justify-center">

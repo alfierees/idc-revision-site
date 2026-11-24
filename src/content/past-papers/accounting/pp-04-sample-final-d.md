@@ -1,5 +1,6 @@
 ---
 title: "Sample Final D — Worked Solutions"
+topics: "Full cycle with a cash flow statement, variance analysis, step acquisition, True/False"
 type: past-paper
 status: worked-solution
 exam: "Sample Final Exam D (mock)"

@@ -1238,3 +1238,11 @@ a.subject-opt:hover { background: color-mix(in srgb, var(--color-accent) 8%, tra
 .mark-read { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: var(--color-ink-soft); }
 .mark-read-undo { font: inherit; font-weight: 500; color: var(--color-ink-muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .mark-read-undo:hover { color: var(--color-ink); }
+.toc-list a.lvl-1 {
+  margin-top: 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}

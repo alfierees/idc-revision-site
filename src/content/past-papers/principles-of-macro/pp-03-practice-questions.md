@@ -1,5 +1,6 @@
 ---
 title: "Practice Questions"
+topics: "Value added, savings, open-economy identities, Solow model, Golden Rule"
 type: past-paper
 status: official-key
 exam: "Practice questions"
