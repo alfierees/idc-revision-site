@@ -1,5 +1,6 @@
 ---
 title: "Macro II Moed A 2025 — Worked Solutions"
+topics: "Solow, classical theory, IS-LM, Mundell-Fleming, AS-AD"
 type: past-paper
 status: worked-solution
 exam: "Moed A, 9 February 2025"

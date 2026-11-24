@@ -8,6 +8,7 @@ import Mermaid from "../../../../components/Mermaid.astro";
 import QuestionSidebar from "../../../../components/QuestionSidebar.astro";
 import { getCollection, getEntry } from "astro:content";
 import { entrySlug } from "../../../../lib/entry-slug";
+import { stripNoteMeta } from "../../../../lib/strip-note-meta";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
 
@@ -34,7 +35,7 @@ const rendered = await Promise.all(set.data.questions.map(async (q) => ({
 })));
 
 const bodyHtml = set.body?.trim()
-  ? await renderMarkdownString(set.body, subjectSlug, links)
+  ? await renderMarkdownString(stripNoteMeta(set.body), subjectSlug, links)
   : null;
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
@@ -135,22 +136,6 @@ const hasToolkit =
     <p class="mb-4 font-ui text-sm text-ink-muted italic">{set.data.official_solution_note}</p>
   )}
 
-  {set.data.tags.length > 0 && (
-    <ul class="mb-6 flex flex-wrap gap-2 list-none p-0">
-      {set.data.tags.map((tag) => {
-        const target = resolveLink(links, tag);
-        return target ? (
-          <li>
-            <a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a>
-          </li>
-        ) : (
-          <li>
-            <span class="tag tag-muted">#{tag}</span>
-          </li>
-        );
-      })}
-    </ul>
-  )}
 
   <div id="content-grid" class="content-grid wide-toc">
     <QuestionSidebar

@@ -1,5 +1,6 @@
 ---
 title: "Final Exam 2025, Moed B"
+topics: "Living standards, capital accumulation, trade balance, Solow model, poverty traps"
 type: past-paper
 status: ai-solved
 exam: "Moed B, 7 September 2025"

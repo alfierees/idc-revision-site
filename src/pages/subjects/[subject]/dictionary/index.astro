@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import PageHead from "../../../../components/PageHead.astro";
 import HoverPreview from "../../../../components/HoverPreview.astro";
 import DictionarySearch from "../../../../components/DictionarySearch";
 import { getCollection, getEntry } from "astro:content";
@@ -49,6 +50,7 @@ const flatEntries = allTerms.map((t) => {
 });
 ---
 <Layout title={`${subject.data.title} · Dictionary`} subject={subjectSlug} active="dictionary">
+  <PageHead title="Dictionary" sub="Every key term in the course, with a short definition. Tap one for the full note." />
   {topics.length > 0 ? (
     <div class="mt-2">
       <input

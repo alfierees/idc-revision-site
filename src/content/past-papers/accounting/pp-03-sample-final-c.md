@@ -1,5 +1,6 @@
 ---
 title: "Sample Final C — Worked Solutions"
+topics: "Retailer cycle with inventory & COGS, DCF valuation, equity method, True/False"
 type: past-paper
 status: worked-solution
 exam: "Sample Final Exam C (mock)"

@@ -1,5 +1,7 @@
 ---
 title: "Sample Test 2025"
+label: "2025 Sample Test"
+topics: "dplyr on the Ames housing data: group summaries, filters, new columns, missing values"
 type: past-paper
 status: partial-official-solution
 exam: "Intro to R example final assignment, 2025 (16 questions)"

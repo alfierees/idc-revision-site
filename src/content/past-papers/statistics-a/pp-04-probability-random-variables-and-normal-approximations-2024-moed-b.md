@@ -1,5 +1,6 @@
 ---
 title: "Moed B 2024 — Worked Solutions"
+topics: "Probability rules, Bayes, random variables, joint distributions, normal approximation"
 type: past-paper
 status: worked-solution
 exam: "Moed B 2024"

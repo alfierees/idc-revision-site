@@ -1,5 +1,6 @@
 ---
 title: "Sample Exam June 2021 — Worked Solutions"
+topics: "Solow, IS-LM, Mundell-Fleming, Phillips curve"
 type: past-paper
 status: worked-solution
 exam: "Sample Exam, June 2021"

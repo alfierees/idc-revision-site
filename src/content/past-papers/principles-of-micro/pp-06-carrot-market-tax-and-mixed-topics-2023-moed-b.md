@@ -1,5 +1,6 @@
 ---
 title: "PP 06: 2023 Moed B — Worked Solutions"
+topics: "Carrot market equilibrium, surplus, a tax on producers, mixed MCQs"
 type: past-paper
 status: worked-solution
 exam: "Principles of Microeconomics, 2023 Moed B (25 March 2023)"

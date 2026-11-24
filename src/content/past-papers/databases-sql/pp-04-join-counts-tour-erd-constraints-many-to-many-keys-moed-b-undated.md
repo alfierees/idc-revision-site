@@ -1,5 +1,6 @@
 ---
 title: "Join Counts, Tour ERD, Constraints & Many-to-Many Keys (Moed B, undated)"
+label: "Moed B (undated)"
 type: past-paper
 status: worked-solution
 exam: "Databases & SQL Exam, Moed B (undated; PDF metadata date 2025-02-02)"

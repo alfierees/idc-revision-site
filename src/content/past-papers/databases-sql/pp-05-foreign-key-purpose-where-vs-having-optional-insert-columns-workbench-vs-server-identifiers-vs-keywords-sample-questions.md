@@ -1,5 +1,6 @@
 ---
 title: "Foreign Key Purpose, WHERE vs HAVING, Optional INSERT Columns, Workbench vs Server & Identifiers vs Keywords (Sample Questions)"
+label: "Sample Questions"
 type: past-paper
 status: worked-solution
 exam: "Databases & SQL, Sample Exam Questions (Feb 2023 sheet, header Sem. 1, 2024)"

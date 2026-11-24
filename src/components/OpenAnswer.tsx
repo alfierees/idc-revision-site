@@ -14,6 +14,8 @@ interface Props {
   refSlug: string;
   questionId: string;
   solutionHtml: string;
+  /** Button wording: "Show solution" (default) or "Show answer". */
+  label?: "solution" | "answer";
 }
 
 // Renders build-time-trusted HTML (markdown already compiled by the site's
@@ -39,7 +41,7 @@ const GRADES: { value: Exclude<StatusValue, "untried">; label: string }[] = [
 // revealed — an inline self-grade row. The chosen grade IS the shared status
 // (done/wrong/skipped), so the exam scorebar picks it up with no parallel state.
 // Replaces the old static CollapsibleSolution + manual StatusPill combination.
-export default function OpenAnswer({ subject, kind, refSlug, questionId, solutionHtml }: Props) {
+export default function OpenAnswer({ subject, kind, refSlug, questionId, solutionHtml, label = "solution" }: Props) {
   const statusK = statusKey(subject, kind, refSlug, questionId);
 
   const [open, setOpen] = useState(false);
@@ -71,7 +73,7 @@ export default function OpenAnswer({ subject, kind, refSlug, questionId, solutio
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        {open ? "Hide" : "Show"} solution
+        {open ? "Hide" : "Show"} {label}
         <span class={`oa-chev${open ? " oa-chev-open" : ""}`} aria-hidden="true">{"→"}</span>
       </button>
 

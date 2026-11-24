@@ -1,5 +1,7 @@
 ---
 title: "ESOP, Section 102 & Cap Tables (Practice Set)"
+label: "2026 ESOP Practice"
+topics: "ESOP, Section 102 & cap tables"
 type: past-paper
 status: worked-solution
 exam: "MCQ ESOP and cap tables (Practice Set, Feb 2026)"

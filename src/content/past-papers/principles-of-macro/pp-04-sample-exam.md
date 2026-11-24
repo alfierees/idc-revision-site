@@ -1,5 +1,6 @@
 ---
 title: "Sample Exam"
+topics: "Output, opening to trade, savings & the trade balance, Solow model, Golden Rule"
 type: past-paper
 status: official-key
 exam: "Sample exam"

@@ -1,6 +1,8 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import PageHead from "../../../../components/PageHead.astro";
 import { getCollection } from "astro:content";
+import { comparePapers, paperLabel } from "../../../../lib/paper-label";
 
 export async function getStaticPaths() {
   const subjects = await getCollection("subjects");
@@ -8,29 +10,43 @@ export async function getStaticPaths() {
 }
 
 const subjectSlug = Astro.params.subject!;
-const papers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug))
-  .sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0));
+const papers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug && p.data.in_scope))
+  .map((p) => {
+    const slug = p.id.split("/").pop()!;
+    return {
+      slug,
+      ...paperLabel({ slug, title: p.data.title, exam: p.data.exam, label: p.data.label, topics: p.data.topics, body: p.body }),
+    };
+  })
+  .sort(comparePapers);
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
 <Layout title={`${subject.data.title} · Past Papers`} subject={subjectSlug} active="past-papers">
+  <PageHead title="Past Papers" sub={papers.length ? `${papers.length} paper${papers.length === 1 ? "" : "s"} · Newest first, answers hidden until you ask.` : undefined} />
   {papers.length === 0 ? (
     <p class="font-ui text-sm text-ink-muted italic">No past papers yet — content not yet ingested.</p>
   ) : (
-    <ul class="mt-2 space-y-4 list-none p-0">
-      {papers.map((p) => {
-        const slug = p.id.split("/").pop()!;
-        return (
-          <li>
-            <a href={`/subjects/${subjectSlug}/past-papers/${slug}`} class="list-card">
-              <div class="font-display text-lg text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 520;">{p.data.title}</div>
-              <div class="mt-1 font-ui text-sm text-ink-muted">
-                {[p.data.exam, p.data.year && p.data.year >= 2000 ? p.data.year : null].filter(Boolean).join(" · ")}
-              </div>
-            </a>
-          </li>
-        );
-      })}
+    <ul class="card-grid">
+      {papers.map((p) => (
+        <li>
+          <a href={`/subjects/${subjectSlug}/past-papers/${p.slug}`} class="list-card paper-card">
+            <div class="font-display text-xl text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 560;">{p.label}</div>
+            {p.topics && <div class="paper-card-topics mt-1.5 font-ui text-sm text-ink-muted">{p.topics}</div>}
+          </a>
+        </li>
+      ))}
     </ul>
   )}
 </Layout>
+
+<style>
+  .paper-card { height: 100%; }
+  .paper-card-topics {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.45;
+  }
+</style>

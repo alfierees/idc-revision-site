@@ -1,5 +1,6 @@
 ---
 title: "PP 08: 2025 Moed A — Worked Solutions"
+topics: "Olive oil market, surplus, tax on sellers, deadweight loss, costs MCQs"
 type: past-paper
 status: worked-solution
 exam: "Principles of Microeconomics, 2025 Moed A (March 2025)"
