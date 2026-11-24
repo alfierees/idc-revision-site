@@ -57,6 +57,9 @@ Database function counting the numeric cells of a field in the records that matc
 ### DSUM
 Database function adding up a field over the records that match the criteria. → [[Lec_01-Sorting, Filters & Database Functions|Lec 01]]
 
+### COUNTIF
+Counts the cells in a range that meet one condition, such as equal to a label; used to check that every row got a classification. → [[Lec_01-Sorting, Filters & Database Functions|Lec 01]]
+
 ## Logical functions
 
 ### IF Function

@@ -25,6 +25,9 @@ in_scope: true
 > [!note] Source format
 > The source is the class workbook `Pivot tables.xlsx`, not a slide deck. It has seven sheets: one raw data sheet (`TotalSales`) and six sheets holding eight pivot tables and five pivot charts. I read the pivot definitions straight from the file XML (fields, summary functions, filters, slicers, timelines), and the small result tables below are copied exactly from the values saved in the sheets. Where the workbook only shows a setup with no explanation, the explanation is mine and marked as reconstructed.
 
+> [!info] Class file (download)
+> [Pivot class data (xlsx)](/papers/excel-data-analysis/class-pivot-totalsales.xlsx): `Pivot2020_new.xlsx`, the Moodle copy of the `TotalSales` source data for this lecture.
+
 ## What a pivot table is
 
 A [[Pivot Table]] summarises a long list of records into a compact report, without writing a single formula. Instead of `SUMIF`/`SUMIFS` per cell (see [[Lec_01-Sorting, Filters & Database Functions]] for the database-style alternatives), you drag field names into four areas and Excel does the grouping and aggregating.
@@ -275,6 +278,10 @@ Five clustered-column [[Pivot Chart]]s sit next to the pivots, each tied to one 
 
 > [!warning] Pivots do not update themselves
 > Editing a value in `TotalSales` does not change any pivot until you press **Refresh** (or *Refresh All*). A pivot reads the cached snapshot, not the sheet. Adding new rows below the data also needs the source range extended (*Change Data Source*) unless the data is an Excel table.
+
+## The class file, sheet by sheet
+
+`Pivot2020_new.xlsx` has a single sheet, `TotalSales`: the flat list of sales records in `A1:I9544` (header in row 1, frozen), with the columns Date, Branch, Software, Category, UnitPrice, Quantity, SalesPerson, Total_Income and Commission. It contains **only the data**: no pivot tables, charts, slicers or formulas. It is the clean starting point from which the pivot tables of this lecture are built in class (insert a [[Pivot Table]] from `A1:I9544`, then drag fields in the [[Pivot Table Fields Pane]]). Build the pivots yourself on it and compare with the reports described above.
 
 ## Summary
 
