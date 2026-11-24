@@ -81,8 +81,14 @@ Ordinary shares carrying voting, dividend, and dissolution rights. → [[Session
 ### Preferred Stock
 Shares with negotiated preferences (e.g. liquidation, dividends) over [[Common Stock]]. → [[Session 3 - Raising Debt and Capital|Session 3]]
 
+### Treasury Shares
+A company's own shares bought back from shareholders; a negative (contra-equity) line that reduces total equity. → [[Session 1 - Intro|Session 1]]
+
 ### SAFE
 Simple Agreement for Future Equity — an early-stage instrument converting to equity at a later priced round. → [[Session 3 - Raising Debt and Capital|Session 3]]
+
+### Valuation Cap
+A ceiling on the valuation used to convert a [[SAFE]] at the next priced round, so early investors convert at the lower cap price. → [[Session 3 - Raising Debt and Capital|Session 3]]
 
 ### Pre-Money Valuation
 The company's value *before* a new investment. → [[Session 3 - Raising Debt and Capital|Session 3]]
