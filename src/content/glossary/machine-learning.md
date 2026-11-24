@@ -28,10 +28,10 @@ in_scope: true
 Learning a mapping from labelled $(x, y)$ pairs. → [[Lec_02-Linear Regression|ML Lec 2]]
 
 ### Linear Regression
-An OLS model predicting a continuous target as a linear function of the features. → [[Lecture 4 - Regression|DS Lec 4]]
+An OLS model predicting a continuous target as a linear function of the features. → [[Lec_02-Linear Regression|ML Lec 2]]
 
 ### OLS
-Ordinary Least Squares — the estimator that minimises the sum of squared residuals. → [[Lecture 4 - Regression|DS Lec 4]]
+Ordinary Least Squares — the estimator that minimises the sum of squared residuals. → [[Lec_02-Linear Regression|ML Lec 2]]
 
 ### Cost Function
 A scalar measure of model error (e.g. MSE) that training minimises. → [[Lec_02-Linear Regression|ML Lec 2]]
@@ -52,22 +52,22 @@ Putting features on a comparable scale (min-max scaling, standardisation). → [
 Penalising model complexity — L1 (Lasso), L2 (Ridge), Elastic Net, early stopping. → [[Lec_02-Linear Regression|ML Lec 2]]
 
 ### Ridge Regression
-L2-regularised linear regression. → [[Lecture 4 - Regression|DS Lec 4]]
+L2-regularised linear regression. → [[Lec_02-Linear Regression|ML Lec 2]]
 
 ### Lasso Regression
-L1-regularised regression that performs automatic [[Feature Selection]]. → [[Lecture 4 - Regression|DS Lec 4]]
+L1-regularised regression that performs automatic [[Feature Selection]]. → [[Lec_02-Linear Regression|ML Lec 2]]
 
 ### Overfitting
 A large generalisation gap — the model fits noise; the heart of the bias-variance trade-off. → [[Lec_02-Linear Regression|ML Lec 2]]
 
 ### Bias-Variance Tradeoff
-The trade-off between underfitting (high bias) and overfitting (high variance). → [[Lecture 4 - Regression|DS Lec 4]]
+The trade-off between underfitting (high bias) and overfitting (high variance). → [[Lec_02-Linear Regression|ML Lec 2]]
 
 ### RMSE
-Root Mean Squared Error — a regression error metric in the target's units. → [[Lecture 4 - Regression|DS Lec 4]]
+Root Mean Squared Error — a regression error metric in the target's units.
 
 ### R-Squared
-The coefficient of determination — the proportion of target variance the model explains. → [[Lecture 4 - Regression|DS Lec 4]]
+The coefficient of determination — the proportion of target variance the model explains.
 
 ---
 
@@ -80,31 +80,37 @@ A supervised task mapping inputs to discrete labels (binary, multiclass, multila
 K-Nearest Neighbours — a lazy classifier using a majority vote among the $k$ closest training points. → [[Lec_05-Model Selection & KNN|ML Lec 5]]
 
 ### Decision Tree
-A flowchart classifier that splits on features via if/else rules. → [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]]
+A flowchart classifier that splits on features via if/else rules. → [[Lec_08-Decision Trees|ML Lec 8]]
 
 ### Random Forest
-An ensemble of decision trees with bagging plus feature randomness. → [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]]
+An ensemble of decision trees with bagging plus feature randomness.
 
 ### Logistic Regression
-A probabilistic binary classifier using the [[Sigmoid Function]]. → [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]]
+A probabilistic binary classifier using the [[Sigmoid Function]].
 
 ### Sigmoid Function
-Maps real values to $[0,1]$, giving logistic regression its probability output. → [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]]
+Maps real values to $[0,1]$, giving logistic regression its probability output.
 
 ### Gini Impurity
-A node-purity measure used to choose decision-tree splits. → [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]]
+A node-purity measure used to choose decision-tree splits. → [[Lec_08-Decision Trees|ML Lec 8]]
+
+### Entropy
+A measure of how mixed (uncertain) a node's labels are, in bits: $H = -\sum p \log_2 p$. → [[Lec_08-Decision Trees|ML Lec 8]]
+
+### Information Gain
+The drop in entropy after a split (parent entropy minus weighted child entropy); the split with the highest gain is chosen. → [[Lec_08-Decision Trees|ML Lec 8]]
 
 ### Ensemble Methods
-Combining multiple models to lower variance (e.g. bagging in a [[Random Forest]]). → [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]]
+Combining multiple models to lower variance (e.g. bagging in a [[Random Forest]]).
 
 ### Distance Function
 The similarity measure KNN relies on (Euclidean, Manhattan, Minkowski). → [[Lec_05-Model Selection & KNN|ML Lec 5]]
 
 ### Euclidean Distance
-The standard straight-line distance used by K-Means and KNN. → [[Lecture 5 - Clustering and Dimensionality Reduction|DS Lec 5]]
+The standard straight-line distance used by K-Means and KNN.
 
 ### One-Hot Encoding
-Encoding a categorical variable as a set of binary columns. → [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]]
+Encoding a categorical variable as a set of binary columns.
 
 ---
 
@@ -138,7 +144,7 @@ $TP / (TP + FP)$ — minimises false positives. → [[Lec_07-Performance Measure
 $TP / (TP + FN)$ — minimises false negatives; also called TPR / sensitivity. → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
 
 ### Precision and Recall
-The paired evaluation metrics for imbalanced classification — see [[Precision]] and [[Recall]]. → [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]]
+The paired evaluation metrics for imbalanced classification — see [[Precision]] and [[Recall]]. → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
 
 ### ROC Curve
 TPR vs FPR across all thresholds — measures classifier separability. → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
@@ -150,35 +156,23 @@ Area under the ROC curve — the probability the model ranks a random positive a
 Using test-set information during training, which invalidates the evaluation. → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
 
 ### Scikit-Learn Pipeline
-Chaining preprocessing and model into one object to prevent [[Data Leakage]]. → [[Lecture 4 - Regression|DS Lec 4]]
+Chaining preprocessing and model into one object to prevent [[Data Leakage]].
 
 ---
 
 ## Unsupervised learning & dimensionality reduction
 
 ### Unsupervised Learning
-Finding structure in unlabelled data. → [[Lecture 5 - Clustering and Dimensionality Reduction|DS Lec 5]]
-
-### K-Means
-A centroid-based clustering algorithm. → [[Lecture 5 - Clustering and Dimensionality Reduction|DS Lec 5]]
-
-### Elbow Method
-Plotting within-cluster sum of squares vs $K$ to pick the number of clusters. → [[Lecture 5 - Clustering and Dimensionality Reduction|DS Lec 5]]
-
-### Silhouette Score
-Measures how well each point fits its assigned cluster. → [[Lecture 5 - Clustering and Dimensionality Reduction|DS Lec 5]]
+Finding structure in unlabelled data.
 
 ### PCA
 Principal Component Analysis — unsupervised feature extraction via a variance-maximising rotation. → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
-
-### Explained Variance
-The proportion of total variance captured by the PCA components. → [[Lecture 5 - Clustering and Dimensionality Reduction|DS Lec 5]]
 
 ### Curse of Dimensionality
 Exponential data sparsity (and degrading distances) in high-dimensional spaces, motivating dimensionality reduction. → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
 
 ### Customer Segmentation
-A business application of clustering to group customers. → [[Lecture 5 - Clustering and Dimensionality Reduction|DS Lec 5]]
+A business application of clustering to group customers.
 
 ### Feature Selection
 Choosing a subset of the original features (wrappers and filters). → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
@@ -191,40 +185,31 @@ A linear-dependency measure $\rho = \sigma_{xy}/(\sigma_x \sigma_y)$, used as a 
 ## Exploratory data analysis & data wrangling
 
 ### Exploratory Data Analysis
-The workflow of summarising, visualising, and sanity-checking a dataset before modelling. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+The workflow of summarising, visualising, and sanity-checking a dataset before modelling.
 
 ### Pandas
-The Python library for tabular data manipulation — the [[DataFrame]] toolkit. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+The Python library for tabular data manipulation — the [[DataFrame]] toolkit.
 
 ### DataFrame
-Pandas' 2-D labelled table (rows × named columns), the core EDA data structure. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+Pandas' 2-D labelled table (rows × named columns), the core EDA data structure.
 
 ### Groupby
-The split-apply-combine pattern: split rows by a key, apply an aggregation, combine the results. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+The split-apply-combine pattern: split rows by a key, apply an aggregation, combine the results.
 
 ### Summary Statistics
-Measures of central tendency (mean, median, mode) and spread (standard deviation, quartiles) describing a column. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+Measures of central tendency (mean, median, mode) and spread (standard deviation, quartiles) describing a column.
 
 ### Distributions
-The shape of a variable's values (symmetric, skewed), read from a histogram. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+The shape of a variable's values (symmetric, skewed), read from a histogram.
 
 ### Histograms
-A chart that bins a numeric variable to show its distribution. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
-
-### Boxplots
-A chart showing the median, quartiles, and outliers via the IQR. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+A chart that bins a numeric variable to show its distribution.
 
 ### Missing Values
-Absent entries (`NaN`) that must be detected and handled (drop or impute) before modelling. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+Absent entries (`NaN`) that must be detected and handled (drop or impute) before modelling.
 
 ### Outliers
-Extreme values — flagged by the IQR rule — that can distort summaries and models. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
-
-### Matplotlib
-The foundational Python plotting library. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
-
-### Seaborn
-A higher-level statistical plotting library built on [[Matplotlib]]. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+Extreme values — flagged by the IQR rule — that can distort summaries and models.
 
 ### Correlation vs Causation
-The caution that a statistical association does not by itself imply a causal effect. → [[Lecture 2 - EDA and Charts|DS Lec 2]]
+The caution that a statistical association does not by itself imply a causal effect.
