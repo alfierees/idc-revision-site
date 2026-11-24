@@ -9,4 +9,4 @@ ai_drafted: true
 
 A node-purity measure used to choose decision-tree splits.
 
-See [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]].
+See [[Lec_08-Decision Trees|ML Lec 8]].

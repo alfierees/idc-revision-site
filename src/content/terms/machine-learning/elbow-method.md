@@ -8,5 +8,3 @@ ai_drafted: true
 ---
 
 Plotting within-cluster sum of squares vs $K$ to pick the number of clusters.
-
-See [[Lecture 5 - Clustering and Dimensionality Reduction|DS Lec 5]].

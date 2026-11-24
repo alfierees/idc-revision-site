@@ -21,7 +21,7 @@ Use [[K-Means]] to partition $n$ unlabelled points into exactly $K$ clusters by 
 
 ## Worked example
 
-From DS Lecture 5 (the StyleNation segmentation, which lands on $K = 4$):
+Example (a customer segmentation that lands on $K = 4$):
 
 ```python
 from sklearn.cluster import KMeans
@@ -32,5 +32,3 @@ kmeans.fit(X_scaled)
 df["cluster"] = kmeans.labels_
 print(df["cluster"].value_counts())
 ```
-
-See [[Lecture 5 - Clustering and Dimensionality Reduction]] for the full walkthrough.

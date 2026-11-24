@@ -9,4 +9,4 @@ ai_drafted: true
 
 The trade-off between underfitting (high bias) and overfitting (high variance).
 
-See [[Lecture 4 - Regression|DS Lec 4]].
+See [[Lec_02-Linear Regression|ML Lec 2]].

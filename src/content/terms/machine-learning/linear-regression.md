@@ -9,4 +9,4 @@ ai_drafted: true
 
 An OLS model predicting a continuous target as a linear function of the features.
 
-See [[Lecture 4 - Regression|DS Lec 4]].
+See [[Lec_02-Linear Regression|ML Lec 2]].

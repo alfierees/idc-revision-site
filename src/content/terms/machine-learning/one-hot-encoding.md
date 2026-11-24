@@ -8,5 +8,3 @@ ai_drafted: true
 ---
 
 Encoding a categorical variable as a set of binary columns.
-
-See [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]].

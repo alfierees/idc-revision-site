@@ -277,6 +277,65 @@ type: roc-curve
 
 ---
 
+## Extra Worked Examples from the Slides
+
+### Metrics from a confusion matrix
+
+| | Predicted Positive | Predicted Negative |
+| --- | --- | --- |
+| **Actual Positive** | TP = 763 | FN = 149 |
+| **Actual Negative** | FP = 157 | TN = 8330 |
+
+- Accuracy $= \frac{763 + 8330}{763 + 149 + 157 + 8330} \approx 96.7\%$
+- Precision $= \frac{763}{763 + 157} \approx 82.9\%$
+- Recall $= \frac{763}{763 + 149} \approx 83.7\%$
+
+> [!note] Rounding
+> The slide prints recall as 83.6%; 763 / 912 = 0.8366, which rounds to 83.7%.
+
+### Comparing three classifiers on the ROC plane
+
+Each fixed classifier gives a **single** ROC point.
+
+| | Classifier 1 | Classifier 2 | Classifier 3 |
+| --- | --- | --- | --- |
+| TP / FN | 40 / 60 | 70 / 30 | 60 / 40 |
+| FP / TN | 30 / 70 | 50 / 50 | 20 / 80 |
+| TPR | 0.4 | 0.7 | 0.6 |
+| FPR | 0.3 | 0.5 | 0.2 |
+
+Classifier 3 is closest to the ideal top-left corner. Classifier 1 has both a lower TPR and a higher FPR than Classifier 3, so it is dominated. Classifier 2 catches more positives (0.7) than Classifier 3 (0.6) but pays for it with a much higher FPR (0.5 vs 0.2). A single ROC point can also come from varying training hyperparameters, not just the threshold.
+
+### Thresholds on 14 scored samples
+
+The slide lists 14 samples with predicted probability and true class (6 true positives, 8 true negatives). Scores from highest: 0.95 (T), 0.90 (T), 0.89 (T), 0.85 (F), 0.80 (F), 0.65 (T), 0.60 (F), 0.60 (F), 0.58 (F), 0.30 (F), 0.21 (T), 0.13 (F), 0.01 (T), 0.01 (F), where T / F is the true class.
+
+| Threshold | Predicted positive | Precision | Recall | FPR |
+| --- | --- | --- | --- | --- |
+| 0.7 | 5 samples | 3/5 | 3/6 | 2/8 |
+| 0.5 | 9 samples | 4/9 | 4/6 | 5/8 |
+
+Lowering the threshold raises recall and FPR together and, here, lowers precision. Sweeping every threshold gives the full PR and ROC tables (for example threshold 0.87 gives precision 1, recall 0.5, FPR 0; threshold 0 gives precision 0.43, recall 1, FPR 1).
+
+### PR and ROC on imbalanced data
+
+The slides build a random dataset of **4000 samples, 1% positive**, and plot both curves (the plots are not reproduced here; the usual point *(reconstructed)* is that ROC can look healthy while the PR curve exposes poor precision, because the large negative class keeps FPR small).
+
+### Pearson correlation is not invariant to shape
+
+On the second slide example, four toy datasets with $x$ and a binary $y$ give $\rho = 0.8704$, $0.8704$, $-0.8704$ and $0.8704$. Shifting or reversing $x$ changes the sign or nothing, but not the magnitude: Pearson depends on the *linear* pattern only.
+
+### Why feature reduction matters
+
+- Some problems define hundreds of features, most **irrelevant**; some even add false regularities.
+- Using all features costs time and memory and can **hurt** performance.
+- Image example: using every pixel of a 640 x 480 image gives more than **300,000 features** (the slides ask you to imagine classifying dogs vs cupcakes this way).
+- Models with complex boundaries that overfit (**KNN**, **decision trees**) benefit most from fewer dimensions; simpler learners (**linear classifiers**, **Naive Bayes**) cope better with many.
+
+**Slides (PDF):** [Experiment Setup deck](/papers/machine-learning/lec-07-experiment-setup-slides.pdf)
+
+---
+
 ## Data Processing
 
 ### Splitting Data

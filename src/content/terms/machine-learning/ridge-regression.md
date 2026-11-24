@@ -9,4 +9,4 @@ ai_drafted: true
 
 L2-regularised linear regression.
 
-See [[Lecture 4 - Regression|DS Lec 4]].
+See [[Lec_02-Linear Regression|ML Lec 2]].

@@ -1,11 +1,9 @@
 [
+  "machine-learning:lecture:lec-01-introduction-to-applied-ml",
   "machine-learning:lecture:lec-02-linear-regression",
   "machine-learning:lecture:lec-05-model-selection-knn",
   "machine-learning:lecture:lec-07-performance-measures-data-processing",
-  "machine-learning:lecture:lecture-2-eda-and-charts",
-  "machine-learning:lecture:lecture-3-classification-knn-random-tree",
-  "machine-learning:lecture:lecture-4-regression",
-  "machine-learning:lecture:lecture-5-clustering-and-dimensionality-reduction",
+  "machine-learning:lecture:lec-08-decision-trees",
   "machine-learning:past-paper:pp-01-sample-exam-25-questions:q1",
   "machine-learning:past-paper:pp-01-sample-exam-25-questions:q10",
   "machine-learning:past-paper:pp-01-sample-exam-25-questions:q11",
