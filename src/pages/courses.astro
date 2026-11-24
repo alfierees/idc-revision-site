@@ -1,5 +1,6 @@
 ---
 import Layout from "../components/Layout.astro";
+import CourseIcon from "../components/CourseIcon.astro";
 import { loadCourseCards } from "../lib/course-cards";
 import { SEMESTERS, SEMESTER_STORAGE_KEY } from "../lib/semesters";
 
@@ -37,6 +38,7 @@ const semesterIds = SEMESTERS.map((s) => s.id);
                       </div>
                     ) : (
                       <a class="course-row-item" href={card.href} data-course={s.slug}>
+                        <CourseIcon slug={s.slug} title={s.title} tone={i} size="sm" />
                         <span class="c-main">
                           <span class="c-title">{s.title}</span>
                           {s.tagline && <span class="c-tag">{s.tagline}</span>}
