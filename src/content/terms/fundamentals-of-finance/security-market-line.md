@@ -4,6 +4,7 @@ subject: fundamentals-of-finance
 aliases:
   - SML
   - CAPM
+  - Capital Asset Pricing Model
 related:
   - Beta
   - Capital Market Line

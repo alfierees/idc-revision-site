@@ -11,6 +11,6 @@ The line of efficient portfolios that mix the risk-free asset with the market po
 
 ## When to use
 
-Use it only for efficient portfolios, and leave $E(R_p)$ and $\sigma_p$ as variables. If a beta is given, use the [[Security Market Line]] instead, even for an efficient portfolio. The cheat sheet is the only course source for this.
+Use it only for efficient portfolios, and leave $E(R_p)$ and $\sigma_p$ as variables. If a beta is given, use the [[Security Market Line]] instead, even for an efficient portfolio. Taught in [[Lesson_09-Capital Market Line]]; for an efficient portfolio $\sigma_p=x_m\sigma_m$.
 
 See [[Read_01-Finance Cheat Sheet|Cheat sheet]].

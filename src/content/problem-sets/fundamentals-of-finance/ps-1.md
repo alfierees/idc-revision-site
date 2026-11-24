@@ -1,6 +1,7 @@
 ---
 title: "HW1"
 subject: fundamentals-of-finance
+official_solution: "/papers/fundamentals-of-finance/ps-1-official-solution.pdf"
 tags:
   - financial-management
   - time-value-of-money

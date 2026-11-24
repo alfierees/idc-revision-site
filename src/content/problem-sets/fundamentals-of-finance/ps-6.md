@@ -1,6 +1,7 @@
 ---
 title: "HW6"
 subject: fundamentals-of-finance
+official_solution: "/papers/fundamentals-of-finance/ps-6-official-solution.pdf"
 tags:
   - financial-management
   - loan
@@ -12,7 +13,7 @@ ai_drafted: true
 questions:
   - id: "1"
     text: |
-      **Equal-payment loan.** A $150,000 loan at 10% per year is repaid in 5 equal annual installments.
+      **Equal-payment loan.** A \$150,000 loan at 10% per year is repaid in 5 equal annual installments.
 
       Find the level payment, the outstanding balance after the 3rd installment, and the principal repaid in the last payment.
     solution: |
@@ -24,7 +25,7 @@ questions:
     related_terms: ["loan", "amortization", "outstanding-balance", "annuity", "present-value"]
   - id: "2"
     text: |
-      **Mortgage with refinancing.** A $300,000 house is bought with a 20% down payment. The mortgage has a stated rate of 12% per year, compounded monthly, over 240 months.
+      **Mortgage with refinancing.** A \$300,000 house is bought with a 20% down payment. The mortgage has a stated rate of 12% per year, compounded monthly, over 240 months.
 
       Find the monthly payment. Later, market rates fall to 10.8% (0.9% per month) and the borrower refinances. Find the loan's contractual (book) balance, its fair market value at the new rate over the remaining months, and the early-termination fee.
     solution: |
@@ -47,7 +48,7 @@ questions:
     related_terms: ["mortgage", "refinancing", "stated-rate", "outstanding-balance", "present-value", "amortization", "loan"]
   - id: "3"
     text: |
-      **Equal-principal loan.** A $100,000 loan at 6% per year is repaid over 5 years with equal principal installments.
+      **Equal-principal loan.** A \$100,000 loan at 6% per year is repaid over 5 years with equal principal installments.
 
       Find the payment in each year and the outstanding balance after 3 years.
     solution: |
@@ -62,7 +63,7 @@ questions:
     related_terms: ["loan", "amortization", "outstanding-balance"]
   - id: "4"
     text: |
-      **Interest-only loan, CPI-linked.** A $50,000 loan at 5% for 15 years is interest-only, with payments linked to CPI at 2% inflation.
+      **Interest-only loan, CPI-linked.** A \$50,000 loan at 5% for 15 years is interest-only, with payments linked to CPI at 2% inflation.
 
       Describe the real and nominal interest and balance schedules.
     solution: |

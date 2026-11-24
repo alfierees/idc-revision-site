@@ -11,6 +11,6 @@ How sensitive an asset is to market moves, $\beta=Cov(A,M)/\sigma_M^2=\rho_{A,M}
 
 ## When to use
 
-Use beta in the [[Security Market Line]] to get an asset's required return $r_f+\beta(r_M-r_f)$, which can serve as the discount rate. A portfolio's beta is the weighted average of its assets' betas. The cheat sheet is the only course source for this.
+Use beta in the [[Security Market Line]] to get an asset's required return $r_f+\beta(r_M-r_f)$, which can serve as the discount rate. A portfolio's beta is the weighted average of its assets' betas. Taught in [[Lesson_10-Security Market Line & CAPM]]: $\beta_i=Cov(r_i,r_m)/\sigma_m^2=\rho_{im}\sigma_i/\sigma_m$, and for an efficient portfolio $\beta_p=x_m$.
 
 See [[Read_01-Finance Cheat Sheet|Cheat sheet]].
