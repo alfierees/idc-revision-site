@@ -1,6 +1,7 @@
 ---
 title: "HW3"
 subject: fundamentals-of-finance
+official_solution: "/papers/fundamentals-of-finance/ps-3-official-solution.pdf"
 tags:
   - financial-management
   - profitability-index
@@ -50,10 +51,10 @@ questions:
     related_terms: ["profitability-index"]
   - id: "1d"
     text: |
-      You have a budget of $1,000,000 and projects are divisible. Allocate the budget by PI rank and find the total NPV.
+      You have a budget of \$1,000,000 and projects are divisible. Allocate the budget by PI rank and find the total NPV.
     solution: |
       > [!example] Spend the budget in PI order
-      > A (500k, PI 0.22), then C (350k, PI 0.20). That leaves $150k for E, which needs 200k. Projects are divisible, so take **three quarters of E**.
+      > A (500k, PI 0.22), then C (350k, PI 0.20). That leaves \$150k for E, which needs 200k. Projects are divisible, so take **three quarters of E**.
       >
       > $$
       > NPV = 110 + 70 + 0.75 \times 40 = \boxed{\$210\text{k}}
@@ -64,7 +65,7 @@ questions:
       Now suppose the projects **cannot** be split. Is following the PI ranking still guaranteed to maximise NPV?
     solution: |
       > [!warning] PI-greedy is not always the NPV-maximiser when projects are indivisible
-      > If projects cannot be split, the highest-PI combination may waste budget. A + D uses $950k for $191k of NPV (50k idle), while A + C uses $850k for $180k of NPV. The best indivisible bundle depends on the objective: maximise NPV subject to the budget constraint, which may differ from the pure PI ranking.
+      > If projects cannot be split, the highest-PI combination may waste budget. A + D uses \$950k for \$191k of NPV (50k idle), while A + C uses \$850k for \$180k of NPV. The best indivisible bundle depends on the objective: maximise NPV subject to the budget constraint, which may differ from the pure PI ranking.
     related_terms: ["profitability-index", "net-present-value", "capital-budgeting"]
   - id: "2"
     text: |
@@ -72,8 +73,8 @@ questions:
 
       | Machine | Cost | Life |
       |---|---|---|
-      | A | $10,000 | 5 years |
-      | B | $18,000 | 8 years |
+      | A | \$10,000 | 5 years |
+      | B | \$18,000 | 8 years |
 
       Which machine should you choose?
     solution: |
@@ -81,11 +82,11 @@ questions:
 
       | Machine | Cost | Life | Annuity factor | EAC |
       |---|---|---|---|---|
-      | A | $10,000 | 5 | 4.2124 | **$2,373.96/yr** |
-      | B | $18,000 | 8 | 6.2098 | $2,898.65/yr |
+      | A | \$10,000 | 5 | 4.2124 | **\$2,373.96/yr** |
+      | B | \$18,000 | 8 | 6.2098 | \$2,898.65/yr |
 
       > [!success] Choose A
-      > Lower equivalent annual cost. Comparing the raw costs ($10k vs $18k) would be misleading because B lasts longer: EAC annualises that difference away.
+      > Lower equivalent annual cost. Comparing the raw costs (\$10k vs \$18k) would be misleading because B lasts longer: EAC annualises that difference away.
     related_terms: ["equivalent-annual-cost", "annuity", "present-value", "discount-rate"]
   - id: "3"
     text: |

@@ -1,6 +1,8 @@
 ---
 title: "HW8"
 subject: fundamentals-of-finance
+official_solution: "/papers/fundamentals-of-finance/ps-8-official-solution.pdf"
+source_doc: "/papers/fundamentals-of-finance/ps-8-bonds-questions.pdf"
 tags:
   - financial-management
   - bond
@@ -28,7 +30,7 @@ questions:
     related_terms: ["bond", "coupon", "face-value", "yield-to-maturity", "present-value", "discount-rate"]
   - id: "1b"
     text: |
-      Same bond as 1a (face value 1,000, 10% annual coupon). Price it when the market yield is **8%**, and say whether it trades at a premium or a discount.
+      Same bond as 1a (face value 1,000, 10% annual coupon). **Two years after issue** (right after the coupon) the market yield has dropped to **8%**. Price it, and say whether it trades at a premium or a discount.
     solution: |
       The vault note and the spreadsheet give a price of **1,114.93**:
 
@@ -36,8 +38,7 @@ questions:
       P = \sum_{t=1}^{8} \frac{100}{1.08^t} + \frac{1{,}000}{1.08^{8}} \approx 1{,}114.93
       $$
 
-      > [!warning] Check the number of years
-      > The spreadsheet cell behind 1,114.93 discounts only **8** cash flows (years 1 to 8), while the vault note describes a 10-year bond. For a full 10 years at 8% the same formula gives about **1,134.20**. The source does not say which maturity this part was set with, so check the original question. Either way the conclusion below is the same.
+      Two years after issue, 8 annual coupons remain, so 8 cash flows is right; the official solution also gives 1,115.
 
       > [!success] Premium
       > The yield (8%) is below the coupon rate (10%), so the bond is dear: it trades at a **premium** to face value.

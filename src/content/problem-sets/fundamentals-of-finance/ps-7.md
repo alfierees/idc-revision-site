@@ -1,6 +1,8 @@
 ---
 title: "HW7"
 subject: fundamentals-of-finance
+official_solution: "/papers/fundamentals-of-finance/ps-7-official-solution-capital-budgeting.pdf"
+official_solution_note: "An older version of this problem set (Problem Set 9, capital budgeting): Questions 2 and 3 match; Question 1 differs at t=0."
 tags:
   - financial-management
   - free-cash-flow
@@ -119,7 +121,8 @@ questions:
 
       Use **after-tax** maintenance and the **depreciation tax shield** on the upfront cost, and compare the machines on a like-for-like basis given their different lifespans. Which machine should be bought?
     solution: |
-      > [!warning] AI-written answer, not official. The homework workbook stops before the comparison, so check this before relying on it.
+      > [!success] Matches the official solution
+      > The lecturer's solution (Problem Set 9, Question 3) gets the same numbers: Benzi NPV −168,872 and EAC about 26K, Yuddle −210,000 and 28,507, so buy **Benzi**. The working below was written for this site.
 
       **Assumptions:** straight-line depreciation to zero over each machine's life, maintenance paid at the end of each year, and Benzi's resale price fully taxed because its book value is zero by then.
 
@@ -152,4 +155,4 @@ questions:
 
 *Related: [[Lesson_06-Capital Budgeting & Free Cash Flow]] · [[Lesson_03-Rate Conversion, Effective Rates & EAC]]*
 
-HW7 has no source PDF: it was drafted from the vault note and the Excel workbook. Part 3 has no worked answer in the source (the workbook working is unfinished), so its answer here is AI-written and flagged.
+HW7 was drafted from the vault note and the Excel workbook, then checked against the official solution (an older Problem Set 9 on capital budgeting). Question 3 matches it exactly. In Question 1 the official version has no penalty or consulting fee at $t=0$ (it gives an NPV of −32.23K); the decision, reject, is the same.

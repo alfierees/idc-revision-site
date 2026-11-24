@@ -147,36 +147,66 @@ Bond with no coupons; price $=FV/(1+r)^n$. → [[Lesson_07-Bond Pricing|Lesson 0
 ## Portfolio risk and diversification
 
 ### Expected Return
-Weighted average of the assets' expected returns, $w_1E[R_1]+w_2E[R_2]$. → [[HW_09-Risk, Return & Diversification|HW 09]]
+Weighted average of the assets' expected returns, $w_1E[R_1]+w_2E[R_2]$. Also in [[HW_09-Risk, Return & Diversification|HW 09]]. → [[Lesson_08-Risk, Return & Diversification|Lesson 08]]
 
 ### Portfolio Risk
-$\sigma_p^2=w_1^2\sigma_1^2+w_2^2\sigma_2^2+2w_1w_2\sigma_1\sigma_2\rho$. → [[HW_09-Risk, Return & Diversification|HW 09]]
+$\sigma_p^2=w_1^2\sigma_1^2+w_2^2\sigma_2^2+2w_1w_2\sigma_1\sigma_2\rho$. Also in [[HW_09-Risk, Return & Diversification|HW 09]]. → [[Lesson_08-Risk, Return & Diversification|Lesson 08]]
 
 ### Correlation
-$\rho$: how closely two assets' returns move together, from -1 to 1. → [[HW_09-Risk, Return & Diversification|HW 09]]
+$\rho$: how closely two assets' returns move together, from -1 to 1. Also in [[HW_09-Risk, Return & Diversification|HW 09]]. → [[Lesson_08-Risk, Return & Diversification|Lesson 08]]
 
 ### Diversification
-Combining imperfectly correlated assets removes idiosyncratic risk, down to a floor of $\sigma\sqrt{\rho}$ for equal-risk assets. → [[HW_09-Risk, Return & Diversification|HW 09]]
+Combining imperfectly correlated assets removes idiosyncratic risk, down to a floor of $\sigma\sqrt{\rho}$ for equal-risk assets. Also in [[HW_09-Risk, Return & Diversification|HW 09]]. → [[Lesson_08-Risk, Return & Diversification|Lesson 08]]
 
 ### Minimum Variance Portfolio
-MVP: the mix of two assets with the lowest portfolio variance. Also in [[HW_09-Risk, Return & Diversification|HW 09]]. → [[Read_01-Finance Cheat Sheet|Cheat sheet]]
+MVP: the mix of two assets with the lowest portfolio variance, $x_A=\frac{\sigma_B^2-\sigma_A\sigma_B\rho}{\sigma_A^2+\sigma_B^2-2\sigma_A\sigma_B\rho}$. Also in [[HW_09-Risk, Return & Diversification|HW 09]] and the [[Read_01-Finance Cheat Sheet|cheat sheet]]. → [[Lesson_08-Risk, Return & Diversification|Lesson 08]]
+
+### Standard Deviation
+$\sigma=\sqrt{Var(r)}$, the dispersion of returns: the course's measure of total risk. Excel `STDEV.S`. → [[Lesson_08-Risk, Return & Diversification|Lesson 08]]
+
+### Covariance
+$Cov(r_A,r_B)$: the expected product of the two returns' deviations from their means; $\rho=Cov/(\sigma_A\sigma_B)$. Excel `COVARIANCE.S`. → [[Lesson_08-Risk, Return & Diversification|Lesson 08]]
+
+### Short Selling
+Selling a borrowed share: a negative portfolio weight, equivalent to borrowing at the stock's return. → [[Lesson_08-Risk, Return & Diversification|Lesson 08]]
+
+### Efficient Frontier
+The upper half of the minimum variance frontier: for each return, the lowest-risk portfolio. → [[Lesson_09-Capital Market Line|Lesson 09]]
 
 ## Market risk, CML and SML
 
 ### Capital Market Line
-Line of efficient portfolios mixing the risk-free asset with the market portfolio; return rises linearly with total risk. → [[Read_01-Finance Cheat Sheet|Cheat sheet]]
+Line of efficient portfolios mixing the risk-free asset with the market portfolio; return rises linearly with total risk. Also on the [[Read_01-Finance Cheat Sheet|cheat sheet]]. → [[Lesson_09-Capital Market Line|Lesson 09]]
 
 ### Security Market Line
-Line giving any asset's required return from its beta: $r_f+\beta(r_M-r_f)$ (the CAPM). Also in [[PP_01-Machine FCF & NPV, CAPM, Bond Repricing, Loan Effective Rate, NPV vs IRR & EAC (2020 Moed A)|PP 01]]. → [[Read_01-Finance Cheat Sheet|Cheat sheet]]
+Line giving any asset's required return from its beta: $r_f+\beta(r_M-r_f)$ (the CAPM). Taught in [[Lesson_10-Security Market Line & CAPM|Lesson 10]]. Also in [[PP_01-Machine FCF & NPV, CAPM, Bond Repricing, Loan Effective Rate, NPV vs IRR & EAC (2020 Moed A)|PP 01]]. → [[Read_01-Finance Cheat Sheet|Cheat sheet]]
 
 ### Beta
-An asset's sensitivity to market returns, $Cov(A,M)/\sigma_M^2$. Also in [[PP_01-Machine FCF & NPV, CAPM, Bond Repricing, Loan Effective Rate, NPV vs IRR & EAC (2020 Moed A)|PP 01]]. → [[Read_01-Finance Cheat Sheet|Cheat sheet]]
+An asset's sensitivity to market returns, $Cov(A,M)/\sigma_M^2$; for an efficient portfolio $\beta_p=x_m$. Taught in [[Lesson_10-Security Market Line & CAPM|Lesson 10]]. Also in [[PP_01-Machine FCF & NPV, CAPM, Bond Repricing, Loan Effective Rate, NPV vs IRR & EAC (2020 Moed A)|PP 01]]. → [[Read_01-Finance Cheat Sheet|Cheat sheet]]
 
 ### Systematic Risk
-The market-driven, undiversifiable part of total variance; this is what beta measures and what the market pays for. → [[Read_01-Finance Cheat Sheet|Cheat sheet]]
+The market-driven, undiversifiable part of total variance; this is what beta measures and what the market pays for. → [[Lesson_10-Security Market Line & CAPM|Lesson 10]]
 
 ### Idiosyncratic Risk
-The asset-specific, diversifiable part of total variance (also called specific risk). → [[Read_01-Finance Cheat Sheet|Cheat sheet]]
+The asset-specific, diversifiable part of total variance (also called specific risk). → [[Lesson_10-Security Market Line & CAPM|Lesson 10]]
+
+### Capital Allocation Line
+CAL: every mix of one risky portfolio and the riskless asset, a straight line with slope equal to its Sharpe ratio. → [[Lesson_09-Capital Market Line|Lesson 09]]
+
+### Sharpe Ratio
+$\frac{E(r)-r_f}{\sigma}$: excess return per unit of total risk; efficient portfolios share the highest one, the CML slope. → [[Lesson_09-Capital Market Line|Lesson 09]]
+
+### Tangency Portfolio
+The mean-variance efficient (MVE) mix of risky assets, where the line from $r_f$ touches the frontier. → [[Lesson_09-Capital Market Line|Lesson 09]]
+
+### Market Portfolio
+The value-weighted portfolio of all risky assets, $x_i=V_i/V_M$; in equilibrium it is the tangency portfolio. → [[Lesson_09-Capital Market Line|Lesson 09]]
+
+### Separation Theorem
+Tobin: choose the risky portfolio first (same for everyone), then the split with the riskless asset (depends on risk aversion). → [[Lesson_09-Capital Market Line|Lesson 09]]
+
+### Risk Premium
+The extra return demanded for risk; market risk premium $E(r_m)-r_f$, an asset's CAPM premium $\beta_i[E(r_m)-r_f]$. → [[Lesson_10-Security Market Line & CAPM|Lesson 10]]
 
 ## Aliases & Shorthands
 
@@ -239,3 +269,15 @@ See [[#Systematic Risk]].
 
 ### Real Rate
 See [[#Real Interest Rate]].
+
+### CAL
+See [[#Capital Allocation Line]].
+
+### MVE Portfolio
+See [[#Tangency Portfolio]].
+
+### Volatility
+See [[#Standard Deviation]].
+
+### Equity Premium
+See [[#Risk Premium]].

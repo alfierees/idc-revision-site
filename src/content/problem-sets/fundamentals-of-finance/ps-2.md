@@ -1,6 +1,7 @@
 ---
 title: "HW2"
 subject: fundamentals-of-finance
+official_solution: "/papers/fundamentals-of-finance/ps-2-official-solution.pdf"
 tags:
   - financial-management
   - npv
@@ -23,8 +24,8 @@ questions:
     solution: |
       | Project | Cash flows | IRR | NPV @ 5% |
       |---|---|---|---|
-      | A | $(-600, 0, 726, 0)$ | 10.0% | **+$58.50** |
-      | B | $(-700, 770, 11, 11)$ | 12.6% | **+$52.81** |
+      | A | $(-600, 0, 726, 0)$ | 10.0% | **+\$58.50** |
+      | B | $(-700, 770, 11, 11)$ | 12.6% | **+\$52.81** |
       | C | $(-100, 105, 0, 0)$ | 5.0% | $0 |
 
       > [!success] Decision
@@ -44,19 +45,19 @@ questions:
     related_terms: ["net-present-value", "internal-rate-of-return", "discount-rate"]
   - id: "3"
     text: |
-      **Back out a bonus and a cost of capital.** The cost of capital is $r = 15\%$. Two projects (Nepal and Uganda) have similar NPVs.
+      **Back out a bonus and a cost of capital.** A company chooses between growing coconuts in **Nepal** and watermelons in **Uganda**. The cost of capital is $10\%$. The difference between the projects' cash flows (Uganda minus Nepal, $ thousands) is $-20$ today, $+10$ in year 3 and $+30$ in year 6.
 
-      (a) What is the minimum bonus needed to choose Uganda?
+      (a) Nepal's minister of agriculture offers the company a bonus, paid at the end of year 4, to choose Nepal. What is the minimum bonus?
 
       (b) At what cost of capital is no bonus needed?
 
-      > [!todo] Question text not in the vault note
-      > The vault note holds only the answer for this question, not the original project cash flows.
+      > [!note] Question wording reconstructed
+      > The vault note did not hold the original question. This wording follows the official solution's differential cash-flow table; the full project cash flows are in the original assignment.
     solution: |
-      Two projects (Nepal, Uganda) with similar NPVs (~$50.9k vs ~$50.5k).
+      Work with the **differential project** (Uganda minus Nepal): the bonus must cover exactly what the company gives up by choosing Nepal.
 
-      - **(a) Minimum bonus** to choose Uganda = the NPV gap, carried forward to year 4: difference $\approx -0.455\text{k}$ in PV, then $\times 1.1^4 \approx \boxed{-\$666}$ (in the relevant units).
-      - **(b) Cost of capital at which no bonus is needed** = the rate where the incremental cash flow's IRR makes the two indifferent $\approx$ **14.47%**.
+      - **(a)** $NPV_{diff} = -20 + \frac{10}{1.1^3} + \frac{30}{1.1^6} = +4.45$ thousand. Uganda is worth about \$4,450 more, so Nepal must make that up. Paid at the end of year 4, the bonus is $4.45 \times 1.1^4 \approx \boxed{\$6{,}515}$ (official figure; 6,511 unrounded).
+      - **(b)** No bonus is needed when the differential NPV is zero, i.e. at the differential project's IRR, $\boxed{14.47\%}$. Above that rate coconuts in Nepal are worth more on their own.
     related_terms: ["net-present-value", "internal-rate-of-return", "discount-rate", "opportunity-cost"]
   - id: "4"
     text: |
@@ -64,7 +65,7 @@ questions:
     solution: |
       | | Project A | Project B |
       |---|---|---|
-      | NPV | **$20,865** | $14,920 |
+      | NPV | **\$20,865** | \$14,920 |
       | IRR | 21.98% | **25.98%** |
 
       > [!tip] Conflict resolution
@@ -89,7 +90,7 @@ questions:
       > [!example] The five statements
       > 1. *Indifferent at any r*: **False.** At $r=0$, NPV = sum of cash flows, so the bigger-total project wins; we don't know which that is.
       > 2. *We can always rank them*: **False** without knowing the crossover rate.
-      > 3. *If IRR < r the project loses money*: **True** (e.g. A's 15.2% < a 17% hurdle, so reject A and choose B).
+      > 3. *If IRR < r the project loses money*: **True** (e.g. A's IRR of about 15% < a 17% hurdle, so reject A and choose B).
       > 4. *At r = 22%, both unprofitable*: **True** (both IRRs below 22%).
       > 5. *At r = 15%, both profitable*: **False.** NPV(A) = 0 there, NPV(B) > 0, so only B is strictly profitable.
     related_terms: ["npv-profile", "net-present-value", "internal-rate-of-return", "discount-rate"]
