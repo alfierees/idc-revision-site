@@ -23,6 +23,9 @@ in_scope: true
 > [!info] Source
 > This note is built from one class workbook, `feedback.xlsx`, with six sheets: `employees` (200 rows, the main table), `feedback` (50 rows), `Branches` (16 rows), `index&match` (178 students with five exercise grades), and two pivot sheets `Sheet2` and `Sheet3`. Everything below uses the real values and formulas in that file. The `employees` table repeats the one from [[Lec_01-Sorting, Filters & Database Functions]]; only the **new** columns `feedback`, `Bonus`, `Salary + Bonus` and `Area`, plus the lookup blocks under the table, are covered here.
 
+> [!info] Class file (download)
+> [Lookups class workbook (xlsx)](/papers/excel-data-analysis/class-feedback-lookups.xlsx): `feedback.xlsx`, the Moodle copy of the workbook this note is built from. Sheets: `employees`, `feedback` and `index&match`.
+
 ## 1. The idea of a lookup
 
 A **lookup** answers: "I know a key (an employee ID, a branch name, a salary). Go to another table, find that key, and bring back a related value." It replaces copy and paste, and it keeps working when the data changes.
@@ -357,6 +360,24 @@ Rule of thumb from this workbook: use [[XLOOKUP]] for a "find the row, return a 
 - **`Sheet3`**: a one-cell pivot, `Sum of Monthly Salary in NIS` = `1622904`.
 
 I confirmed these totals independently from the `employees` rows: Tiberias has 21 employees with NIS 168,992 salary and NIS 12,400 bonus, and the grand totals are NIS 1,622,904 and NIS 115,800. The link to this lecture: the bonus summed in the pivot is not typed data, it is the result of the approximate-match XLOOKUP, which shows why lookups feed later analysis.
+
+## The class file, sheet by sheet
+
+The Moodle `feedback.xlsx` is the class file at the point where the three lookup styles are compared. It has three sheets.
+
+**`employees`.** The 200-employee table in `A1:J201` and a lookup block under it (`D204:G205`). A drop-down in `D205` (a [[Data Validation]] list of the Employee IDs, `A2:A201`) holds the employee to look up (10018). Three formulas look the same employee up three ways:
+
+| Cell | Formula | Returns |
+|---|---|---|
+| `E205` | `=VLOOKUP(D205,A2:B201,2,FALSE)` | first name (Ofra) |
+| `F205` | `=INDEX(C1:C201,MATCH(D205,A1:A201,0))` | last name (Salonim) |
+| `G205` | `=XLOOKUP(D205,A2:A201,J2:J201,,0)` | monthly salary (12,672) |
+
+The older `VLOOKUP` needs a column number counted by hand and the key in the leftmost column; [[INDEX and MATCH]] needs two functions but any layout; [[XLOOKUP]] names the lookup column and the return column separately and is the simplest. The last argument `0` is [[Exact Match]]. This sheet also has a leftover [[Conditional Formatting]] rule on the seniority column.
+
+**`feedback`.** A 50-row subset of the employee table with an extra column `K`, "feedback" (a score such as 57 or 83 for each employee). In the class the `feedback` column on `employees` is filled by looking each employee up here, as in section 2.4 of this note.
+
+**`index&match`.** A table of 178 students with five exercise grades (columns `D:H`, `grade ex1` to `grade ex5`) and a full-name column `C` built with `=A2&" "&B2`. A small form on the right shows the two-way lookup being built: `L2` is a drop-down of student names (`C2:C179`, currently Lilach Argov) and `L3` a drop-down of exercises (`D1:H1`, currently `grade ex4`). The two helper cells locate the pieces: `N2` = `=MATCH(L2,C1:C179,0)` gives 3 (the student's row) and `N3` = `=MATCH(L3,C1:H1,0)` gives 5 (the exercise's column inside `C1:H1`). The class then feeds both numbers to `INDEX` to return the grade at that row and column (33 for Lilach Argov on exercise 4); see section 4 of this note.
 
 ## Summary
 

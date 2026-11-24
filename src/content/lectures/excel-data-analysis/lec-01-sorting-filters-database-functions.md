@@ -27,6 +27,12 @@ in_scope: true
 > [!info] What this note covers
 > The class workbook `Sorting .xlsx`. It is the **base dataset of the whole course**: later workbooks (dates, IF statements, lookups, pivots) reuse the same 200-row employee table, so learn its columns now. The sheets are `employees`, `Sorting`, `Sorting 2`, `Filter`, `Filter 2`, `Filter 3`, `Filters advanced`, `Filters advanced 2` and `Sheet1`. Rows 2 to 201 hold the data; header in row 1.
 
+> [!info] Class file (download)
+> Three Moodle class files go with this lecture (the 24 November 2024 class and its starting table). Download and follow along:
+> - [Employee table, starting file (xlsx)](/papers/excel-data-analysis/class-employees-start.xlsx): `format_new.xlsx`, the clean 200-row table with no formulas and no formatting.
+> - [Sort and formatting class, 24.11 (xlsx)](/papers/excel-data-analysis/class-24-11-sort.xlsx): `24.11_sort.xlsx`.
+> - [Filters and advanced filter class, 24.11 part 2 (xlsx)](/papers/excel-data-analysis/class-24-11-part2.xlsx): `24.11_part2.xlsx`.
+
 ## 1. The employee dataset
 
 Every sheet from `employees` to `Filters advanced 2` carries the same table in `A1:J201` (200 employees, 10 columns). The only differences are the row order and what has been done on top of it (sorting, filters, extra columns).
@@ -448,6 +454,28 @@ with the **inputs typed once in a small block**: `K204 = 10000` (salary threshol
 ### Stray cells to ignore
 
 `Filters advanced` also contains `J202 = SUM(J1:J201)` (1629264, the total salary bill) and a stray `XFD2 = SUM(A2:XFC2)`, a sum across an entire row to the last column of the sheet. They are leftovers, not part of the lesson. Avoid whole-row sums: they are slow and sensitive to anything accidentally typed in the row.
+
+## The class file, sheet by sheet
+
+These are the Moodle versions of the base employee table used in this lecture. They carry the class **exercise instructions** typed into cells below the data (starting around row 204).
+
+**`format_new.xlsx` (starting file).** One sheet, `employees`, with the 200 employees in `A1:J201` (Employee ID, names, Branch, Department, Birth Date, Hire Date, Seniority, Position, Monthly Salary in NIS). No formulas and no conditional formatting. This is the blank table the class starts from.
+
+**`24.11_sort.xlsx` (sorting and formatting).** One sheet, `employees`, with the same table plus:
+
+| Item | Where | What it shows |
+|---|---|---|
+| Euro salary | column `K`, `=J2/$I$205` | salary divided by the euro rate; the rate `3.95` sits in the helper cell `I205` (label in `I204`), an [[Absolute Reference]] |
+| Seniority threshold | `G205` = `25` (label "sen over 25") | a helper cell for a seniority rule |
+| Colour rules on salary | `J2:J201` | [[Conditional Formatting]] with the thresholds in cells: salary at or above `G209` (`10000`) is purple, salary below `G211` (`5000`) is green |
+| Helper values for a formatting exercise | `C208`, `E209`, `C209` | Tiberias, Metula and the date `1 January 1980`, the "or formatting" criteria |
+| Instruction | `E217` and `E218` | duplicate the sheet as `formatting` and colour the whole row of every employee in the Computing department |
+
+**`24.11_part2.xlsx` (sort, filter, advanced filter).** Three sheets, all carrying the same table and helper cells as `24.11_sort.xlsx`:
+
+- `employees` has two instructions: sheet `sort1` (sort the salary column with green cells first, then purple, then values from largest to smallest) and sheet `sort2` (Branch A to Z, then Department Z to A, then Birth Date newest to oldest). See section 2 on [[Sorting]].
+- `filter` has the filter tasks typed in `J213:J217`: show the employees whose salary cell is purple; whose seniority is above the average; whose department contains the letter `e` or begins with `a`; and whose birth date is after 1 January 1966. It also has `J208` = `=SUM(J66:J200)` and `J209` = `=SUBTOTAL(9,J66:J200)` side by side, to show the difference between `SUM` and [[SUBTOTAL]] on filtered rows (both read 1,128,479 in the saved file because no filter is active).
+- `advanced` is the [[Advanced Filter]] practice sheet. It lays out four criteria-range shapes in `F215` to `H233`: a simple one (Monthly Salary `>10000` and Branch `Eilat` on one row, so AND); an AND of three (salary `>10000`, branch `Eilat`, seniority `<15` on one row); an OR (the three conditions on different rows); and a mixed one (salary `>10000` and seniority `<15` on one row, `Eilat` on the next). The worked task is "work in accounting or computing and earn above 10000" (`F238`): criteria `Department` and `Monthly Salary in NIS` in `F240:G242` with Accounting and Computing on two rows, each with `>10000`. The result list below it, headers in `F247:J247`, holds the 19 matching employees. This is the same rule as section 5 of this note: same row is AND, different rows are OR.
 
 ## Summary
 
