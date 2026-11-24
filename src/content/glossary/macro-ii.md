@@ -29,6 +29,9 @@ Also in Macro (Year 2, Sem 2).
 Production function Y = K^a L^(1-a) with constant returns to scale; the exponents are the factor income shares. → [[Lec_03-Classical Theory & National Income|Lec 03]]
 Also in Macro (Year 2, Sem 2).
 
+### Euler's Theorem
+With constant returns to scale and factors paid their marginal products, total factor payments exactly equal output: Y = MPL·L + MPK·K, so nothing is left over as profit. → [[Lec_03-Classical Theory & National Income|Lec 03]]
+
 ### Marginal Product
 Extra output from one more unit of an input; in the classical model factors are paid their marginal products (MPL = real wage, MPK = real rental rate). → [[Lec_03-Classical Theory & National Income|Lec 03]]
 
