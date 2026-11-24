@@ -33,17 +33,17 @@ questions:
       $$
     options:
       - label: "A"
-        text: "Total savings is 290 and the government deficit is 2,000"
-        correct: true
-        why: "Net saving equals net investment, 290, and $G - T = 2{,}000$."
-      - label: "B"
-        text: "Net investment is 595"
-        correct: false
-        why: "Net investment is $440 - 150 = 290$."
-      - label: "C"
         text: "Final firms' profit is 2,890; intermediate firms' profit is 800"
         correct: false
         why: "They are 2,540 and 670."
+      - label: "B"
+        text: "Total savings is 290 and the government deficit is 2,000"
+        correct: true
+        why: "Net saving equals net investment, 290, and $G - T = 2{,}000$."
+      - label: "C"
+        text: "Net investment is 595"
+        correct: false
+        why: "Net investment is $440 - 150 = 290$."
       - label: "D"
         text: "Net output is 5,145"
         correct: false
@@ -62,24 +62,24 @@ questions:
       figure: open-economy
       ```
 
-      $S = I + NX$ with $S$ fixed. A higher world rate lowers $I$ and creates $NX > 0$. A lower world rate raises $I$ and creates $NX < 0$. The official key marks **A and C**.
+      $S = I + NX$ with $S$ fixed. A higher world rate lowers $I$ and creates $NX > 0$. A lower world rate raises $I$ and creates $NX < 0$. The official key marks **A and D**.
     options:
       - label: "A"
         text: "If net exports are positive, the closed-economy interest rate is lower than the open-economy rate"
         correct: true
         why: "$NX > 0$ means $S > I$, which happens at a higher rate."
       - label: "B"
-        text: "If the open-economy rate is lower than the closed rate, exports exceed imports"
-        correct: false
-        why: "A lower rate raises $I$ above $S$, so $NX < 0$."
-      - label: "C"
-        text: "If the closed-economy rate is higher than the open rate, total savings is lower than domestic investment"
-        correct: true
-        why: "At the lower world rate, $I$ rises above the fixed $S$."
-      - label: "D"
         text: "If the two rates are equal, there would be no international trade"
         correct: false
         why: "Trade can still happen, it just balances."
+      - label: "C"
+        text: "If the open-economy rate is lower than the closed rate, exports exceed imports"
+        correct: false
+        why: "A lower rate raises $I$ above $S$, so $NX < 0$."
+      - label: "D"
+        text: "If the closed-economy rate is higher than the open rate, total savings is lower than domestic investment"
+        correct: true
+        why: "At the lower world rate, $I$ rises above the fixed $S$."
     related_terms:
       - savings-identity
       - net-exports
@@ -106,21 +106,21 @@ questions:
       The options label the statements A, B and C rather than I, II and III.
     options:
       - label: "A"
-        text: "Statements B and C are correct"
-        correct: true
-        why: "This means II and III, which are both true."
+        text: "Statement C only is correct"
+        correct: false
+        why: "Statement II is also true."
       - label: "B"
         text: "All three statements are correct"
         correct: false
         why: "Statement I is false: GDP rose."
       - label: "C"
+        text: "Statements B and C are correct"
+        correct: true
+        why: "This means II and III, which are both true."
+      - label: "D"
         text: "Statements A and C are correct"
         correct: false
         why: "Statement I is false."
-      - label: "D"
-        text: "Statement C only is correct"
-        correct: false
-        why: "Statement II is also true."
     related_terms:
       - real-gdp
       - gdp-per-capita
@@ -135,21 +135,21 @@ questions:
       $$
     options:
       - label: "A"
-        text: "GDP is 638 higher than NNP, and NDP is 394 higher than NNP"
-        correct: true
-        why: "$394 + 244 = 638$."
-      - label: "B"
         text: "GDP is 394 lower than GNP and 244 higher than NDP"
         correct: false
         why: "GDP is 394 **higher** than GNP."
-      - label: "C"
-        text: "NDP is 394 lower than NNP and 638 higher than GDP"
-        correct: false
-        why: "NDP is above NNP and below GDP."
-      - label: "D"
+      - label: "B"
         text: "GNP is 244 lower than NNP and 394 higher than GDP"
         correct: false
         why: "GNP is above NNP and below GDP."
+      - label: "C"
+        text: "GDP is 638 higher than NNP, and NDP is 394 higher than NNP"
+        correct: true
+        why: "$394 + 244 = 638$."
+      - label: "D"
+        text: "NDP is 394 lower than NNP and 638 higher than GDP"
+        correct: false
+        why: "NDP is above NNP and below GDP."
     related_terms:
       - gross-national-product
       - net-domestic-product
@@ -164,21 +164,21 @@ questions:
       $$
     options:
       - label: "A"
-        text: "If exports exceed imports, domestic savings exceed domestic investment"
-        correct: true
-        why: "$S - I = NX > 0$, with no net foreign factor income."
+        text: "If GDP is larger than GNP, imports exceed exports"
+        correct: false
+        why: "The GDP to GNP gap is about factor income, not trade."
       - label: "B"
         text: "If imports exceed exports, private savings exceed domestic investment"
         correct: false
         why: "$NX < 0$ means total $S < I$."
       - label: "C"
-        text: "If GDP is larger than GNP, imports exceed exports"
-        correct: false
-        why: "The GDP to GNP gap is about factor income, not trade."
-      - label: "D"
         text: "If exports equal imports, domestic savings are zero"
         correct: false
         why: "Then $S = I$, which need not be zero."
+      - label: "D"
+        text: "If exports exceed imports, domestic savings exceed domestic investment"
+        correct: true
+        why: "$S - I = NX > 0$, with no net foreign factor income."
     related_terms:
       - savings-identity
       - net-exports
@@ -190,21 +190,21 @@ questions:
       Saving falls, so the supply of loanable funds shifts left, $r$ rises and investment falls.
     options:
       - label: "A"
+        text: "An increase in investment"
+        correct: false
+        why: "A higher rate lowers investment."
+      - label: "B"
         text: "An increase in interest rates"
         correct: true
         why: "Less saving reduces the supply of funds."
-      - label: "B"
-        text: "Higher private savings, if households save at least 25%"
-        correct: false
-        why: "More consumption means less saving."
       - label: "C"
         text: "More loanable funds without a change in rates"
         correct: false
         why: "Supply falls."
       - label: "D"
-        text: "An increase in investment"
+        text: "Higher private savings, if households save at least 25%"
         correct: false
-        why: "A higher rate lowers investment."
+        why: "More consumption means less saving."
     related_terms:
       - loanable-funds-market
       - private-savings
@@ -220,13 +220,13 @@ questions:
         correct: true
         why: "The basic model has constant technology."
       - label: "B"
-        text: "Capital accumulation is independent of the savings rate"
-        correct: false
-        why: "Saving drives accumulation."
-      - label: "C"
         text: "There are increasing returns to capital and labour"
         correct: false
         why: "Returns to each are diminishing."
+      - label: "C"
+        text: "Capital accumulation is independent of the savings rate"
+        correct: false
+        why: "Saving drives accumulation."
       - label: "D"
         text: "The production function exhibits increasing returns to scale"
         correct: false
@@ -241,19 +241,19 @@ questions:
       Steady state means $\Delta k = 0$, so any change in $k$ means the economy is not there.
     options:
       - label: "A"
-        text: "Capital per worker changes between periods"
-        correct: true
-        why: "In steady state $k$ is constant."
-      - label: "B"
         text: "Investment equals depreciation plus equipping new workers"
         correct: false
         why: "That defines steady state."
-      - label: "C"
-        text: "Output per worker does not change"
+      - label: "B"
+        text: "Total capital grows at the rate of population growth"
         correct: false
         why: "That holds in steady state."
+      - label: "C"
+        text: "Capital per worker changes between periods"
+        correct: true
+        why: "In steady state $k$ is constant."
       - label: "D"
-        text: "Total capital grows at the rate of population growth"
+        text: "Output per worker does not change"
         correct: false
         why: "That holds in steady state."
     related_terms:
@@ -273,17 +273,17 @@ questions:
         correct: true
         why: "Lower $s$ lowers $k^*$ and $y^*$."
       - label: "B"
-        text: "$k$ decreases but $y$ is unchanged"
-        correct: false
-        why: "$y$ depends on $k$."
-      - label: "C"
-        text: "The growth rate of output per worker declines permanently"
-        correct: false
-        why: "It is zero in both steady states."
-      - label: "D"
         text: "The economy cannot reach a steady state"
         correct: false
         why: "It reaches a lower one."
+      - label: "C"
+        text: "$k$ decreases but $y$ is unchanged"
+        correct: false
+        why: "$y$ depends on $k$."
+      - label: "D"
+        text: "The growth rate of output per worker declines permanently"
+        correct: false
+        why: "It is zero in both steady states."
     related_terms:
       - steady-state
   - id: "q10"
@@ -291,24 +291,24 @@ questions:
     text: |
       Which does **not** describe an economy in a poverty trap in the Solow framework?
     solution: |
-      A trap needs savings too low to build capital. Option A has the opposite.
+      A trap needs savings too low to build capital. Option B has the opposite.
     options:
       - label: "A"
+        text: "High depreciation and low savings, with a low steady state"
+        correct: false
+        why: "This is a trap."
+      - label: "B"
         text: "Low population growth and high savings, accumulating capital fast enough to raise income"
         correct: true
         why: "This economy is escaping poverty."
-      - label: "B"
-        text: "Low savings and low $k$, unable to raise savings, stuck at a low steady state"
-        correct: false
-        why: "This is a trap."
       - label: "C"
-        text: "High depreciation and low savings, with a low steady state"
+        text: "Low savings and low $k$, unable to raise savings, stuck at a low steady state"
         correct: false
         why: "This is a trap."
       - label: "D"
         text: "All other answers describe a poverty trap"
         correct: false
-        why: "Option A does not."
+        why: "Option B does not."
     related_terms:
       - poverty-trap
   - id: "q11"
@@ -321,21 +321,21 @@ questions:
       $$
     options:
       - label: "A"
-        text: "Encourage the public to set the savings rate to $\\alpha$"
-        correct: true
-        why: "The Golden Rule for Cobb-Douglas."
-      - label: "B"
         text: "Increase capital per worker by $\\alpha$"
         correct: false
         why: "The rule concerns the savings rate."
+      - label: "B"
+        text: "Increase output by $\\alpha$"
+        correct: false
+        why: "Not the Golden Rule condition."
       - label: "C"
         text: "If in steady state, consumption is at its highest"
         correct: false
         why: "Only the Golden Rule steady state maximises it."
       - label: "D"
-        text: "Increase output by $\\alpha$"
-        correct: false
-        why: "Not the Golden Rule condition."
+        text: "Encourage the public to set the savings rate to $\\alpha$"
+        correct: true
+        why: "The Golden Rule for Cobb-Douglas."
     related_terms:
       - golden-rule-savings-rate
   - id: "q12"
@@ -346,19 +346,19 @@ questions:
       With the same $A$, $\alpha$, $n$ and $\delta$, only $s$ can produce a different steady state. Initial capital does not affect it.
     options:
       - label: "A"
-        text: "Bywater's savings rate is higher"
-        correct: true
-        why: "It is the only parameter left that differs."
-      - label: "B"
         text: "Returns to capital fall in Mordor but rise in Bywater"
         correct: false
         why: "They share a production function."
+      - label: "B"
+        text: "Bywater's savings rate is higher"
+        correct: true
+        why: "It is the only parameter left that differs."
       - label: "C"
-        text: "Mordor's capital depreciates faster at higher output"
+        text: "Mordor is in a poverty trap due to higher depreciation"
         correct: false
         why: "They share $\\delta$."
       - label: "D"
-        text: "Mordor is in a poverty trap due to higher depreciation"
+        text: "Mordor's capital depreciates faster at higher output"
         correct: false
         why: "They share $\\delta$."
     related_terms:
@@ -378,9 +378,9 @@ questions:
       > With $n_1 \neq n_2$, the two economies have different steady states, so they cannot both start in steady state at the same $k$. The official answer is kept.
     options:
       - label: "A"
-        text: "$k$ and $y$ fall temporarily, then return to their original levels; Economy 2 recovers faster"
-        correct: true
-        why: "At the same $k$, lower $n$ leaves more saving to raise $k$."
+        text: "$k$ and $y$ remain unchanged"
+        correct: false
+        why: "$K$ falls while $L$ does not."
       - label: "B"
         text: "$k$ and $y$ rise temporarily, then fall below original levels"
         correct: false
@@ -390,9 +390,9 @@ questions:
         correct: false
         why: "Parameters are unchanged, so $k$ recovers."
       - label: "D"
-        text: "$k$ and $y$ remain unchanged"
-        correct: false
-        why: "$K$ falls while $L$ does not."
+        text: "$k$ and $y$ fall temporarily, then return to their original levels; Economy 2 recovers faster"
+        correct: true
+        why: "At the same $k$, lower $n$ leaves more saving to raise $k$."
     related_terms:
       - steady-state
       - capital-dilution
@@ -406,17 +406,17 @@ questions:
       $$
     options:
       - label: "A"
-        text: "No, the economy is at steady state, so $k$ is constant"
-        correct: true
-        why: "$\\Delta k = 0$."
+        text: "No, saving is insufficient to cover depreciation and population growth"
+        correct: false
+        why: "It exactly covers them."
       - label: "B"
         text: "Yes, the net change in $k$ is positive"
         correct: false
         why: "It is zero."
       - label: "C"
-        text: "No, saving is insufficient to cover depreciation and population growth"
-        correct: false
-        why: "It exactly covers them."
+        text: "No, the economy is at steady state, so $k$ is constant"
+        correct: true
+        why: "$\\Delta k = 0$."
       - label: "D"
         text: "Yes, $k$ is at its highest level"
         correct: false
@@ -436,13 +436,13 @@ questions:
         correct: true
         why: "The deficit is financed from reserves."
       - label: "B"
-        text: "An increase in reserves reflects a capital account deficit if the current account is zero"
-        correct: false
-        why: "With a zero current account and no capital flows, reserves do not change."
-      - label: "C"
         text: "The balance of payments records only capital movements"
         correct: false
         why: "It also records goods, services and transfers."
+      - label: "C"
+        text: "An increase in reserves reflects a capital account deficit if the current account is zero"
+        correct: false
+        why: "With a zero current account and no capital flows, reserves do not change."
       - label: "D"
         text: "The balance of payments reflects a country's ability to lend abroad"
         correct: false
@@ -483,21 +483,21 @@ questions:
       $$
     options:
       - label: "A"
-        text: "Only Economist B is correct"
-        correct: true
-        why: "$s_{GR} = \\alpha = 0.4$."
-      - label: "B"
         text: "B is correct, and A is correct only in the short run"
         correct: false
         why: "A's reasoning is wrong."
-      - label: "C"
+      - label: "B"
         text: "All three are wrong"
         correct: false
         why: "B is right."
-      - label: "D"
+      - label: "C"
         text: "Only Economist C is correct"
         correct: false
         why: "Saving above the Golden Rule lowers consumption."
+      - label: "D"
+        text: "Only Economist B is correct"
+        correct: true
+        why: "$s_{GR} = \\alpha = 0.4$."
     related_terms:
       - golden-rule-savings-rate
   - id: "q18"
@@ -520,21 +520,21 @@ questions:
       $$
     options:
       - label: "A"
-        text: "Foreign reserves decreased by 478"
-        correct: true
-        why: "Aid in goods has no reserve effect."
-      - label: "B"
         text: "Net capital movement = 1,407"
         correct: false
         why: "It is $-254 + 223 - 856 - 297 = -1{,}184$."
-      - label: "C"
+      - label: "B"
         text: "The current account is in deficit"
         correct: false
         why: "It is $+706$."
+      - label: "C"
+        text: "Foreign reserves decreased by 478"
+        correct: true
+        why: "Aid in goods has no reserve effect."
       - label: "D"
         text: "All other alternatives are incorrect"
         correct: false
-        why: "Option A is correct."
+        why: "Option C is correct."
     related_terms:
       - balance-of-payments
       - foreign-exchange-reserves
@@ -558,13 +558,13 @@ questions:
         correct: false
         why: "They share a production function."
       - label: "C"
-        text: "Economy B has a larger population"
-        correct: false
-        why: "Not enough to explain it."
-      - label: "D"
         text: "Nothing can explain this"
         correct: false
         why: "Diminishing returns can."
+      - label: "D"
+        text: "Economy B has a larger population"
+        correct: false
+        why: "Not enough to explain it."
     related_terms:
       - marginal-product-of-capital
       - solow-model
@@ -576,21 +576,21 @@ questions:
       With $K$ fixed, less labour means more capital per worker and higher productivity, but less total output.
     options:
       - label: "A"
-        text: "Higher capital per worker and lower total output"
-        correct: true
-        why: "$K/L$ rises and $Y$ falls."
-      - label: "B"
         text: "Lower output per worker and lower total output"
         correct: false
         why: "Output per worker rises."
+      - label: "B"
+        text: "Higher capital per worker and lower total output"
+        correct: true
+        why: "$K/L$ rises and $Y$ falls."
       - label: "C"
-        text: "Higher capital per worker but lower output per worker"
-        correct: false
-        why: "More $k$ raises $y$."
-      - label: "D"
         text: "A decrease in labour's marginal output"
         correct: false
         why: "MPL rises when $L$ falls."
+      - label: "D"
+        text: "Higher capital per worker but lower output per worker"
+        correct: false
+        why: "More $k$ raises $y$."
     related_terms:
       - marginal-product-of-labor
   - id: "q21"
@@ -605,17 +605,17 @@ questions:
         correct: true
         why: "Both definitions are right."
       - label: "B"
-        text: "NDP measures net output produced by nationals domestically; GNP measures gross final output produced by nationals"
+        text: "GNP is final national domestic output including investment in depreciation"
         correct: false
-        why: "NDP covers all domestic production."
+        why: "GNP is not limited to domestic output."
       - label: "C"
         text: "NDP is gross final domestic output excluding investment in depreciation"
         correct: false
         why: "NDP is net, not gross."
       - label: "D"
-        text: "GNP is final national domestic output including investment in depreciation"
+        text: "NDP measures net output produced by nationals domestically; GNP measures gross final output produced by nationals"
         correct: false
-        why: "GNP is not limited to domestic output."
+        why: "NDP covers all domestic production."
     related_terms:
       - gross-domestic-product
       - gross-national-product
@@ -630,31 +630,31 @@ questions:
       $$
     options:
       - label: "A"
-        text: "Real GDP per capita increased by about 1% in 2021"
-        correct: true
-        why: "$1.06 / (1.04 \\times 1.01) \\approx 1.009$."
-      - label: "B"
         text: "Population growth offsets GDP growth completely"
         correct: false
         why: "It does not."
-      - label: "C"
+      - label: "B"
         text: "Real GDP per capita growth was 5%"
         correct: false
         why: "That ignores inflation."
-      - label: "D"
+      - label: "C"
         text: "Data is insufficient"
         correct: false
         why: "The growth rates are enough."
+      - label: "D"
+        text: "Real GDP per capita increased by about 1% in 2021"
+        correct: true
+        why: "$1.06 / (1.04 \\times 1.01) \\approx 1.009$."
     related_terms:
       - real-gdp
       - gdp-per-capita
 ---
 
 > [!info] Answer key
-> The marked answers come from the **official Moed A key**. The explanations are AI-written.
+> The marked answers come from the **official Moed A key**. The explanations are AI-written. The options are shuffled on this page, so the position of the correct answer gives nothing away.
 
 > [!warning] Questions to check
-> - **Q2:** the official key marks **both A and C** as correct.
+> - **Q2:** the official key marks **both A and D** as correct.
 > - **Q13:** the question says both economies start with the same $k$ but different $n$, so they cannot both begin in steady state. The official answer is kept.
 > - **Q16:** the lecturers **struck this question out** of the key. No option matches the data.
 > - **Q19:** the official answer says "diminishing return to scale", but the model has constant returns to scale and diminishing returns **to capital**.
