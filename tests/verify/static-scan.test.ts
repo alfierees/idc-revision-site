@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { scanHtml, stripScriptsAndStyles } from "../../scripts/verify/static-scan";
+import { collectLineDisplayTex, displayOnlyTex, scanHtml, stripScriptsAndStyles } from "../../scripts/verify/static-scan";
 
 const kinds = (html: string) => scanHtml(html).map((finding) => finding.kind);
 
@@ -50,3 +50,40 @@ describe("scanHtml", () => {
     expect(finding.excerpt.length).toBeLessThanOrEqual(100);
   });
 });
+
+describe("cramped-math check", () => {
+  // A KaTeX inline formula as it appears in built HTML: the TeX sits in a MathML annotation.
+  const inline = (tex: string) =>
+    `<span class="katex"><span class="katex-mathml"><math><semantics><mrow></mrow><annotation encoding="application/x-tex">${tex}</annotation></semantics></math></span></span>`;
+  const display = (tex: string) => `<span class="katex-display">${inline(tex)}</span>`;
+
+  it("collects one-line $$ formulas from callouts and list items, not mid-sentence or in code", () => {
+    const md = "$$a=1$$\n> $$b = 2$$\n   $$c=3$$ ^id\nso $$d$$ holds\n```\n$$e$$\n```";
+    expect(collectLineDisplayTex(md)).toEqual(["a=1", "b = 2", "c=3"]);
+  });
+
+  it("only checks formulas the course never also writes inline", () => {
+    const tex = displayOnlyTex(["$$-2$$\n$$\\frac{a}{b}$$", "The answer is $-2$."]);
+    expect([...tex]).toEqual(["\\frac{a}{b}"]);
+  });
+
+  it("flags a one-line $$ formula that rendered inline on its own line", () => {
+    const displayTex = new Set(["\\frac{a}{b}"]);
+    expect(kinds2(`<ul><li>item\n${inline("\\frac{a}{b}")}\n</li></ul>`, displayTex)).toEqual(["cramped-math"]);
+    expect(kinds2(`<p>text\n${inline("\\frac{a}{b}")}\nmore</p>`, displayTex)).toEqual(["cramped-math"]);
+  });
+
+  it("does not flag display output, mid-sentence use, or pages scanned without the course formulas", () => {
+    const displayTex = new Set(["\\frac{a}{b}"]);
+    expect(kinds2(`<div class="eqn">${display("\\frac{a}{b}")}</div>`, displayTex)).toEqual([]);
+    expect(kinds2(`<p>so ${inline("\\frac{a}{b}")} holds</p>`, displayTex)).toEqual([]);
+    expect(kinds(`<p>${inline("\\frac{a}{b}")}</p>`)).toEqual([]);
+  });
+
+  it("checks solutions hidden in an island's props", () => {
+    const props = JSON.stringify({ solutionHtml: [0, `<p>${inline("\\frac{a}{b}")}</p>`] }).replace(/"/g, "&quot;");
+    expect(kinds2(`<astro-island props="${props}"></astro-island>`, new Set(["\\frac{a}{b}"]))).toEqual(["cramped-math"]);
+  });
+});
+
+const kinds2 = (html: string, displayTex: Set<string>) => scanHtml(html, { displayTex }).map((finding) => finding.kind);

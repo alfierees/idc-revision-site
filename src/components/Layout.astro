@@ -27,13 +27,11 @@ const currentSection = activeSection(Astro.url.pathname);
 
 const subjects = (await getCollection("subjects")).map((s) => s.data);
 const current = subject ? subjects.find((s) => s.slug === subject) : undefined;
-// Header switcher: live courses only, under their semester, current semester first.
-const switcherGroups = groupBySemester(subjects)
-  .filter((g) => g.live.length > 0)
-  .sort((a, b) => {
-    const isCurrent = (g: typeof a) => g.live.some((s) => s.slug === subject);
-    return Number(isCurrent(b)) - Number(isCurrent(a));
-  });
+// Header switcher: only the courses in the current course's semester (picking
+// a semester narrows the site to it); the rest are one click away on /courses.
+const currentGroup = current
+  ? groupBySemester(subjects).find((g) => g.semester.year === current.year && g.semester.semester === current.semester)
+  : undefined;
 
 const tabs = [
   { id: "lectures",     label: "Lectures" },
@@ -83,17 +81,18 @@ const section = active ?? "dictionary";
         </nav>
         <div class="bar-right">
           <HeaderAccount client:load />
-          {hasSidebar && (
-            <button id="sidebar-toggle" type="button" class="panel-toggle" aria-pressed="false" title="Toggle sidebar">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
-            </button>
-          )}
         </div>
       </div>
       {current && (
         <div class="course-row">
           <div class="course-row-inner">
             <div class="course-head">
+              {hasSidebar && (
+                <button id="sidebar-toggle" type="button" class="panel-toggle" aria-controls="content-grid" aria-expanded="true" title="Hide sidebar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
+                  <span class="sr-only">Toggle sidebar</span>
+                </button>
+              )}
               <div class="subject-menu" id="subject-menu">
                 <button
                   type="button"
@@ -107,22 +106,19 @@ const section = active ?? "dictionary";
                   </span>
                 </button>
                 <div class="subject-pop" hidden role="menu">
-                  <p class="subject-pop-label">Switch course</p>
-                  {switcherGroups.map((g) => (
-                    <div class="subject-group" role="group" aria-label={g.semester.label}>
-                      <p class="subject-group-label">{g.semester.label}</p>
-                      {g.live.map((s) => (
-                        <a
-                          href={`/subjects/${s.slug}/${section}`}
-                          class={`subject-opt ${s.slug === subject ? "current" : ""}`}
-                          role="menuitem"
-                        >
-                          {s.title}
-                          {s.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
-                        </a>
-                      ))}
-                    </div>
+                  <p class="subject-pop-label">{currentGroup ? currentGroup.semester.label : "Switch course"}</p>
+                  {(currentGroup?.live ?? []).map((s) => (
+                    <a
+                      href={`/subjects/${s.slug}/${section}`}
+                      class={`subject-opt ${s.slug === subject ? "current" : ""}`}
+                      role="menuitem"
+                      aria-current={s.slug === subject ? "page" : undefined}
+                    >
+                      {s.title}
+                      {s.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
+                    </a>
                   ))}
+                  <a href="/courses" class="subject-all" role="menuitem">Other semesters <span aria-hidden="true">→</span></a>
                 </div>
               </div>
               {PROGRESS_UI_ENABLED && subject && <CourseChip client:idle subject={subject} />}
@@ -200,23 +196,51 @@ const section = active ?? "dictionary";
         });
       }
 
-      // ---- sidebar collapse (toggle lives in the header) ----
+      // ---- sidebar: top-left toggle. Desktop: the rail collapses (remembered).
+      // Below 1024px: the rail is an off-canvas drawer from the left, closed by default.
       const KEY = "idc-sidebar-hidden";
       const grid = document.getElementById("content-grid");
       const toggleBtn = document.getElementById("sidebar-toggle");
-      if (grid && toggleBtn) {
-        const apply = (hidden: boolean) => {
-          grid.classList.toggle("sidebar-collapsed", hidden);
-          toggleBtn.classList.toggle("active", !hidden);
-          toggleBtn.setAttribute("aria-pressed", String(!hidden));
-          toggleBtn.setAttribute("title", hidden ? "Show sidebar" : "Hide sidebar");
+      const rail = grid?.querySelector<HTMLElement>(":scope > aside");
+      if (grid && toggleBtn && rail) {
+        const desktop = window.matchMedia("(min-width: 1024px)");
+        const scrim = document.createElement("div");
+        scrim.className = "rail-scrim";
+        scrim.hidden = true;
+        document.body.append(scrim);
+        const setDrawer = (open: boolean) => {
+          grid.classList.toggle("rail-open", open);
+          document.documentElement.classList.toggle("rail-locked", open);
+          scrim.hidden = !open;
         };
-        apply(localStorage.getItem(KEY) === "1");
+        const sync = () => {
+          const shown = desktop.matches ? !grid.classList.contains("sidebar-collapsed") : grid.classList.contains("rail-open");
+          toggleBtn.classList.toggle("active", shown);
+          toggleBtn.setAttribute("aria-expanded", String(shown));
+          toggleBtn.setAttribute("title", shown ? "Hide sidebar" : "Show sidebar");
+        };
+        let stored = false;
+        try { stored = localStorage.getItem(KEY) === "1"; } catch {}
+        grid.classList.toggle("sidebar-collapsed", stored);
+        sync();
         toggleBtn.addEventListener("click", () => {
-          const hidden = !grid.classList.contains("sidebar-collapsed");
-          localStorage.setItem(KEY, hidden ? "1" : "0");
-          apply(hidden);
+          if (desktop.matches) {
+            const hidden = !grid.classList.contains("sidebar-collapsed");
+            grid.classList.toggle("sidebar-collapsed", hidden);
+            try { localStorage.setItem(KEY, hidden ? "1" : "0"); } catch {}
+          } else {
+            setDrawer(!grid.classList.contains("rail-open"));
+          }
+          sync();
         });
+        scrim.addEventListener("click", () => { setDrawer(false); sync(); });
+        rail.addEventListener("click", (e) => {
+          if (!desktop.matches && (e.target as HTMLElement).closest("a")) { setDrawer(false); sync(); }
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && grid.classList.contains("rail-open")) { setDrawer(false); sync(); toggleBtn.focus(); }
+        });
+        desktop.addEventListener("change", () => { setDrawer(false); sync(); });
       }
 
       // ---- TOC scroll-spy ----

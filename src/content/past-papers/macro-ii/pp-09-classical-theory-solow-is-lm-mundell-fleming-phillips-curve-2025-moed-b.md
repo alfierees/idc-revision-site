@@ -1,5 +1,6 @@
 ---
 title: "Macro II Moed B 2025 — Worked Solutions"
+topics: "Classical theory, Solow, IS-LM, Mundell-Fleming, Phillips curve"
 type: past-paper
 status: worked-solution
 exam: "Moed B, 17 March 2025 (header misprinted as Moed A)"

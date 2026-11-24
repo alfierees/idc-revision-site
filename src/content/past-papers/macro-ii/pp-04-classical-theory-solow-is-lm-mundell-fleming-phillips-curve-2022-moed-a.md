@@ -1,5 +1,6 @@
 ---
 title: "Moed A 2022 — Worked Solutions"
+topics: "Classical theory, Solow, IS-LM, Mundell-Fleming, Phillips curve"
 type: past-paper
 status: worked-solution
 exam: "Moed A, 16 June 2022"

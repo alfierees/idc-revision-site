@@ -13,6 +13,17 @@ interface Props {
 }
 const { title, slug, placeholder, eyebrow, tagline, counts, href, index } = Astro.props;
 const delay = `${index * 60}ms`;
+const STOP = new Set(["and", "of", "to", "for", "the", "in", "&", "-", "–"]);
+const words = title.split(/\s+/).filter((w) => w && !STOP.has(w.toLowerCase()));
+// "Accounting" → "AC", "Macro-Economics" → "MA", "Macro II" → "MII", "Maths for Economists A" → "MEA"
+const initials = (
+  words.length === 1
+    ? words[0].slice(0, 2)
+    : words.map((w) => (/^(I|II|III|IV)$/.test(w) ? w : w[0])).join("")
+)
+  .toUpperCase()
+  .slice(0, 3);
+const tone = index % 4;
 ---
 {placeholder ? (
   <div class="subject-card placeholder" data-course={slug} style={`animation-delay: ${delay};`}>
@@ -22,6 +33,7 @@ const delay = `${index * 60}ms`;
   </div>
 ) : (
   <a href={href} class="subject-card" data-course={slug} style={`animation-delay: ${delay};`}>
+    <span class={`mono tone-${tone}${initials.length > 2 ? " mono-3" : ""}`} aria-hidden="true">{initials}</span>
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h2 style={`view-transition-name: subj-${slug};`}>{title}</h2>
     {tagline && <p class="tagline">{tagline}</p>}
@@ -42,7 +54,7 @@ const delay = `${index * 60}ms`;
     border-radius: var(--radius-card);
     background: var(--color-card);
     box-shadow: var(--shadow-soft);
-    padding: 1.9rem 2rem 1.6rem;
+    padding: 1.6rem 1.7rem 1.4rem;
     overflow: hidden;
     animation: rise-in 280ms ease-out both;
     transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.28s ease;
@@ -57,11 +69,29 @@ const delay = `${index * 60}ms`;
     letter-spacing: 0.15em;
     color: var(--color-ink-faint);
   }
+  .mono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    margin-bottom: 1.1rem;
+    border-radius: 12px;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .mono-3 { font-size: 0.78rem; letter-spacing: 0.02em; }
+  .tone-0 { background: var(--color-accent-soft); color: var(--color-accent-ink); }
+  .tone-1 { background: var(--color-accent-2-soft); color: var(--color-accent-2); }
+  .tone-2 { background: var(--color-status-skipped-bg); color: var(--color-status-skipped); }
+  .tone-3 { background: var(--color-status-done-bg); color: var(--color-status-done); }
   .subject-card h2 {
     margin-top: 0;
     font-family: var(--font-display);
-    font-size: 1.75rem;
-    line-height: 1.15;
+    font-size: 1.5rem;
+    line-height: 1.18;
     font-variation-settings: "opsz" 48, "wght" 500;
     color: var(--color-ink);
     width: fit-content;
@@ -138,6 +168,7 @@ const delay = `${index * 60}ms`;
 
   @media (max-width: 640px) {
     .subject-card { padding: 1.4rem 1.4rem 1.2rem; min-height: 0; }
-    .subject-card h2 { font-size: 1.55rem; }
+    .subject-card h2 { font-size: 1.4rem; }
+    .mono { width: 2.2rem; height: 2.2rem; margin-bottom: 0.8rem; font-size: 0.8rem; }
   }
 </style>

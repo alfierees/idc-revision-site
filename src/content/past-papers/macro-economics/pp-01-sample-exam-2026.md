@@ -1,5 +1,6 @@
 ---
 title: "Sample Exam 2026 — Worked Solutions"
+topics: "Growth accounting, GDP vs GNP, unemployment, CPI vs PCE, two-period consumption, debt-to-GDP"
 type: past-paper
 status: worked-solution
 exam: "Final Exam — Intermediate Macro (Sample, 2026)"

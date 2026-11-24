@@ -104,6 +104,11 @@ const pastPapers = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/past-papers" }),
   schema: z.object({
     title: z.string(),
+    // Optional overrides for the short list label ("2022 Moed A") and the
+    // one-line "what it tests" subline; derived from title/exam when absent
+    // (see src/lib/paper-label.ts).
+    label: z.string().optional(),
+    topics: z.string().optional(),
     subject: z.string(),
     type: z.string().optional(),
     exam: z.string().optional(),

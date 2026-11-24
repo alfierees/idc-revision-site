@@ -2,12 +2,23 @@
 import Layout from "../components/Layout.astro";
 import SubjectCard from "../components/SubjectCard.astro";
 import SemesterTiles from "../components/SemesterTiles.astro";
-import { loadCourseCards } from "../lib/course-cards";
-import { SEMESTERS, SEMESTER_STORAGE_KEY } from "../lib/semesters";
-import { ONBOARDED_KEY } from "../lib/onboarding";
 import ProgressStrip from "../components/progress/ProgressStrip";
+import { loadCourseCards } from "../lib/course-cards";
+import { SEMESTERS, SEMESTER_STORAGE_KEY, countsLine } from "../lib/semesters";
+import { ONBOARDED_KEY } from "../lib/onboarding";
 
-const { subjects, groups, cardFor } = await loadCourseCards();
+const { subjects, groups, cardFor, totals, totalsFor } = await loadCourseCards();
+const stats = [
+  { n: totals.courses, l: "courses" },
+  { n: totals.lectures, l: "lectures" },
+  { n: totals.pastPapers, l: "past papers" },
+  { n: totals.problemSets, l: "problem sets" },
+].filter((s) => s.n > 0);
+const panelLine = (g: (typeof groups)[number]) => {
+  if (g.live.length === 0) return "";
+  const c = countsLine(totalsFor(g.live.map((s) => s.slug)));
+  return `${g.live.length} course${g.live.length === 1 ? "" : "s"}${c ? ` · ${c}` : ""}`;
+};
 const semesterIds = SEMESTERS.map((s) => s.id);
 const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
 ---
@@ -39,10 +50,9 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
     <div class="step" data-step="welcome">
       <p class="eyebrow">Entrepreneurship, Economics &amp; Data Science</p>
       <h1 class="welcome-title" tabindex="-1">Everything we learnt, in one place.</h1>
-      <ul class="welcome-lines">
-        <li>Lecture notes for every course, rewritten to revise from.</li>
-        <li>Past papers and problem sets with worked answers.</li>
-        <li>Tick questions as you go. Sign in and they become a rank, a streak and badges.</li>
+      <p class="hero-sub">Lecture notes rewritten to revise from, past papers with worked answers, and a tick for every question you've done.</p>
+      <ul class="stats" aria-label="What's inside">
+        {stats.map((s) => <li><span class="stat-n">{s.n}</span><span class="stat-l">{s.l}</span></li>)}
       </ul>
       <div class="welcome-actions">
         <button type="button" class="btn-primary" data-action="start">Get started</button>
@@ -50,10 +60,12 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
       </div>
     </div>
     <div class="step" data-step="semester">
+      <p class="eyebrow">Step 2 of 2</p>
       <h2 class="step-title" tabindex="-1">Which semester are you in?</h2>
+      <p class="hero-sub">You can switch any time from the home page.</p>
       <SemesterTiles groups={groups} />
       <div class="welcome-actions">
-        <button type="button" class="btn-text" data-action="skip">Skip</button>
+        <button type="button" class="btn-text" data-action="skip">Skip for now</button>
       </div>
     </div>
     <div class="step" data-step="save">
@@ -72,11 +84,23 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
 
   <!-- ===== hub ===== -->
   <div class="hub">
-    <section class="reading home-hero">
+    <section class="home-hero">
       <p class="eyebrow">Entrepreneurship, Economics &amp; Data Science</p>
       <h1 class="hub-title">Everything we learnt, in one place.</h1>
+      <ul class="stats" aria-label="What's inside">
+        {stats.map((s) => <li><span class="stat-n">{s.n}</span><span class="stat-l">{s.l}</span></li>)}
+      </ul>
       <ProgressStrip client:idle />
     </section>
+
+    <nav class="sem-switch" aria-label="Semester">
+      {groups.map((g) => (
+        <a href={`#${g.semester.id}`} class="seg" data-pick={g.semester.id}>
+          <span class="seg-long">{g.semester.label}</span>
+          <span class="seg-short">{g.semester.short}</span>
+        </a>
+      ))}
+    </nav>
 
     <section class="continue" id="continue" aria-labelledby="continue-title" hidden>
       <h2 class="section-label" id="continue-title">Continue where you left off</h2>
@@ -86,19 +110,20 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
 
     <section class="your-semester" aria-labelledby="your-semester-title">
       <div class="pick-view">
-        <h2 class="section-label" id="your-semester-title">Pick your semester</h2>
+        <h2 class="panel-title" id="your-semester-title">Pick your semester</h2>
+        <p class="panel-sub">Your courses show up here once you choose.</p>
         <SemesterTiles groups={groups} />
       </div>
       {groups.map((g) => (
         <div class="sem-panel" data-sem={g.semester.id}>
           <div class="panel-head">
-            <h2 class="section-label">{g.semester.label}</h2>
-            <button type="button" class="btn-text change" data-action="change">Change</button>
+            <h2 class="panel-title">{g.semester.label}</h2>
+            {panelLine(g) && <p class="panel-sub">{panelLine(g)}</p>}
           </div>
           {g.live.length + g.coming.length === 0 ? (
             <p class="panel-empty">Courses for this semester are on their way.</p>
           ) : (
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="course-grid">
               {[...g.live, ...g.coming].map((s, i) => (
                 <SubjectCard {...cardFor(s, i)} />
               ))}
@@ -108,7 +133,7 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
       ))}
     </section>
 
-    <p class="all-courses"><a href="/courses">All courses <span aria-hidden="true">→</span></a></p>
+    <p class="all-courses"><a href="/courses">Browse every course <span aria-hidden="true">→</span></a></p>
   </div>
 </Layout>
 
@@ -118,18 +143,65 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.18em;
-    color: var(--color-ink-muted);
+    color: var(--color-accent);
+    font-weight: 600;
   }
   .hub-title, .welcome-title {
-    margin-top: 0.75rem;
+    margin: 0.85rem auto 0;
+    max-width: 18ch;
     font-family: var(--font-display);
-    font-size: 2.15rem;
-    line-height: 1.12;
-    font-variation-settings: "opsz" 96, "wght" 500;
+    font-size: 3rem;
+    line-height: 1.06;
+    font-variation-settings: "opsz" 120, "wght" 500;
   }
-  .welcome-title { font-size: 2.6rem; }
+  .welcome-title { font-size: 3.4rem; }
   .welcome-title:focus, .step-title:focus { outline: none; }
-  .home-hero { margin-bottom: 2.25rem; }
+  .hero-sub {
+    margin: 1.1rem auto 0;
+    max-width: 38rem;
+    font-size: 1.12rem;
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+  }
+
+  /* ---- hero band ---- */
+  .home-hero, .step {
+    position: relative;
+    text-align: center;
+  }
+  .home-hero {
+    padding: 3.25rem 1.5rem 2.75rem;
+    border-radius: 24px;
+    background:
+      radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--color-accent-soft) 70%, transparent) 0%, transparent 62%),
+      var(--color-paper-tint);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-rule) 80%, transparent);
+  }
+  .stats {
+    margin: 2rem auto 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .stats li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    background: var(--color-card);
+    box-shadow: var(--shadow-soft);
+  }
+  .stat-n {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-variation-settings: "opsz" 48, "wght" 560;
+    color: var(--color-ink);
+  }
+  .stat-l { font-family: var(--font-ui); font-size: 0.82rem; color: var(--color-ink-muted); }
 
   .section-label {
     font-family: var(--font-ui);
@@ -144,11 +216,11 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
   .onboarding { display: none; }
   :global(html[data-onboarding]) .onboarding { display: block; }
   :global(html[data-onboarding]) .hub { display: none; }
-  .step { display: none; max-width: 34rem; }
+  .step { display: none; margin: 0 auto; padding: 3.5rem 0 2rem; max-width: 44rem; }
   :global(html[data-onboarding="welcome"]) .step[data-step="welcome"],
   :global(html[data-onboarding="semester"]) .step[data-step="semester"],
   :global(html[data-onboarding="save"]) .step[data-step="save"] { display: block; }
-  .step[data-step="semester"] { max-width: 46rem; }
+  .step[data-step="semester"] { max-width: 72rem; }
 
   .sem-panel { display: none; }
   :global(html[data-semester="y1s1"]) .sem-panel[data-sem="y1s1"],
@@ -159,17 +231,22 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
 
   /* ---- welcome ---- */
   .step-title {
+    margin-top: 0.75rem;
     font-family: var(--font-display);
-    font-size: 1.8rem;
-    font-variation-settings: "opsz" 36, "wght" 480;
+    font-size: 2.4rem;
+    font-variation-settings: "opsz" 72, "wght" 500;
     color: var(--color-ink);
   }
+  .welcome-actions { margin-top: 2.25rem; display: flex; align-items: center; justify-content: center; gap: 1.25rem; }
+  /* "Save your progress" step: a short bulleted list, centred as a block but read left-aligned. */
   .welcome-lines {
-    margin-top: 1.5rem;
+    margin: 1.5rem auto 0;
     padding: 0;
     list-style: none;
     display: grid;
+    justify-content: center;
     gap: 0.7rem;
+    text-align: left;
     font-size: 1.1rem;
     color: var(--color-ink-soft);
   }
@@ -182,19 +259,21 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
     border-radius: 50%;
     background: var(--color-accent);
   }
-  .welcome-actions { margin-top: 2rem; display: flex; align-items: center; gap: 1.25rem; }
   .btn-primary {
-    min-height: 44px;
-    padding: 0.6rem 1.5rem;
+    min-height: 48px;
+    padding: 0.65rem 2rem;
     border: none;
     border-radius: 999px;
     cursor: pointer;
     font-family: var(--font-ui);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--color-card);
     background: var(--color-accent);
+    box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-accent) 80%, transparent);
+    transition: background 0.2s ease, transform 0.2s ease;
   }
+  .btn-primary:hover { background: var(--color-accent-ink); transform: translateY(-1px); }
   .btn-text {
     min-height: 44px;
     padding: 0.5rem 0.4rem;
@@ -209,23 +288,72 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
   .btn-text:hover { color: var(--color-accent-ink); }
   .btn-primary:focus-visible, .btn-text:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
+  /* ---- semester switcher (segmented) ---- */
+  .sem-switch {
+    position: relative;
+    z-index: 1;
+    margin: -1.6rem auto 0;
+    width: fit-content;
+    max-width: 100%;
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    border-radius: 999px;
+    background: var(--color-card);
+    box-shadow: var(--shadow-soft), inset 0 0 0 1px var(--color-rule);
+  }
+  .seg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.4rem 1.15rem;
+    border-radius: 999px;
+    font-family: var(--font-ui);
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--color-ink-soft);
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+  .seg:hover { background: var(--color-paper-deep); color: var(--color-ink); }
+  .seg:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+  .seg-short { display: none; }
+  :global(html[data-semester="y1s1"]) .seg[data-pick="y1s1"],
+  :global(html[data-semester="y1s2"]) .seg[data-pick="y1s2"],
+  :global(html[data-semester="y2s1"]) .seg[data-pick="y2s1"],
+  :global(html[data-semester="y2s2"]) .seg[data-pick="y2s2"] {
+    background: var(--color-ink);
+    color: var(--color-card);
+  }
+
   /* ---- continue ---- */
-  .continue { margin-bottom: 2.25rem; max-width: 36rem; }
+  .continue { margin: 2.75rem auto 0; max-width: 72rem; }
   .continue[hidden] { display: none; }
-  .continue-list { margin: 0.9rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.6rem; }
+  .continue-list {
+    margin: 0.9rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 0.75rem;
+  }
   .continue-list :global(a) {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
     min-height: 44px;
-    padding: 0.6rem 1.1rem;
+    height: 100%;
+    padding: 0.75rem 1.1rem;
     border-radius: 12px;
     background: var(--color-card);
     box-shadow: var(--shadow-soft);
     text-decoration: none;
     font-family: var(--font-display);
-    font-size: 1.05rem;
+    font-size: 1rem;
+    line-height: 1.3;
     color: var(--color-ink);
   }
   .continue-list :global(a:hover) { color: var(--color-accent-ink); }
@@ -233,19 +361,56 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
   .continue-list :global(.arr) { color: var(--color-accent); font-family: var(--font-ui); }
 
   /* ---- your semester ---- */
-  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
+  .your-semester { margin-top: 2.75rem; }
+  .pick-view { text-align: center; }
+  .panel-head { margin-bottom: 1.4rem; }
+  .panel-title {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    font-variation-settings: "opsz" 72, "wght" 500;
+  }
+  .panel-sub { margin-top: 0.3rem; font-family: var(--font-ui); font-size: 0.88rem; color: var(--color-ink-muted); }
+  .course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: 1.5rem;
+  }
   .panel-empty { font-style: italic; color: var(--color-ink-faint); }
-  .all-courses { margin-top: 2.5rem; font-family: var(--font-ui); font-size: 0.95rem; font-weight: 600; }
-  .all-courses a { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; color: var(--color-accent); text-decoration: none; }
-  .all-courses a:hover { color: var(--color-accent-ink); }
+  .all-courses { margin-top: 3rem; text-align: center; font-family: var(--font-ui); font-size: 0.95rem; font-weight: 600; }
+  .all-courses a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0 1.4rem;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--color-rule-strong);
+    color: var(--color-ink-soft);
+    text-decoration: none;
+  }
+  .all-courses a:hover { color: var(--color-accent-ink); box-shadow: inset 0 0 0 1px var(--color-accent); }
   .all-courses a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
+  @media (max-width: 760px) {
+    .seg-long { display: none; }
+    .seg-short { display: inline; }
+    .seg { padding: 0.4rem 0.85rem; }
+  }
   @media (max-width: 640px) {
-    .welcome-title { font-size: 2.1rem; }
+    .home-hero { padding: 1.75rem 1.1rem 2.4rem; border-radius: 18px; }
+    .home-hero .stats { display: none; }
+    .step { padding-top: 1.5rem; }
+    .welcome-title { font-size: 2.3rem; }
+    .hub-title { font-size: 2.1rem; }
+    .hero-sub { font-size: 1.02rem; }
     .welcome-lines { font-size: 1.02rem; }
-    .step-title { font-size: 1.5rem; }
-    .home-hero { margin-bottom: 1.75rem; }
-    .hub-title { font-size: 1.9rem; }
+    .step-title { font-size: 1.7rem; }
+    .stats { gap: 0.5rem; margin-top: 1.5rem; }
+    .stats li { padding: 0.4rem 0.8rem; }
+    .stat-n { font-size: 1.1rem; }
+    .stat-l { font-size: 0.75rem; }
+    .panel-title { font-size: 1.55rem; }
+    .seg { padding: 0.4rem 0.7rem; font-size: 0.82rem; }
   }
 
   /* Step swap crossfade (only runs inside startViewTransition, i.e. after a tap). */
@@ -281,33 +446,42 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
       if (focusSelector) document.querySelector<HTMLElement>(focusSelector)?.focus({ preventScroll: true });
     });
   };
-  const finish = (semesterId?: string) => {
+  const finish = (semesterId?: string, keepScroll = false) => {
     store(() => localStorage.setItem(ONBOARDED_KEY, "1"));
     if (semesterId) store(() => localStorage.setItem(SEMESTER_STORAGE_KEY, semesterId));
     swap(() => {
       if (semesterId) root.setAttribute("data-semester", semesterId);
       root.removeAttribute("data-onboarding");
-      window.scrollTo(0, 0);
+      syncSegments();
+      if (!keepScroll) window.scrollTo(0, 0);
     });
   };
 
+  // Semester tiles (onboarding + "Pick your semester") and the hub's segmented switcher.
+  const syncSegments = () => {
+    const current = root.getAttribute("data-semester");
+    document.querySelectorAll<HTMLAnchorElement>(".seg[data-pick]").forEach((seg) => {
+      if (seg.dataset.pick === current) seg.setAttribute("aria-current", "true");
+      else seg.removeAttribute("aria-current");
+    });
+  };
   // "Change" on the hub reopens the semester step; it shouldn't lead on to the sign-in step.
   let changingSemester = false;
 
-  // Semester tiles (onboarding step and the hub's "Pick your semester").
-  document.querySelectorAll<HTMLAnchorElement>(".tile[data-pick]").forEach((tile) => {
+  document.querySelectorAll<HTMLAnchorElement>("[data-pick]").forEach((tile) => {
     tile.addEventListener("click", (event) => {
       event.preventDefault();
       const id = tile.dataset.pick;
       if (!id || !isSemesterId(id)) return;
       const firstVisit = root.getAttribute("data-onboarding") === "semester" && !changingSemester;
-      if (!firstVisit || isSignedIn()) return finish(id);
+      if (!firstVisit || isSignedIn()) return finish(id, tile.classList.contains("seg"));
       // First visit, signed out: keep the pick, then offer to save progress (skippable).
       store(() => localStorage.setItem(SEMESTER_STORAGE_KEY, id));
       root.setAttribute("data-semester", id);
       setOnboarding("save", '.step[data-step="save"] .step-title');
     });
   });
+  syncSegments();
   document.querySelectorAll<HTMLButtonElement>("[data-action]").forEach((button) => {
     button.addEventListener("click", () => {
       const action = button.dataset.action;

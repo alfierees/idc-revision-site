@@ -1,5 +1,6 @@
 ---
 title: "Sample Final B — Worked Solutions"
+topics: "Accounting cycle with deferred revenue, stock options, revenue recognition, True/False"
 type: past-paper
 status: worked-solution
 exam: "Sample Final Exam B (mock)"

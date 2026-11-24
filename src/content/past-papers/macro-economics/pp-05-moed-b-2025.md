@@ -1,5 +1,6 @@
 ---
 title: "Moed B 2025 — Worked Solutions"
+topics: "Investment rule, debt forecasting, TFP & wages, consumption growth, labour flows, cake-eating"
 type: past-paper
 status: worked-solution
 exam: "Final Exam — Intermediate Macro, Moed B (2025)"

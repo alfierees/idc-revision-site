@@ -1,5 +1,6 @@
 ---
 title: "PP 04: 2022 Moed B — Worked Solutions"
+topics: "Market equilibrium, surplus, a tax on producers, elasticity, costs"
 type: past-paper
 status: worked-solution
 exam: "Principles of Microeconomics, 2022 Moed B (March 2022)"

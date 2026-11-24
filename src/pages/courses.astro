@@ -40,8 +40,8 @@ const semesterIds = SEMESTERS.map((s) => s.id);
                         <span class="c-main">
                           <span class="c-title">{s.title}</span>
                           {s.tagline && <span class="c-tag">{s.tagline}</span>}
+                          {card.counts && <span class="c-counts">{card.counts}</span>}
                         </span>
-                        {card.counts && <span class="c-counts">{card.counts}</span>}
                         <span class="c-arr" aria-hidden="true">→</span>
                       </a>
                     )}
@@ -89,7 +89,8 @@ const semesterIds = SEMESTERS.map((s) => s.id);
     align-items: center;
     gap: 1.25rem;
     min-height: 44px;
-    padding: 0.85rem 0.25rem;
+    padding: 0.85rem 0.75rem;
+    border-radius: 10px;
     text-decoration: none;
     color: var(--color-ink);
   }
@@ -109,7 +110,7 @@ const semesterIds = SEMESTERS.map((s) => s.id);
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .c-counts { flex: none; font-family: var(--font-ui); font-size: 0.78rem; color: var(--color-ink-muted); }
+  .c-counts { margin-top: 0.2rem; font-family: var(--font-ui); font-size: 0.78rem; color: var(--color-ink-faint); }
   .c-arr { flex: none; color: var(--color-accent); font-family: var(--font-ui); }
   .soon { justify-content: space-between; }
   .soon .c-title { color: var(--color-ink-muted); font-variation-settings: "opsz" 36, "wght" 420; }
@@ -119,7 +120,6 @@ const semesterIds = SEMESTERS.map((s) => s.id);
     .page-title { font-size: 1.9rem; }
     .course-row-item { flex-wrap: wrap; gap: 0.2rem 1rem; }
     .c-main { flex: 1 1 calc(100% - 2rem); }
-    .c-counts { order: 3; flex: 1 1 auto; }
     .c-arr { order: 2; }
   }
 </style>

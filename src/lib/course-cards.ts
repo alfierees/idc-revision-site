@@ -29,5 +29,21 @@ export async function loadCourseCards() {
     };
   };
 
-  return { subjects, groups: groupBySemester(subjects), cardFor };
+  const liveSlugs = new Set(subjects.filter((s) => !s.placeholder).map((s) => s.slug));
+  const liveCount = (entries: { data: { subject: string } }[]) =>
+    entries.filter((e) => liveSlugs.has(e.data.subject)).length;
+  const totals = {
+    courses: liveSlugs.size,
+    lectures: liveCount(lectures),
+    problemSets: liveCount(problemSets),
+    pastPapers: liveCount(pastPapers),
+  };
+  /** Content totals for a set of subjects ("6 courses · 80 lectures"). */
+  const totalsFor = (slugs: string[]) => ({
+    lectures: lectures.filter((e) => slugs.includes(e.data.subject)).length,
+    problemSets: problemSets.filter((e) => slugs.includes(e.data.subject)).length,
+    pastPapers: pastPapers.filter((e) => slugs.includes(e.data.subject)).length,
+  });
+
+  return { subjects, groups: groupBySemester(subjects), cardFor, totals, totalsFor };
 }

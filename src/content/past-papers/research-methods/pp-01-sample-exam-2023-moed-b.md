@@ -1,5 +1,6 @@
 ---
 title: "Sample Exam (March 2023, Moed B)"
+topics: "Variables, correlation, surveys, choosing a method, research questions, sampling"
 type: past-paper
 status: worked-solution
 exam: "March 2023 Moed B (sample exam)"
