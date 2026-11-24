@@ -165,20 +165,8 @@ Chaining preprocessing and model into one object to prevent [[Data Leakage]].
 ### Unsupervised Learning
 Finding structure in unlabelled data.
 
-### K-Means
-A centroid-based clustering algorithm.
-
-### Elbow Method
-Plotting within-cluster sum of squares vs $K$ to pick the number of clusters.
-
-### Silhouette Score
-Measures how well each point fits its assigned cluster.
-
 ### PCA
 Principal Component Analysis — unsupervised feature extraction via a variance-maximising rotation. → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
-
-### Explained Variance
-The proportion of total variance captured by the PCA components.
 
 ### Curse of Dimensionality
 Exponential data sparsity (and degrading distances) in high-dimensional spaces, motivating dimensionality reduction. → [[Lec_07-Performance Measures & Data Processing|ML Lec 7]]
@@ -217,20 +205,11 @@ The shape of a variable's values (symmetric, skewed), read from a histogram.
 ### Histograms
 A chart that bins a numeric variable to show its distribution.
 
-### Boxplots
-A chart showing the median, quartiles, and outliers via the IQR.
-
 ### Missing Values
 Absent entries (`NaN`) that must be detected and handled (drop or impute) before modelling.
 
 ### Outliers
 Extreme values — flagged by the IQR rule — that can distort summaries and models.
-
-### Matplotlib
-The foundational Python plotting library.
-
-### Seaborn
-A higher-level statistical plotting library built on [[Matplotlib]].
 
 ### Correlation vs Causation
 The caution that a statistical association does not by itself imply a causal effect.

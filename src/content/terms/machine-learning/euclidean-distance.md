@@ -7,4 +7,4 @@ source_folder: machine-learning
 ai_drafted: true
 ---
 
-The standard straight-line distance used by K-Means and KNN.
+The standard straight-line distance used by KNN.
