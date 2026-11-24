@@ -1,5 +1,6 @@
 ---
 title: "Macro II Moed B 2024 — Worked Solutions"
+topics: "IS-LM, Mundell-Fleming, AS-AD, classical theory"
 type: past-paper
 status: worked-solution
 exam: "Moed B, 30 July 2024"

@@ -1,5 +1,6 @@
 import { entrySlug } from "../entry-slug";
 import type { ProgressTotals } from "./types";
+import { flatPaperQuestionIds } from "../split-paper";
 
 interface QuestionLike { id: string; solution: string; options?: unknown[] }
 interface Entry<D> { id: string; data: D }
@@ -7,7 +8,7 @@ export interface TotalsInput {
   subjects: { slug: string; title: string; year: 1 | 2; semester: 1 | 2; placeholder: boolean }[];
   lectures: Entry<{ subject: string; in_scope?: boolean }>[];
   problemSets: Entry<{ subject: string; questions: QuestionLike[] }>[];
-  pastPapers: Entry<{ subject: string; in_scope?: boolean; questions?: QuestionLike[] }>[];
+  pastPapers: (Entry<{ subject: string; in_scope?: boolean; questions?: QuestionLike[] }> & { body?: string })[];
 }
 
 const hasSolution = (q: QuestionLike) => q.solution.trim().length > 0;
@@ -25,7 +26,11 @@ export function buildTotals(input: TotalsInput): ProgressTotals {
       }
       const pastPapers: Record<string, string[]> = {};
       for (const paper of input.pastPapers.filter((p) => p.data.subject === s.slug && p.data.in_scope !== false)) {
-        const ids = (paper.data.questions ?? []).filter(isGradable).map((q) => q.id);
+        // Structured papers list their questions; flat ones are split into
+        // question cards at render time (see split-paper.ts), same ids here.
+        const ids = paper.data.questions?.length
+          ? paper.data.questions.filter(isGradable).map((q) => q.id)
+          : flatPaperQuestionIds(paper.body ?? "");
         if (ids.length > 0) pastPapers[entrySlug(paper.id)] = ids;
       }
       return {

@@ -1,0 +1,24 @@
+{
+  "slug": "statistics-b",
+  "title": "Statistics B",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 2/Statistics B",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 2/Statistics B",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentsDir": "Problem sets",
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "statistics-b",
+    "exam-prep",
+    "exam-structure",
+    "past-paper-practice",
+    "lecture-notes",
+    "lecture",
+    "test-selection",
+    "excel",
+    "recap",
+    "exam-review"
+  ],
+  "notes": "Year 1 Semester 2 (Moodle 2025 course 2502499, Statistics II for Economics). Source files are downloaded for the ingest and removed afterwards: class decks in Lectures, exercises in Problem sets, official solutions in Assignment solutions, past exams and formula sheets in Past papers. Moodle has no Exercise 10. Recitations and tutorials are out of scope."
+}

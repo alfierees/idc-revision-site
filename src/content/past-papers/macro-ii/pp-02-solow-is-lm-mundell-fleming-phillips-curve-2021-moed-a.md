@@ -1,5 +1,6 @@
 ---
 title: "Macro II 3058 — Moed A, 19 July 2021 (online version)"
+topics: "Solow, IS-LM, Mundell-Fleming, Phillips curve"
 type: past-paper
 status: worked-solution
 exam: "Moed A, 19 July 2021"

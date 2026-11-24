@@ -1,5 +1,6 @@
 ---
-interface PaperEntry { slug: string; title: string; year?: number; }
+import { comparePapers, type PaperLabel } from "../lib/paper-label";
+interface PaperEntry extends PaperLabel { slug: string; }
 interface Section { id: string; text: string; html?: string; level: number; }
 interface Props {
   subject: string;
@@ -8,18 +9,13 @@ interface Props {
   currentSections: Section[];
 }
 const { subject, papers, currentSlug, currentSections } = Astro.props;
-const sorted = [...papers].sort((a, b) => {
-  if (a.year !== undefined && b.year !== undefined && a.year !== b.year) return b.year - a.year;
-  if (a.year !== undefined && b.year === undefined) return -1;
-  if (b.year !== undefined && a.year === undefined) return 1;
-  return a.title.localeCompare(b.title);
-});
+const sorted = [...papers].sort(comparePapers);
 const current = sorted.find((p) => p.slug === currentSlug);
 const others = sorted.filter((p) => p.slug !== currentSlug);
 ---
 <aside class="rail">
   <p class="toc-label">Past Papers</p>
-  {current && <p class="toc-current">{current.title}</p>}
+  {current && <p class="toc-current">{current.label}</p>}
   {currentSections.length > 0 && (
     <ul class="toc-list">
       {currentSections.map((s) => (
@@ -27,7 +23,7 @@ const others = sorted.filter((p) => p.slug !== currentSlug);
           {s.html ? (
             <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : "lvl-2"} set:html={s.html} />
           ) : (
-            <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : "lvl-2"}>{s.text}</a>
+            <a href={`#${s.id}`} class={s.level === 3 ? "lvl-3" : s.level === 1 ? "lvl-1" : "lvl-2"}>{s.text}</a>
           )}
         </li>
       ))}
@@ -36,7 +32,7 @@ const others = sorted.filter((p) => p.slug !== currentSlug);
   {others.length > 0 && (
     <nav class="toc-other">
       {others.map((p) => (
-        <a href={`/subjects/${subject}/past-papers/${p.slug}`}>{p.title}</a>
+        <a href={`/subjects/${subject}/past-papers/${p.slug}`}>{p.label}</a>
       ))}
     </nav>
   )}

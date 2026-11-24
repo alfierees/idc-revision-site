@@ -30,11 +30,11 @@ const countsFor = (slug: string) => courseContent.get(slug)?.counts ?? NO_CONTEN
 const subjects = (await getCollection("subjects")).map((entry) => entry.data);
 const currentCourse = subject ? subjects.find((entry) => entry.slug === subject) : undefined;
 const liveGroups = groupBySemester(subjects).filter((group) => group.live.length > 0);
-// Switcher: the current course's semester first.
-const switcherGroups = [...liveGroups].sort((first, second) => {
-  const holdsCurrent = (group: typeof first) => group.live.some((entry) => entry.slug === subject);
-  return Number(holdsCurrent(second)) - Number(holdsCurrent(first));
-});
+// Switcher: only the current course's semester (picking a semester narrows the
+// site to it); other semesters are one click away on /courses.
+const currentGroup = currentCourse
+  ? liveGroups.find((group) => group.semester.year === currentCourse.year && group.semester.semester === currentCourse.semester)
+  : undefined;
 const sections = currentCourse ? availableSections(countsFor(currentCourse.slug)) : [];
 const navSections = visibleSections(PROGRESS_UI_ENABLED);
 const currentNavSection = activeSection(Astro.url.pathname);
@@ -43,8 +43,9 @@ const currentNavSection = activeSection(Astro.url.pathname);
   <div class="site-rail-top">
     <a href="/" class="brand"><img class="brand-mark" src="/images/brand/idc-mark.webp" alt="" width="29" height="24" /> <span class="brand-name">IDC Revision</span></a>
     {hasSidebar && (
-      <button id="sidebar-toggle" type="button" class="panel-toggle" aria-pressed="false" title="Toggle contents">
+      <button id="sidebar-toggle" type="button" class="panel-toggle" aria-controls="content-grid" aria-expanded="true" title="Hide contents">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg>
+        <span class="sr-only">Toggle contents</span>
       </button>
     )}
   </div>
@@ -58,22 +59,19 @@ const currentNavSection = activeSection(Astro.url.pathname);
         </span>
       </button>
       <div class="subject-pop" hidden role="menu">
-        <p class="subject-pop-label">Switch course</p>
-        {switcherGroups.map((group) => (
-          <div class="subject-group" role="group" aria-label={group.semester.label}>
-            <p class="subject-group-label">{group.semester.label}</p>
-            {group.live.map((entry) => (
-              <a
-                href={switchCourseHref(entry.slug, countsFor(entry.slug), activeCourseSection)}
-                class={`subject-opt ${entry.slug === subject ? "current" : ""}`}
-                role="menuitem"
-              >
-                {entry.title}
-                {entry.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
-              </a>
-            ))}
-          </div>
+        <p class="subject-pop-label">{currentGroup ? currentGroup.semester.label : "Switch course"}</p>
+        {(currentGroup?.live ?? []).map((entry) => (
+          <a
+            href={switchCourseHref(entry.slug, countsFor(entry.slug), activeCourseSection)}
+            class={`subject-opt ${entry.slug === subject ? "current" : ""}`}
+            role="menuitem"
+            aria-current={entry.slug === subject ? "page" : undefined}
+          >
+            {entry.title}
+            {entry.slug === subject && <span class="so-tick" aria-hidden="true">●</span>}
+          </a>
         ))}
+        <a href="/courses" class="subject-all" role="menuitem">Other semesters <span aria-hidden="true">→</span></a>
       </div>
       {PROGRESS_UI_ENABLED && subject && <CourseChip client:idle subject={subject} />}
     </div>

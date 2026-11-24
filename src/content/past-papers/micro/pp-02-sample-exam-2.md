@@ -1,5 +1,6 @@
 ---
 title: "Sample Exam 2 — Worked Solutions"
+topics: "Bundling, health insurance, two-part tariffs, Cournot vs Bertrand"
 type: past-paper
 status: worked-solution
 exam: "Sample Exam 2 (practice)"

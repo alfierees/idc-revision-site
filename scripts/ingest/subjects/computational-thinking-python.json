@@ -1,0 +1,30 @@
+{
+  "slug": "computational-thinking-python",
+  "title": "Computational Thinking & Python",
+  "vaultPath": "/Users/alfierees/Documents/Obsidian/IDC notes/Year 1/Semester 1/Computational Thinking & Python",
+  "sourceDocPath": "/Users/alfierees/Desktop/IDC/IDC subjects/Year 1/Semester 1/Python learning/_moodle",
+  "lecturesDir": "Lecture notes",
+  "vaultSolutionsDir": "Problem Sets",
+  "requireSolutionKeyword": false,
+  "assignmentFiles": [],
+  "problemSetSlugPrefix": "ps",
+  "mutedTags": [
+    "computational-thinking-python",
+    "computational-thinking",
+    "python",
+    "course-admin",
+    "syllabus",
+    "grading",
+    "lecture",
+    "python-basics",
+    "types",
+    "data-types",
+    "numeric-types",
+    "input-output",
+    "primality-test",
+    "matplotlib",
+    "searching",
+    "sorting"
+  ],
+  "notes": "Year 1 Semester 1. Sources came from Moodle course 2500329 into a temporary _moodle folder, which is deleted after ingest, so the vault notes and public/papers are the lasting copies. Assignments are notebooks, which the scan does not queue, so assignmentFiles is empty and the eight official notebooks are copied to public/papers by hand. Alfie's own submissions are never published."
+}

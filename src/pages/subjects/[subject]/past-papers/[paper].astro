@@ -9,9 +9,12 @@ import ExamScorebar from "../../../../components/ExamScorebar";
 import Mermaid from "../../../../components/Mermaid.astro";
 import { getCollection, getEntry } from "astro:content";
 import { entrySlug } from "../../../../lib/entry-slug";
+import { stripNoteMeta } from "../../../../lib/strip-note-meta";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
-import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
+import { buildLinkMap } from "../../../../lib/known-links";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
+import { splitPaper, partId } from "../../../../lib/split-paper";
+import { paperLabel } from "../../../../lib/paper-label";
 
 export async function getStaticPaths() {
   const papers = await getCollection("past-papers", (p) => p.data.in_scope);
@@ -35,7 +38,7 @@ const links = await buildLinkMap(subjectSlug);
 const structured = (paper.data.questions ?? []).length > 0;
 
 const [introMd, outroMd] = (() => {
-  const body = paper.body ?? "";
+  const body = stripNoteMeta(paper.body ?? "");
   if (!structured) return [body, ""];
   const idx = body.indexOf("<!--questions-->");
   return idx === -1 ? [body, ""] : [body.slice(0, idx), body.slice(idx + "<!--questions-->".length)];
@@ -63,17 +66,70 @@ const renderedQuestions = await Promise.all((paper.data.questions ?? []).map(asy
     : null,
 })));
 
-// Flat-mode body (unchanged behaviour for papers without `questions`).
-const flatHtml = structured ? "" : await renderMarkdownString(paper.body ?? "", subjectSlug, links);
+// Flat papers (no `questions` frontmatter): split the markdown into question
+// cards (question text visible, worked answer behind "Show answer"). Papers the
+// splitter can't read as a list of questions fall back to one flat page.
+const split = structured ? null : splitPaper(stripNoteMeta(paper.body ?? ""));
+const render = (md: string) => (md.trim() ? renderMarkdownString(md, subjectSlug, links) : Promise.resolve(""));
+// Heading text can carry inline math/code ("Q8 — $U=X^a+Y^a$"): render it, keep it inline.
+const renderInline = async (md: string) =>
+  md.trim() ? (await renderMarkdownString(md, subjectSlug, links)).replace(/^\s*<p>([\s\S]*)<\/p>\s*$/, "$1") : "";
+const splitIntroHtml = split ? await render(split.intro) : "";
+const splitOutroHtml = split ? await render(split.outro) : "";
+const splitItems = split
+  ? await Promise.all(split.items.map(async (it) =>
+      it.kind === "question"
+        ? {
+            kind: "question" as const,
+            id: it.id,
+            title: it.title,
+            titleHtml: await renderInline(it.title),
+            stemHtml: await render(it.stem),
+            parts: await Promise.all(it.parts.map(async (p, i) => ({
+              id: partId(it, i),
+              title: p.title,
+              titleHtml: p.title ? await renderInline(p.title) : "",
+              promptHtml: await render(p.prompt),
+              answerHtml: await render(p.answer),
+            }))),
+          }
+        : { kind: "section" as const, id: it.id, title: it.title, group: it.group, html: await render(it.md) },
+    ))
+  : [];
+const splitGradableIds = splitItems.flatMap((it) =>
+  it.kind === "question" ? it.parts.filter((p) => p.answerHtml).map((p) => p.id) : [],
+);
+
+const flatHtml = structured || split ? "" : await renderMarkdownString(stripNoteMeta(paper.body ?? ""), subjectSlug, links);
 
 const allPapers = (await getCollection("past-papers", (p) => p.data.subject === subjectSlug && p.data.in_scope))
-  .map((p) => ({ slug: p.id.split("/").pop()!, title: p.data.title, year: p.data.year }));
+  .map((p) => {
+    const slug = p.id.split("/").pop()!;
+    return { slug, ...paperLabel({ slug, title: p.data.title, exam: p.data.exam, label: p.data.label, topics: p.data.topics }) };
+  });
+const label = paperLabel({
+  slug: paperSlug,
+  title: paper.data.title,
+  exam: paper.data.exam,
+  label: paper.data.label,
+  topics: paper.data.topics,
+  body: paper.body,
+});
 
 // Sidebar sections: in structured mode list the questions; otherwise derive from
 // the rendered headings (keep inner HTML so KaTeX in headings renders in the TOC).
 let sections: { id: string; text: string; html: string; level: number }[] = [];
 if (structured) {
   sections = renderedQuestions.map((q) => ({ id: q.id, text: q.title ?? q.id, html: "", level: 2 }));
+} else if (split) {
+  sections = splitItems
+    .filter((it) => it.kind === "question" || (it.group && it.title))
+    .map((it) => ({
+      id: it.id!,
+      text: it.title,
+      html: it.kind === "question" ? it.titleHtml.replace(/<\/?a\b[^>]*>/g, "") : "",
+      level: it.kind === "question" ? 2 : 1,
+    }));
 } else {
   const sectionRe = /<(h2|h3)[^>]*id="([^"]+)"[^>]*>(.*?)<\/\1>/g;
   for (const m of flatHtml.matchAll(sectionRe)) {
@@ -81,38 +137,27 @@ if (structured) {
   }
 }
 
-const meta = [paper.data.exam, paper.data.instructor, paper.data.status].filter(Boolean);
+const meta = [paper.data.exam, paper.data.instructor].filter((x) => x && !/^(unknown|n\/a|none)$/i.test(x.trim()));
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
-<Layout title={`${paper.data.title} · ${subject.data.title}`} subject={subjectSlug} active="past-papers" hasSidebar continueTitle={paper.data.title}>
+<Layout title={`${label.label} · ${subject.data.title}`} subject={subjectSlug} active="past-papers" hasSidebar continueTitle={label.label}>
   <div id="content-grid" class="content-grid">
     <PaperSidebar subject={subjectSlug} papers={allPapers} currentSlug={paperSlug} currentSections={sections} />
     <article class="paper-body">
-      {meta.length > 0 && (
-        <p class="doc-meta">{meta.join(" · ")}</p>
-      )}
-      <div class="flex items-baseline justify-between gap-4">
-        <h1 class="doc-title">{paper.data.title}</h1>
+      <div class="paper-head">
+        <div class="min-w-0">
+          <h1 class="doc-title">{label.label}</h1>
+          {label.topics && <p class="paper-topics">{label.topics}</p>}
+          {meta.length > 0 && <p class="paper-meta">{meta.join(" · ")}</p>}
+        </div>
         {paper.data.source_doc && (
-          <a href={paper.data.source_doc} class="shrink-0 font-ui text-xs uppercase tracking-[0.15em] text-ink-muted hover:text-accent">
+          <a href={paper.data.source_doc} class="paper-source">
             Original paper ↗
           </a>
         )}
       </div>
       {paper.data.dataset && (
         <p class="mt-2 font-ui text-sm text-ink-muted italic">Dataset: {paper.data.dataset}</p>
-      )}
-      {paper.data.tags.length > 0 && (
-        <ul class="mt-4 flex flex-wrap gap-2 list-none p-0">
-          {paper.data.tags.map((tag) => {
-            const target = resolveLink(links, tag);
-            return target ? (
-              <li><a href={linkHref(subjectSlug, target)} class="tag tag-link">#{tag}</a></li>
-            ) : (
-              <li><span class="tag tag-muted">#{tag}</span></li>
-            );
-          })}
-        </ul>
       )}
 
       {structured ? (
@@ -142,6 +187,7 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
                     refSlug={paperSlug}
                     questionId={q.id}
                     solutionHtml={q.solutionHtml}
+                    label="answer"
                   />
                 )}
               </li>
@@ -149,11 +195,57 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
           </ol>
           {outroHtml && <div class="mt-10 paper-prose prose-card" set:html={outroHtml} />}
         </>
+      ) : split ? (
+        <>
+          {splitIntroHtml && (
+            <details class="paper-intro mt-8">
+              <summary>About this paper</summary>
+              <div class="paper-prose prose-card" set:html={splitIntroHtml} />
+            </details>
+          )}
+          <div class="mt-8 space-y-6">
+            {splitItems.map((it) =>
+              it.kind === "question" ? (
+                <section id={it.id} class="qcard rounded-card bg-card p-7 shadow-soft">
+                  <h2 class="qtitle" set:html={it.titleHtml} />
+                  {it.stemHtml && <div class="mt-3 question-body prose-card" set:html={it.stemHtml} />}
+                  <div class={it.parts.length > 1 ? "qparts" : ""}>
+                    {it.parts.map((p) => (
+                      <div class={it.parts.length > 1 ? "qpart" : "mt-3"}>
+                        {p.titleHtml && <h3 class="qpart-title" set:html={p.titleHtml} />}
+                        {p.promptHtml && <div class="mt-2 question-body prose-card" set:html={p.promptHtml} />}
+                        {p.answerHtml && (
+                          <OpenAnswer
+                            client:visible
+                            subject={subjectSlug}
+                            kind="past-paper"
+                            refSlug={paperSlug}
+                            questionId={p.id}
+                            solutionHtml={p.answerHtml}
+                            label="answer"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : it.group ? (
+                <div id={it.id} class="qgroup paper-prose prose-card" set:html={it.html} />
+              ) : (
+                <div id={it.id} class="paper-prose prose-card" set:html={it.html} />
+              ),
+            )}
+          </div>
+          {splitOutroHtml && <div class="mt-10 paper-prose prose-card" set:html={splitOutroHtml} />}
+        </>
       ) : (
         <div class="mt-8 paper-prose prose-card" set:html={flatHtml} />
       )}
     </article>
   </div>
+  {split && splitGradableIds.length > 0 && (
+    <ExamScorebar client:load subject={subjectSlug} kind="past-paper" refSlug={paperSlug} questionIds={splitGradableIds} />
+  )}
   {structured && renderedQuestions.some((q) => q.gradable) && (
     <ExamScorebar
       client:load
@@ -170,6 +262,81 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
 
 <style>
   .qcard { scroll-margin-top: calc(var(--toc-top) + 1rem); }
+  .paper-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .paper-topics {
+    margin-top: 0.6rem;
+    font-family: var(--font-ui);
+    font-size: 1.02rem;
+    line-height: 1.45;
+    color: var(--color-ink-soft);
+  }
+  .paper-meta {
+    margin-top: 0.35rem;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--color-ink-muted);
+  }
+  .paper-source {
+    flex-shrink: 0;
+    margin-top: 0.6rem;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+  .paper-source:hover { color: var(--color-accent); }
+  .paper-intro {
+    border: 1px solid var(--color-rule);
+    border-radius: 14px;
+    padding: 0.85rem 1.1rem;
+    background: color-mix(in srgb, var(--color-card) 60%, transparent);
+  }
+  .paper-intro > summary {
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .paper-intro[open] > summary { margin-bottom: 0.9rem; }
+  .qtitle {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1.3;
+    color: var(--color-ink);
+    font-variation-settings: "opsz" 36, "wght" 560;
+    margin: 0;
+  }
+  .qparts { margin-top: 1.1rem; display: flex; flex-direction: column; }
+  .qpart { padding: 1.1rem 0 0.2rem; border-top: 1px solid var(--color-rule); }
+  .qpart:first-child { border-top: none; padding-top: 0.25rem; }
+  .qpart-title {
+    font-family: var(--font-ui);
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+  }
+  .qgroup { margin-top: 2.5rem; }
+  .qgroup :global(h1), .qgroup :global(h2) {
+    font-family: var(--font-ui);
+    font-size: 0.8rem !important;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    border-bottom: 1px solid var(--color-rule);
+    padding-bottom: 0.5rem;
+    margin-top: 0 !important;
+  }
+  @media (max-width: 640px) {
+    .paper-head { flex-direction: column; gap: 0.25rem; }
+    .qcard { padding: 1.25rem; }
+  }
   .qid {
     font-family: var(--font-ui);
     font-size: 0.8rem;

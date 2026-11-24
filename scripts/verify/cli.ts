@@ -4,18 +4,19 @@
 // reading every page:
 //   1. build (unless --skip-build)
 //   2. scripts/ingest/audit.ts <slug>
-//   3. static scan of dist/subjects/<slug>/** for KaTeX errors, ==highlights==, ^block-ids
+//   3. static scan of dist/subjects/<slug>/** for KaTeX errors, ==highlights==, ^block-ids,
+//      and one-line $$…$$ formulas that rendered inline (cramped)
 //   4. Playwright sweep of every subject page at 390px and 1280px
 //   5. internal links checked against dist/ on disk
 // Writes <out>/report.json and <out>/summary.md (default .verify/<slug>/),
 // prints the summary, exits 1 if anything failed.
 
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
-import { scanHtml } from "./static-scan.js";
+import { displayOnlyTex, scanHtml } from "./static-scan.js";
 import { startStaticServer } from "./static-server.js";
 import { createContexts, runPool, sweepPage } from "./sweep.js";
 import { listSubjectPages, findBrokenLinks } from "./pages.js";
@@ -50,6 +51,25 @@ function parseArguments(argv: string[]): CliOptions {
   return { slug, skipBuild, concurrency, outDir: resolve(outDir ?? join(REPO_ROOT, ".verify", slug)) };
 }
 
+// Formulas written only as one-line `$$…$$` display math in every markdown file of the course's collections
+// (src/content/<collection>/<slug>/**), for the static scan's cramped-math check.
+function courseDisplayTex(slug: string): Set<string> {
+  const contentRoot = join(REPO_ROOT, "src/content");
+  const markdowns: string[] = [];
+  const walk = (directory: string) => {
+    for (const entry of readdirSync(directory)) {
+      const fullPath = join(directory, entry);
+      if (statSync(fullPath).isDirectory()) walk(fullPath);
+      else if (/\.mdx?$/.test(entry)) markdowns.push(readFileSync(fullPath, "utf8"));
+    }
+  };
+  for (const collection of readdirSync(contentRoot)) {
+    const courseDir = join(contentRoot, collection, slug);
+    if (existsSync(courseDir) && statSync(courseDir).isDirectory()) walk(courseDir);
+  }
+  return displayOnlyTex(markdowns);
+}
+
 function run(command: string, args: string[]): { exitCode: number; output: string } {
   const result = spawnSync(command, args, { cwd: REPO_ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
   return { exitCode: result.status ?? 1, output: `${result.stdout ?? ""}${result.stderr ?? ""}` };
@@ -81,9 +101,10 @@ async function main() {
   }
 
   console.log(`verify ${slug}: static scan of ${pages.length} pages…`);
+  const displayTex = courseDisplayTex(slug);
   const staticPages = pages.map((path) => ({
     path,
-    findings: scanHtml(readFileSync(join(distRoot, path, "index.html"), "utf8")),
+    findings: scanHtml(readFileSync(join(distRoot, path, "index.html"), "utf8"), { displayTex }),
   }));
 
   let sweptPages: Awaited<ReturnType<typeof sweepPage>>[] = [];

@@ -1,5 +1,6 @@
 ---
 title: "Macro II Moed A 2023 (7 July 2023), Worked Solutions"
+topics: "Classical model, money growth, IS-LM, Mundell-Fleming, AS-AD"
 type: past-paper
 status: worked-solution
 exam: "Moed A, 7 July 2023 (Tofes 0)"

@@ -90,7 +90,11 @@
     border-radius: 2px;
   }
 
-  .katex { font-size: 1.05em; }
+  /* Maths keeps the case the author wrote. Callout titles, section labels and
+     other small-caps-style headings set text-transform: uppercase, which KaTeX
+     inherits: \rho became P, \beta became B, \text{} words were shouted.
+     Their wide letter-spacing also pulled formulas apart. */
+  .katex { font-size: 1.05em; text-transform: none; letter-spacing: normal; }
   /* --math-fit (0.66–1) is set by src/lib/fit-display-math.ts on formulas wider
      than their box; KaTeX sizes everything in em, so this scales the lot. */
   .katex-display { margin: 1.25rem 0; font-size: calc(var(--math-fit, 1) * 1em); }
@@ -789,17 +793,17 @@ html[data-rail-semester="y2s2"] .rail-semester[data-sem="y2s2"] { display: block
 @media (max-width: 1023px) {
   .site-rail {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
     padding: 0 1rem;
     border-bottom: 1px solid var(--color-rule);
   }
   .site-rail.in-course { position: sticky; top: -44px; }
   .site-rail-top { display: contents; }
-  .site-rail .brand { grid-column: 1; grid-row: 1; min-height: 44px; }
+  .site-rail .brand { grid-column: 1 / -1; grid-row: 1; min-height: 44px; }
   .site-rail.in-course .brand { display: none; }
-  .site-rail .panel-toggle { grid-column: 2; grid-row: 1; width: 44px; height: 44px; margin-right: -0.6rem; }
-  .subject-menu { grid-column: 1; grid-row: 1; min-width: 0; display: flex; align-items: center; gap: 0.5rem; }
+  .site-rail .panel-toggle { grid-column: 1; grid-row: 1; width: 44px; height: 44px; margin-left: -0.6rem; }
+  .subject-menu { grid-column: 2; grid-row: 1; min-width: 0; display: flex; align-items: center; gap: 0.5rem; }
   .subject-trigger { min-width: 0; min-height: 44px; }
   .subject-trigger .subject-name { overflow: hidden; text-overflow: ellipsis; }
   .subject-pop { max-width: calc(100vw - 2rem); left: 0; }
@@ -876,22 +880,10 @@ html[data-rail-semester="y2s2"] .rail-semester[data-sem="y2s2"] { display: block
   grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
 }
-/* Contents sit to the right of the text, beside the site rail. */
-@media (min-width: 1024px) {
-  .content-grid { grid-template-columns: minmax(0, 1fr) 11rem; gap: clamp(1.5rem, 2.5vw, 3rem); }
-  .content-grid.wide-toc { grid-template-columns: minmax(0, 1fr) 11rem; }
-  .content-grid.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); }
-  .content-grid > aside { order: 2; }
-}
-@media (min-width: 1280px) {
-  .content-grid { grid-template-columns: minmax(0, 1fr) 12.5rem; }
-  .content-grid.wide-toc { grid-template-columns: minmax(0, 1fr) 13rem; }
-  .content-grid.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); }
-}
-.sidebar-collapsed > aside { display: none; }
+/* Contents layout lives in "sidebar v2" below: a right-hand panel from 1280px, a drawer under that. */
 
 .rail { font-family: var(--font-ui); }
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .rail {
     position: sticky;
     top: var(--toc-top);
@@ -1301,3 +1293,159 @@ html[data-rail-semester="y2s2"] .rail-semester[data-sem="y2s2"] { display: block
 .mark-read { margin: 0; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; color: var(--color-ink-soft); }
 .mark-read-undo { font: inherit; font-weight: 500; color: var(--color-ink-muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .mark-read-undo:hover { color: var(--color-ink); }
+.toc-list a.lvl-1 {
+  margin-top: 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* ===================== sidebar v2: panel + drawer =====================
+   The toggle sits in the site rail (top left of the course bar on phones).
+   From 1280px the contents are a tinted panel to the right of the text that
+   collapses away. Below 1280px they're an off-canvas drawer from the left. */
+.course-head .panel-toggle { margin-left: -0.35rem; }
+.subject-all {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.6rem 0.45rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-rule) 70%, transparent);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+}
+.subject-all:hover { color: var(--color-accent-ink); }
+
+.rail {
+  background: color-mix(in srgb, var(--color-paper-deep) 55%, var(--color-paper));
+  border: 1px solid color-mix(in srgb, var(--color-rule) 65%, transparent);
+  border-radius: 16px;
+  padding: 1.1rem 0.75rem 1rem 0.9rem;
+}
+.toc-list { border-left: none; }
+.toc-list a {
+  margin-left: 0;
+  border-left: none;
+  border-radius: 8px;
+  padding: 0.38rem 0.6rem;
+}
+.toc-list a.lvl-3 { padding-left: 1.4rem; }
+.toc-list a:hover { background: color-mix(in srgb, var(--color-ink) 5%, transparent); }
+.toc-list a.active {
+  background: color-mix(in srgb, var(--color-accent) 11%, transparent);
+  color: var(--color-accent-ink);
+}
+.toc-list a.lvl-1 { background: none; padding-left: 0.6rem; }
+.rail .toc-current { padding: 0 0.6rem; }
+.rail .toc-label { padding: 0 0.6rem; margin-bottom: 0.7rem; }
+.toc-other { margin-top: 1.1rem; padding-top: 0.9rem; }
+.toc-other a {
+  padding: 0.38rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+.toc-other a:hover { background: color-mix(in srgb, var(--color-ink) 5%, transparent); color: var(--color-ink); }
+
+@media (min-width: 1280px) {
+  .content-grid { grid-template-columns: minmax(0, 1fr) 15.5rem; gap: clamp(2rem, 3vw, 3rem); }
+  .content-grid.wide-toc { grid-template-columns: minmax(0, 1fr) 15.5rem; }
+  .content-grid > aside { order: 2; }
+  .content-grid.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); }
+  .content-grid.sidebar-collapsed > aside { display: none; }
+  .content-grid.sidebar-collapsed > :not(aside) { max-width: 52rem; margin-inline: auto; width: 100%; }
+}
+
+@media (max-width: 1279.98px) {
+  .content-grid > aside.rail {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 70;
+    width: min(21rem, 86vw);
+    max-height: none;
+    overflow-y: auto;
+    border-radius: 0 18px 18px 0;
+    border-left: none;
+    padding: calc(1.25rem + env(safe-area-inset-top)) 1rem 2rem 1.1rem;
+    background: var(--color-paper);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-rule) 60%, transparent), 0 30px 60px -20px rgba(28, 24, 20, 0.35);
+    transform: translateX(-105%);
+    visibility: hidden;
+    transition: transform 0.26s cubic-bezier(0.2, 0.7, 0.3, 1), visibility 0s linear 0.26s;
+  }
+  .content-grid.rail-open > aside.rail {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.26s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  /* collapsed only applies on desktop; the drawer has its own state */
+  .sidebar-collapsed > aside.rail { display: block; }
+}
+.rail-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(28, 24, 20, 0.32);
+  backdrop-filter: blur(2px);
+}
+.rail-scrim[hidden] { display: none; }
+html.rail-locked { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  .content-grid > aside.rail { transition: none !important; }
+}
+
+/* ---- section index pages: card grid ---- */
+@layer components {
+  .card-grid {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: 1rem;
+  }
+  .card-grid > li > .list-card { height: 100%; }
+  .list-card.with-num { display: flex; align-items: flex-start; gap: 1.1rem; }
+  .list-num {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.6rem;
+    height: 2.6rem;
+    padding: 0 0.5rem;
+    border-radius: 12px;
+    background: var(--color-accent-soft);
+    color: var(--color-accent-ink);
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-variation-settings: "opsz" 36, "wght" 600;
+  }
+  .list-body { display: flex; flex-direction: column; min-width: 0; }
+  .list-kicker {
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-ink-muted);
+  }
+  .list-title {
+    margin-top: 0.2rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.25;
+    color: var(--color-ink);
+    font-variation-settings: "opsz" 36, "wght" 520;
+  }
+  .list-meta { margin-top: 0.3rem; font-family: var(--font-ui); font-size: 0.85rem; color: var(--color-ink-muted); }
+  a.list-card:hover .list-title { color: var(--color-accent-ink); }
+}

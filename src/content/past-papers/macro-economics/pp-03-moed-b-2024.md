@@ -1,5 +1,7 @@
 ---
 title: "Moed B 2023–24 — Worked Solutions"
+label: "2024 Moed B"
+topics: "MPC, debt-to-GDP, TFP, capital tax, PPP growth, two-period consumption, Laffer curve"
 type: past-paper
 status: worked-solution
 exam: "Final Exam — Intermediate Macro, Moed B (2023–24)"

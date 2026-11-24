@@ -16,19 +16,19 @@ interface Props {
   currentSlug: string;
   currentSections: Section[];
 }
+import { lectureDisplay, sortByCourseOrder } from "../lib/ordering";
 const { subject, lectures, currentSlug, currentSections } = Astro.props;
-const sorted = [...lectures].sort((a, b) => {
-  if (a.week !== undefined && b.week !== undefined) return a.week - b.week;
-  if (a.week !== undefined) return -1;
-  if (b.week !== undefined) return 1;
-  return a.title.localeCompare(b.title);
+const sorted = sortByCourseOrder(lectures).map((l) => {
+  const d = lectureDisplay(l.slug, l.title);
+  const num = d.kicker.replace(/^\D+/, "");
+  return { ...l, label: num ? `${num}. ${d.topic}` : d.topic };
 });
 const current = sorted.find((l) => l.slug === currentSlug);
 const others = sorted.filter((l) => l.slug !== currentSlug);
 ---
 <aside class="rail">
   <p class="toc-label">Lectures</p>
-  {current && <p class="toc-current">{current.title}</p>}
+  {current && <p class="toc-current">{current.label}</p>}
   {currentSections.length > 0 && (
     <ul class="toc-list">
       {currentSections.map((s) => (
@@ -45,7 +45,7 @@ const others = sorted.filter((l) => l.slug !== currentSlug);
   {others.length > 0 && (
     <nav class="toc-other">
       {others.map((l) => (
-        <a href={`/subjects/${subject}/lectures/${l.slug}`}>{l.title}</a>
+        <a href={`/subjects/${subject}/lectures/${l.slug}`}>{l.label}</a>
       ))}
     </nav>
   )}

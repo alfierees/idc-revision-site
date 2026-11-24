@@ -1,5 +1,6 @@
 ---
 title: "Sample Exam 1 — Worked Solutions"
+topics: "Bundling, insurance, price discrimination, Bertrand, standard adoption, mergers"
 type: past-paper
 status: worked-solution
 exam: "Sample Exam 1 (practice)"

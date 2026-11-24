@@ -1,5 +1,6 @@
 ---
 title: "Sample Final A — Worked Solutions"
+topics: "Full accounting cycle & ratios, SAFE conversion & cap table, goodwill, True/False"
 type: past-paper
 status: worked-solution
 exam: "Sample Final Exam A (mock)"

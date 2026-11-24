@@ -125,23 +125,51 @@ const currentSection = activeSection(Astro.url.pathname);
         });
       }
 
-      // ---- contents collapse (toggle lives in the rail) ----
+      // ---- contents: the toggle lives in the rail. Desktop: the contents collapse (remembered).
+      // Below 1024px: they're an off-canvas drawer, closed by default.
       const KEY = "idc-sidebar-hidden";
       const grid = document.getElementById("content-grid");
       const toggleBtn = document.getElementById("sidebar-toggle");
-      if (grid && toggleBtn) {
-        const apply = (hidden: boolean) => {
-          grid.classList.toggle("sidebar-collapsed", hidden);
-          toggleBtn.classList.toggle("active", !hidden);
-          toggleBtn.setAttribute("aria-pressed", String(!hidden));
-          toggleBtn.setAttribute("title", hidden ? "Show sidebar" : "Hide sidebar");
+      const rail = grid?.querySelector<HTMLElement>(":scope > aside");
+      if (grid && toggleBtn && rail) {
+        const desktop = window.matchMedia("(min-width: 1280px)");
+        const scrim = document.createElement("div");
+        scrim.className = "rail-scrim";
+        scrim.hidden = true;
+        document.body.append(scrim);
+        const setDrawer = (open: boolean) => {
+          grid.classList.toggle("rail-open", open);
+          document.documentElement.classList.toggle("rail-locked", open);
+          scrim.hidden = !open;
         };
-        apply(localStorage.getItem(KEY) === "1");
+        const sync = () => {
+          const shown = desktop.matches ? !grid.classList.contains("sidebar-collapsed") : grid.classList.contains("rail-open");
+          toggleBtn.classList.toggle("active", shown);
+          toggleBtn.setAttribute("aria-expanded", String(shown));
+          toggleBtn.setAttribute("title", shown ? "Hide sidebar" : "Show sidebar");
+        };
+        let stored = false;
+        try { stored = localStorage.getItem(KEY) === "1"; } catch {}
+        grid.classList.toggle("sidebar-collapsed", stored);
+        sync();
         toggleBtn.addEventListener("click", () => {
-          const hidden = !grid.classList.contains("sidebar-collapsed");
-          localStorage.setItem(KEY, hidden ? "1" : "0");
-          apply(hidden);
+          if (desktop.matches) {
+            const hidden = !grid.classList.contains("sidebar-collapsed");
+            grid.classList.toggle("sidebar-collapsed", hidden);
+            try { localStorage.setItem(KEY, hidden ? "1" : "0"); } catch {}
+          } else {
+            setDrawer(!grid.classList.contains("rail-open"));
+          }
+          sync();
         });
+        scrim.addEventListener("click", () => { setDrawer(false); sync(); });
+        rail.addEventListener("click", (e) => {
+          if (!desktop.matches && (e.target as HTMLElement).closest("a")) { setDrawer(false); sync(); }
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && grid.classList.contains("rail-open")) { setDrawer(false); sync(); toggleBtn.focus(); }
+        });
+        desktop.addEventListener("change", () => { setDrawer(false); sync(); });
       }
 
       // ---- TOC scroll-spy ----

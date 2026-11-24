@@ -1,5 +1,6 @@
 ---
 title: "Sample Exam 3 — Worked Solutions"
+topics: "Bundling, moral hazard & adverse selection, Cournot mergers, Lerner index, Stackelberg"
 type: past-paper
 status: worked-solution
 exam: "Sample Exam 3 (practice)"

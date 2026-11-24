@@ -1,5 +1,6 @@
 ---
 title: "Moed B 2022 — Worked Solutions"
+topics: "Neoclassical saving, Solow growth, IS-LM, Mundell-Fleming, Phillips curve"
 type: past-paper
 status: worked-solution
 exam: "Moed B, 21 July 2022"

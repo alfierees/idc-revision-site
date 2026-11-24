@@ -3,6 +3,7 @@ import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { remarkCalloutsLocal } from "./remark-callouts";
+import { remarkLineDisplayMath } from "./remark-line-display-math";
 import remarkRehype from "remark-rehype";
 import type { Root, Element } from "hast";
 import { toString as hastToString } from "hast-util-to-string";
@@ -145,25 +146,60 @@ function wrapSpanningHighlights(children: MdNode[]): MdNode[] {
  * code-fence-style *info string* and then fails to find a close, swallowing the
  * rest of the block).
  *
- * The `^\$\$` anchor (column 0, no indent) is deliberate. Display math inside a
- * callout begins with `> `, and math indented under a list item begins with
- * spaces — both are left untouched so remark-callouts + remark-math handle them
- * (rewriting across a `> ` prefix, or promoting an indented block, corrupts
- * them). `$$` never appears in fenced code in the content, so this never
- * touches code.
+ * The `^\$\$` anchor (column 0, no indent) is deliberate. Math indented under a
+ * list item begins with spaces and is left untouched, because promoting an
+ * indented block corrupts it. `$$` never appears in unquoted fenced code in the
+ * content, so this never touches code. Callouts and blockquotes are handled
+ * line by line in promoteQuotedDisplayMath, which keeps the `> ` prefix.
  */
 function promoteDisplayMath(md: string): string {
-  return md.replace(
+  return promoteQuotedDisplayMath(md).replace(
     /^\$\$([^$][\s\S]*?)\$\$[ \t]*$/gm,
     (_m, inner: string) => `$$\n${inner.trim()}\n$$`,
   );
+}
+
+// `> $$x$$`, optionally followed by punctuation or prose on the same line.
+const QUOTED_ONE_LINE_DISPLAY = /^([ \t]{0,3}(?:>[ \t]?)+)\$\$((?:(?!\$\$).)+)\$\$([.,;:]?)[ \t]*(.*)$/;
+const QUOTED_CODE_FENCE = /^[ \t]{0,3}(?:>[ \t]?)*[ \t]{0,3}(?:`{3,}|~{3,})/;
+
+/**
+ * Pre-pass: give a one-line `$$…$$` inside a callout or blockquote its own
+ * delimiter lines, so remark-math reads it as display math rather than cramped
+ * inline math. Each new line keeps the original `> ` prefix. Multi-line blocks
+ * already work and don't match; a line holding two `$$…$$` spans is left alone
+ * because it can't be one equation; quoted code fences are skipped.
+ */
+function promoteQuotedDisplayMath(md: string): string {
+  let insideCodeFence = false;
+  const output: string[] = [];
+  for (const line of md.split("\n")) {
+    if (QUOTED_CODE_FENCE.test(line)) insideCodeFence = !insideCodeFence;
+    const match = insideCodeFence ? null : line.match(QUOTED_ONE_LINE_DISPLAY);
+    if (!match || match[4].includes("$$")) {
+      output.push(line);
+      continue;
+    }
+    const [, prefix, equation, punctuation, trailingProse] = match;
+    const blankQuotedLine = prefix.trimEnd();
+    const previousLine = output[output.length - 1] ?? "";
+    if (previousLine.replace(/[>\s]/g, "") !== "") output.push(blankQuotedLine);
+    output.push(`${prefix}$$`, `${prefix}${equation.trim()}${punctuation}`, `${prefix}$$`);
+    if (trailingProse) output.push(blankQuotedLine, `${prefix}${trailingProse}`);
+  }
+  return output.join("\n");
 }
 
 // Private-use sentinel standing in for an escaped dollar `\$` while remark-math
 // runs. Currency written inside inline math (`$P = \$10$`, `$\Delta P = \$75$`)
 // would otherwise break: remark-math treats the `$` in `\$` as a closing
 // delimiter, so KaTeX receives a dangling `\` and the rest leaks out as text.
-const DOLLAR_SENTINEL = "\uE000";
+const ESCAPED_DOLLAR_SENTINEL = "\uE000";
+
+// Stands in for a bare currency-style `$10`. It is kept apart from the escaped
+// sentinel because code must get back exactly what the author typed: `$B$10` in
+// an Excel formula has no backslash, while `\$HOME` in a shell snippet does.
+const BARE_DOLLAR_SENTINEL = "\uE001";
 
 // Sentinels bracketing a stashed inline-math span while currency is neutralised.
 const MATH_OPEN = "\uE003";
@@ -196,34 +232,35 @@ const INLINE_MATH = /(?<![$\\])\$(?![\s$])[^$\n]*?(?<![\s$])\$(?!\d)/g;
  * `restoreEscapedDollars` puts the sentinel back once parsing is done.
  */
 function protectLiteralDollars(md: string): string {
-  md = md.replace(/\\\$/g, DOLLAR_SENTINEL);
+  md = md.replace(/\\\$/g, ESCAPED_DOLLAR_SENTINEL);
   const spans: string[] = [];
   md = md.replace(INLINE_MATH, (m) => `${MATH_OPEN}${spans.push(m) - 1}${MATH_CLOSE}`);
-  md = md.replace(/(?<!\$)\$(?=[\d][\d.,]*(?:[^\d.,$]|$))/g, DOLLAR_SENTINEL);
+  md = md.replace(/(?<!\$)\$(?=[\d][\d.,]*(?:[^\d.,$]|$))/g, BARE_DOLLAR_SENTINEL);
   md = md.replace(new RegExp(`${MATH_OPEN}(\\d+)${MATH_CLOSE}`, "g"), (_m, i) => spans[Number(i)]);
   return md;
 }
 
 /**
  * rehype plugin (after remark-rehype, before rehype-katex): restore the dollar
- * sentinel now that math spans are delimited. It must run on hast, not mdast —
+ * sentinels now that math spans are delimited. It must run on hast, not mdast —
  * remark-math freezes each math node's rendered children into `data.hChildren`
  * at parse time, so a later mdast mutation of `node.value` is ignored. Here the
- * immediate parent tells us the context: inside a `math` span or a `code`/`pre`
- * element the sentinel becomes `\$` (KaTeX renders a literal dollar; code is
- * verbatim); everywhere else (prose) it becomes a plain `$`.
+ * immediate parent tells us the context: inside a `math` span both become `\$`
+ * (KaTeX renders a literal dollar); inside `code`/`pre` each goes back to what
+ * the author typed; everywhere else (prose) both become a plain `$`.
  */
 function restoreEscapedDollars() {
   return (tree: Root) => {
     visit(tree, "text", (node: { value: string }, _i, parent) => {
-      if (!node.value.includes(DOLLAR_SENTINEL)) return;
+      if (!node.value.includes(ESCAPED_DOLLAR_SENTINEL) && !node.value.includes(BARE_DOLLAR_SENTINEL)) return;
       const el = parent as Element | undefined;
       const cls = el?.properties?.className;
       const classList = Array.isArray(cls) ? cls.map(String) : [];
       const inMath = classList.some((c) => c.includes("math"));
       const inCode = el?.tagName === "code" || el?.tagName === "pre";
-      const replacement = inMath || inCode ? "\\$" : "$";
-      node.value = node.value.split(DOLLAR_SENTINEL).join(replacement);
+      node.value = node.value
+        .split(ESCAPED_DOLLAR_SENTINEL).join(inMath || inCode ? "\\$" : "$")
+        .split(BARE_DOLLAR_SENTINEL).join(inMath ? "\\$" : "$");
     });
   };
 }
@@ -233,6 +270,7 @@ const processor = unified()
   .use(remarkGfm)
   .use(remarkMath)
   .use(remarkCalloutsLocal)
+  .use(remarkLineDisplayMath)
   .use(remarkObsidianHighlights)
   .use(wikiLinkPlugin, {
     pageResolver: (n: string) => {

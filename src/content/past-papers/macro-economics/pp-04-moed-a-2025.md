@@ -1,5 +1,6 @@
 ---
 title: "Moed A 2025 — Worked Solutions"
+topics: "TFP vs capital, immigration, labour tax, GDP vs GNP, CPI vs PCE, retirement saving"
 type: past-paper
 status: worked-solution
 exam: "Final Exam — Intermediate Macro, Moed A (2025)"
