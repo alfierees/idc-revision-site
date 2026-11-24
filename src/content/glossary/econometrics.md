@@ -325,3 +325,12 @@ See [[#Deterministic Time Trend]].
 
 ### Distributed Lag
 See [[#Distributed Lag Model]].
+
+### Dynamic Difference-in-Differences
+A DiD that estimates a **separate treatment effect for each period** instead of one average effect — an [[#Event Study|event study]] in DiD form. Two versions: **period-specific** (interact the treatment-group dummy with a dummy for each period, omitting one reference period to avoid collinearity; pre-treatment coefficients should be ≈0 if [[#Parallel Trends Assumption|parallel trends]] holds) and **linear-trend** (the effect grows/shrinks by a fixed amount each period: effect in treated period $k$ = $\delta_1+\delta_2(k-1)$). Test $H_0:\delta_2=0$ for "no dynamics." → [[Lec_11-Difference-in-Differences II (Dynamic DiD)|Lec 11]]
+
+### Prior Trends Test
+A formal check of [[#Parallel Trends Assumption|parallel trends]] using **pre-treatment data only**: regress the outcome on a time trend, the group dummy, and their interaction, $y_{it}=\beta_0+\beta_1 t+\beta_2 dT_i+\beta_3(t\cdot dT_i)+u_{it}$, and test $H_0:\beta_3=0$ (equal pre-trends). Failing to reject supports the design; a significant $\beta_3$ is a red flag. The graphical version: pre-treatment coefficients in a [[#Dynamic Difference-in-Differences|dynamic DiD]] should be flat at zero. → [[Lec_11-Difference-in-Differences II (Dynamic DiD)|Lec 11]]
+
+### Intention-to-Treat
+The effect of being **assigned/offered** a treatment, regardless of whether the unit actually takes it up. Used when take-up is a **choice** ([[#Endogeneity|endogenous]]) but assignment is randomised (exogenous): regressing on assignment gives the unbiased ITT, which is also the policy-relevant quantity (a firm/government controls offers, not compliance). The effect of *actually complying* is recovered by [[#Instrumental Variables|IV]], using assignment as an instrument for take-up (the compliers' [[#Local Average Treatment Effect|LATE]]). → [[Lec_11-Difference-in-Differences II (Dynamic DiD)|Lec 11]]
