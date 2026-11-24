@@ -1,6 +1,7 @@
 ---
 import Layout from "../../../../components/Layout.astro";
 import { getCollection } from "astro:content";
+import PageHead from "../../../../components/PageHead.astro";
 import { lectureDisplay, sortByCourseOrder } from "../../../../lib/ordering";
 
 export async function getStaticPaths() {
@@ -33,33 +34,62 @@ const groups = [
   { key: "lectures", label: "Lectures", blurb: "In-class slide decks, reconstructed as notes.", items: lectures },
   { key: "readings", label: "Readings", blurb: "Assigned articles from the syllabus.", items: readings },
 ].filter((g) => g.items.length > 0);
+const plural = (n: number, noun: string) => `${n} ${noun}${n === 1 ? "" : "s"}`;
+const headSub = [
+  lectures.length ? plural(lectures.length, "lecture") : "",
+  readings.length ? plural(readings.length, "reading") : "",
+  groups.length === 1 ? groups[0].blurb : "",
+].filter(Boolean).join(" · ");
 ---
 <Layout title={`Lectures · ${subject.data.title}`} subject={subjectSlug} active="lectures">
+  <PageHead title="Lectures" sub={headSub} />
   {groups.length === 0 ? (
     <p class="mt-6 font-ui text-ink-muted">No lectures ingested for this subject yet.</p>
   ) : (
     groups.map((g) => (
-      <section class="mt-8 first:mt-2">
-        <div class="border-b border-rule pb-2">
-          <h2 class="font-ui text-xs font-bold uppercase tracking-[0.18em] text-accent">{g.label}</h2>
-          <p class="mt-0.5 font-ui text-sm text-ink-muted">{g.blurb}</p>
-        </div>
-        <ol class="mt-3 space-y-4 list-none p-0">
-          {g.items.map((l) => (
-            <li>
-              <a href={`/subjects/${subjectSlug}/lectures/${l.slug}`} class="list-card">
-                {(l.kicker || l.week !== undefined) && (
-                  <p class="font-ui text-xs font-bold uppercase tracking-[0.15em] text-accent">
-                    {[l.kicker, l.week !== undefined && !l.kicker.startsWith("Week") ? `Week ${l.week}` : null].filter(Boolean).join(" · ")}
-                  </p>
-                )}
-                <h3 class="mt-1 font-display text-xl text-ink" style="font-variation-settings: 'opsz' 36, 'wght' 520;">{l.topic}</h3>
-                {l.instructor && <p class="mt-1 font-ui text-sm text-ink-muted">{l.instructor}</p>}
-              </a>
-            </li>
-          ))}
+      <section class="lec-group">
+        {groups.length > 1 && (
+          <div class="lec-group-head">
+            <h2>{g.label}</h2>
+            <p>{g.blurb}</p>
+          </div>
+        )}
+        <ol class="card-grid">
+          {g.items.map((l) => {
+            const num = l.kicker.split(" ").pop();
+            return (
+              <li>
+                <a href={`/subjects/${subjectSlug}/lectures/${l.slug}`} class="list-card with-num">
+                  {l.kicker && <span class="list-num" aria-hidden="true">{num}</span>}
+                  <span class="list-body">
+                    {(l.kicker || l.week !== undefined) && (
+                      <span class="list-kicker">
+                        {[l.kicker ? l.kicker.replace(/\s+\S+$/, "") : null, l.week !== undefined && !l.kicker.startsWith("Week") ? `Week ${l.week}` : null].filter(Boolean).join(" · ")}
+                      </span>
+                    )}
+                    <span class="list-title">{l.topic}</span>
+                    {l.instructor && <span class="list-meta">{l.instructor}</span>}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
         </ol>
       </section>
     ))
   )}
 </Layout>
+
+<style>
+  .lec-group + .lec-group { margin-top: 2.5rem; }
+  .lec-group-head { margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-rule); }
+  .lec-group-head h2 {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--color-accent);
+  }
+  .lec-group-head p { margin-top: 0.15rem; font-family: var(--font-ui); font-size: 0.88rem; color: var(--color-ink-muted); }
+</style>

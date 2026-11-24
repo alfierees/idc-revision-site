@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../../components/Layout.astro";
+import PageHead from "../../../../components/PageHead.astro";
 import { getCollection } from "astro:content";
 import { comparePapers, paperLabel } from "../../../../lib/paper-label";
 
@@ -22,10 +23,11 @@ const papers = (await getCollection("past-papers", (p) => p.data.subject === sub
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
 ---
 <Layout title={`${subject.data.title} · Past Papers`} subject={subjectSlug} active="past-papers">
+  <PageHead title="Past Papers" sub={papers.length ? `${papers.length} paper${papers.length === 1 ? "" : "s"} · Newest first, answers hidden until you ask.` : undefined} />
   {papers.length === 0 ? (
     <p class="font-ui text-sm text-ink-muted italic">No past papers yet — content not yet ingested.</p>
   ) : (
-    <ul class="paper-grid mt-2 list-none p-0">
+    <ul class="card-grid">
       {papers.map((p) => (
         <li>
           <a href={`/subjects/${subjectSlug}/past-papers/${p.slug}`} class="list-card paper-card">
@@ -39,7 +41,6 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
 </Layout>
 
 <style>
-  .paper-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
   .paper-card { height: 100%; }
   .paper-card-topics {
     display: -webkit-box;

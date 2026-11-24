@@ -5,6 +5,7 @@ interface Props {
 }
 const { groups } = Astro.props;
 
+const PREVIEW = 4;
 const courses = (n: number) => `${n} course${n === 1 ? "" : "s"}`;
 const tileNote = (live: number, coming: number) =>
   live > 0 ? courses(live) : coming > 0 ? `${courses(coming)} coming soon` : "Coming soon";
@@ -12,8 +13,16 @@ const tileNote = (live: number, coming: number) =>
 <div class="tiles">
   {groups.map((g) => (
     <a href={`#${g.semester.id}`} class={`tile ${g.live.length === 0 ? "quiet" : ""}`} data-pick={g.semester.id}>
-      <span class="tile-year">Year {g.semester.year}</span>
-      <span class="tile-sem">Semester {g.semester.semester}</span>
+      <span class="tile-head">
+        <span class="tile-year">Year {g.semester.year}</span>
+        <span class="tile-sem">Semester {g.semester.semester}</span>
+      </span>
+      {g.live.length > 0 && (
+        <span class="tile-courses">
+          {g.live.slice(0, PREVIEW).map((s) => <span class="tc">{s.title}</span>)}
+          {g.live.length > PREVIEW && <span class="tc more">+ {g.live.length - PREVIEW} more</span>}
+        </span>
+      )}
       <span class="tile-note">
         {tileNote(g.live.length, g.coming.length)}
         {g.live.length > 0 && <span class="tile-arr" aria-hidden="true">→</span>}
@@ -24,21 +33,35 @@ const tileNote = (live: number, coming: number) =>
 
 <style>
   .tiles {
-    margin-top: 1.25rem;
+    margin: 1.5rem auto 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem;
-    max-width: 46rem;
+    max-width: 72rem;
+    text-align: left;
+  }
+  @media (min-width: 1024px) {
+    .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
   .tile {
+    position: relative;
     display: flex;
     flex-direction: column;
-    padding: 1.6rem 1.75rem 1.4rem;
+    padding: 1.5rem 1.5rem 1.25rem;
     border-radius: var(--radius-card);
     background: var(--color-card);
     box-shadow: var(--shadow-soft);
     text-decoration: none;
+    overflow: hidden;
     transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.28s ease;
+  }
+  .tile::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--color-accent);
+    opacity: 0.85;
   }
   .tile:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
   .tile-arr { font-size: 1rem; transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1); }
@@ -47,16 +70,32 @@ const tileNote = (live: number, coming: number) =>
     .tile:hover .tile-arr { transform: translateX(5px); }
     .tile.quiet:hover { transform: translateY(-2px); }
   }
+  .tile-head { display: flex; flex-direction: column; }
   .tile-year {
     font-family: var(--font-display);
-    font-size: 2.1rem;
+    font-size: 1.9rem;
     line-height: 1.1;
     font-variation-settings: "opsz" 72, "wght" 500;
     color: var(--color-ink);
   }
-  .tile-sem { margin-top: 0.15rem; font-size: 1.05rem; color: var(--color-ink-soft); }
+  .tile-sem { margin-top: 0.1rem; font-size: 1.02rem; color: var(--color-ink-soft); }
+  .tile-courses {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--color-rule);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--color-ink-soft);
+  }
+  .tc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tc.more { color: var(--color-ink-muted); }
   .tile-note {
-    margin-top: 1.1rem;
+    margin-top: auto;
+    padding-top: 1.1rem;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -70,14 +109,16 @@ const tileNote = (live: number, coming: number) =>
     background: color-mix(in srgb, var(--color-paper-deep) 55%, var(--color-paper));
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-rule) 70%, transparent);
   }
+  .tile.quiet::before { display: none; }
   .tile.quiet .tile-year { color: var(--color-ink-muted); }
   .tile.quiet .tile-note { font-family: var(--font-body); font-style: italic; font-weight: 400; font-size: 0.95rem; color: var(--color-ink-faint); }
   @media (max-width: 640px) {
     .tiles { gap: 0.75rem; }
     .tile { padding: 1.1rem 1.1rem 1rem; min-height: 44px; }
-    .tile-year { font-size: 1.6rem; }
-    .tile-sem { font-size: 0.98rem; }
-    .tile-note { margin-top: 0.8rem; }
+    .tile-year { font-size: 1.55rem; }
+    .tile-sem { font-size: 0.95rem; }
+    .tile-courses { display: none; }
+    .tile-note { padding-top: 0.8rem; }
   }
   @media (prefers-reduced-motion: reduce) {
     .tile, .tile-arr { transition: none; }
