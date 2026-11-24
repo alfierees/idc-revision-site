@@ -36,34 +36,34 @@ questions:
     options:
       - label: "a"
         text: |
-          Ingredient Made in China
-        correct: true
-        why: |
-          Equivalent annual cost 23,335 vs 26,626 for the US component (savings are the same for both).
-      - label: "b"
-        text: |
           The firm is indifferent between the plans
         correct: false
         why: |
           Their equivalent annual costs differ.
-      - label: "c"
+      - label: "b"
         text: |
           A decision cannot be made because the components have a different duration
         correct: false
         why: |
           Different lives with renewal is exactly what EAC handles.
-      - label: "d"
+      - label: "c"
         text: |
           Made in the USA
         correct: false
         why: |
           Its after-tax cost per year of use is higher.
-      - label: "e"
+      - label: "d"
         text: |
           A decision cannot be made because the components have a different investment amount
         correct: false
         why: |
           EAC puts both on a per-year basis.
+      - label: "e"
+        text: |
+          Ingredient Made in China
+        correct: true
+        why: |
+          Equivalent annual cost 23,335 vs 26,626 for the US component (savings are the same for both).
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -82,22 +82,22 @@ questions:
     options:
       - label: "a"
         text: |
-          It may be an efficient portfolio
-        correct: true
-        why: |
-          A levered efficient portfolio ($x_m > 1$) has $\beta = x_m > 1$.
-      - label: "b"
-        text: |
-          This may be the M market portfolio
-        correct: false
-        why: |
-          The market's beta is exactly 1.
-      - label: "c"
-        text: |
           It is possible that the portfolio consists of 10% risk-free asset and 90% market portfolio
         correct: false
         why: |
           That mix has $\beta = 0.9$.
+      - label: "b"
+        text: |
+          It may be an efficient portfolio
+        correct: true
+        why: |
+          A levered efficient portfolio ($x_m > 1$) has $\beta = x_m > 1$.
+      - label: "c"
+        text: |
+          Necessarily the correlation coefficient of the investment portfolio with the market portfolio M is greater than 1
+        correct: false
+        why: |
+          A correlation can never exceed 1.
       - label: "d"
         text: |
           Necessarily the portfolio is inefficient
@@ -106,10 +106,10 @@ questions:
           Borrowing to hold more than 100% of M is efficient with beta above 1.
       - label: "e"
         text: |
-          Necessarily the correlation coefficient of the investment portfolio with the market portfolio M is greater than 1
+          This may be the M market portfolio
         correct: false
         why: |
-          A correlation can never exceed 1.
+          The market's beta is exactly 1.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -123,34 +123,34 @@ questions:
     options:
       - label: "a"
         text: |
-          2.45%
-        correct: true
-        why: |
-          Real yield $6/300 = 2\%$; nominal $(1000/703.19)^{1/8} - 1 = 4.5\%$; $1.045/1.02 - 1 = 2.45\%$.
-      - label: "b"
-        text: |
-          2.50%
-        correct: false
-        why: |
-          The simple difference $4.5\% - 2\%$, not the Fisher relation.
-      - label: "c"
-        text: |
           2%
         correct: false
         why: |
           That is the real yield of the indexed consol.
-      - label: "d"
-        text: |
-          4.5%
-        correct: false
-        why: |
-          That is the nominal yield of the zero.
-      - label: "e"
+      - label: "b"
         text: |
           5%
         correct: false
         why: |
           Not implied by these prices.
+      - label: "c"
+        text: |
+          2.50%
+        correct: false
+        why: |
+          The simple difference $4.5\% - 2\%$, not the Fisher relation.
+      - label: "d"
+        text: |
+          2.45%
+        correct: true
+        why: |
+          Real yield $6/300 = 2\%$; nominal $(1000/703.19)^{1/8} - 1 = 4.5\%$; $1.045/1.02 - 1 = 2.45\%$.
+      - label: "e"
+        text: |
+          4.5%
+        correct: false
+        why: |
+          That is the nominal yield of the zero.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -164,34 +164,34 @@ questions:
     options:
       - label: "a"
         text: |
-          9.67%
-        correct: true
-        why: |
-          $\sigma^2 = 0.3^2(0.16^2) + 0.3^2(0.2^2) + 2(0.3)(0.3)(0.16)(0.2)(0.6) = 0.00936$.
-      - label: "b"
-        text: |
           8.43%
         correct: false
         why: |
           Drops part of the covariance term.
+      - label: "b"
+        text: |
+          9.67%
+        correct: true
+        why: |
+          $\sigma^2 = 0.3^2(0.16^2) + 0.3^2(0.2^2) + 2(0.3)(0.3)(0.16)(0.2)(0.6) = 0.00936$.
       - label: "c"
-        text: |
-          9.01%
-        correct: false
-        why: |
-          Not the square root of 0.00936.
-      - label: "d"
-        text: |
-          10.28%
-        correct: false
-        why: |
-          Overstates the covariance term.
-      - label: "e"
         text: |
           16.12%
         correct: false
         why: |
           Treats the 60% in stocks as if it were 100%.
+      - label: "d"
+        text: |
+          9.01%
+        correct: false
+        why: |
+          Not the square root of 0.00936.
+      - label: "e"
+        text: |
+          10.28%
+        correct: false
+        why: |
+          Overstates the covariance term.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -206,34 +206,34 @@ questions:
     options:
       - label: "a"
         text: |
-          About NIS201,662
-        correct: true
-        why: |
-          Monthly rates 0.4% and 0.3%: market value of the 324 remaining payments minus the balance.
-      - label: "b"
-        text: |
-          The borrower will not be charged a capitalization difference fee at all since the interest rate has decreased from 4.8% to 3.6% and has not increased.
-        correct: false
-        why: |
-          Backwards: the fee arises precisely because rates fell.
-      - label: "c"
-        text: |
-          About NIS72,253
-        correct: false
-        why: |
-          Too small for this rate drop over 27 remaining years.
-      - label: "d"
-        text: |
           About NIS129,409
         correct: false
         why: |
           Too small for this rate drop over 27 remaining years.
-      - label: "e"
+      - label: "b"
         text: |
           About NIS1,426,490
         correct: false
         why: |
           This is an outstanding balance (with monthly rates from effective conversion), not a fee.
+      - label: "c"
+        text: |
+          About NIS201,662
+        correct: true
+        why: |
+          Monthly rates 0.4% and 0.3%: market value of the 324 remaining payments minus the balance.
+      - label: "d"
+        text: |
+          The borrower will not be charged a capitalization difference fee at all since the interest rate has decreased from 4.8% to 3.6% and has not increased.
+        correct: false
+        why: |
+          Backwards: the fee arises precisely because rates fell.
+      - label: "e"
+        text: |
+          About NIS72,253
+        correct: false
+        why: |
+          Too small for this rate drop over 27 remaining years.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -250,16 +250,16 @@ questions:
     options:
       - label: "a"
         text: |
+          Loan at an annual interest rate of 12.5% + portfolio opening fee (paid on the day the loan is taken) at a rate of 2%
+        correct: false
+        why: |
+          $1.125/0.98 - 1 = 14.80\%$.
+      - label: "b"
+        text: |
           Loan at an effective quarterly interest rate of 3.5%
         correct: true
         why: |
           $1.035^4 - 1 = 14.75\%$, the lowest effective annual rate.
-      - label: "b"
-        text: |
-          Loan at an annual interest rate of 14% annually is calculated monthly
-        correct: false
-        why: |
-          $(1 + 0.14/12)^{12} - 1 = 14.93\%$.
       - label: "c"
         text: |
           A loan with an annual interest rate of 13.2% is paid in advance
@@ -268,10 +268,10 @@ questions:
           Interest paid up front: $1/(1 - 0.132) - 1 = 15.21\%$.
       - label: "d"
         text: |
-          Loan at an annual interest rate of 12.5% + portfolio opening fee (paid on the day the loan is taken) at a rate of 2%
+          Loan at an annual interest rate of 14% annually is calculated monthly
         correct: false
         why: |
-          $1.125/0.98 - 1 = 14.80\%$.
+          $(1 + 0.14/12)^{12} - 1 = 14.93\%$.
       - label: "e"
         text: |
           A loan with an annual interest rate of 14% is calculated continuously
@@ -291,19 +291,19 @@ questions:
     options:
       - label: "a"
         text: |
-          NIS1,219.
-        correct: true
+          NIS1,210.
+        correct: false
         why: |
-          Need at 67: 1,988,360; deposit = need / FV factor of 444 monthly deposits at 0.5%.
+          Close, but not the result of the exact 0.5% monthly calculation.
       - label: "b"
         text: |
-          NIS1,210.
+          NIS1,204.
         correct: false
         why: |
           Close, but not the result of the exact 0.5% monthly calculation.
       - label: "c"
         text: |
-          NIS1,204.
+          NIS1,213.
         correct: false
         why: |
           Close, but not the result of the exact 0.5% monthly calculation.
@@ -315,10 +315,10 @@ questions:
           Close, but not the result of the exact 0.5% monthly calculation.
       - label: "e"
         text: |
-          NIS1,213.
-        correct: false
+          NIS1,219.
+        correct: true
         why: |
-          Close, but not the result of the exact 0.5% monthly calculation.
+          Need at 67: 1,988,360; deposit = need / FV factor of 444 monthly deposits at 0.5%.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -341,31 +341,31 @@ questions:
     options:
       - label: "a"
         text: |
-          We cannot say for certain
-        correct: true
+          100,000 NIS
+        correct: false
         why: |
-          Every project has PI = 0.3, so any way of spending 400,000 gives NPV 120,000.
+          One of many equally good choices, not a forced one.
       - label: "b"
         text: |
-          100,000 NIS
+          400,000 NIS
         correct: false
         why: |
           One of many equally good choices, not a forced one.
       - label: "c"
         text: |
-          200,000 NIS
-        correct: false
+          We cannot say for certain
+        correct: true
         why: |
-          One of many equally good choices, not a forced one.
+          Every project has PI = 0.3, so any way of spending 400,000 gives NPV 120,000.
       - label: "d"
         text: |
-          300,000 NIS
+          200,000 NIS
         correct: false
         why: |
           One of many equally good choices, not a forced one.
       - label: "e"
         text: |
-          400,000 NIS
+          300,000 NIS
         correct: false
         why: |
           One of many equally good choices, not a forced one.
@@ -382,22 +382,22 @@ questions:
     options:
       - label: "a"
         text: |
-          13,632 NIS
-        correct: true
-        why: |
-          Real payment 12,950.46; annual inflation $1.08^{1/3} - 1 = 2.6\%$; $12{,}950.46 \times 1.026^2 = 13{,}632$.
-      - label: "b"
-        text: |
-          14,006 NIS
+          15,107 NIS
         correct: false
         why: |
-          Not the real payment indexed by two years of inflation.
-      - label: "c"
+          Too high for two years of 2.6% inflation.
+      - label: "b"
         text: |
           15,567 NIS
         correct: false
         why: |
           Too high for two years of 2.6% inflation.
+      - label: "c"
+        text: |
+          14,006 NIS
+        correct: false
+        why: |
+          Not the real payment indexed by two years of inflation.
       - label: "d"
         text: |
           13,987 NIS
@@ -406,10 +406,10 @@ questions:
           This is about $12{,}950 \times 1.08$, i.e. the **third** payment (all three years of inflation).
       - label: "e"
         text: |
-          15,107 NIS
-        correct: false
+          13,632 NIS
+        correct: true
         why: |
-          Too high for two years of 2.6% inflation.
+          Real payment 12,950.46; annual inflation $1.08^{1/3} - 1 = 2.6\%$; $12{,}950.46 \times 1.026^2 = 13{,}632$.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -423,34 +423,34 @@ questions:
     options:
       - label: "a"
         text: |
-          12.03%
-        correct: true
-        why: |
-          Solve $700 = 355/(1+i) + 355/(1+i)^2$: $i = 0.951\%$ a month, $1.00951^{12} - 1 = 12.03\%$.
-      - label: "b"
-        text: |
-          0.95%
+          5.84%
         correct: false
         why: |
-          That is the monthly rate, not the annual one.
-      - label: "c"
+          Not the IRR of +700, −355, −355.
+      - label: "b"
         text: |
           14.44%
         correct: false
         why: |
           Not the IRR of +700, −355, −355.
+      - label: "c"
+        text: |
+          12.03%
+        correct: true
+        why: |
+          Solve $700 = 355/(1+i) + 355/(1+i)^2$: $i = 0.951\%$ a month, $1.00951^{12} - 1 = 12.03\%$.
       - label: "d"
+        text: |
+          0.95%
+        correct: false
+        why: |
+          That is the monthly rate, not the annual one.
+      - label: "e"
         text: |
           0%
         correct: false
         why: |
           Ignores the 5 NIS fees, which make the credit cost something.
-      - label: "e"
-        text: |
-          5.84%
-        correct: false
-        why: |
-          Not the IRR of +700, −355, −355.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -525,5 +525,5 @@ questions:
 > Part of: [[Financial Management]] · Moed B 2024 · [official solution file](/papers/fundamentals-of-finance/2024-moed-b-solution.pdf) (it contains the full questions)
 
 > [!info] What is official here
-> - **Section 1 (Q1 to Q10, multiple choice):** the official file marks the correct option (always option **a**) but gives **no working**. The working and the reasons other options fail are **AI-written**, and each was recomputed to agree with the official option.
+> - **Section 1 (Q1 to Q10, multiple choice):** the official file marks the correct option (it always lists it first; the options are shuffled here) but gives **no working**. The working and the reasons other options fail are **AI-written**, and each was recomputed to agree with the official option.
 > - **Section 2 (two open questions, 50%):** the numbers are the **official** solution.

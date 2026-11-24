@@ -132,8 +132,8 @@ This sheet is the lecturer's worked free-cash-flow table for the franchise quest
 - **Cannibalisation:** `=(250-250%*500)*0.25*C5/1000`, i.e. 25% of device sales are lost screen sales, at a lost profit of $250\% \times 500 - 250 = 1{,}000$ per screen (scaled to thousands).
 - **Working capital** (rows 36 to 43, at the start of each year): inventory $= \frac13 \times 2{,}000 \times$ units purchased, receivables $= 30\%$ of that year's sales, payables $= 10\% \times 2{,}000 \times$ units purchased (units purchased 15,000, 5,000, 10,000). The cash flow is minus the change in the balance; it is all recovered at $t=3$.
 
-> [!warning] Compare with the site's reconstruction of this exam
-> [[PP_02-Franchise FCF NPV, NPV vs IRR, Loan Effective Rate, Amortisation & Growing Cash Flows (2025 Moed B)|PP 02]] was rebuilt from a student's workbook without the question paper and reaches an NPV of 2,756.51. The lecturer's sheet differs in three places: cost of goods on **units sold** (9,000 and 7,000 × 2) rather than units purchased; a maintenance cost on next year's sales rather than an inventory holding cost; and a cannibalisation cost of 1 per lost screen sale, which PP 02 had flagged as its biggest doubt. Both reach "buy". Note also that the sheet's year-3 cost of goods is $10{,}000 \times 2$ (units purchased), not $14{,}000 \times 2$ (units sold), so it is not fully consistent with years 1 and 2.
+> [!warning] Not the official solution
+> The official 2025 Moed B solution ([[PP_02-Franchise FCF NPV, NPV vs IRR, Loan Effective Rate, Amortisation & Growing Cash Flows (2025 Moed B)|PP 02]]) reaches an NPV of **2,756.51**: it expenses the cost of **purchases** (30,000, 10,000, 20,000), charges the holding cost on the 6,000 and 4,000 units in stock, and uses a 1,000 loss per discounted screen. This tutorial sheet is the lecturer's different worked version: cost of goods on units sold in years 1 and 2 (and on purchases in year 3), maintenance on next year's sales, NPV 6,769.64. Both say "buy"; for the exam, follow the official solution.
 
 ---
 

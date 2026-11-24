@@ -36,16 +36,16 @@ questions:
     options:
       - label: "a"
         text: |
-          Increases by less than one shekel
-        correct: true
-        why: |
-          Depreciation is not a cash outflow; it only cuts tax, by $t_c \times 1 < 1$.
-      - label: "b"
-        text: |
-          Decreases by less than one shekel
+          All of the answers are incorrect
         correct: false
         why: |
-          Depreciation reduces taxable profit, so cash flow goes up, not down.
+          The correct option is the one marked right above; this catch-all is wrong.
+      - label: "b"
+        text: |
+          Decreases by one shekel
+        correct: false
+        why: |
+          Treats depreciation as a cash cost; it is a non-cash expense.
       - label: "c"
         text: |
           Increases by more than one shekel
@@ -54,16 +54,16 @@ questions:
           The gain is the tax saving only, a fraction of the shekel.
       - label: "d"
         text: |
-          Decreases by one shekel
+          Decreases by less than one shekel
         correct: false
         why: |
-          Treats depreciation as a cash cost; it is a non-cash expense.
+          Depreciation reduces taxable profit, so cash flow goes up, not down.
       - label: "e"
         text: |
-          All of the answers are incorrect
-        correct: false
+          Increases by less than one shekel
+        correct: true
         why: |
-          Option a is correct.
+          Depreciation is not a cash outflow; it only cuts tax, by $t_c \times 1 < 1$.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -77,10 +77,10 @@ questions:
     options:
       - label: "a"
         text: |
-          3.75%
-        correct: true
+          4.15%
+        correct: false
         why: |
-          CML slope from A: $(16-4)/5 = 2.4$; B: $13 = 4 + 2.4\sigma_B \Rightarrow \sigma_B = 3.75\%$.
+          Does not lie on the CML through A.
       - label: "b"
         text: |
           3.25%
@@ -89,10 +89,10 @@ questions:
           Does not lie on the CML through A.
       - label: "c"
         text: |
-          4.15%
-        correct: false
+          3.75%
+        correct: true
         why: |
-          Does not lie on the CML through A.
+          CML slope from A: $(16-4)/5 = 2.4$; B: $13 = 4 + 2.4\sigma_B \Rightarrow \sigma_B = 3.75\%$.
       - label: "d"
         text: |
           4.75%
@@ -118,34 +118,34 @@ questions:
     options:
       - label: "a"
         text: |
-          3.78%
-        correct: true
-        why: |
-          Nominal $(100/62.09)^{1/5} - 1 = 10\%$, real $(100/74.73)^{1/5} - 1 = 6\%$; $1.10/1.06 - 1 = 3.78\%$.
-      - label: "b"
-        text: |
-          3.27%
+          4.00%
         correct: false
         why: |
-          Not consistent with 10% nominal and 6% real.
-      - label: "c"
+          The simple difference $10\% - 6\%$; the exact Fisher relation divides.
+      - label: "b"
         text: |
           6.43%
         correct: false
         why: |
           Not consistent with 10% nominal and 6% real.
-      - label: "d"
+      - label: "c"
         text: |
           4.27%
         correct: false
         why: |
           Not consistent with 10% nominal and 6% real.
+      - label: "d"
+        text: |
+          3.78%
+        correct: true
+        why: |
+          Nominal $(100/62.09)^{1/5} - 1 = 10\%$, real $(100/74.73)^{1/5} - 1 = 6\%$; $1.10/1.06 - 1 = 3.78\%$.
       - label: "e"
         text: |
-          4.00%
+          3.27%
         correct: false
         why: |
-          The simple difference $10\% - 6\%$; the exact Fisher relation divides.
+          Not consistent with 10% nominal and 6% real.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -159,31 +159,31 @@ questions:
     options:
       - label: "a"
         text: |
-          80,000 ILS
-        correct: true
-        why: |
-          The minimum-variance mix has $x_A = 0.4^2/(0.2^2 + 0.4^2) = 0.8$. More A than that is inefficient.
-      - label: "b"
-        text: |
-          20,000 ILS
+          40,000 ILS
         correct: false
         why: |
-          That is the MVP weight of B, not A.
-      - label: "c"
+          Not the minimum-variance weight.
+      - label: "b"
         text: |
           33,333 ILS
         correct: false
         why: |
           Not the minimum-variance weight.
-      - label: "d"
+      - label: "c"
         text: |
-          66,667 ILS
+          20,000 ILS
         correct: false
         why: |
-          Not the minimum-variance weight.
+          That is the MVP weight of B, not A.
+      - label: "d"
+        text: |
+          80,000 ILS
+        correct: true
+        why: |
+          The minimum-variance mix has $x_A = 0.4^2/(0.2^2 + 0.4^2) = 0.8$. More A than that is inefficient.
       - label: "e"
         text: |
-          40,000 ILS
+          66,667 ILS
         correct: false
         why: |
           Not the minimum-variance weight.
@@ -200,10 +200,10 @@ questions:
     options:
       - label: "a"
         text: |
-          21,801 ILS
-        correct: true
+          19,820 ILS
+        correct: false
         why: |
-          Balance 110,000 at year 1; PMT 29,017.72; principal parts 18,017.72, 19,819.50, 21,801.44.
+          That is the principal in the **second** payment.
       - label: "b"
         text: |
           18,610 ILS
@@ -212,10 +212,10 @@ questions:
           Not a principal component of this schedule.
       - label: "c"
         text: |
-          19,820 ILS
+          8,920 ILS
         correct: false
         why: |
-          That is the principal in the **second** payment.
+          Not a principal component of this schedule.
       - label: "d"
         text: |
           16,529 ILS
@@ -224,10 +224,10 @@ questions:
           Ignores the year of deferred interest.
       - label: "e"
         text: |
-          8,920 ILS
-        correct: false
+          21,801 ILS
+        correct: true
         why: |
-          Not a principal component of this schedule.
+          Balance 110,000 at year 1; PMT 29,017.72; principal parts 18,017.72, 19,819.50, 21,801.44.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -247,34 +247,34 @@ questions:
     options:
       - label: "a"
         text: |
-          Approximately 18.46%
-        correct: true
-        why: |
-          Net 49,000 now, repay 56,431.11 in 10 months: 1.42% a month, 18.46% a year.
-      - label: "b"
-        text: |
           Approximately 10.27%
         correct: false
         why: |
           Lower than the 12.68% the loan costs even without fees.
-      - label: "c"
+      - label: "b"
         text: |
           Approximately 12.45%
         correct: false
         why: |
           Roughly the cost without the fees.
-      - label: "d"
+      - label: "c"
         text: |
           Approximately 15.17%
         correct: false
         why: |
           Leaves out part of the fees.
-      - label: "e"
+      - label: "d"
         text: |
           Approximately 1.50%
         correct: false
         why: |
           A monthly-scale number, not annual.
+      - label: "e"
+        text: |
+          Approximately 18.46%
+        correct: true
+        why: |
+          Net 49,000 now, repay 56,431.11 in 10 months: 1.42% a month, 18.46% a year.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -290,28 +290,28 @@ questions:
     options:
       - label: "a"
         text: |
-          Approximately ₪1,220,111
-        correct: true
-        why: |
-          Growing annuity with $g = -1\%$, 60 months, monthly rate 0.4%.
-      - label: "b"
-        text: |
-          Approximately ₪2,846,926
-        correct: false
-        why: |
-          Too large: even a salary growing 1% a month would be worth only about 2.15M.
-      - label: "c"
-        text: |
           Approximately ₪145,293
         correct: false
         why: |
           Far too small for 60 salaries starting at 30,000.
-      - label: "d"
+      - label: "b"
+        text: |
+          Approximately ₪1,220,111
+        correct: true
+        why: |
+          Growing annuity with $g = -1\%$, 60 months, monthly rate 0.4%.
+      - label: "c"
         text: |
           Approximately ₪920,889
         correct: false
         why: |
           Too small; discounts too hard or drops payments.
+      - label: "d"
+        text: |
+          Approximately ₪2,846,926
+        correct: false
+        why: |
+          Too large: even a salary growing 1% a month would be worth only about 2.15M.
       - label: "e"
         text: |
           Approximately ₪1,640,553
@@ -335,34 +335,34 @@ questions:
     options:
       - label: "a"
         text: |
-          Both projects.
-        correct: true
-        why: |
-          NPV(A) = 3,890.65 > 0 and NPV(B) = 5,930.75 > 0.
-      - label: "b"
-        text: |
           Only Project A.
         correct: false
         why: |
           B also has a positive NPV.
-      - label: "c"
-        text: |
-          Only Project B.
-        correct: false
-        why: |
-          A also has a positive NPV; with no budget limit take both.
-      - label: "d"
-        text: |
-          Neither project.
-        correct: false
-        why: |
-          Both NPVs are positive.
-      - label: "e"
+      - label: "b"
         text: |
           Insufficient data to answer the question.
         correct: false
         why: |
           All the data needed for NPV is given.
+      - label: "c"
+        text: |
+          Neither project.
+        correct: false
+        why: |
+          Both NPVs are positive.
+      - label: "d"
+        text: |
+          Only Project B.
+        correct: false
+        why: |
+          A also has a positive NPV; with no budget limit take both.
+      - label: "e"
+        text: |
+          Both projects.
+        correct: true
+        why: |
+          NPV(A) = 3,890.65 > 0 and NPV(B) = 5,930.75 > 0.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -376,34 +376,34 @@ questions:
     options:
       - label: "a"
         text: |
-          Positive yield of 16.15%
-        correct: true
-        why: |
-          Buy at 91,289.48; sell for 106,029.68 (98,029.68 after-coupon value plus the 8,000 coupon).
-      - label: "b"
-        text: |
           Negative yield of 12.3%
         correct: false
         why: |
           The yield fell, so the price rose: the return is positive.
+      - label: "b"
+        text: |
+          Positive yield of 16.15%
+        correct: true
+        why: |
+          Buy at 91,289.48; sell for 106,029.68 (98,029.68 after-coupon value plus the 8,000 coupon).
       - label: "c"
+        text: |
+          None of the above
+        correct: false
+        why: |
+          The correct option is the one marked right above; this catch-all is wrong.
+      - label: "d"
         text: |
           Positive yield of 14.03%
         correct: false
         why: |
           Leaves out part of the gain.
-      - label: "d"
+      - label: "e"
         text: |
           Negative yield of 18.56%
         correct: false
         why: |
           Wrong sign: falling yields raise bond prices.
-      - label: "e"
-        text: |
-          None of the above
-        correct: false
-        why: |
-          Option a is correct.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -419,10 +419,10 @@ questions:
     options:
       - label: "a"
         text: |
-          The savings plan yielded a nominal return of 4.5% and a real return of 8.85%.
-        correct: true
+          The savings plan yielded a real return of 4.5% and a nominal return of 3.20%.
+        correct: false
         why: |
-          Inflation $102.24/106.5 - 1 = -4\%$; real $1.045/0.96 - 1 = 8.85\%$.
+          Swaps real and nominal.
       - label: "b"
         text: |
           The savings plan yielded a real return of 4.5% and a nominal return of 0.32%.
@@ -431,10 +431,10 @@ questions:
           The plan is non-indexed: 4.5% is nominal.
       - label: "c"
         text: |
-          The savings plan yielded a nominal return of 4.5% and a real return of 0.32%.
-        correct: false
+          The savings plan yielded a nominal return of 4.5% and a real return of 8.85%.
+        correct: true
         why: |
-          Treats deflation as inflation.
+          Inflation $102.24/106.5 - 1 = -4\%$; real $1.045/0.96 - 1 = 8.85\%$.
       - label: "d"
         text: |
           The savings plan yielded a nominal return of 4.5% and a real return of 0.48%.
@@ -443,10 +443,10 @@ questions:
           Prices fell 4%, so the real return exceeds 4.5%.
       - label: "e"
         text: |
-          The savings plan yielded a real return of 4.5% and a nominal return of 3.20%.
+          The savings plan yielded a nominal return of 4.5% and a real return of 0.32%.
         correct: false
         why: |
-          Swaps real and nominal.
+          Treats deflation as inflation.
     solution: |
       > [!warning] AI-written working: the official file gives only the correct option.
 
@@ -529,5 +529,5 @@ questions:
 > Part of: [[Financial Management]] · Moed A 2024 · [official solution file](/papers/fundamentals-of-finance/2024-moed-a-solution.pdf) (it contains the full questions)
 
 > [!info] What is official here
-> - **Multiple choice (Q1 to Q10):** the official file marks the correct option (always option **a**) but gives **no working**. The working and the reasons other options fail are **AI-written**; each one was recomputed and agrees with the official option.
+> - **Multiple choice (Q1 to Q10):** the official file marks the correct option (it always lists it first; the options are shuffled here) but gives **no working**. The working and the reasons other options fail are **AI-written**; each one was recomputed and agrees with the official option.
 > - **Business plan and project-evaluation questions:** the numbers are the **official** solution. The explanations around them are written for this site.
