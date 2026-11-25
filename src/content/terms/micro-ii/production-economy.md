@@ -13,4 +13,4 @@ A general-equilibrium model with firms producing goods from inputs; efficiency r
 
 Follow the lecture's steps: derive the [[Efficiency Locus]], the [[PPF]], solve $MRS = RPT$, normalise a price, then check the budget constraint.
 
-See [[Lec_05-Production Economy & Externalities|Lec 05]].
+See [[Lec_05-Production Economy & Externalities|Part 2]].

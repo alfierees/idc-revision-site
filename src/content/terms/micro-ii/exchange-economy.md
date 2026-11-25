@@ -13,4 +13,4 @@ An economy with no production in which agents trade their endowments. An allocat
 
 The setting for the Edgeworth-box, contract-curve, core and Walrasian-equilibrium questions: given utilities and endowments, find efficient allocations and equilibrium prices.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

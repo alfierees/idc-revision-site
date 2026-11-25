@@ -13,4 +13,4 @@ A tax independent of the agent's choices, so it does not distort margins. It is 
 
 Contrast it with distortionary taxes and price controls in questions on equity versus efficiency; in practice real taxes always distort somewhat, giving an equity-efficiency tradeoff.
 
-See [[Lec_05-Production Economy & Externalities|Lec 05]].
+See [[Lec_05-Production Economy & Externalities|Part 2]].

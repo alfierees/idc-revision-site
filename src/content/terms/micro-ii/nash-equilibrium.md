@@ -13,4 +13,4 @@ Choices where each agent's contribution is her best response to the others' and 
 
 Solve it from the agents' [[Best Response]] functions in public-goods questions, then compare with the planner's optimum to show [[Under-Provision]].
 
-See [[Lec_06-Public Goods & Altruism|Lec 06]].
+See [[Lec_06-Public Goods & Altruism|Part 3]].

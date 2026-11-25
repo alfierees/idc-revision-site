@@ -13,4 +13,4 @@ A per-unit tax on a negative externality set equal to the marginal external harm
 
 Use it as the government remedy in externality questions. Drawback: it requires the regulator to know both firms' cost functions. Alternative: the [[Coase Theorem]] market.
 
-See [[Lec_05-Production Economy & Externalities|Lec 05]].
+See [[Lec_05-Production Economy & Externalities|Part 2]].

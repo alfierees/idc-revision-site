@@ -13,4 +13,4 @@ The market provides a public good at too low a level: in Nash equilibrium $V_1'+
 
 Show it by comparing the planner's $V_1'+V_2'=1$ with the [[Nash Equilibrium]] condition where only one agent's $V'$ equals 1.
 
-See [[Lec_06-Public Goods & Altruism|Lec 06]].
+See [[Lec_06-Public Goods & Altruism|Part 3]].

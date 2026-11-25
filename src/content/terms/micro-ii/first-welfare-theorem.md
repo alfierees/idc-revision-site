@@ -13,4 +13,4 @@ Every competitive equilibrium allocation is [[Pareto Efficiency|Pareto efficient
 
 Quote it to justify efficiency of the market outcome, and remember its conditions: competitive markets, perfect information and no externalities. Violating one gives a [[Market Failure]].
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

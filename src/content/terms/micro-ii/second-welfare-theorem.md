@@ -13,4 +13,4 @@ Any [[Pareto Efficiency|Pareto efficient]] allocation can be achieved as a compe
 
 Use it to argue that redistribution of endowments (ideally by [[Lump-Sum Tax|lump-sum taxes]]) is better than price controls. Caveat: implementing it needs complete information, so there is an equity-efficiency tradeoff.
 
-See [[Lec_05-Production Economy & Externalities|Lec 05]].
+See [[Lec_05-Production Economy & Externalities|Part 2]].

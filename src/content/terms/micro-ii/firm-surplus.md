@@ -13,4 +13,4 @@ The area between the price and the supply (marginal cost) curve: revenue minus c
 
 Add it to [[Consumer Surplus]] to get $W(x_1)=v(x_1)-C(x_1)$ in partial-equilibrium welfare questions.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].
