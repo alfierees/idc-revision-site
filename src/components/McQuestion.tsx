@@ -11,6 +11,8 @@ interface Option {
 
 interface Props {
   subject: string;
+  /** Progress bucket the status is recorded under (default "past-paper"). */
+  kind?: "problem-set" | "past-paper";
   refSlug: string;
   questionId: string;
   options: Option[];
@@ -32,8 +34,8 @@ function Html({ html, ...rest }: { html: string } & JSX.HTMLAttributes<HTMLDivEl
 // locks the user's answer and reveals every option's verdict + per-option
 // explanation, auto-sets the shared status (done/wrong), and exposes the full
 // derivation behind a "Show working" toggle. "Try again" clears it.
-export default function McQuestion({ subject, refSlug, questionId, options, workingHtml }: Props) {
-  const statusK = statusKey(subject, "past-paper", refSlug, questionId);
+export default function McQuestion({ subject, kind = "past-paper", refSlug, questionId, options, workingHtml }: Props) {
+  const statusK = statusKey(subject, kind, refSlug, questionId);
   const pickK = `idc-mc:${subject}:${refSlug}:${questionId}`;
 
   const [picked, setPicked] = useState<string | null>(null);

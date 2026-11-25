@@ -5,6 +5,7 @@ import GraphMounter from "../../../../components/GraphMounter.astro";
 import PaperSidebar from "../../../../components/PaperSidebar.astro";
 import OpenAnswer from "../../../../components/OpenAnswer";
 import McQuestion from "../../../../components/McQuestion";
+import "../../../../styles/mcq.css";
 import ExamScorebar from "../../../../components/ExamScorebar";
 import Mermaid from "../../../../components/Mermaid.astro";
 import { getCollection, getEntry } from "astro:content";
@@ -15,6 +16,8 @@ import { buildLinkMap } from "../../../../lib/known-links";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
 import { splitPaper, partId } from "../../../../lib/split-paper";
 import { paperLabel } from "../../../../lib/paper-label";
+import { detectPaperMcqs } from "../../../../lib/paper-mcq";
+import type { ParsedMcq } from "../../../../lib/mcq-parse";
 
 export async function getStaticPaths() {
   const papers = await getCollection("past-papers", (p) => p.data.in_scope);
@@ -47,24 +50,45 @@ const [introMd, outroMd] = (() => {
 const introHtml = introMd.trim() ? await renderMarkdownString(introMd, subjectSlug, links) : "";
 const outroHtml = outroMd.trim() ? await renderMarkdownString(outroMd, subjectSlug, links) : "";
 
-const renderedQuestions = await Promise.all((paper.data.questions ?? []).map(async (q) => ({
-  id: q.id,
-  title: q.title,
-  // Gradable = auto-scored (MCQ) or self-graded (has a real solution). Framing
-  // rows with neither are excluded from the scorebar denominator.
-  gradable: Boolean(q.options?.length) || q.solution.trim().length > 0,
-  questionHtml: await renderMarkdownString(q.text, subjectSlug, links),
-  solutionHtml: await renderMarkdownString(q.solution, subjectSlug, links),
-  // Multiple-choice: pre-render each option's text + per-option explanation.
-  options: q.options
-    ? await Promise.all(q.options.map(async (o) => ({
-        label: o.label,
-        correct: o.correct,
-        html: await renderMarkdownString(o.text, subjectSlug, links),
-        whyHtml: o.why ? await renderMarkdownString(o.why, subjectSlug, links) : "",
-      })))
-    : null,
-})));
+// Questions written as markdown MCQs (options listed in `text`, letter in the
+// `solution`) but without an `options` block become interactive too.
+const structuredMcqs = detectPaperMcqs(
+  paperSlug,
+  (paper.data.questions ?? []).filter((q) => !q.options?.length).map((q) => ({ id: q.id, prompt: q.text, answer: q.solution })),
+  paper.body ?? "",
+);
+
+const renderMcqOptions = (m: ParsedMcq) =>
+  Promise.all(m.options.map(async (o) => ({
+    label: o.label,
+    correct: o.correct,
+    html: await renderMarkdownString(o.text, subjectSlug, links),
+    whyHtml: o.why ? await renderMarkdownString(o.why, subjectSlug, links) : "",
+  })));
+
+const renderedQuestions = await Promise.all((paper.data.questions ?? []).map(async (q) => {
+  const auto = q.options?.length ? null : structuredMcqs.get(q.id) ?? null;
+  return {
+    id: q.id,
+    title: q.title,
+    // Gradable = auto-scored (MCQ) or self-graded (has a real solution). Framing
+    // rows with neither are excluded from the scorebar denominator.
+    gradable: Boolean(q.options?.length) || Boolean(auto) || q.solution.trim().length > 0,
+    questionHtml: await renderMarkdownString(auto ? auto.stem : q.text, subjectSlug, links),
+    solutionHtml: await renderMarkdownString(auto ? auto.working : q.solution, subjectSlug, links),
+    // Multiple-choice: pre-render each option's text + per-option explanation.
+    options: q.options
+      ? await Promise.all(q.options.map(async (o) => ({
+          label: o.label,
+          correct: o.correct,
+          html: await renderMarkdownString(o.text, subjectSlug, links),
+          whyHtml: o.why ? await renderMarkdownString(o.why, subjectSlug, links) : "",
+        })))
+      : auto
+        ? await renderMcqOptions(auto)
+        : null,
+  };
+}));
 
 // Flat papers (no `questions` frontmatter): split the markdown into question
 // cards (question text visible, worked answer behind "Show answer"). Papers the
@@ -76,28 +100,54 @@ const renderInline = async (md: string) =>
   md.trim() ? (await renderMarkdownString(md, subjectSlug, links)).replace(/^\s*<p>([\s\S]*)<\/p>\s*$/, "$1") : "";
 const splitIntroHtml = split ? await render(split.intro) : "";
 const splitOutroHtml = split ? await render(split.outro) : "";
-const splitItems = split
-  ? await Promise.all(split.items.map(async (it) =>
-      it.kind === "question"
-        ? {
-            kind: "question" as const,
-            id: it.id,
-            title: it.title,
-            titleHtml: await renderInline(it.title),
-            stemHtml: await render(it.stem),
-            parts: await Promise.all(it.parts.map(async (p, i) => ({
+// MCQs inside flat papers: a part whose prompt lists lettered options and
+// whose answer names the letter renders as the interactive MCQ card.
+const singlePrompt = (it: { stem: string; parts: { prompt: string }[] }) =>
+  [it.stem, it.parts[0].prompt].filter((x) => x.trim()).join("\n\n");
+const splitMcqs = split
+  ? detectPaperMcqs(
+      paperSlug,
+      split.items.flatMap((it) =>
+        it.kind === "question"
+          ? it.parts.map((p, i) => ({
               id: partId(it, i),
-              title: p.title,
-              titleHtml: p.title ? await renderInline(p.title) : "",
-              promptHtml: await render(p.prompt),
-              answerHtml: await render(p.answer),
-            }))),
-          }
-        : { kind: "section" as const, id: it.id, title: it.title, group: it.group, html: await render(it.md) },
-    ))
+              prompt: it.parts.length === 1 ? singlePrompt(it) : p.prompt,
+              answer: p.answer,
+            }))
+          : [],
+      ),
+      [split.intro, split.outro, ...split.items.map((it) => (it.kind === "section" ? it.md : ""))].join("\n"),
+    )
+  : new Map<string, ParsedMcq>();
+const splitItems = split
+  ? await Promise.all(split.items.map(async (it) => {
+      if (it.kind !== "question") {
+        return { kind: "section" as const, id: it.id, title: it.title, group: it.group, html: await render(it.md) };
+      }
+      const singleMcq = it.parts.length === 1 ? splitMcqs.get(partId(it, 0)) : undefined;
+      return {
+        kind: "question" as const,
+        id: it.id,
+        title: it.title,
+        titleHtml: await renderInline(it.title),
+        // A one-part MCQ folds the stem into its own prompt (options removed).
+        stemHtml: singleMcq ? "" : await render(it.stem),
+        parts: await Promise.all(it.parts.map(async (p, i) => {
+          const mcq = splitMcqs.get(partId(it, i));
+          return {
+            id: partId(it, i),
+            title: p.title,
+            titleHtml: p.title ? await renderInline(p.title) : "",
+            promptHtml: await render(mcq ? mcq.stem : p.prompt),
+            answerHtml: await render(mcq ? mcq.working : p.answer),
+            options: mcq ? await renderMcqOptions(mcq) : null,
+          };
+        })),
+      };
+    }))
   : [];
 const splitGradableIds = splitItems.flatMap((it) =>
-  it.kind === "question" ? it.parts.filter((p) => p.answerHtml).map((p) => p.id) : [],
+  it.kind === "question" ? it.parts.filter((p) => p.answerHtml || p.options).map((p) => p.id) : [],
 );
 
 const flatHtml = structured || split ? "" : await renderMarkdownString(stripNoteMeta(paper.body ?? ""), subjectSlug, links);
@@ -214,7 +264,16 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
                       <div class={it.parts.length > 1 ? "qpart" : "mt-3"}>
                         {p.titleHtml && <h3 class="qpart-title" set:html={p.titleHtml} />}
                         {p.promptHtml && <div class="mt-2 question-body prose-card" set:html={p.promptHtml} />}
-                        {p.answerHtml && (
+                        {p.options ? (
+                          <McQuestion
+                            client:visible
+                            subject={subjectSlug}
+                            refSlug={paperSlug}
+                            questionId={p.id}
+                            options={p.options}
+                            workingHtml={p.answerHtml}
+                          />
+                        ) : p.answerHtml && (
                           <OpenAnswer
                             client:visible
                             subject={subjectSlug}
@@ -348,89 +407,3 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
   }
 </style>
 
-<style is:global>
-  /* Interactive multiple-choice (McQuestion island) */
-  .mc-options { list-style: none; padding: 0; margin: 1.25rem 0 0; display: flex; flex-direction: column; gap: 0.6rem; }
-  .mc-item { margin: 0; }
-  .mc-opt {
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-    text-align: left;
-    padding: 0.8rem 1rem;
-    border: 1.5px solid var(--color-rule);
-    border-radius: 12px;
-    background: var(--color-card);
-    color: var(--color-ink);
-    font: inherit;
-    cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-  }
-  .mc-opt:disabled { cursor: default; }
-  .mc-idle:hover { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 5%, var(--color-card)); }
-  .mc-key {
-    flex: 0 0 auto;
-    width: 1.7rem; height: 1.7rem;
-    display: grid; place-items: center;
-    border-radius: 7px;
-    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
-    color: var(--color-accent-ink);
-    font-family: var(--font-ui);
-    font-weight: 700; font-size: 0.85rem;
-  }
-  .mc-text { flex: 1 1 auto; min-width: 0; }
-  .mc-text p { margin: 0; }
-  .mc-verdict {
-    flex: 0 0 auto;
-    margin-left: auto;
-    align-self: center;
-    font-family: var(--font-ui);
-    font-size: 0.68rem; font-weight: 700;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .mc-correct { border-color: var(--color-status-done); background: var(--color-status-done-bg); }
-  .mc-correct .mc-key { background: var(--color-status-done); color: var(--color-card); }
-  .mc-correct .mc-verdict { color: var(--color-status-done); }
-  .mc-wrong { border-color: color-mix(in srgb, var(--color-status-wrong) 35%, transparent); background: var(--color-status-wrong-bg); }
-  .mc-wrong .mc-key { background: color-mix(in srgb, var(--color-status-wrong) 70%, transparent); color: var(--color-card); }
-  .mc-wrong .mc-verdict { color: var(--color-status-wrong); }
-  .mc-picked { box-shadow: 0 0 0 2px var(--color-accent); }
-  .mc-why { margin: 0.4rem 0 0 2.55rem; font-size: 0.92rem; color: var(--color-ink-soft); }
-  .mc-why p { margin: 0.3rem 0; }
-  /* Narrow screens: the "WRONG · YOUR ANSWER" verdict can't share the row with the
-     option text (it starves the text to ~1 word per line and overlaps). Drop it to
-     its own line under the text, aligned past the letter key. */
-  @media (max-width: 560px) {
-    .mc-opt { flex-wrap: wrap; }
-    .mc-verdict { order: 3; width: 100%; margin: 0.3rem 0 0 2.55rem; align-self: flex-start; }
-  }
-  .mc-after { margin-top: 1.1rem; display: flex; flex-direction: column; gap: 0.85rem; align-items: flex-start; }
-  .mc-working-toggle {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    font-family: var(--font-ui);
-    font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--color-accent);
-    padding: 0.5rem 0.85rem; border-radius: 999px;
-    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
-    border: none; cursor: pointer;
-    transition: background 0.15s ease;
-  }
-  .mc-working-toggle:hover { background: color-mix(in srgb, var(--color-accent) 14%, transparent); }
-  .mc-chev { display: inline-block; transition: transform 0.15s ease; }
-  .mc-chev-open { transform: rotate(90deg); }
-  .mc-working {
-    align-self: stretch;
-    margin-top: 0.2rem; padding-top: 1.1rem;
-    border-top: 1px solid var(--color-rule);
-    color: var(--color-ink-soft);
-  }
-  .mc-reset {
-    font-family: var(--font-ui);
-    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--color-ink-muted);
-    background: none; border: none; cursor: pointer; padding: 0;
-  }
-  .mc-reset:hover { color: var(--color-accent); }
-</style>
