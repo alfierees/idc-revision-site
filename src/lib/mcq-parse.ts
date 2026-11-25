@@ -196,6 +196,15 @@ function whyBullets(answer: string, labels: string[]): Map<string, string> {
     // "(a) is wrong because …" reads fine on its own; keep the verb.
     rest = rest.replace(/^(?:is|are)\s+(?:wrong|incorrect|false|out)\b[,:]?\s*(?:because\s+)?/i, "");
     if (!rest) continue;
+    // "**b (0.25)** and **c (0.5)** are…": cutting the lead split a bold run,
+    // so keep the whole bullet.
+    if ((rest.match(/\*\*/g) ?? []).length % 2 === 1 || /^\(/.test(rest)) {
+      rest = body.trim();
+      for (const m of body.matchAll(/\*\*\(?([A-Ha-h])\b\)?[^*\n]{0,20}\*\*/g)) {
+        const l = m[1].toLowerCase();
+        if (lower.includes(l) && !letters.includes(l)) letters.push(l);
+      }
+    }
     rest = rest.charAt(0).toUpperCase() + rest.slice(1);
     for (const l of letters) {
       const label = labels[lower.indexOf(l)];
@@ -209,7 +218,7 @@ function whyBullets(answer: string, labels: string[]): Map<string, string> {
 // "C, D are not on both curves." Capital or bracketed letters only, so the
 // article "a" never reads as an option.
 const WHY_SENTENCE_RE =
-  /^(?:Why not\s+)?((?:\(?[A-H]\)?|\([a-h]\)|\*\*[A-Ha-h]\*\*|[a-h](?=:))(?:\s*(?:,|and|or|&)\s*(?:\(?[A-H]\)?|\([a-h]\)|\*\*[A-Ha-h]\*\*|[a-h](?=:)))*)(?=\s*:|\s+(?:is|are|has|have|gives?|uses?|would|changes?|says?|puts?|treats?|confuses?|reverses?|ignores?|assumes?|mixes?|fails?|misses?|counts?|adds?|takes?|describes?|forgets?|applies|apply|states?|claims?|swaps?|drops?|doubles?)\b)/;
+  /^(?:Why not\s+|Options?\s+)?((?:\(?[A-H]\)?|\([a-h]\)|\*\*[A-Ha-h]\*\*|[a-h](?=:))(?:\s*(?:,|and|or|&)\s*(?:\(?[A-H]\)?|\([a-h]\)|\*\*[A-Ha-h]\*\*|[a-h](?=:)))*)(?=\s*:|\s+(?:is|are|has|have|gives?|uses?|would|changes?|says?|puts?|treats?|confuses?|reverses?|ignores?|assumes?|mixes?|fails?|misses?|counts?|adds?|takes?|describes?|forgets?|applies|apply|states?|claims?|swaps?|drops?|doubles?)\b)/;
 
 function whySentences(answer: string, labels: string[], out: Map<string, string>): void {
   const lower = labels.map((l) => l.toLowerCase());
@@ -217,13 +226,14 @@ function whySentences(answer: string, labels: string[], out: Map<string, string>
     // Drop quote markers and a callout header ("[!example] Why the others fail").
     const t = para.replace(/^\s*>\s?/gm, "").replace(/^\[![a-z-]+\][-+]?[^\n]*\n?/i, "").trim();
     if (!t || /^(?:[-*+]\s|\||\$\$|!\[|#|\[!)/.test(t)) continue;
-    const sentences = t.replace(/\n/g, " ").split(/(?<=[.!?;])\s+(?=(?:Why not\s+)?(?:\*\*)?\(?[A-Ha-h]\)?(?:\*\*)?[\s,:])|(?<=:)\s+(?=(?:\*\*)?[A-Ha-h](?:\*\*)?\s+gives\b)/);
+    const sentences = t.replace(/\n/g, " ").split(/(?<=[.!?;])\s+(?=(?:Why not\s+|Options?\s+)?(?:\*\*)?\(?[A-Ha-h]\)?(?:\*\*)?[\s,:])|(?<=:)\s+(?=(?:\*\*)?[A-Ha-h](?:\*\*)?\s+gives\b)/);
     for (const sen of sentences) {
       const m = WHY_SENTENCE_RE.exec(sen.trim().replace(/^Why the others (?:fail|are wrong|lose)\s*:\s*/i, ""));
       if (!m) continue;
       const letters = [...m[1].matchAll(/(?<![A-Za-z])[A-Ha-h](?![A-Za-z])/g)].map((x) => x[0].toLowerCase()).filter((l) => lower.includes(l));
       let rest = sen.trim().replace(/^Why the others (?:fail|are wrong|lose)\s*:\s*/i, "");
       rest = rest.replace(/^Why not\s+[^:]+:\s*/, "");
+      rest = rest.charAt(0).toUpperCase() + rest.slice(1);
       for (const l of letters) {
         const label = labels[lower.indexOf(l)];
         if (!out.has(label)) out.set(label, rest);
@@ -256,11 +266,17 @@ function correctWhy(answer: string): string {
   }
   // 2) Otherwise the first ordinary paragraph of the working.
   const paras = answer.split(/\n\s*\n/);
-  for (const p of paras) {
-    const t = p.trim();
+  for (let k = 0; k < paras.length; k++) {
+    const t = paras[k].trim();
     if (!t || /^(?:>|\$\$|!\[|\||#|[-*+]\s|```|<)/.test(t)) continue;
     if (/\banswer\b/i.test(t) && t.length < 80) continue;
-    if (/^See\s/.test(t)) continue;
+    if (/^See\s/.test(t) || /^(?:-{3,}|\*{3,}|_{3,})$/.test(t)) continue;
+    // "Set demand equal to supply:" then the equation → keep the equation.
+    const next = paras[k + 1]?.trim() ?? "";
+    if (/:$/.test(t) && /^\$\$[\s\S]*\$\$$/.test(next)) return `${t}\n\n${next}`;
+    if (/:$/.test(t) && /^>\s*\[!(?:example|info|note)\]/i.test(next) && next.length < 500) {
+      return `${t}\n\n${next.replace(/^>\s*\[![a-z]+\][-+]?[^\n]*\n?/i, "").replace(/^>\s?/gm, "")}`;
+    }
     return t.length < 700 ? t : "";
   }
   return "";
@@ -290,7 +306,8 @@ function tableOptions(lines: string[]): OptionRun | null {
   return null;
 }
 
-function parseIn(prompt: string, answer: string): ParsedMcq | null {
+function parseIn(prompt: string, answerIn: string): ParsedMcq | null {
+  let answer = answerIn;
   if (!prompt.trim() || !answer.trim()) return null;
   const lines = prompt.split("\n");
 
@@ -298,21 +315,33 @@ function parseIn(prompt: string, answer: string): ParsedMcq | null {
   let stemLines: string[] = lines;
 
   const run = findOptionRun(lines) ?? tableOptions(lines);
+  // Anything after the options in the prompt is worked solution that some
+  // notes put above the answer callout: it belongs behind the click.
+  let workingLead = "";
   if (run) {
     opts = run.options;
-    stemLines = [...lines.slice(0, run.start), ...lines.slice(run.end)];
+    stemLines = lines.slice(0, run.start);
+    workingLead = lines.slice(run.end).join("\n").trim();
   } else {
     for (let k = lines.length - 1; k >= 0; k--) {
       const inl = inlineOptions(lines[k]);
       if (inl) {
         opts = inl.options;
-        stemLines = [...lines.slice(0, k), ...(inl.lead ? [inl.lead] : []), ...lines.slice(k + 1)];
+        stemLines = [...lines.slice(0, k), ...(inl.lead ? [inl.lead] : [])];
+        workingLead = lines.slice(k + 1).join("\n").trim();
         break;
       }
     }
   }
   if (!opts) return null;
 
+  // A closing note in italics/brackets right after the options ("*(Pick one.)*")
+  // is question text, not working.
+  if (workingLead && /^(?:\*\([^\n]*\)\*|\([^\n]*\))$/.test(workingLead)) {
+    stemLines.push("", workingLead);
+    workingLead = "";
+  }
+  answer = workingLead ? `${workingLead}\n\n${answer}` : answer;
   const labels = opts.map((o) => o.label);
   const corrects = answerLetters(answer, labels);
   if (!corrects.length) return null;

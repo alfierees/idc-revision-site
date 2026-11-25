@@ -70,6 +70,18 @@ describe("parseMcq", () => {
     expect(m.options.filter((o) => o.correct).map((o) => o.label)).toEqual(["A", "B"]);
   });
 
+  it("moves working written between the options and the answer behind the click", () => {
+    const m = parseMcq(
+      "Women in liberal arts?\n\n- a. 0.05\n- b. 0.25\n- c. 0.5\n\nLiberal arts is the rest: $0.40-0.35=0.05$.",
+      "> [!success] Answer — **A. 0.05**\n\nOptions B and C are not cells of the table.",
+    )!;
+    expect(m.stem).toBe("Women in liberal arts?");
+    expect(m.working).toMatch(/^Liberal arts is the rest/);
+    expect(m.options[0].why).toMatch(/^Liberal arts is the rest/);
+    expect(m.options[1].why).toMatch(/not cells of the table/);
+    expect(m.options[2].why).toMatch(/not cells of the table/);
+  });
+
   it("ignores sub-part lists and answers without a letter", () => {
     expect(parseMcq("- a. Find the domain.\n- b. Find the asymptotes.\n- c. Sketch it.", "> [!success] Answer from the key\n\nWorking.")).toBeNull();
     expect(parseMcq("What is GDP?", "> [!success] Answer: 2,400")).toBeNull();
