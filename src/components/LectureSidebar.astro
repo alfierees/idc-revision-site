@@ -3,6 +3,7 @@ interface LectureEntry {
   slug: string;
   title: string;
   week?: number;
+  kicker?: string;
 }
 interface Section {
   id: string;       // the rehype-slug id, e.g. "cournot-1838-quantity-competition"
@@ -19,7 +20,7 @@ interface Props {
 import { lectureDisplay, sortByCourseOrder } from "../lib/ordering";
 const { subject, lectures, currentSlug, currentSections } = Astro.props;
 const sorted = sortByCourseOrder(lectures).map((l) => {
-  const d = lectureDisplay(l.slug, l.title);
+  const d = lectureDisplay(l.slug, l.title, l.kicker);
   const num = d.kicker.replace(/^\D+/, "");
   return { ...l, label: num ? `${num}. ${d.topic}` : d.topic };
 });

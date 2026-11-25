@@ -13,4 +13,4 @@ If one market clears, all other markets also clear: summed budget constraints gi
 
 Clear only one market to solve for equilibrium prices in a two-good economy. See [[Excess Demand]].
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

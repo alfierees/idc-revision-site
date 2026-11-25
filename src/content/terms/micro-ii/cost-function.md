@@ -13,4 +13,4 @@ $C(q)$: the minimum cost of producing $q$ units. With one input, $C(q)=w\cdot f^
 
 Derive it by solving [[Cost Minimisation]] (or inverting $f$ with one input), then differentiate to get [[Marginal Cost]], which is the competitive firm's supply curve.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

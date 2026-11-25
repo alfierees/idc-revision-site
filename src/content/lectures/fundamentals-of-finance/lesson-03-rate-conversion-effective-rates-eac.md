@@ -28,6 +28,13 @@ in_scope: true
 > **Lesson 3** — Financial Management & Finance
 > Key concepts: [[Effective Interest Rate]], [[Stated Rate]], [[Rate Conversion]], [[Profitability Index]], [[Equivalent Annual Cost]]
 
+> [!info] Class workbooks (downloads)
+> - [2025.05.08 Fourth class (Effective IR).xlsx](/papers/fundamentals-of-finance/class-2025-05-08-fourth-class-effective-ir.xlsx)
+> - [2024.04.24 Third class (PEC-II).xlsx](/papers/fundamentals-of-finance/class-2024-04-24-third-class-pec-ii.xlsx) (sheets `EAC` and `PI`)
+> - [2025.05.19 Recitation hour.xlsx](/papers/fundamentals-of-finance/class-2025-05-19-recitation-hour.xlsx) (`Sheet1`: an effective rate with a fee)
+>
+> What each sheet does: [[#The class workbooks, sheet by sheet|see below]].
+
 ---
 
 ## The core problem: rates only mean something with a frequency
@@ -120,6 +127,33 @@ Equivalently, $EAC = -\texttt{PMT}(r, n, NPV)$ in Excel.
 
 > [!tip] When to reach for EAC
 > Use EAC whenever the alternatives **repeat** or have **different horizons** (machine replacement, lease vs buy, recurring projects). It annualises away the horizon difference.
+
+---
+
+## The class workbooks, sheet by sheet
+
+### 8 May 2025, fourth class (Effective IR)
+
+- **`Effective IR conversions`:** is 12% a year the same as 1% a month? No: 100 at 12% a year is 112, but at 1% a month `=100*(1+1%)^12` = 112.68. The equivalent monthly rate is `=(1+B14)^(1/B15)-1` = **0.9489%**.
+  - *Class exercise 1:* 6% a year converted to semi-annual (2.956%), quarterly (1.467%), monthly (0.487%), weekly, daily, hourly and per minute, all with `=(1+6%)^(1/n)-1`.
+  - *Class exercise 2:* 0.5% a month converted down (daily with $n=30$, weekly with $n=4$) using the root, and up (quarterly 1.508%, semi-annual 3.038%, annual **6.168%**, 2-year 12.72%, 3-year 19.67%) using the power `=(1+0.5%)^n-1`.
+- **`Stated vs. Effective`:** "6% a year calculated monthly" does **not** mean paying 6%; it means 0.5% a month, so the effective annual rate is `=(1+0.5%)^12-1` = `=(1+6%/12)^12-1` = `=EFFECT(6%,12)` = **6.168%**. A table shows the effective rate rising with the compounding frequency (6% annual, 6.09% semi-annual, 6.136% quarterly, …, 6.1837% continuous with `=EXP(B10)-1`).
+  - *Class discussion:* 8% stated, compounded quarterly, gives an effective annual rate of `=(1+8%/4)^4-1` = 8.243%. From that: effective monthly 0.662%, semi-annual 4.04%, and quarterly back to exactly 2%.
+- **`Effective rate in transactions`:** the effective rate is the IRR of the actual cash flows.
+  - *Example 1, \$100,000 for a year:* (a) 11% paid at year end, IRR **11%**; (b) 10% charged **up front**, so you receive only 90,000 and repay 100,000, IRR `=IRR(B17:C17)` = **11.11%**. Prepaid interest is dearer.
+  - *Example 2, \$20,000, daily compounding:* (a) 12% stated is `=(1+12%/365)^365-1` = 12.75% effective; (b) 10% stated (10.52% effective) plus a \$250 fee paid up front, so you net 19,750 and repay 22,103.12: IRR **11.91%**. Option (b) is cheaper despite the fee.
+  - *Example 3, supplier credit:* \$10,000 cash now, or \$1,000 a month for 12 months. The implied monthly rate is 2.92%, found three ways: `=RATE(12,1000,-10000)`, Goal Seek on the NPV difference, and `=IRR()` on the difference of the two cash-flow rows. Annualised `=(1+B67)^12-1` = **41.3%**.
+  - *Example 4:* receive 29,200 now and pay 2,100 a month for 30 months: monthly IRR 5.91%, annual **99.1%**.
+
+### 24 April 2024, third class (PEC-II): `Board`, `EAC` and `PI`
+
+- **`Board`:** the decision map. *Mutually exclusive* projects: one-off → highest NPV; renewable with different cycle lengths → EAC. *Not mutually exclusive*: no budget constraint → every project with NPV > 0; with a budget constraint → rank by PI.
+- **`EAC`:** renewable projects at 10%. A: −50 then +110 at year 2, NPV 40.91. B: −100 then +322.11 at year 6, NPV 81.82. B's NPV is twice A's, but A renews three times in six years. Equivalent annual cash flow `=PMT(B3,2,-J5)` = **23.57** for A vs `=PMT(B3,6,-J6)` = 18.79 for B, so A wins by 25.5%. The check below chains A three times over six years (A1, A2, A3): NPV **102.66**, which beats B's 81.82 by the same 25.5%.
+- **`PI`:** six independent projects at 10% with a \$500 budget. NPV and `PI = NPV/investment` (e.g. D: NPV 40.16, PI 0.80; A 0.66; B 0.46; C 0.41; E 0.28; F negative). If they were mutually exclusive you would take **E** (highest NPV, 142.03). With the budget you fill in PI order: D (50), A (100), B (150), then two-thirds of C (200 of 300), total NPV **257.44**, much more than E alone.
+
+### 19 May 2025, recitation hour (`Sheet1`)
+
+A two-month loan of 50,000 at 12.68% a year effective, repaid as `=-C5*(1+12.68%)^(2/12)` = 51,004.81 after two months, with a 1,000 fee at the start. You net 49,000, so the monthly IRR is 2.03% and the effective annual rate `=(1+C9)^12-1` = **27.2%**: on a short loan a flat fee dominates the cost.
 
 ---
 

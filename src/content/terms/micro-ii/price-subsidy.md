@@ -13,4 +13,4 @@ A per-unit payment to buyers: consumers pay $p - \Delta$, shifting demand up by 
 
 Compute quantity under the shifted demand, then subtract government cost from $CS + FS$ to find the [[Deadweight Loss]] (lecture example: demand $100-p$, $C=x^2/2$, $\Delta=20$ gives a loss of 100).
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

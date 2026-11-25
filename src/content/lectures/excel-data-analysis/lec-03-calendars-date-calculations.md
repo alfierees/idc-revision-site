@@ -25,6 +25,9 @@ in_scope: true
 > Source workbook: `Calendar and dates.xlsx`. It reuses the `employees` table and the sorting and filtering sheets from [[Lec_01-Sorting, Filters & Database Functions]], so those are not repeated here. What is **new**: the `Calendar` sheet (a self-building monthly calendar), the `Israel cities` list, and four new `employees` columns: **K** (birthday message), **L** (promotion date), **M** (time until promotion) and **N** (city).
 > The nested `IF`/`AND` logic is taught properly in [[Lec_02-IF Statements & Logical Functions]]; date functions continue in [[Lec_04-Date Functions, Named Ranges & Data Validation]] and [[Lec_05-Time Functions & Protecting Cells]].
 
+> [!info] Class file (download)
+> [Class of 15 December 2024 (xlsx)](/papers/excel-data-analysis/class-15-12-2024-dates.xlsx): `15.12.2024.xlsx`, the Moodle workbook for this lecture. Three sheets: `Employees` (with the new date columns), `calander` (the self-building calendar) and `Sheet1` (lists for the drop-downs).
+
 ## 1. Dates are just numbers
 
 Excel stores a [[Date Serial Number]]: the count of days since an origin date (30 December 1899 in practice). Formatting is only a costume. That is why you can add 1 to a date to get tomorrow, subtract two dates to get a gap in days, and compare dates with `>` and `<`.
@@ -282,6 +285,34 @@ These come over from the earlier sheet and are worth recognising:
 | `J2:J201` | Salary banding: under 5000, between 5000 and 10000, over 10000, each a different colour |
 
 The department rule uses a mixed reference: column locked (`$E`), row free, so each row compares **its own** department to the one fixed cell `$E$204`.
+
+## The class file, sheet by sheet
+
+The Moodle file `15.12.2024.xlsx` is the class workbook in an earlier, unfinished state. It has three sheets.
+
+**`Employees`.** The employee table in `A1:J201` plus five new columns:
+
+| Column | Header | Formula (row 2) | What it does |
+|---|---|---|---|
+| `K` | happy birthday | `=IF(MONTH(F2)=MONTH(TODAY()),$K$1,"")` | shows the message in the header cell `K1` when the birth month equals the current month |
+| `L` | promotion date | `=IF(AND(WEEKDAY(G2)=2,MONTH(G2)=3),DATE(YEAR(G2)+2,7,1),DATE(2024,MONTH(G2)+2,DAY(EOMONTH(G2,0))))` | two-branch date rule: hired on a Monday in March gets 1 July two years later; anyone else gets the last day of the month two months after the hire month, in 2024 |
+| `M` | month | `=MONTH(G2)` | helper that shows the hire month |
+| `N` | weekday | `=WEEKDAY(G2)` | helper that shows the hire weekday number (Sunday = 1) |
+| `O` | city | typed (`acre` in `O2`) | the starting point for a city drop-down built from `Sheet1` |
+
+The hire dates in this copy differ from the base table (employee 10001 is hired on 18 October 2022, so the 2024 promotion rule gives a sensible date, 31 December 2024). Columns `M` and `N` are there so you can see the pieces the promotion `IF` is testing.
+
+**`calander`.** The calendar exercise, unfinished: the instructions in `B1` and `B2` read "add a list of the months" and "add a list of the years (2020 till 2050)", so `F1` (month, here `8`) and `F2` (year, here `2036`) are meant to become drop-downs ([[Data Validation]]). Helper cells below them:
+
+| Cell | Formula | Meaning |
+|---|---|---|
+| `F4` | `=DATE(F2,F1,1)` | the 1st of the chosen month and year |
+| `F6` | `=WEEKDAY(F4)` | weekday of the 1st (Friday = 6 for August 2036) |
+| `F8` | `=EOMONTH(F4,0)` | last day of that month |
+
+The grid is `J1:P1` (weekday numbers 1 to 7) over `J2:P2` (Sunday to Saturday). First week: `J3` is `=IF(J1=F6,1,"")`, `K3` is `=IF(J3="",IF(K1=$F$6,1,""),J3+1)`, copied across to `P3`. It puts a `1` under the weekday of the 1st and counts up after it. Later rows continue with `=P3+1` and `=J4+1`. For August 2036 the 1 lands under Friday and the 2 under Saturday. This is the method of section 3 of this note; the hiding of overflow days is not yet set in this copy.
+
+**`Sheet1`.** Source lists for the drop-downs: Israeli city names in column `A`, a month list `=SEQUENCE(12,,1,1)` in `F1` (1 to 12) and a year list `=SEQUENCE(31,,2020,1)` in `G1` (2020 to 2050). Both are [[SEQUENCE]] spill ranges.
 
 ## 6. Summary
 

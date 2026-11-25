@@ -8,5 +8,3 @@ ai_drafted: true
 ---
 
 Absent entries (`NaN`) that must be detected and handled (drop or impute) before modelling.
-
-See [[Lecture 2 - EDA and Charts|DS Lec 2]].

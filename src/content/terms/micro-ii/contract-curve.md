@@ -13,4 +13,4 @@ The set of all [[Pareto Efficiency|Pareto efficient]] allocations in the [[Edgew
 
 Derive it whenever a question asks for Pareto efficient allocations of an exchange economy. The [[Core]] is its slice inside the agents' indifference curves through the endowment.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

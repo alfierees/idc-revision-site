@@ -1,6 +1,6 @@
 ---
 title: "General Equilibrium Production Economy & Externalities"
-week: 5
+kicker: "Part 2"
 semester: 1
 year: 2
 academic_year: "2025-26"

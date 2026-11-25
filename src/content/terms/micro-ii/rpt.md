@@ -13,4 +13,4 @@ Rate of Product Transformation: the opportunity cost of $X$ in terms of $Y$ on t
 
 At the optimum $MRS = RPT$, and in a competitive equilibrium $RPT = p_x/p_y = C'(x)/C'(y)$. Linear PPF example: $RPT=2$.
 
-See [[Lec_05-Production Economy & Externalities|Lec 05]].
+See [[Lec_05-Production Economy & Externalities|Part 2]].

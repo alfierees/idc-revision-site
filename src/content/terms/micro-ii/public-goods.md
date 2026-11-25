@@ -13,4 +13,4 @@ A good whose aggregate quantity affects every agent's utility (national security
 
 In the public-goods questions, compare the planner's condition ($V_1'+V_2'=1$) with the Nash equilibrium. Pairwise bargaining breaks down because each agent must guess everyone else's contribution.
 
-See [[Lec_06-Public Goods & Altruism|Lec 06]].
+See [[Lec_06-Public Goods & Altruism|Part 3]].

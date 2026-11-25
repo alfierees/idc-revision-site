@@ -13,4 +13,4 @@ Production Possibility Frontier: all efficient $(x,y)$ output combinations. Poin
 
 Derive it by mapping the [[Efficiency Locus]] into output space, then find the optimum where $MRS = RPT$.
 
-See [[Lec_05-Production Economy & Externalities|Lec 05]].
+See [[Lec_05-Production Economy & Externalities|Part 2]].

@@ -13,4 +13,4 @@ The set of input bundles $(l,k)$ with the same total cost $c_0$, i.e. $p_l l + p
 
 In [[Cost Minimisation]], find the lowest isocost that still touches the [[Isoquant]]; at an interior optimum the two are tangent.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

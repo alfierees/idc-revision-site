@@ -12,7 +12,7 @@ instructor: Dr. Aluma Dembo
 date: 2026-06-09
 tags:
   - econometrics
-  - causal-inference/difference-in-differences
+  - difference-in-differences
   - treatment-effects
   - parallel-trends
   - policy-evaluation

@@ -9,4 +9,4 @@ ai_drafted: true
 
 L1-regularised regression that performs automatic [[Feature Selection]].
 
-See [[Lecture 4 - Regression|DS Lec 4]].
+See [[Lec_02-Linear Regression|ML Lec 2]].

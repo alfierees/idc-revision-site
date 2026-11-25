@@ -143,6 +143,21 @@ TFP growth measured as the residual in growth accounting. → [[Lec_04-Productio
 ### Real Business Cycles
 A theory of fluctuations driven by TFP (productivity) shocks. → [[Lec_04-Production|Lec 4]]
 
+### Average Productivity
+Output per unit of one factor ($Y/N$, $Y/K$); depends on the other factor's quantity, unlike [[Total Factor Productivity]]. → [[Lec_11-Productivity|Lec 11]]
+
+### Misallocation
+Resources not where they are most productive; efficiency requires equal marginal products of mobile factors across firms ($MPN_1 = MPN_2$). → [[Lec_11-Productivity|Lec 11]]
+
+### Human Capital
+The skill or quality of an hour of work ($h$); if ignored, it is absorbed into measured [[Total Factor Productivity]]. → [[Lec_11-Productivity|Lec 11]]
+
+### Institutions
+Man-made "rules of the game" (property rights, contract enforcement, rule of law); inclusive vs. extractive. → [[Lec_11-Productivity|Lec 11]]
+
+### Learning by Doing
+Productivity gains from accumulated past production, experimenting, or spillovers from other plants. → [[Lec_11-Productivity|Lec 11]]
+
 ---
 
 ## Investment & capital

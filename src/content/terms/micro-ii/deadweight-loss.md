@@ -13,4 +13,4 @@ The welfare loss when a policy pushes quantity away from the competitive equilib
 
 Compute it by comparing total welfare (CS + FS minus any government cost) with and without the policy, as in the [[Price Subsidy]], [[Price Ceiling]] and [[Price Floor]] questions.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

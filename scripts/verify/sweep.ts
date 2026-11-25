@@ -206,6 +206,17 @@ export async function sweepPage(
     status = response?.status() ?? null;
     if (status !== 200) issues.push({ kind: "load-failed", detail: `HTTP ${status}` });
 
+    // client:visible islands (past-paper answer cards) only hydrate once on
+    // screen: bring each into view, then return to the top.
+    await page.evaluate(async () => {
+      const lazy = Array.from(document.querySelectorAll('astro-island[client="visible"][ssr]'));
+      for (const island of lazy) {
+        (island.firstElementChild ?? island).scrollIntoView({ block: "center", behavior: "instant" });
+        await new Promise((done) => requestAnimationFrame(() => setTimeout(done, 20)));
+      }
+      if (lazy.length > 0) window.scrollTo({ top: 0, behavior: "instant" });
+    });
+
     const hydrated = await page
       .waitForFunction(() => !document.querySelector("astro-island[ssr]"), null, { timeout: settings.hydrationTimeoutMs })
       .then(() => true, () => false);

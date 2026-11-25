@@ -9,4 +9,4 @@ ai_drafted: true
 
 The paired evaluation metrics for imbalanced classification — see [[Precision]] and [[Recall]].
 
-See [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]].
+See [[Lec_07-Performance Measures & Data Processing|ML Lec 7]].

@@ -9,4 +9,4 @@ ai_drafted: true
 
 A flowchart classifier that splits on features via if/else rules.
 
-See [[Lecture 3 - Classification, KNN, Random Tree|DS Lec 3]].
+See [[Lec_08-Decision Trees|ML Lec 8]].

@@ -13,4 +13,4 @@ An allocation is Pareto efficient if no feasible alternative makes everyone at l
 
 In the interior, check $MRS_1 = MRS_2$. Remember it is not fairness: efficient allocations can be very unequal.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

@@ -28,6 +28,9 @@ Related notes: [[Lec_02-IF Statements & Logical Functions]] (the same decision l
 
 ---
 
+> [!info] Class file (download)
+> [Macro class workbook, 19 January (xlsb)](/papers/excel-data-analysis/class-19-1-macros.xlsb): `19.1.xlsb`, the Moodle copy of the class file for this lecture. Enable macros to run the buttons.
+
 ## 1. Why macros, and where the code lives
 
 A macro saves a sequence of actions so you can replay it with one click. Use one when a task is repetitive, or when you want to hand a colleague a button instead of a manual.
@@ -324,6 +327,20 @@ This shows the loop with a **dynamic upper bound**: `Sheets.Count` is however ma
 > Macros can run arbitrary code, so Excel blocks them by default in files from the internet. Only enable them for files you trust.
 
 ---
+
+## The class file, sheet by sheet
+
+`19.1.xlsb` is the class workbook with five sheets, one per exercise, and the same macros as sections 2 to 6 of this note (`Module1`: `series_num`, `erase_num`, `mydata_new`, `calc`, `bmi`).
+
+| Sheet | Exercise | Content |
+|---|---|---|
+| `Sheet1` | 1 and 2, recorded macros | a column of row numbers and the task text: "Add a series of numbers", "edit the macro and change the range", "add a button to activate the macro", "add a new macro that will erase the series", "add a button to activate the macro" |
+| `Sheet2` | 3, `mydata_new` | the target output in `E1:E3`: liat, erel, tel aviv |
+| `Sheet3` | 4, `calc` | the calculator output: headers Number 1, Number 2 and sum, with 100, 150 and 250 from a previous run |
+| `Sheet4` | 5, `bmi` (the brief) | the BMI task text: ask for height in metres and weight in kg, calculate the BMI in `C2`; the formula `weight / height ^ 2` and the equivalent `weight / (height * height)`; sample height 1.6, weight 55, BMI 24.3 |
+| `Sheet5` | 5, `bmi` (the result) | a finished run: height 1.8, weight 50, BMI 15.43, status "underweight" |
+
+The saved `.xlsb` format keeps the code, which is why it is used in class (a plain `.xlsx` would drop the macros). The code in the file is the code printed in this note.
 
 ## 9. Quick revision checklist
 

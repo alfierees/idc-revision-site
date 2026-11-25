@@ -1,6 +1,6 @@
 ---
 title: "Theory of the Firm, Partial Equilibrium & General Equilibrium"
-week: 4
+kicker: "Part 1"
 semester: 1
 year: 2
 academic_year: "2025-26"

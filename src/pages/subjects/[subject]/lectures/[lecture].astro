@@ -34,6 +34,7 @@ const allLectures = (await getCollection("lectures", (l) => l.data.subject === s
     slug: l.id.split("/").pop()!,
     title: l.data.title,
     week: l.data.week,
+    kicker: l.data.kicker,
   }));
 
 // Extract section headings from the rendered HTML for the sidebar. Keep the
@@ -53,7 +54,7 @@ while ((m = sectionRe.exec(html)) !== null) {
 }
 
 const subject = (await getCollection("subjects", (s) => s.data.slug === subjectSlug))[0];
-const display = lectureDisplay(lectureSlug, lecture.data.title);
+const display = lectureDisplay(lectureSlug, lecture.data.title, lecture.data.kicker);
 const metaParts = [
   display.kicker,
   lecture.data.week !== undefined && !display.kicker.startsWith("Week") ? `Week ${lecture.data.week}` : null,

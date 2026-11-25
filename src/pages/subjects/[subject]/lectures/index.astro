@@ -14,7 +14,7 @@ const entries = sortByCourseOrder((await getCollection("lectures", (l) => l.data
   .map((l) => ({
     slug: l.id.split("/").pop()!,
     title: l.data.title,
-    ...lectureDisplay(l.id.split("/").pop()!, l.data.title),
+    ...lectureDisplay(l.id.split("/").pop()!, l.data.title, l.data.kicker),
     week: l.data.week,
     lecture: l.data.lecture,
     instructor: l.data.instructor,

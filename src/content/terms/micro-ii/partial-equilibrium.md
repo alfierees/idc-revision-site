@@ -13,4 +13,4 @@ Equilibrium in a single market, holding other prices and incomes fixed: a price 
 
 The setting for supply and demand, welfare and price-control questions. It ignores cross-market effects, which is when you need [[General Equilibrium]].
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

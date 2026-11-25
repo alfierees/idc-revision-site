@@ -28,6 +28,11 @@ in_scope: true
 > **Lesson 7** — Financial Management & Finance
 > Key concepts: [[Bond]], [[Coupon]], [[Face Value]], [[Yield to Maturity]], [[Zero-Coupon Bond]]
 
+> [!info] Class workbook (download)
+> - [2025.05.30 Seventh class (Bonds).xlsx](/papers/fundamentals-of-finance/class-2025-05-30-seventh-class-bonds.xlsx)
+>
+> What each sheet does: [[#The class workbook, sheet by sheet|see below]].
+
 ---
 
 ## What a bond is
@@ -35,7 +40,7 @@ in_scope: true
 A ==bond== is a loan *to* the issuer. It has three features:
 
 > [!info] The three things on a bond
-> - **Face value (par)** — the principal repaid at maturity (e.g. $100 or $1000).
+> - **Face value (par)** — the principal repaid at maturity (e.g. \$100 or \$1000).
 > - **Coupon rate** — the periodic interest, quoted on the face value (e.g. 5% → $5/yr on $100 face).
 > - **Maturity** — when the face value is returned.
 
@@ -79,7 +84,7 @@ As a bond ages toward maturity its price is **pulled to par** regardless of wher
 > - **Price before a coupon** = price after $+$ the coupon about to be paid (the seller is entitled to that imminent coupon).
 
 > [!example] The 5% bond at $t=2$, yield now 4%
-> After the year-2 coupon: $-\texttt{PV}(4\%,4,5,100) = \$103.63$. Before it (still owed the $5 coupon): $103.63 + 5 = \$108.63$.
+> After the year-2 coupon: $-\texttt{PV}(4\%,4,5,100) = \$103.63$. Before it (still owed the \$5 coupon): $103.63 + 5 = \$108.63$.
 
 ---
 
@@ -89,14 +94,14 @@ As a bond ages toward maturity its price is **pulled to par** regardless of wher
 
 Face value repaid in instalments, so the coupon (charged on the *outstanding* face) **steps down** after each redemption.
 
-> [!example] $1000 face, 8% coupon, $500 repaid at yr 2, rest at yr 5
+> [!example] \$1000 face, 8% coupon, \$500 repaid at yr 2, rest at yr 5
 > Coupons: $80/yr while $1000 outstanding (yrs 1–2), then $40/yr on the remaining $500 (yrs 3–5). Price at 7% yield $= \texttt{NPV}(7\%, \text{CFs}) = \$1{,}029.54$.
 
 ### Semi-annual & CPI-linked bond
 
 Coupons paid twice a year use **half the stated coupon** on each date ($6\%/2 = 3\%$ of face). If the bond is CPI-linked, discount at the **real** semi-annual rate, then convert the resulting real value back to a nominal price using actual inflation.
 
-> [!example] $100 face, 6% semi-annual coupon, 5yr, nominal 7%, expected inflation 1.8%
+> [!example] \$100 face, 6% semi-annual coupon, 5yr, nominal 7%, expected inflation 1.8%
 > Real annual rate $= \frac{1.07}{1.018}-1 = 5.108\%$; real semi-annual $= 1.05108^{1/2}-1 = 2.522\%$. Price $= -\texttt{PV}(2.522\%, 10, 3, 100) = \$104.18$. (See [[Lesson_04-Inflation, Real Rates & Expected Inflation]] for the real/nominal conversion.)
 
 ### Zero-coupon bond
@@ -119,6 +124,18 @@ $$\boxed{P = \frac{FV}{(1+r)^n}}$$ ^zero-coupon
 | Semi-annual | coupon/2 each half-year, $2n$ periods | `-PV(r_semi, 2n, C/2, FV)` |
 | CPI-linked | real coupons; discount at real rate | real PV → convert to nominal via inflation |
 | Zero-coupon | single FV at maturity | $FV/(1+r)^n$ |
+
+---
+
+## The class workbook, sheet by sheet
+
+The 30 May 2025 workbook prices every bond in this lesson twice: by laying out the cash flows and using `NPV`, and with `-PV(rate, n, coupon, face)`. The two always agree.
+
+- **`Streight bond`:** 6 years, face 100, 5% coupon. Price at 5.5% `=NPV(B12,C6:H6)` = `=-PV(B12,6,5,100)` = **97.50** (discount). At $t=2$ with the yield at 4%: after the coupon `=-PV(B18,4,5,100)` = 103.63; before it, `=B19+D6` = **108.63**.
+- **`Partial redeption`:** face 1,000, 8% coupon, 500 repaid at year 2 and 500 at year 5. Coupons 80, 80, then 40, 40, 40; cash flows 80, 580, 40, 40, 540. At 7%: **1,029.54**. At $t=2$ (after the redemption) with the rate at 8%, the bond is worth exactly **500**: when the yield equals the coupon rate, a bond trades at par.
+- **`Streight with two payments`:** CPI-linked, face 100, 6% coupon paid as 3 every six months for 5 years. Nominal 7% and expected inflation 1.8% give a real annual rate `=(1+B11)/(1+B12)-1` = 5.108% and a real semi-annual rate 2.522%, so the price is `=-PV(B14,10,3,100)` = **104.18**. Part b: actual inflation turned out at 2% a year; the real value at period 4 (two years in) is `=-PV(B25,6,3,100)` = 102.63, and the nominal price is `=B27*(1+2%)^2` = **106.78**.
+- **`Zeros and Perpetual`:** a 4-year zero paying 100 at 6%: `=F7/(1+B9)^4` = **79.21** (the text says face value \$1,000, but the cell uses 100). A perpetual bond (consol) paying 4% of 1,000 forever at 6%: `=40/B15` = **666.67**.
+- **`YTM`:** a 5-year bond with a 6% coupon trading at 95. Its yield to maturity is the IRR of buying it: `=IRR(-95, 6, 6, 6, 6, 106)` = **7.23%**. The table summarises: YTM = coupon rate → price = face (par); YTM < coupon → price > face (premium); YTM > coupon → price < face (discount, "disagio").
 
 ---
 
