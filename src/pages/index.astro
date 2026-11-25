@@ -88,10 +88,6 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
       ))}
     </nav>
 
-    <section class="continue" id="continue" aria-labelledby="continue-title" hidden>
-      <h2 class="section-label" id="continue-title">Continue where you left off</h2>
-      <ul class="continue-list" id="continue-list"></ul>
-    </section>
     <script type="application/json" id="course-titles" set:html={JSON.stringify(courseTitles)} />
 
     <section class="your-semester" aria-labelledby="your-semester-title">
@@ -100,12 +96,39 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
         <p class="panel-sub">Your courses show up here once you choose.</p>
         <SemesterTiles groups={groups} />
       </div>
+
+      <!-- Once a semester is picked, the hero and pills hide and this heading
+           doubles as the semester switcher, so the courses sit right under it. -->
+      <div class="sem-head">
+        <p class="eyebrow sem-eyebrow">Your semester</p>
+        <details class="sem-picker" id="sem-picker">
+          <summary aria-label="Change semester">
+            <h1 class="sem-title">
+              {groups.map((g) => <span class="sem-name" data-sem-name={g.semester.id}>{g.semester.label}</span>)}
+            </h1>
+            <span class="sem-chev" aria-hidden="true">
+              <svg viewBox="0 0 20 20" width="20" height="20"><path d="M5 7.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </span>
+          </summary>
+          <div class="sem-menu">
+            <ul>
+              {groups.map((g) => (
+                <li>
+                  <a href={`#${g.semester.id}`} class="sem-opt" data-pick={g.semester.id}>
+                    <span class="opt-label">{g.semester.label}</span>
+                    <span class="opt-note">{g.live.length > 0 ? `${g.live.length} course${g.live.length === 1 ? "" : "s"}` : "Coming soon"}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a class="sem-menu-foot" href="/courses">Browse every course <span aria-hidden="true">→</span></a>
+          </div>
+        </details>
+      </div>
+
       {groups.map((g) => (
         <div class="sem-panel" data-sem={g.semester.id}>
-          <div class="panel-head">
-            <h2 class="panel-title">{g.semester.label}</h2>
-            {panelLine(g) && <p class="panel-sub">{panelLine(g)}</p>}
-          </div>
+          {panelLine(g) && <p class="panel-sub panel-line">{panelLine(g)}</p>}
           {g.live.length + g.coming.length === 0 ? (
             <p class="panel-empty">Courses for this semester are on their way.</p>
           ) : (
@@ -117,6 +140,11 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
           )}
         </div>
       ))}
+    </section>
+
+    <section class="continue" id="continue" aria-labelledby="continue-title" hidden>
+      <h2 class="section-label" id="continue-title">Continue where you left off</h2>
+      <ul class="continue-list" id="continue-list"></ul>
     </section>
 
     <p class="all-courses"><a href="/courses">Browse every course <span aria-hidden="true">→</span></a></p>
@@ -214,6 +242,106 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
   :global(html[data-semester="y2s2"]) .sem-panel[data-sem="y2s2"] { display: block; }
   :global(html[data-semester]) .pick-view { display: none; }
 
+  /* Once a semester is picked, the landing overview steps aside: the
+     semester's courses become the page, under a heading that switches. */
+  :global(html[data-semester]) .home-hero,
+  :global(html[data-semester]) .sem-switch { display: none; }
+  .sem-head { display: none; }
+  :global(html[data-semester]) .sem-head { display: block; }
+  :global(html[data-semester]) .your-semester { margin-top: 0.75rem; }
+  .sem-name { display: none; }
+  :global(html[data-semester="y1s1"]) .sem-name[data-sem-name="y1s1"],
+  :global(html[data-semester="y1s2"]) .sem-name[data-sem-name="y1s2"],
+  :global(html[data-semester="y2s1"]) .sem-name[data-sem-name="y2s1"],
+  :global(html[data-semester="y2s2"]) .sem-name[data-sem-name="y2s2"] { display: inline; }
+
+  /* ---- semester heading + dropdown ---- */
+  .sem-eyebrow { margin-bottom: 0.35rem; }
+  .sem-picker { position: relative; display: inline-block; max-width: 100%; }
+  .sem-picker summary {
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    max-width: 100%;
+    cursor: pointer;
+    border-radius: 14px;
+  }
+  .sem-picker summary::-webkit-details-marker { display: none; }
+  .sem-picker summary:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  .sem-title {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    line-height: 1.1;
+    font-variation-settings: "opsz" 96, "wght" 500;
+    color: var(--color-ink);
+  }
+  .sem-chev {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: var(--color-card);
+    color: var(--color-ink-soft);
+    box-shadow: var(--shadow-soft), inset 0 0 0 1px var(--color-rule);
+    transition: transform 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .sem-picker summary:hover .sem-chev { color: var(--color-accent-ink); background: var(--color-accent-soft); }
+  .sem-picker[open] .sem-chev { transform: rotate(180deg); }
+  .sem-menu {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    width: max-content;
+    min-width: 19rem;
+    max-width: calc(100vw - 2rem);
+    padding: 0.4rem;
+    border-radius: 16px;
+    background: var(--color-card);
+    box-shadow: var(--shadow-lift), inset 0 0 0 1px var(--color-rule);
+  }
+  .sem-menu ul { margin: 0; padding: 0; list-style: none; }
+  .sem-opt {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 44px;
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-family: var(--font-ui);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .sem-opt:hover { background: var(--color-paper-deep); }
+  .sem-opt:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+  .sem-opt[aria-current] { background: var(--color-accent-soft); color: var(--color-accent-ink); }
+  .opt-note { font-size: 0.8rem; font-weight: 500; color: var(--color-ink-muted); }
+  .sem-opt[aria-current] .opt-note { color: var(--color-accent-ink); }
+  .sem-menu-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    margin-top: 0.3rem;
+    padding: 0.6rem 0.9rem 0.5rem;
+    border-top: 1px solid var(--color-rule);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-ink-soft);
+  }
+  .sem-menu-foot:hover { color: var(--color-accent-ink); }
+  .panel-line { margin: 0.2rem 0 1.5rem; }
+
   /* ---- welcome ---- */
   .step-title {
     margin-top: 0.75rem;
@@ -293,7 +421,7 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
   }
 
   /* ---- continue ---- */
-  .continue { margin: 2.75rem auto 0; max-width: 72rem; }
+  .continue { margin: 3rem auto 0; max-width: 72rem; }
   .continue[hidden] { display: none; }
   .continue-list {
     margin: 0.9rem 0 0;
@@ -373,6 +501,9 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
     .stat-n { font-size: 1.1rem; }
     .stat-l { font-size: 0.75rem; }
     .panel-title { font-size: 1.55rem; }
+    .sem-title { font-size: 1.9rem; }
+    .sem-chev { width: 34px; height: 34px; }
+    .panel-line { margin-bottom: 1.1rem; }
     .seg { padding: 0.4rem 0.7rem; font-size: 0.82rem; }
   }
 
@@ -418,10 +549,22 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
     });
   };
 
+  // The semester heading's dropdown: close on outside click or Escape.
+  const picker = document.getElementById("sem-picker") as HTMLDetailsElement | null;
+  document.addEventListener("click", (event) => {
+    if (picker?.open && !picker.contains(event.target as Node)) picker.open = false;
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && picker?.open) {
+      picker.open = false;
+      picker.querySelector("summary")?.focus();
+    }
+  });
+
   // Semester tiles (onboarding + "Pick your semester") and the hub's segmented switcher.
   const syncSegments = () => {
     const current = root.getAttribute("data-semester");
-    document.querySelectorAll<HTMLAnchorElement>(".seg[data-pick]").forEach((seg) => {
+    document.querySelectorAll<HTMLAnchorElement>(".seg[data-pick], .sem-opt[data-pick]").forEach((seg) => {
       if (seg.dataset.pick === current) seg.setAttribute("aria-current", "true");
       else seg.removeAttribute("aria-current");
     });
@@ -430,7 +573,9 @@ const courseTitles = Object.fromEntries(subjects.map((s) => [s.slug, s.title]));
     tile.addEventListener("click", (event) => {
       event.preventDefault();
       const id = tile.dataset.pick;
-      if (id && isSemesterId(id)) finish(id, tile.classList.contains("seg"));
+      const inPlace = tile.classList.contains("seg") || tile.classList.contains("sem-opt");
+      picker?.removeAttribute("open");
+      if (id && isSemesterId(id)) finish(id, inPlace);
     });
   });
   syncSegments();
