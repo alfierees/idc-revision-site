@@ -13,4 +13,4 @@ The area between the demand curve and the price: the value consumers get above w
 
 Add it to [[Firm Surplus]] to measure welfare in partial-equilibrium questions (price ceilings, floors, subsidies). Warning from the lecture: CS is an accurate welfare measure only under quasilinear preferences.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

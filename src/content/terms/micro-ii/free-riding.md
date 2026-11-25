@@ -13,4 +13,4 @@ An agent invests less (or nothing) because other agents' investment already give
 
 Appears in public-goods questions: the Alice and Bob seminar example ends with Bob investing 0 and Alice 3. Find it by solving each agent's [[Best Response]] and the [[Nash Equilibrium]].
 
-See [[Lec_06-Public Goods & Altruism|Lec 06]].
+See [[Lec_06-Public Goods & Altruism|Part 3]].

@@ -13,4 +13,4 @@ $f(l,k)$: output obtained from labour and capital. Its shape (concave $\sqrt{l}$
 
 The starting point of every firm question: compute the marginal products, then the RTS, then solve [[Cost Minimisation]].
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

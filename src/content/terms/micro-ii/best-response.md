@@ -13,4 +13,4 @@ An agent's optimal choice given what the others choose. For a public good, $BR_1
 
 Used to find the [[Nash Equilibrium]] of the public-goods game: write both agents' best responses and find where they hold simultaneously. If $g_1^o \ne g_2^o$ the result is complete [[Free Riding]] by one agent.
 
-See [[Lec_06-Public Goods & Altruism|Lec 06]].
+See [[Lec_06-Public Goods & Altruism|Part 3]].

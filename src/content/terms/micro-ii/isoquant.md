@@ -13,4 +13,4 @@ The set of input bundles $(l,k)$ that produce the same output $q_0$, $\{(l,k): f
 
 Its slope is the [[RTS]]. Draw it together with the [[Isocost Line]] to solve [[Cost Minimisation]].
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

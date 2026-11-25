@@ -13,4 +13,4 @@ An agent's utility that also counts part of the other agent's utility: $V_1(g) +
 
 Appears in the public-goods problem set when asked to show that altruism raises provision. The lecture only states the results and leaves the proof to the problem set, so derive it there rather than quoting a formula.
 
-See [[Lec_06-Public Goods & Altruism|Lec 06]].
+See [[Lec_06-Public Goods & Altruism|Part 3]].

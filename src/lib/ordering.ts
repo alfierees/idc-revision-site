@@ -62,14 +62,22 @@ const KIND_LABEL: Record<string, string> = {
 /**
  * Split an inconsistent vault title ("Lec 03: Conditions…", "Lecture 2: Numeric…",
  * "Lesson_01-Time Value…") into a uniform kicker ("Lecture 3") and topic
- * ("Conditions and While Loops"), using the slug for the kind and number.
+ * ("Conditions and While Loops"), using the slug for the kind and number,
+ * unless the lecture's frontmatter sets its own `kicker`.
  */
-export function lectureDisplay(slug: string, title: string): { kicker: string; topic: string } {
+export function lectureDisplay(
+  slug: string,
+  title: string,
+  kickerOverride?: string,
+): { kicker: string; topic: string } {
   const m = slug.match(/^([a-z]+)[-_]?(\d+)([a-z]?)(?=-|$)/);
   const topic =
     title
       .replace(/^(?:lec(?:ture)?|lesson|session|topic|class|week|rec(?:itation)?|read(?:ing)?|tutorial)[\s_.-]*\d+[a-z]?\s*(?:[:\-–—.|]\s*)?/i, "")
       .trim() || title;
+  // Frontmatter `kicker` wins over the slug, e.g. Micro II's cumulative decks
+  // keep `lec-04` slugs (stable URLs and links) but read as "Part 1".
+  if (kickerOverride) return { kicker: kickerOverride, topic };
   if (!m || !KIND_LABEL[m[1]]) return { kicker: "", topic };
   return { kicker: `${KIND_LABEL[m[1]]} ${parseInt(m[2], 10)}${m[3]}`, topic };
 }

@@ -13,4 +13,4 @@ If property rights over an externality are well defined and transaction costs ar
 
 Use it as the market-based alternative to a [[Pigouvian Tax]] in externality questions: create tradeable rights, let the price clear, and note that the initial assignment changes who is paid, not the quantities. Limits: it needs clear rights, low transaction costs and no wealth effects.
 
-See [[Lec_05-Production Economy & Externalities|Lec 05]].
+See [[Lec_05-Production Economy & Externalities|Part 2]].

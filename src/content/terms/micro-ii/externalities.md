@@ -13,4 +13,4 @@ An effect of one agent's choices on another's utility or cost that is not reflec
 
 Spot it when one agent's choice appears in another's utility or cost function. The competitive equilibrium is then not [[Pareto Efficiency|Pareto efficient]] (a [[Market Failure]]); fix it with a [[Pigouvian Tax]] or a market in the externality ([[Coase Theorem]]).
 
-See [[Lec_05-Production Economy & Externalities|Lec 05]].
+See [[Lec_05-Production Economy & Externalities|Part 2]].

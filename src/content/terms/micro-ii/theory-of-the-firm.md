@@ -13,4 +13,4 @@ How firms choose inputs and output to maximise profit.
 
 The first block of the course: output choice ($MR=MC$), then the [[Cost Function]] from the technology with one or two inputs.
 
-See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Lec 04]].
+See [[Lec_04-Theory of the Firm, Partial & General Equilibrium|Part 1]].

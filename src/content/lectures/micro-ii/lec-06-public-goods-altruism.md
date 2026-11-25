@@ -1,6 +1,6 @@
 ---
 title: "Public Goods, Free Riding & Altruism"
-week: 6
+kicker: "Part 3"
 semester: 1
 year: 2
 academic_year: "2025-26"
