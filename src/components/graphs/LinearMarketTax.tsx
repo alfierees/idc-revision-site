@@ -19,8 +19,8 @@ const NOTES = [
   "Set them equal: the crossing gives Q* and P*.",
   "Consumer surplus sits above the price, producer surplus below it.",
   "A tax of T on sellers lifts supply by exactly T.",
-  "Buyers pay P_B on demand, sellers keep P_S = P_B − T. The gap is the tax.",
-  "The tax revenue rectangle is T × Q_T. The red triangle is the deadweight loss.",
+  "Buyers pay the price on demand; sellers keep that minus T. The gap is the tax.",
+  "The orange rectangle is tax revenue (T × new Q). The red triangle is the deadweight loss.",
   "Your turn. Slide the tax (below zero is a subsidy) or change the curves.",
 ];
 
@@ -32,7 +32,7 @@ const roundUpNice = (value: number) => {
 export default function LinearMarketTax({ a: a0 = 60, b: b0 = 0.5, c: c0 = 30, d: d0 = 0.25, t: t0 = 2 }: Props): VNode {
   const [target, setTarget] = useState({ a: a0, b: b0, c: c0, d: d0, t: t0 });
   const q0 = (a0 - c0) / (b0 + d0);
-  const QUANTITY_MAX = roundUpNice(Math.max(a0 / b0, q0 * 1.6) * 1.05);
+  const QUANTITY_MAX = roundUpNice(Math.min(a0 / b0, q0 * 2.2));
   const PRICE_MAX = roundUpNice(a0 * 1.1);
   const sketch = useSketch({
     stepCount: NOTES.length,
@@ -118,9 +118,9 @@ export default function LinearMarketTax({ a: a0 = 60, b: b0 = 0.5, c: c0 = 30, d
   if (show(4)) {
     drawing.push(<Dot x={toX(qTax)} y={toY(buyerPrice)} color={INK} draw={drawNow(4)} />);
     drawing.push(<Dot x={toX(qTax)} y={toY(sellerPrice)} color={MARKER.blue} draw={drawNow(4)} />);
-    drawing.push(<Note x={frame.left + 6} y={toY(buyerPrice) + (isSubsidy ? 18 : -8)} text={`P_B = ${fmt(buyerPrice, 2)}`} color={INK} size={16} draw={drawNow(4)} />);
-    drawing.push(<Note x={frame.left + 6} y={toY(sellerPrice) + (isSubsidy ? -8 : 18)} text={`P_S = ${fmt(sellerPrice, 2)}`} color={MARKER.blue} size={16} delay={200} draw={drawNow(4)} />);
-    drawing.push(<Note x={toX(qTax)} y={frame.bottom + 32} text={`Q_T = ${fmt(qTax, 2)}`} color={MARKER.purple} anchor="middle" size={17} draw={drawNow(4)} />);
+    drawing.push(<Note x={frame.left + 6} y={toY(buyerPrice) + (isSubsidy ? 18 : -8)} text={`buyers ${fmt(buyerPrice, 2)}`} color={INK} size={16} draw={drawNow(4)} />);
+    drawing.push(<Note x={frame.left + 6} y={toY(sellerPrice) + (isSubsidy ? -8 : 18)} text={`sellers ${fmt(sellerPrice, 2)}`} color={MARKER.blue} size={16} delay={200} draw={drawNow(4)} />);
+    drawing.push(<Note x={toX(qTax)} y={frame.bottom + 32} text={`Q = ${fmt(qTax, 2)}`} color={MARKER.purple} anchor="middle" size={17} draw={drawNow(4)} />);
   }
   if (show(5) && !narrow) {
     drawing.push(<Note x={toX(qStar) + 10} y={toY(pStar) + 4} text="DWL" color={MARKER.red} size={17} delay={400} draw={drawNow(5)} />);
