@@ -2,12 +2,12 @@
 title: Course Cram Sheet
 subject: entrepreneurship
 type: reference
-description: One-page recall of every class, the key frameworks, and the distinctions most easily confused.
+description: "Every framework to reproduce from memory, one table each: the four types of innovation, structures and innovation design, Five Forces, OCAI, barriers, vision vs mission, leadership vs management, Amabile and Pratt, brainstorming rules, Six Hats, the three lenses, Double Diamond, first-diamond tools and prototype fidelity. Plus the distinctions most easily confused."
 course: Innovation & Entrepreneurship in Organizations
 instructor: Dr Michal Ben David
 semester: 2
 year: 1
-order: 1
+order: 2
 pinned: true
 tags:
   - entrepreneurship
@@ -79,6 +79,48 @@ New entrants, supplier power, buyer power, substitutes, rivalry. Strong forces d
 - **External, macro environment**: undeveloped network and ecosystem, technological turbulence, inappropriate infrastructure, restrictive local culture.
 - **Internal**: restrictive mindset, lack of competences (discovery, incubation, acceleration and commercialisation), insufficient resources, unsupportive structure.
 
+### Vision vs. mission (Class 7)
+
+| | Vision | Mission |
+|---|---|---|
+| Time frame | The future (about 10 years) | The present, every day |
+| Answers | Where do we want to be? | What do we do to get there? |
+| Tone | Aspirational | Concrete, operational |
+
+### Leadership vs. management (Class 7)
+
+| | Leadership | Management |
+|---|---|---|
+| Focus | Vision, strategic context, long-term strategy | Planning, organising, staffing, directing, controlling |
+| Horizon | Long term | Specific short-term results |
+| Motto | Doing the right things | Doing things right |
+
+**Transformational leadership** (Grădinaru et al. 2020): followers see past self-interest toward a greater vision. Five behaviours: inspire a shared vision, empower, adapt to change, encourage innovation and initiative, create ethical, attitudinal and process change.
+
+### Amabile & Pratt's componential model (Class 8)
+
+| Level | Skills | Process | Motivation |
+|---|---|---|---|
+| Individual | Domain-relevant skills | Creativity-relevant processes | Task (intrinsic) motivation |
+| Organisation | Resources (time, money, information, expertise) | Innovation-management skills | Motivation to innovate |
+
+All three must be present. Dynamic loops: progress raises motivation, failure becomes learning under psychological safety, leaders keep work meaningful.
+
+### Ideation (Class 8)
+
+- **Osborn's four rules:** defer judgment, go for quantity, go for wild ideas, build on others' ideas.
+- **Six Thinking Hats (de Bono):** white facts, red feelings, black risks, yellow benefits, green new ideas, blue process. Everyone wears the same hat at the same time.
+
+### Three lenses of Design Thinking (Class 9)
+
+| Lens | Question | Perspective |
+|---|---|---|
+| Desirability | Do people want it? | Human |
+| Feasibility | Can we build it? | Technology |
+| Viability | Can it sustain as a business? | Business |
+
+Five stages: Empathy, Define, Ideate, Prototype, Test.
+
 ### Double Diamond
 
 | Diamond | Phase | Mode | Design Thinking stage |
@@ -87,6 +129,25 @@ New entrants, supplier power, buyer power, substitutes, rivalry. Strong forces d
 | Problem | Define | Converge | Define |
 | Solution | Develop | Diverge | Ideate, Prototype |
 | Solution | Deliver | Converge | Test |
+
+### First-diamond tools (Class 10)
+
+| Tool | Shows | Content |
+|---|---|---|
+| Empathy Map | The user's mindset | Say, Think, Do, Feel |
+| Persona | Who we design for | Name, background, goals, frustrations, needs, motivations, a real quote |
+| Customer Journey Map | The experience over time | Stages, emotions, touchpoints, one key moment |
+| Design question | The problem to solve | "How might we…": user + need + problem |
+
+### Prototype fidelity (Class 11)
+
+| Type | Fidelity | Interactive |
+|---|---|---|
+| Wireframe | Low: layout skeleton | No |
+| Mockup | Medium: looks real | No |
+| Interactive prototype | High: clickable (Figma, InVision, Adobe XD) | Yes |
+
+Loop: **Plan** (what to learn) → **Build** (low fidelity, the key feature) → **Test** (at least two real users) → iterate.
 
 ## Distinctions that are easy to confuse
 
