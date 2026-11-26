@@ -69,6 +69,13 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  /* No programming ligatures in code: students must see and type `>=`, `<=`,
+     `<>` and `|>` exactly as written, not as single ≥ ≤ ≠ ▷ glyphs. */
+  code, pre, kbd, samp {
+    font-feature-settings: "kern", "liga" 0, "calt" 0;
+    font-variant-ligatures: none;
+  }
+  :not(pre) > code { overflow-wrap: break-word; }
   h1, h2, h3 {
     font-family: var(--font-display);
     font-feature-settings: "ss01", "kern", "liga";
@@ -390,6 +397,8 @@
     color: color-mix(in srgb, var(--color-accent-2) 88%, var(--color-ink));
     padding: 0.12em 0.38em;
     border-radius: 5px;
+    /* long formulas (=XLOOKUP(J2,$F$217:…)) have no spaces: let them wrap on phones */
+    overflow-wrap: break-word;
   }
 
   /* display math — framed equation slab (renderer wraps .katex-display) */
