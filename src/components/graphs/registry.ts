@@ -1,6 +1,10 @@
 import type { ComponentType } from "preact";
 import TwoPartTariff from "./TwoPartTariff";
 import MonopolyCsDwl from "./MonopolyCsDwl";
+import LinearMarketTax from "./LinearMarketTax";
+import StatsNormalArea from "./StatsNormalArea";
+import StatsCltAverage from "./StatsCltAverage";
+import StatsDiscreteDist from "./StatsDiscreteDist";
 import PriceDiscrimination3rd from "./PriceDiscrimination3rd";
 import OligopolyStructures from "./OligopolyStructures";
 import CournotReaction from "./CournotReaction";
@@ -99,10 +103,15 @@ import CalcConcavity from "./CalcConcavity";
 import CalcOptimisation from "./CalcOptimisation";
 import CalcRiemann from "./CalcRiemann";
 import CalcAccumulation from "./CalcAccumulation";
+import CalcInvestigation from "./CalcInvestigation";
 
 export const GRAPHS: Record<string, ComponentType<any>> = {
   "two-part-tariff": TwoPartTariff,
   "monopoly-cs-dwl": MonopolyCsDwl,
+  "linear-market-tax": LinearMarketTax,
+  "stats-normal-area": StatsNormalArea,
+  "stats-clt-average": StatsCltAverage,
+  "stats-discrete-dist": StatsDiscreteDist,
   "price-discrimination-3rd": PriceDiscrimination3rd,
   "oligopoly-structures": OligopolyStructures,
   "cournot-reaction": CournotReaction,
@@ -186,6 +195,7 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "calc-optimisation": CalcOptimisation,
   "calc-riemann": CalcRiemann,
   "calc-accumulation": CalcAccumulation,
+  "calc-investigation": CalcInvestigation,
   // maths B explainers
   "mathsb-global-extrema": MathsBGlobalExtrema,
   "mathsb-fence-optimum": MathsBFenceOptimum,

@@ -166,6 +166,9 @@ const examPrep = defineCollection({
     pinned: z.boolean().default(false),
     order: z.number().optional(),
     in_scope: z.boolean().default(true),
+    // Optional self-test: same shape as problem-set questions. Rendered as
+    // interactive MCQ / show-answer cards after the markdown body.
+    questions: z.array(question).optional(),
   }),
 });
 
