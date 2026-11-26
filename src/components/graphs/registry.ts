@@ -103,6 +103,7 @@ import CalcConcavity from "./CalcConcavity";
 import CalcOptimisation from "./CalcOptimisation";
 import CalcRiemann from "./CalcRiemann";
 import CalcAccumulation from "./CalcAccumulation";
+import CalcInvestigation from "./CalcInvestigation";
 
 export const GRAPHS: Record<string, ComponentType<any>> = {
   "two-part-tariff": TwoPartTariff,
@@ -194,6 +195,7 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "calc-optimisation": CalcOptimisation,
   "calc-riemann": CalcRiemann,
   "calc-accumulation": CalcAccumulation,
+  "calc-investigation": CalcInvestigation,
   // maths B explainers
   "mathsb-global-extrema": MathsBGlobalExtrema,
   "mathsb-fence-optimum": MathsBFenceOptimum,
