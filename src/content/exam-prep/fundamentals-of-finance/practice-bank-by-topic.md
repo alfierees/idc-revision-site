@@ -6,8 +6,8 @@ course: Financial Management & Finance
 instructor: Dr. Tal Mofkadi
 semester: 2
 year: 1
-order: 1
-pinned: true
+order: 8
+pinned: false
 tags:
   - financial-management
   - exam-prep

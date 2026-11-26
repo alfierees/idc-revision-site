@@ -142,7 +142,9 @@ export default function MathsBFunctionStudy({ fn = "xx" }: { fn?: string }): VNo
   if (show(2)) {
     const c = study.critical;
     parts.push(<Dot x={frame.x(c.x)} y={frame.y(f(c.x))} color={ACCENT} radius={5} />);
-    parts.push(<Note x={frame.x(c.x)} y={frame.y(f(c.x)) + (c.kind === "min" ? 26 : -14)} text={`${c.kind} (${fmt(c.x, 2)}, ${fmt(f(c.x), 2)})`} color={ACCENT} anchor="middle" size={17} />);
+    // On the interval step a "global" label sits right next to it: drop this one to avoid a clash.
+    const clash = show(3) && study.best.some((best) => Math.abs(frame.x(best.x) - frame.x(c.x)) < 80);
+    if (!clash) parts.push(<Note x={frame.x(c.x)} y={frame.y(f(c.x)) + (c.kind === "min" ? 26 : -14)} text={`${c.kind} (${fmt(c.x, 2)}, ${fmt(f(c.x), 2)})`} color={ACCENT} anchor="middle" size={17} />);
     const leftSign = c.kind === "min" ? "f′ < 0" : "f′ > 0", rightSign = c.kind === "min" ? "f′ > 0" : "f′ < 0";
     parts.push(<Note x={frame.x((view.xMin + c.x) / 2 + (study.pieces[0][0] > view.xMin ? study.pieces[0][0] / 2 : 0))} y={frame.bottom - 10} text={leftSign} color={MARKER.purple} anchor="middle" size={16} />);
     parts.push(<Note x={frame.x((c.x + view.xMax) / 2)} y={frame.bottom - 10} text={rightSign} color={MARKER.purple} anchor="middle" size={16} />);

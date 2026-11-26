@@ -107,6 +107,8 @@ import CalcInvestigation from "./CalcInvestigation";
 // micro I (consumer theory) explainers
 import ConsumerChoice from "./ConsumerChoice";
 import StatsPowerTest from "./StatsPowerTest";
+import MacroKCheck from "./MacroKCheck";
+import FinanceNpvProfile from "./FinanceNpvProfile";
 import MathsBFunctionStudy from "./MathsBFunctionStudy";
 
 export const GRAPHS: Record<string, ComponentType<any>> = {
@@ -203,6 +205,8 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   // micro I (consumer theory) explainers
   "consumer-choice": ConsumerChoice,
   "stats-power": StatsPowerTest,
+  "macro-k-check": MacroKCheck,
+  "finance-npv-profile": FinanceNpvProfile,
   "mathsb-function-study": MathsBFunctionStudy,
   // maths B explainers
   "mathsb-global-extrema": MathsBGlobalExtrema,
