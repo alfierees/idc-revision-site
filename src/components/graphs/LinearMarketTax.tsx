@@ -67,11 +67,11 @@ export default function LinearMarketTax({ a: a0 = 60, b: b0 = 0.5, c: c0 = 30, d
   const TEX = [
     `D:\\; P = ${fmt(a)} - ${coef(b)}Q \\qquad S:\\; P = ${fmt(c)} + ${coef(d)}Q`,
     `${fmt(a)} - ${coef(b)}Q = ${fmt(c)} + ${coef(d)}Q \\;\\Rightarrow\\; Q^* = ${fmt(qStar, 2)},\\; P^* = ${fmt(pStar, 2)}`,
-    `\\color{${MARKER.blue}}{CS} = \\tfrac12(${fmt(qStar, 2)})(${fmt(a - pStar, 2)}) = ${fmt(cs, 2)},\\quad \\color{${MARKER.green}}{PS} = \\tfrac12(${fmt(qStar, 2)})(${fmt(pStar - c, 2)}) = ${fmt(ps, 2)}`,
+    `\\textcolor{${MARKER.blue}}{CS} = \\tfrac12(${fmt(qStar, 2)})(${fmt(a - pStar, 2)}) = ${fmt(cs, 2)},\\quad \\textcolor{${MARKER.green}}{PS} = \\tfrac12(${fmt(qStar, 2)})(${fmt(pStar - c, 2)}) = ${fmt(ps, 2)}`,
     `S_T:\\; P = ${fmt(c + tax, 2)} + ${coef(d)}Q \\;\\Rightarrow\\; Q_T = ${fmt(qTax, 2)}`,
     `P_B = ${fmt(buyerPrice, 2)},\\quad P_S = ${fmt(sellerPrice, 2)},\\quad P_B - P_S = ${fmt(tax, 2)}`,
-    `\\color{${MARKER.amber}}{\\text{${isSubsidy ? "cost" : "revenue"}}} = ${fmt(Math.abs(tax), 2)} \\times ${fmt(qTax, 2)} = ${fmt(Math.abs(revenue), 2)},\\quad \\color{${MARKER.red}}{DWL} = \\tfrac12 (${fmt(Math.abs(tax), 2)})(${fmt(Math.abs(qStar - qTax), 2)}) = ${fmt(dwl, 2)}`,
-    `${word} = ${fmt(Math.abs(tax), 2)}:\\; Q_T = ${fmt(qTax, 2)},\\; P_B = ${fmt(buyerPrice, 2)},\\; P_S = ${fmt(sellerPrice, 2)},\\; \\color{${MARKER.red}}{DWL} = ${fmt(dwl, 2)}`,
+    `\\textcolor{${MARKER.amber}}{\\text{${isSubsidy ? "cost" : "revenue"}}} = ${fmt(Math.abs(tax), 2)} \\times ${fmt(qTax, 2)} = ${fmt(Math.abs(revenue), 2)},\\quad \\textcolor{${MARKER.red}}{DWL} = \\tfrac12 (${fmt(Math.abs(tax), 2)})(${fmt(Math.abs(qStar - qTax), 2)}) = ${fmt(dwl, 2)}`,
+    `${word} = ${fmt(Math.abs(tax), 2)}:\\; Q_T = ${fmt(qTax, 2)},\\; P_B = ${fmt(buyerPrice, 2)},\\; P_S = ${fmt(sellerPrice, 2)},\\; \\textcolor{${MARKER.red}}{DWL} = ${fmt(dwl, 2)}`,
   ];
 
   const quantityTicks = niceTicks(0, QUANTITY_MAX, narrow ? 3 : 6);
