@@ -106,6 +106,8 @@ import CalcAccumulation from "./CalcAccumulation";
 import CalcInvestigation from "./CalcInvestigation";
 // micro I (consumer theory) explainers
 import ConsumerChoice from "./ConsumerChoice";
+import StatsPowerTest from "./StatsPowerTest";
+import MathsBFunctionStudy from "./MathsBFunctionStudy";
 
 export const GRAPHS: Record<string, ComponentType<any>> = {
   "two-part-tariff": TwoPartTariff,
@@ -200,6 +202,8 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "calc-investigation": CalcInvestigation,
   // micro I (consumer theory) explainers
   "consumer-choice": ConsumerChoice,
+  "stats-power": StatsPowerTest,
+  "mathsb-function-study": MathsBFunctionStudy,
   // maths B explainers
   "mathsb-global-extrema": MathsBGlobalExtrema,
   "mathsb-fence-optimum": MathsBFenceOptimum,
