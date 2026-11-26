@@ -9,6 +9,11 @@ import { stripNoteMeta } from "../../../../lib/strip-note-meta";
 import { renderMarkdownString } from "../../../../lib/render-markdown-string";
 import { buildLinkMap, linkHref, resolveLink } from "../../../../lib/known-links";
 import { decodeHtmlEntities } from "../../../../lib/html-entities";
+import OpenAnswer from "../../../../components/OpenAnswer";
+import McQuestion from "../../../../components/McQuestion";
+import ExamScorebar from "../../../../components/ExamScorebar";
+import "../../../../styles/mcq.css";
+import { detectPaperMcqs } from "../../../../lib/paper-mcq";
 
 export async function getStaticPaths() {
   const docs = await getCollection("exam-prep", (e) => e.data.in_scope);
@@ -25,6 +30,34 @@ if (!doc) throw new Error(`exam-prep doc ${subjectSlug}/${docSlug} not found`);
 
 const links = await buildLinkMap(subjectSlug);
 const html = await renderMarkdownString(stripNoteMeta(doc.body ?? ""), subjectSlug, links);
+
+// Optional self-test questions (frontmatter `questions`), rendered as cards.
+const questions = doc.data.questions ?? [];
+const autoMcqs = detectPaperMcqs(
+  `exam-prep-${docSlug}`,
+  questions.filter((q) => !q.options?.length).map((q) => ({ id: q.id, prompt: q.text, answer: q.solution })),
+  doc.body ?? "",
+);
+const renderOpts = (opts: { label: string; text: string; correct: boolean; why: string }[]) =>
+  Promise.all(opts.map(async (o) => ({
+    label: o.label,
+    correct: o.correct,
+    html: await renderMarkdownString(o.text, subjectSlug, links),
+    whyHtml: o.why ? await renderMarkdownString(o.why, subjectSlug, links) : "",
+  })));
+const renderedQs = await Promise.all(questions.map(async (q) => {
+  const auto = q.options?.length ? null : autoMcqs.get(q.id) ?? null;
+  const options = q.options?.length ? await renderOpts(q.options) : auto ? await renderOpts(auto.options) : null;
+  return {
+    id: q.id,
+    title: q.title,
+    questionHtml: await renderMarkdownString(auto ? auto.stem : q.text, subjectSlug, links),
+    solutionHtml: await renderMarkdownString(auto ? auto.working : q.solution, subjectSlug, links),
+    options,
+    hasSolution: q.solution.trim().length > 0 || Boolean(options),
+  };
+}));
+const quizRef = `exam-prep-${docSlug}`;
 
 const allDocs = (await getCollection("exam-prep", (e) => e.data.subject === subjectSlug && e.data.in_scope))
   .map((e) => ({ slug: e.id.split("/").pop()!, title: e.data.title, order: e.data.order }));
@@ -71,11 +104,29 @@ const subject = (await getCollection("subjects", (s) => s.data.slug === subjectS
               </a>
             </div>
           )}
-          <div class="mt-8 paper-prose prose-card" set:html={html} />
+          {html.trim() && <div class="mt-8 paper-prose prose-card" set:html={html} />}
+          {renderedQs.length > 0 && (
+            <ol class="mt-8 space-y-6 list-none p-0">
+              {renderedQs.map((q, i) => (
+                <li id={`q-${q.id}`} class="qcard rounded-card bg-card p-7 shadow-soft">
+                  <span class="qid"><span class="qnum">{q.title ?? `Q${i + 1}`}</span></span>
+                  <div class="mt-3 text-base text-ink question-body prose-card" set:html={q.questionHtml} />
+                  {q.options ? (
+                    <McQuestion client:load subject={subjectSlug} kind="exam-prep" refSlug={quizRef} questionId={q.id} options={q.options} workingHtml={q.solutionHtml} />
+                  ) : q.hasSolution && (
+                    <OpenAnswer client:load subject={subjectSlug} kind="exam-prep" refSlug={quizRef} questionId={q.id} solutionHtml={q.solutionHtml} />
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
         </>
       )}
     </article>
   </div>
+  {renderedQs.some((q) => q.hasSolution) && (
+    <ExamScorebar client:load subject={subjectSlug} kind="exam-prep" refSlug={quizRef} questionIds={renderedQs.filter((q) => q.hasSolution).map((q) => q.id)} />
+  )}
   <Mermaid />
   <GraphMounter />
   <HoverPreview subject={subjectSlug} />

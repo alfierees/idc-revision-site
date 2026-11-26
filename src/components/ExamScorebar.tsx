@@ -12,7 +12,7 @@ import {
 
 interface Props {
   subject: string;
-  kind: "problem-set" | "past-paper";
+  kind: "problem-set" | "past-paper" | "exam-prep";
   refSlug: string;
   questionIds: string[];
 }

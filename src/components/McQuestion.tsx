@@ -12,7 +12,7 @@ interface Option {
 interface Props {
   subject: string;
   /** Progress bucket the status is recorded under (default "past-paper"). */
-  kind?: "problem-set" | "past-paper";
+  kind?: "problem-set" | "past-paper" | "exam-prep";
   refSlug: string;
   questionId: string;
   options: Option[];

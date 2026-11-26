@@ -1,6 +1,7 @@
 import type { ComponentType } from "preact";
 import TwoPartTariff from "./TwoPartTariff";
 import MonopolyCsDwl from "./MonopolyCsDwl";
+import LinearMarketTax from "./LinearMarketTax";
 import PriceDiscrimination3rd from "./PriceDiscrimination3rd";
 import OligopolyStructures from "./OligopolyStructures";
 import CournotReaction from "./CournotReaction";
@@ -103,6 +104,7 @@ import CalcAccumulation from "./CalcAccumulation";
 export const GRAPHS: Record<string, ComponentType<any>> = {
   "two-part-tariff": TwoPartTariff,
   "monopoly-cs-dwl": MonopolyCsDwl,
+  "linear-market-tax": LinearMarketTax,
   "price-discrimination-3rd": PriceDiscrimination3rd,
   "oligopoly-structures": OligopolyStructures,
   "cournot-reaction": CournotReaction,

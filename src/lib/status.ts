@@ -7,7 +7,7 @@ const ORDER: StatusValue[] = ["untried", "done", "wrong", "skipped"];
 
 export function statusKey(
   subject: string,
-  kind: "problem-set" | "past-paper",
+  kind: "problem-set" | "past-paper" | "exam-prep",
   ref: string,
   questionId: string,
 ): string {
