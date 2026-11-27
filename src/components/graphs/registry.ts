@@ -73,6 +73,11 @@ import SeparateTariffs from "./SeparateTariffs";
 import TariffPriceVsA from "./TariffPriceVsA";
 
 // maths B explainers
+// micro II (welfare and general equilibrium) explainers
+import MicroIIPriceControl from "./MicroIIPriceControl";
+import MicroIIEdgeworth from "./MicroIIEdgeworth";
+import MicroIIPpf from "./MicroIIPpf";
+import MicroIIPublicGood from "./MicroIIPublicGood";
 import MathsBGlobalExtrema from "./MathsBGlobalExtrema";
 import MathsBFenceOptimum from "./MathsBFenceOptimum";
 import MathsBLogInverse from "./MathsBLogInverse";
@@ -208,6 +213,11 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "macro-k-check": MacroKCheck,
   "finance-npv-profile": FinanceNpvProfile,
   "mathsb-function-study": MathsBFunctionStudy,
+  // micro II explainers
+  "microii-price-control": MicroIIPriceControl,
+  "microii-edgeworth": MicroIIEdgeworth,
+  "microii-ppf": MicroIIPpf,
+  "microii-public-good": MicroIIPublicGood,
   // maths B explainers
   "mathsb-global-extrema": MathsBGlobalExtrema,
   "mathsb-fence-optimum": MathsBFenceOptimum,
