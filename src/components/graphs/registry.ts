@@ -78,6 +78,22 @@ import MicroIIPriceControl from "./MicroIIPriceControl";
 import MicroIIEdgeworth from "./MicroIIEdgeworth";
 import MicroIIPpf from "./MicroIIPpf";
 import MicroIIPublicGood from "./MicroIIPublicGood";
+// intro econometrics explainers
+import EconTTest from "./EconTTest";
+import EconX2Models from "./EconX2Models";
+import EconHeteroskedasticity from "./EconHeteroskedasticity";
+// macro II explainers
+import MacroIIIsLm from "./MacroIIIsLm";
+import MacroIIMundellFleming from "./MacroIIMundellFleming";
+import MacroIIAdAs from "./MacroIIAdAs";
+// databases & SQL explainers
+import SqlJoins from "./SqlJoins";
+import SqlGroupBy from "./SqlGroupBy";
+// legal & tax explainers
+import LegalCapTable from "./LegalCapTable";
+import LegalEsopTimeline from "./LegalEsopTimeline";
+// data science explainers
+import DsPrecisionRecall from "./DsPrecisionRecall";
 import MathsBGlobalExtrema from "./MathsBGlobalExtrema";
 import MathsBFenceOptimum from "./MathsBFenceOptimum";
 import MathsBLogInverse from "./MathsBLogInverse";
@@ -218,6 +234,19 @@ export const GRAPHS: Record<string, ComponentType<any>> = {
   "microii-edgeworth": MicroIIEdgeworth,
   "microii-ppf": MicroIIPpf,
   "microii-public-good": MicroIIPublicGood,
+  // intro econometrics explainers
+  "econ-t-test": EconTTest,
+  "econ-x2-models": EconX2Models,
+  "econ-heteroskedasticity": EconHeteroskedasticity,
+  // macro II explainers
+  "macroii-islm": MacroIIIsLm,
+  "macroii-mundell-fleming": MacroIIMundellFleming,
+  "macroii-adas": MacroIIAdAs,
+  "sql-joins": SqlJoins,
+  "sql-group-by": SqlGroupBy,
+  "legal-cap-table": LegalCapTable,
+  "legal-esop-timeline": LegalEsopTimeline,
+  "ds-precision-recall": DsPrecisionRecall,
   // maths B explainers
   "mathsb-global-extrema": MathsBGlobalExtrema,
   "mathsb-fence-optimum": MathsBFenceOptimum,
