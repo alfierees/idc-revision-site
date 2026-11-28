@@ -352,10 +352,13 @@ The efficient outcome is the **same regardless of whether F or S holds the prope
 
 #### Worked Example
 
-**Setup:** $C_S(s,x) = s^2 - \frac{1}{2}(s-x)^2$, $C_F(f,x) = f^2 + fx$. Prices: $p_S = 65$, $p_F = 39$.
+**Setup:** $C_S(s,x) = s^2 + \frac{1}{2}(s-x)^2$, $C_F(f,x) = f^2 + fx$. Prices: $p_S = 65$, $p_F = 39$.
+
+> [!warning] Sign corrected
+> An earlier version of this note had $C_S = s^2 - \frac12(s-x)^2$. That function is *largest* at $x = s$, the opposite of the setup above (pollution lowers S's cost up to $\bar x(s) = s$), and its derivatives do not give the numbers below. With $+\frac12(s-x)^2$: $\partial C_S/\partial s = 3s - x$ and $\partial C_S/\partial x = x - s$, and every number in the example checks out.
 
 > [!example] Competitive equilibrium
-> FOCs for S: $p_S = \partial C_S/\partial s = 2s - (s-x) = s+x \Rightarrow s+x=65$ ... and $\partial C_S/\partial x = s-x = 0 \Rightarrow s^e = x^e = 32.5$.
+> FOCs for S: $\partial C_S/\partial x = x - s = 0 \Rightarrow x = s$, and $p_S = \partial C_S/\partial s = 2s + (s-x) = 3s - x \Rightarrow 3s - s = 65 \Rightarrow s^e = x^e = 32.5$.
 >
 > FOC for F: $p_F = 2f + x \Rightarrow 2f + 32.5 = 39 \Rightarrow f^e = 3.25$.
 >
@@ -363,9 +366,9 @@ The efficient outcome is the **same regardless of whether F or S holds the prope
 > **Total: 1066.81**
 
 > [!example] Social optimum
-> FOCs: $p_F = 2f + x \Rightarrow f = (39-x)/2$; $p_S = s + x \Rightarrow s = (65-x)/2$; $-\partial C_S/\partial x = \partial C_F/\partial x \Rightarrow s-x = f$.
+> FOCs: $p_F = 2f + x \Rightarrow f = (39-x)/2$; $p_S = 3s - x \Rightarrow s = (65+x)/3$; $-\partial C_S/\partial x = \partial C_F/\partial x \Rightarrow s-x = f$.
 >
-> Substituting: $(65-x)/2 - x = (39-x)/2 \Rightarrow 65-3x = 39 \Rightarrow x^* = \mathbf{13}$; $s^* = 26$; $f^* = 13$.
+> Substituting: $(65+x)/3 - x = (39-x)/2 \Rightarrow 130 - 4x = 117 - 3x \Rightarrow x^* = \mathbf{13}$; $s^* = 78/3 = 26$; $f^* = 13$.
 >
 > **Total profit: 1098.5** — higher than the competitive case (1066.81). The market failure destroyed 31.69 in total surplus.
 
