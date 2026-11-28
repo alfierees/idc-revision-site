@@ -104,15 +104,16 @@ export default function LegalEsopTimeline(): VNode {
     parts.push(<Note x={frame.x(18) - 6} y={frame.y(vested(18)) - 12} anchor="end" text="sale at 18: marginal" color={MARKER.red} size={16} />);
   }
   if (exploring) {
-    const win = WINDOW[reason];
-    const lapsed = reason === "cause" || sale > leave + win;
+    // Exercise and sale are separate: the vested options are assumed exercised
+    // within the window after leaving; the shares can be sold any time later.
+    const lapsed = reason === "cause" && sale >= leave;
     const n = lapsed ? 0 : vested(Math.min(sale, leave));
     const rate = sale >= 24 ? 0.25 : 0.59;
     const gain = n * GAIN_PER_OPTION;
     parts.push(<InkLine x1={frame.x(sale)} y1={frame.bottom} x2={frame.x(sale)} y2={frame.top + 30} id={`sale-${sale}`} color={MARKER.purple} width={1.8} />);
     parts.push(<Note x={frame.x(sale) + (sale > 40 ? -6 : 6)} y={frame.bottom - 10} anchor={sale > 40 ? "end" : "start"} text="sale" color={MARKER.purple} size={16} />);
     tex = lapsed
-      ? `\\text{${reason === "cause" ? "Dismissed for cause: every option expired" : "Sold after the exercise window closed: the options lapsed"}}`
+      ? "\\text{Dismissed for cause: every option expired}"
       : `${n.toLocaleString("en-US").replace(",", "{,}")} \\times \\$${GAIN_PER_OPTION} = \\$${gain.toLocaleString("en-US").replace(/,/g, "{,}")}\\ \\text{gain},\\ \\text{tax } ${rate === 0.25 ? "25\\%" : "\\text{up to } 59\\%"} = \\$${Math.round(gain * rate).toLocaleString("en-US").replace(/,/g, "{,}")}`;
   }
 
@@ -121,7 +122,7 @@ export default function LegalEsopTimeline(): VNode {
       sketch={sketch}
       note={NOTES[step]}
       tex={tex}
-      footnote={exploring ? `Gain assumed $${GAIN_PER_OPTION} per option. ${REASON_LABEL[reason]}: vested options can be exercised for ${WINDOW[reason]} months after leaving.` : "Section 102 covers employees and officers only. Consultants and controlling shareholders fall under Section 3(i): taxed at exercise, as ordinary income."}
+      footnote={exploring ? `Gain assumed $${GAIN_PER_OPTION} per option. ${REASON_LABEL[reason]}: vested options are exercised within ${WINDOW[reason]} months of leaving (exercise is not taxed); the shares can be sold later.` : "Section 102 covers employees and officers only. Consultants and controlling shareholders fall under Section 3(i): taxed at exercise, as ordinary income."}
       ariaLabel="A vesting staircase of 4,800 options over 48 months with a 12-month cliff, the exercise window after leaving, and the 24-month Section 102 line."
       top={exploring ? <Toggle label="Reason for leaving" active={reason} onPick={(key) => setReason(key as Reason)} options={(["none", "death", "cause"] as Reason[]).map((r) => ({ key: r, label: REASON_LABEL[r] }))} /> : undefined}
       explore={

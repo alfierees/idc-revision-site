@@ -91,7 +91,9 @@ export default function MicroIIPpf({ utility = "cd" }: Props): VNode {
   const mrsTex = kind === "cd" ? `MRS = \\tfrac{${fmt(c, 2)}\\,y}{${fmt(1 - c, 2)}\\,x}` : kind === "linear" ? `MRS = c = ${fmt(c, 2)}` : `MRS = \\tfrac{5}{\\sqrt{x}}`;
   const verdict = kind === "linear"
     ? (c > b ? `${fmt(c, 2)} > ${fmt(b, 2)}:\\ \\text{only } x` : c < b ? `${fmt(c, 2)} < ${fmt(b, 2)}:\\ \\text{only } y` : `\\text{tie: any point}`)
-    : `${mrsTex} = ${fmt(b, 2)} \\Rightarrow (x^*, y^*) = (${fmt(xs, 2)}, ${fmt(ys, 2)})`;
+    : kind !== "cd" && 25 / (b * b) > D
+      ? `MRS(${fmt(D, 0)}) = \\tfrac{5}{\\sqrt{${fmt(D, 0)}}} = ${fmt(5 / Math.sqrt(D), 2)} > ${fmt(b, 2)}:\\ \\text{corner } (x^*, y^*) = (${fmt(xs, 2)}, ${fmt(ys, 2)})`
+      : `${mrsTex} = ${fmt(b, 2)} \\Rightarrow (x^*, y^*) = (${fmt(xs, 2)}, ${fmt(ys, 2)})`;
   const TEX = [
     `k_1 = l_1:\\ x = l_1,\\ y = ${fmt(b, 2)}(${fmt(D, 0)} - l_1) \\Rightarrow RPT = ${fmt(b, 2)}`,
     `\\tfrac{p_x}{p_y} = RPT = ${fmt(b, 2)}`,
