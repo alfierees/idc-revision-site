@@ -6,6 +6,8 @@ import { groupBySemester } from "../lib/semesters";
 import BadgeToaster from "./progress/BadgeToaster";
 import CourseChip from "./progress/CourseChip";
 import NavIcon from "./NavIcon.astro";
+import HeaderAccount from "./account/HeaderAccount";
+import SignInNudge from "./account/SignInNudge";
 import { PROGRESS_UI_ENABLED } from "../lib/progress/flags";
 import { activeSection, visibleSections } from "../lib/nav";
 
@@ -78,6 +80,7 @@ const section = active ?? "dictionary";
           ))}
         </nav>
         <div class="bar-right">
+          <HeaderAccount client:load />
         </div>
       </div>
       {current && (
@@ -266,5 +269,6 @@ const section = active ?? "dictionary";
       }
     </script>
     <BadgeToaster client:idle />
+    <SignInNudge client:idle />
   </body>
 </html>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import { SYNC_PULLED_EVENT } from "../lib/progress/sync-constants";
 import type { JSX } from "preact";
 import {
   readStatus,
@@ -54,8 +55,14 @@ export default function OpenAnswer({ subject, kind, refSlug, questionId, solutio
       setOpen(false);
       setGrade("untried");
     };
+    // Synced progress arrived from the account: show this question's tick from it.
+    const onPulled = () => setGrade(readStatus(statusK));
     window.addEventListener(EXAM_RESET_EVENT, onReset);
-    return () => window.removeEventListener(EXAM_RESET_EVENT, onReset);
+    window.addEventListener(SYNC_PULLED_EVENT, onPulled);
+    return () => {
+      window.removeEventListener(EXAM_RESET_EVENT, onReset);
+      window.removeEventListener(SYNC_PULLED_EVENT, onPulled);
+    };
   }, [statusK, refSlug]);
 
   const pick = (value: StatusValue) => {

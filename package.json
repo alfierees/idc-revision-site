@@ -13,11 +13,16 @@
     "astro": "astro",
     "test": "vitest run",
     "verify": "tsx scripts/verify/cli.ts",
-    "ids:record": "tsx scripts/progress-ids/record.ts"
+    "ids:record": "tsx scripts/progress-ids/record.ts",
+    "db:migrate": "tsx --env-file=.env.local scripts/db/migrate.ts",
+    "db:check-views": "tsx --env-file=.env.local scripts/db/check-owner-views.ts",
+    "test:db":"node --env-file=.env.local ./node_modules/vitest/vitest.mjs run tests/db-"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.2",
     "@astrojs/preact": "^5.1.5",
+    "@astrojs/vercel": "^10.0.8",
+    "@clerk/astro": "^4.1.29",
     "@fontsource-variable/fraunces": "^5.2.9",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/manrope": "^5.2.8",
@@ -29,6 +34,7 @@
     "fuse.js": "^7.4.2",
     "hast-util-to-string": "^3.0.1",
     "katex": "^0.17.0",
+    "pg": "^8.23.1",
     "preact": "^10.29.2",
     "rehype-katex": "^7.0.1",
     "rehype-stringify": "^10.0.1",
@@ -43,6 +49,7 @@
     "unified": "^11.0.5"
   },
   "devDependencies": {
+    "@types/pg": "^8.23.1",
     "hast-util-from-html": "2.0.3",
     "playwright": "1.65.0",
     "tsx": "^4.23.15",

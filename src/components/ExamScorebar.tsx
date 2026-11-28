@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import { SYNC_PULLED_EVENT } from "../lib/progress/sync-constants";
 import {
   readStatus,
   writeStatus,
@@ -35,9 +36,11 @@ export default function ExamScorebar({ subject, kind, refSlug, questionIds }: Pr
     recompute();
     window.addEventListener(STATUS_EVENT, recompute);
     window.addEventListener(EXAM_RESET_EVENT, recompute);
+    window.addEventListener(SYNC_PULLED_EVENT, recompute);
     return () => {
       window.removeEventListener(STATUS_EVENT, recompute);
       window.removeEventListener(EXAM_RESET_EVENT, recompute);
+      window.removeEventListener(SYNC_PULLED_EVENT, recompute);
     };
     // questionIds is a stable build-time array for the page.
   }, [subject, kind, refSlug, questionIds]);

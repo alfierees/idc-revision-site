@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import { isSignedIn } from "../../lib/auth/session";
+import { SYNC_PULLED_EVENT } from "../../lib/progress/sync-constants";
 import { BADGES } from "../../lib/progress/badges";
 import { syncBadges } from "../../lib/progress/client";
 import { BADGE_EVENT, LECTURE_EVENT } from "../../lib/progress/store";
@@ -28,7 +30,7 @@ export default function BadgeToaster() {
     };
     const onBadges = (event: Event) => {
       const fresh = (event as CustomEvent<{ ids: string[] }>).detail?.ids ?? [];
-      if (fresh.length === 0 || !PROGRESS_UI_ENABLED) return;
+      if (fresh.length === 0 || !PROGRESS_UI_ENABLED || !isSignedIn()) return;
       setIds(fresh);
       window.clearTimeout(hideTimer.current);
       hideTimer.current = window.setTimeout(() => setIds([]), SHOW_MS);
@@ -36,7 +38,11 @@ export default function BadgeToaster() {
     window.addEventListener(STATUS_EVENT, onMark);
     window.addEventListener(LECTURE_EVENT, onMark);
     window.addEventListener(BADGE_EVENT, onBadges);
+    // Synced progress can complete badges: record them silently, like the on-load backfill.
+    const onPulled = () => void syncBadges(false).catch(() => {});
+    window.addEventListener(SYNC_PULLED_EVENT, onPulled);
     return () => {
+      window.removeEventListener(SYNC_PULLED_EVENT, onPulled);
       window.clearTimeout(debounce);
       window.clearTimeout(hideTimer.current);
       window.removeEventListener(STATUS_EVENT, onMark);
@@ -67,7 +73,7 @@ export default function BadgeToaster() {
               New badge · <strong>{badges.slice(0, 2).map((b) => b.name).join(", ")}</strong>
               {badges.length > 2 && ` +${badges.length - 2} more`}
             </p>
-            <a class="toast-link" href="/#progress">See your badges →</a>
+            <a class="toast-link" href="/progress">See your badges →</a>
           </div>
           <button type="button" class="toast-close" aria-label="Dismiss" onClick={dismiss}>×</button>
         </div>

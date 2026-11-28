@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import { SYNC_PULLED_EVENT } from "../../lib/progress/sync-constants";
 import { localDay } from "../../lib/progress/days";
 import { LECTURE_EVENT, progressStore } from "../../lib/progress/store";
 
@@ -13,7 +14,11 @@ export default function MarkAsRead({ subject, lecture }: Props) {
   const [read, setRead] = useState(false);
 
   useEffect(() => {
-    setRead(progressStore().lectureRead(subject, lecture));
+    const reread = () => setRead(progressStore().lectureRead(subject, lecture));
+    reread();
+    // Synced progress arrived from the account.
+    window.addEventListener(SYNC_PULLED_EVENT, reread);
+    return () => window.removeEventListener(SYNC_PULLED_EVENT, reread);
   }, [subject, lecture]);
 
   const change = (nextRead: boolean) => {

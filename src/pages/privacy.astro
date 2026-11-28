@@ -1,0 +1,42 @@
+---
+import Layout from "../components/Layout.astro";
+---
+<Layout title="Your data · IDC Revision">
+  <article class="progress-page privacy reading">
+    <h1 class="page-title">Your data</h1>
+    <p class="privacy-lede">A plain-language note on what this site keeps, where, and what you can do about it.</p>
+
+    <h2>Without an account</h2>
+    <p>
+      Everything you tick, the lectures you mark as read and your semester stay in your browser on this device.
+      None of it is sent anywhere. Clearing your browser's site data removes it.
+    </p>
+
+    <h2>With an account</h2>
+    <p>Signing in saves the following to your account, so it follows you between devices:</p>
+    <ul>
+      <li>your email address and name, from your sign-in;</li>
+      <li>each tick and lecture read, with when you made it (including a history of changes);</li>
+      <li>the days you revised, the badges you earned and the last page you opened in each course.</li>
+    </ul>
+    <p>
+      Sign-in is handled by <a href="https://clerk.com" rel="noopener">Clerk</a>, which sets the cookies needed to keep
+      you signed in (<a href="https://clerk.com/legal/privacy" rel="noopener">Clerk's privacy policy</a>). Your progress
+      is stored in a Postgres database hosted by <a href="https://neon.com" rel="noopener">Neon</a> in Frankfurt.
+    </p>
+
+    <h2>Who can see it</h2>
+    <p>
+      Only you. The site's maintainer sees course-wide totals, such as how many students got a question wrong,
+      and only for groups of five or more students, so no one's individual activity can be picked out.
+      Page visits are counted with Vercel's cookie-free analytics.
+    </p>
+
+    <h2>What you can do</h2>
+    <ul>
+      <li><strong>Download your data</strong> from the You page, as one file.</li>
+      <li><strong>Sign out</strong> to remove your progress from a device. It stays in your account.</li>
+      <li><strong>Delete your account</strong> from the You page. Your account and all its progress are removed straight away.</li>
+    </ul>
+  </article>
+</Layout>
