@@ -18,7 +18,7 @@ const LEDGER_KEY = `${PREFIX}badges`;
 /** mark key → ms timestamp of its last change (clears included), for B2's newest-wins sync. */
 const STAMPS_KEY = `${PREFIX}stamps`;
 /** Most recently opened item per course, for "Continue where you left off". */
-const LAST_SEEN_KEY = `${PREFIX}last-seen`;
+export const LAST_SEEN_STORAGE_KEY = `${PREFIX}last-seen`;
 const lectureKey = (subject: string, lecture: string) => `${PREFIX}${subject}:lecture:${lecture}`;
 
 /** Fired after a lecture is marked read or unread. detail: { subject, lecture, read } */
@@ -85,10 +85,10 @@ export function createProgressStore(storage: KeyValueStore, now: () => number = 
     stamps: () => readJson(storage, STAMPS_KEY, isStampIndex, {}),
     /** Newest first, one entry per subject. */
     lastSeen: (): LastSeenEntry[] =>
-      readJson(storage, LAST_SEEN_KEY, isLastSeenList, []).sort((a, b) => b.at - a.at),
+      readJson(storage, LAST_SEEN_STORAGE_KEY, isLastSeenList, []).sort((a, b) => b.at - a.at),
     recordLastSeen(subject: string, path: string, title: string, at: number = now()) {
-      const others = readJson(storage, LAST_SEEN_KEY, isLastSeenList, []).filter((e) => e.subject !== subject);
-      storage.setItem(LAST_SEEN_KEY, JSON.stringify([{ subject, path, title, at }, ...others]));
+      const others = readJson(storage, LAST_SEEN_STORAGE_KEY, isLastSeenList, []).filter((e) => e.subject !== subject);
+      storage.setItem(LAST_SEEN_STORAGE_KEY, JSON.stringify([{ subject, path, title, at }, ...others]));
     },
     activityDays: () => readJson(storage, ACTIVITY_KEY, isDayList, []),
     recordActivity(day: string) {

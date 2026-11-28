@@ -120,7 +120,10 @@ const semesterIds = SEMESTERS.map((s) => s.id);
 
   @media (max-width: 640px) {
     .page-title { font-size: 1.9rem; }
-    .course-row-item { flex-wrap: wrap; gap: 0.2rem 1rem; }
+  }
+  /* Beside the rail, two columns are too tight to keep the counts on the title's line. */
+  @media (max-width: 1439px) {
+    a.course-row-item { flex-wrap: wrap; gap: 0.2rem 1rem; }
     .c-main { flex: 1 1 calc(100% - 2rem); }
     .c-arr { order: 2; }
   }
