@@ -120,7 +120,7 @@ With 1464 degrees of freedom the two-sided 1% critical value is $2.576$ (the nor
 
 Amounts in dollars are euro amounts divided by 0.85, so $\ln(\text{USD})=\ln(\text{EUR})+\ln\!\left(\tfrac{1}{0.85}\right)$, and $\ln\!\left(\tfrac{1}{0.85}\right)\approx0.162$. Substitute into Model [0], using $\ln(A\cdot B)=\ln A+\ln B$ on both spending variables:
 
-$$\ln(invest^{USD})=\beta_0+(\beta_1-1)\cdot 0.162+\beta_1\ln(maintain^{USD})+\beta_2\,year+u$$
+$$\ln(invest^{USD})=\beta_0+(1-\beta_1)\cdot 0.162+\beta_1\ln(maintain^{USD})+\beta_2\,year+u$$
 
 Only the **intercept** absorbs the constant. The slope on $year$ ($\beta_2$) is unchanged, and so is the slope on $\ln(maintain)$.
 
